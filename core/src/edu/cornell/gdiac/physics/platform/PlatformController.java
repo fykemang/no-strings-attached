@@ -290,42 +290,32 @@ public class PlatformController extends WorldController implements ContactListen
         // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
         float dheight = goalTile.getRegionHeight() / scale.y;
-        goalDoor = new BoxObstacle(GOAL_POS.x, GOAL_POS.y, dwidth, dheight);
-        goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
-        goalDoor.setDensity(0.0f);
-        goalDoor.setFriction(0.0f);
-        goalDoor.setRestitution(0.0f);
-        goalDoor.setSensor(true);
-        goalDoor.setDrawScale(scale);
-        goalDoor.setTexture(goalTile);
-        goalDoor.setName("goal");
-        addObject(goalDoor);
 
         String wname = "wall";
-        for (int ii = 0; ii < WALLS.length; ii++) {
+        for (int i = 0; i < WALLS.length; i++) {
             PolygonObstacle obj;
-            obj = new PolygonObstacle(WALLS[ii], 0, 0);
+            obj = new PolygonObstacle(WALLS[i], 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(BASIC_DENSITY);
             obj.setFriction(BASIC_FRICTION);
             obj.setRestitution(BASIC_RESTITUTION);
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
-            obj.setName(wname + ii);
+            obj.setName(wname + i);
             addObject(obj);
         }
 
         String pname = "platform";
-        for (int ii = 0; ii < PLATFORMS.length; ii++) {
+        for (int i = 0; i < PLATFORMS.length; i++) {
             PolygonObstacle obj;
-            obj = new PolygonObstacle(PLATFORMS[ii], 0, 0);
+            obj = new PolygonObstacle(PLATFORMS[i], 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(BASIC_DENSITY);
             obj.setFriction(BASIC_FRICTION);
             obj.setRestitution(BASIC_RESTITUTION);
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
-            obj.setName(pname + ii);
+            obj.setName(pname + i);
             addObject(obj);
         }
 
@@ -344,14 +334,6 @@ public class PlatformController extends WorldController implements ContactListen
         bridge.setTexture(bridgeTexture);
         bridge.setDrawScale(scale);
         addObject(bridge);
-
-        // Create spinning platform
-        dwidth = barrierTexture.getRegionWidth() / scale.x;
-        dheight = barrierTexture.getRegionHeight() / scale.y;
-        Spinner spinPlatform = new Spinner(SPIN_POS.x, SPIN_POS.y, dwidth, dheight);
-        spinPlatform.setDrawScale(scale);
-        spinPlatform.setTexture(barrierTexture);
-        addObject(spinPlatform);
     }
 
     /**
@@ -361,7 +343,7 @@ public class PlatformController extends WorldController implements ContactListen
      * to switch to a new game mode.  If not, the update proceeds
      * normally.
      *
-     * @param delta Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      * @return whether to process the update loop
      */
     public boolean preUpdate(float dt) {
@@ -385,7 +367,7 @@ public class PlatformController extends WorldController implements ContactListen
      * This method is called after input is read, but before collisions are resolved.
      * The very last thing that it should do is apply forces to the appropriate objects.
      *
-     * @param delta Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
         // Process actions in object model

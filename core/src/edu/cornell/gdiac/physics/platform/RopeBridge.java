@@ -130,13 +130,13 @@ public class RopeBridge extends ComplexObstacle {
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
-        for (int ii = 0; ii < nLinks; ii++) {
-            float t = ii * (linksize + spacing) + linksize / 2.0f;
+        for (int i = 0; i < nLinks; i++) {
+            float t = i * (linksize + spacing) + linksize / 2.0f;
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
             BoxObstacle plank = new BoxObstacle(pos.x, pos.y, planksize.x, planksize.y);
-            plank.setName(PLANK_NAME + ii);
+            plank.setName(PLANK_NAME + i);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
         }
