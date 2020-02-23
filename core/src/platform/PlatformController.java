@@ -23,6 +23,9 @@ import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
 import util.SoundController;
+import softBody.Simulation;
+
+import java.util.LinkedList;
 
 /**
  * Gameplay specific controller for the platformer game.
@@ -34,6 +37,8 @@ import util.SoundController;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController implements ContactListener {
+    private Simulation s;
+
     /**
      * The texture file for the character avatar (no animation)
      */
@@ -246,6 +251,7 @@ public class PlatformController extends WorldController implements ContactListen
         setFailure(false);
         world.setContactListener(this);
         sensorFixtures = new ObjectSet<>();
+        this.s = new Simulation();
     }
 
     /**
@@ -321,6 +327,10 @@ public class PlatformController extends WorldController implements ContactListen
         bridge.setTexture(bridgeTexture);
         bridge.setDrawScale(scale);
         addObject(bridge);
+
+        LinkedList<Vector2> l = new LinkedList<>();
+        l.add(new Vector2(30,30));
+        s.populate(l);
     }
 
     /**
