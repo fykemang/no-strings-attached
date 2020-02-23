@@ -190,34 +190,18 @@ public class PlatformController extends WorldController implements ContactListen
     // Since these appear only once, we do not care about the magic numbers.
     // In an actual game, this information would go in a data file.
     // Wall vertices
-    private static final float[][] WALLS = {
-            {16.0f, 18.0f, 16.0f, 17.0f, 1.0f, 17.0f,
-                    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 18.0f},
-            {32.0f, 18.0f, 32.0f, 0.0f, 31.0f, 0.0f,
-                    31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f}
-    };
+    private float[][] walls;
 
     /**
      * The outlines of all of the platforms
      */
-    private static final float[][] PLATFORMS = {
-            {1.0f, 0.0f, 31.0f, 0.0f, 31.0f, 1f, 1.0f, 1f},
-            {6.0f, 4.0f, 9.0f, 4.0f, 9.0f, 2.5f, 6.0f, 2.5f},
-            {23.0f, 4.0f, 31.0f, 4.0f, 31.0f, 2.5f, 23.0f, 2.5f},
-            {26.0f, 5.5f, 28.0f, 5.5f, 28.0f, 5.0f, 26.0f, 5.0f},
-            {29.0f, 7.0f, 31.0f, 7.0f, 31.0f, 6.5f, 29.0f, 6.5f},
-            {24.0f, 8.5f, 27.0f, 8.5f, 27.0f, 8.0f, 24.0f, 8.0f},
-            {29.0f, 10.0f, 31.0f, 10.0f, 31.0f, 9.5f, 29.0f, 9.5f},
-            {23.0f, 11.5f, 27.0f, 11.5f, 27.0f, 11.0f, 23.0f, 11.0f},
-            {19.0f, 12.5f, 23.0f, 12.5f, 23.0f, 12.0f, 19.0f, 12.0f},
-            {1.0f, 12.5f, 7.0f, 12.5f, 7.0f, 12.0f, 1.0f, 12.0f}
-    };
+    private float[][] platfroms;
 
     // Other game objects
     /**
      * The initial position of the dude
      */
-    private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
+    private Vector2 dudePos;
     /**
      * The position of the rope bridge
      */
@@ -274,14 +258,20 @@ public class PlatformController extends WorldController implements ContactListen
      * Lays out the game geography.
      */
     private void populateLevel() {
+
+        PlatformLoader loader = new PlatformLoader(
+                "test.json");
+        walls = loader.getWalls();
+        platfroms = loader.getPlatforms();
+        dudePos = loader.getCharacterPos();
         // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
         float dheight = goalTile.getRegionHeight() / scale.y;
 
         String wname = "wall";
-        for (int i = 0; i < WALLS.length; i++) {
+        for (int i = 0; i < walls.length; i++) {
             PolygonObstacle obj;
-            obj = new PolygonObstacle(WALLS[i], 0, 0);
+            obj = new PolygonObstacle(walls[i], 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(BASIC_DENSITY);
             obj.setFriction(BASIC_FRICTION);
@@ -293,9 +283,9 @@ public class PlatformController extends WorldController implements ContactListen
         }
 
         String pname = "platform";
-        for (int i = 0; i < PLATFORMS.length; i++) {
+        for (int i = 0; i < platfroms.length; i++) {
             PolygonObstacle obj;
-            obj = new PolygonObstacle(PLATFORMS[i], 0, 0);
+            obj = new PolygonObstacle(platfroms[i], 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(BASIC_DENSITY);
             obj.setFriction(BASIC_FRICTION);
@@ -309,7 +299,7 @@ public class PlatformController extends WorldController implements ContactListen
         // Create dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-        avatar = new DudeModel(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
+        avatar = new DudeModel(dudePos.x, dudePos.y, dwidth, dheight);
         avatar.setDrawScale(scale);
         avatar.setTexture(avatarTexture);
         addObject(avatar);
