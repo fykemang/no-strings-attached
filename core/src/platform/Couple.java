@@ -73,9 +73,9 @@ public class Couple extends ComplexObstacle {
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
 
-        jointDef.bodyA = trampoline.getBody();
+        jointDef.bodyA = trampoline.getLastLink();
         jointDef.bodyB = r.getBody();
-        anchor1.x = -r.getWidth() / 2;
+        anchor1.x = r.getWidth() / 2;
         anchor2.x = -trampoline.linksize / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);

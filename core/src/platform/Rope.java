@@ -16,7 +16,7 @@ package platform;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
@@ -41,16 +41,6 @@ public class Rope extends ComplexObstacle {
      * The density of each plank in the bridge
      */
     private static final float BASIC_DENSITY = 1.0f;
-
-    // Invisible anchor objects
-    /**
-     * The left side of the bridge
-     */
-    private WheelObstacle start = null;
-    /**
-     * The right side of the bridge
-     */
-    private WheelObstacle finish = null;
 
     // Dimension information
     /**
@@ -160,7 +150,6 @@ public class Rope extends ComplexObstacle {
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         for (int i = 0; i < bodies.size - 1; i++) {
-            //#region INSERT CODE HERE
             // Look at what we did above and join the planks
             Obstacle curr = bodies.get(i);
             Obstacle next = bodies.get(i + 1);
@@ -168,7 +157,6 @@ public class Rope extends ComplexObstacle {
             jointDef.bodyB = next.getBody();
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
-            //#endregion
         }
         return true;
     }
@@ -181,12 +169,6 @@ public class Rope extends ComplexObstacle {
      */
     public void deactivatePhysics(World world) {
         super.deactivatePhysics(world);
-        if (start != null) {
-            start.deactivatePhysics(world);
-        }
-        if (finish != null) {
-            finish.deactivatePhysics(world);
-        }
     }
 
     /**
@@ -210,5 +192,13 @@ public class Rope extends ComplexObstacle {
             return null;
         }
         return ((SimpleObstacle) bodies.get(0)).getTexture();
+    }
+
+    /**
+     *
+     * @return retrieve the last link in the rope
+     */
+    public Body getLastLink() {
+        return (bodies.size > 0 ? bodies.get(bodies.size - 1).getBody() : null);
     }
 }
