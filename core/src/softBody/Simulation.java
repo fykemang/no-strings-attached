@@ -53,8 +53,19 @@ public class Simulation {
     }
 
     public void populate(Vector2 person1, Vector2 person2) {
-        Vector2 pos = new Vector2((person1.x + person2.x) /2, (person1.y + person2.y) / 2);
+//        Vector2 pos = new Vector2((person1.x + person2.x) /2, (person1.y + person2.y) / 2);
+        Vector2 pos = new Vector2();
+        float angle;
+        if (person1.x < person2.x) {
+            pos = person1;
+            angle = (float) (Math.tan((person2.y - person1.y) / (person2.x - person1.x)));
+        }
+        else {
+            pos = person2;
+            angle = (float) (Math.tan((person1.y - person2.y) / (person1.x - person2.x)));
+        }
         StringObject o1 = new StringObject(1, SimObjectType.ACTIVE, pos);
+        o1.setAngle(angle);
         NPCObject o2 = new NPCObject(1000, SimObjectType.ACTIVE, person1, o1);
         NPCObject o3 = new NPCObject(1000, SimObjectType.ACTIVE, person2, o1);
 

@@ -6,6 +6,15 @@ import root.GameCanvas;
 
 public class StringObject extends SimModel {
     private Spring springForce;
+    private float angle;
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
 
     public Spring getSpringForce() {
         return springForce;
@@ -17,6 +26,7 @@ public class StringObject extends SimModel {
 
     public StringObject(float mass, SimObjectType s, Vector2 currPosition) {
         super(mass, s, currPosition);
+        this.angle = 0f;
     }
 
     /**
@@ -25,13 +35,12 @@ public class StringObject extends SimModel {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-//        float restlength =
         System.out.println(currPosition);
 
         if (texture != null) {
-//            System.out.println("here");
             canvas.draw(texture, Color.RED, origin.x, origin.y, currPosition.x * drawScale.x,
-                    currPosition.y * drawScale.y, 0f, springForce.getRestlength() / texture.getRegionWidth(), 1);
+                    currPosition.y * drawScale.y, angle, springForce.getRestlength() / texture.getRegionWidth(),
+                    1);
 
         }
     }
