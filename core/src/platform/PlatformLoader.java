@@ -26,8 +26,6 @@ public class PlatformLoader {
             rootobj = new JSONParser().parse(new FileReader(filePath));;
             JSONArray wallArray = (JSONArray) (((JSONObject) rootobj).get("walls"));
             walls = parseArray(wallArray);
-            JSONArray platArray = (JSONArray) (((JSONObject) rootobj).get("platforms"));
-            platforms = parseArray(platArray);
             JSONArray characterPos = (JSONArray) (((JSONObject) rootobj).get("characterPos"));
             dudePos =  new Vector2((float)(double)characterPos.get(0),
                     (float)(double)characterPos.get(1));
@@ -39,15 +37,28 @@ public class PlatformLoader {
         }
     }
 
+    /**
+     * parses a walls array to Polygon obstacle input
+     * @param array JSONarray for the walls
+     * @return
+     */
     public float[][] parseArray(JSONArray array){
         float[][] result = new float[array.size()][];
-        for(int row = 0; row < array.size(); row++) {
-            JSONArray cols = (JSONArray)((JSONArray) array.get(row));
-            float[] temp = new float[cols.size()];
-            for(int col=0; col < cols.size(); col++) {
-                temp[col] = (float)(double) cols.get(col);
-            }
-            result[row] = temp;
+        for(int i = 0; i < array.size(); i++) {
+            JSONObject wall = ((JSONObject) array.get(i));
+            float[] temp = new float[8];
+            Vector2 wallPos = new Vector2((float)(double)wall.get("x"), (float)(double)wall.get("y"));
+            float width = (float)(double) wall.get("width");
+            float height = (float)(double) wall.get("height");
+            temp[0] = wallPos.x;
+            temp[1] = wallPos.y;
+            temp[2] = wallPos.x;
+            temp[3] = wallPos.y + height;
+            temp[4] = wallPos.x + width;
+            temp[5] = wallPos.y + height;
+            temp[6] = wallPos.x + width;
+            temp[7] = wallPos.y;
+            result[i] = temp;
         }
         return result;
     }

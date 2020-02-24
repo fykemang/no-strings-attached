@@ -262,7 +262,6 @@ public class PlatformController extends WorldController implements ContactListen
         PlatformLoader loader = new PlatformLoader(
                 "test.json");
         walls = loader.getWalls();
-        platfroms = loader.getPlatforms();
         dudePos = loader.getCharacterPos();
         // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
@@ -282,20 +281,6 @@ public class PlatformController extends WorldController implements ContactListen
             addObject(obj);
         }
 
-        String pname = "platform";
-        for (int i = 0; i < platfroms.length; i++) {
-            PolygonObstacle obj;
-            obj = new PolygonObstacle(platfroms[i], 0, 0);
-            obj.setBodyType(BodyDef.BodyType.StaticBody);
-            obj.setDensity(BASIC_DENSITY);
-            obj.setFriction(BASIC_FRICTION);
-            obj.setRestitution(BASIC_RESTITUTION);
-            obj.setDrawScale(scale);
-            obj.setTexture(earthTile);
-            obj.setName(pname + i);
-            addObject(obj);
-        }
-
         // Create dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
@@ -311,6 +296,11 @@ public class PlatformController extends WorldController implements ContactListen
         bridge.setTexture(bridgeTexture);
         bridge.setDrawScale(scale);
         addObject(bridge);
+    }
+
+
+    public void createPlatform(){
+
     }
 
     /**
