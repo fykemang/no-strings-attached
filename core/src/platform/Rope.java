@@ -28,7 +28,7 @@ import obstacle.*;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class RopeBridge extends ComplexObstacle {
+public class Rope extends ComplexObstacle {
     /**
      * The debug name for the entire obstacle
      */
@@ -37,14 +37,6 @@ public class RopeBridge extends ComplexObstacle {
      * The debug name for each plank
      */
     private static final String PLANK_NAME = "barrier";
-    /**
-     * The debug name for each anchor pin
-     */
-    private static final String BRIDGE_PIN_NAME = "pin";
-    /**
-     * The radius of each anchor pin
-     */
-    private static final float BRIDGE_PIN_RADIUS = 0.1f;
     /**
      * The density of each plank in the bridge
      */
@@ -89,7 +81,7 @@ public class RopeBridge extends ComplexObstacle {
      * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public RopeBridge(float x, float y, float width, float lwidth, float lheight) {
+    public Rope(float x, float y, float width, float lwidth, float lheight) {
         this(x, y, x + width, y, lwidth, lheight);
     }
 
@@ -103,7 +95,7 @@ public class RopeBridge extends ComplexObstacle {
      * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public RopeBridge(float x0, float y0, float x1, float y1, float lwidth, float lheight) {
+    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight) {
         super(x0, y0);
         setName(BRIDGE_NAME);
 
@@ -151,37 +143,22 @@ public class RopeBridge extends ComplexObstacle {
      * @param world Box2D world to store joints
      * @return true if object allocation succeeded
      */
+    @Override
     protected boolean createJoints(World world) {
         assert bodies.size > 0;
 
-        Vector2 anchor1 = new Vector2();
+        Vector2 anchor1 = new Vector2(linksize / 2, 0);
         Vector2 anchor2 = new Vector2(-linksize / 2, 0);
 
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
-        Vector2 pos = bodies.get(0).getPosition();
-        pos.x -= linksize / 2;
-        start = new WheelObstacle(pos.x, pos.y, BRIDGE_PIN_RADIUS);
-        start.setName(BRIDGE_PIN_NAME + 0);
-        start.setDensity(BASIC_DENSITY);
-        start.setBodyType(BodyDef.BodyType.StaticBody);
-        start.activatePhysics(world);
 
         // Definition for a revolute joint
         RevoluteJointDef jointDef = new RevoluteJointDef();
-
-        // Initial joint
-        jointDef.bodyA = start.getBody();
-        jointDef.bodyB = bodies.get(0).getBody();
+        // Link the planks together
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
-        jointDef.collideConnected = false;
-        Joint joint = world.createJoint(jointDef);
-        joints.add(joint);
-
-        // Link the planks together
-        anchor1.x = linksize / 2;
         for (int i = 0; i < bodies.size - 1; i++) {
             //#region INSERT CODE HERE
             // Look at what we did above and join the planks
@@ -189,32 +166,10 @@ public class RopeBridge extends ComplexObstacle {
             Obstacle next = bodies.get(i + 1);
             jointDef.bodyA = curr.getBody();
             jointDef.bodyB = next.getBody();
-            jointDef.localAnchorA.set(anchor1);
-            joint = world.createJoint(jointDef);
+            Joint joint = world.createJoint(jointDef);
             joints.add(joint);
             //#endregion
         }
-
-        // Create the rightmost anchor
-        Obstacle last = bodies.get(bodies.size - 1);
-
-        pos = last.getPosition();
-        pos.x += linksize / 2;
-        finish = new WheelObstacle(pos.x, pos.y, BRIDGE_PIN_RADIUS);
-        finish.setName(BRIDGE_PIN_NAME + 1);
-        finish.setDensity(BASIC_DENSITY);
-        finish.setBodyType(BodyDef.BodyType.StaticBody);
-        finish.activatePhysics(world);
-
-        // Final joint
-        anchor2.x = 0;
-        jointDef.bodyA = last.getBody();
-        jointDef.bodyB = finish.getBody();
-        jointDef.localAnchorA.set(anchor1);
-        jointDef.localAnchorB.set(anchor2);
-        joint = world.createJoint(jointDef);
-        joints.add(joint);
-
         return true;
     }
 

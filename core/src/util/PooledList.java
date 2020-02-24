@@ -842,7 +842,7 @@
          /**
           * Replaces the last element returned with this element
           *
-          * @param e the element to replace with
+          * @param entry the element to replace with
           */
          public void set(Entry entry) {
              if (last == null) {

@@ -22,6 +22,7 @@ import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
+import sun.awt.PlatformFont;
 import util.SoundController;
 
 /**
@@ -68,14 +69,12 @@ public class PlatformController extends WorldController implements ContactListen
      * Texture asset for character avatar
      */
     private TextureRegion avatarTexture;
-    /**
-     * Texture asset for the spinning barrier
-     */
-    private TextureRegion barrierTexture;
+
     /**
      * Texture asset for the bullet
      */
     private TextureRegion bulletTexture;
+
     /**
      * Texture asset for the bridge plank
      */
@@ -137,7 +136,6 @@ public class PlatformController extends WorldController implements ContactListen
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
-        barrierTexture = createTexture(manager, BARRIER_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
 
@@ -170,10 +168,7 @@ public class PlatformController extends WorldController implements ContactListen
      * The restitution for all physics objects
      */
     private static final float BASIC_RESTITUTION = 0.1f;
-    /**
-     * The width of the rope bridge
-     */
-    private static final float BRIDGE_WIDTH = 14.0f;
+
     /**
      * Offset for bullet when firing
      */
@@ -202,7 +197,6 @@ public class PlatformController extends WorldController implements ContactListen
      */
     private static final float[][] PLATFORMS = {
             {1.0f, 0.0f, 31.0f, 0.0f, 31.0f, 1f, 1.0f, 1f},
-            {6.0f, 4.0f, 9.0f, 4.0f, 9.0f, 2.5f, 6.0f, 2.5f},
             {23.0f, 4.0f, 31.0f, 4.0f, 31.0f, 2.5f, 23.0f, 2.5f},
             {26.0f, 5.5f, 28.0f, 5.5f, 28.0f, 5.0f, 26.0f, 5.0f},
             {29.0f, 7.0f, 31.0f, 7.0f, 31.0f, 6.5f, 29.0f, 6.5f},
@@ -210,24 +204,19 @@ public class PlatformController extends WorldController implements ContactListen
             {29.0f, 10.0f, 31.0f, 10.0f, 31.0f, 9.5f, 29.0f, 9.5f},
             {23.0f, 11.5f, 27.0f, 11.5f, 27.0f, 11.0f, 23.0f, 11.0f},
             {19.0f, 12.5f, 23.0f, 12.5f, 23.0f, 12.0f, 19.0f, 12.0f},
-            {1.0f, 12.5f, 7.0f, 12.5f, 7.0f, 12.0f, 1.0f, 12.0f}
     };
 
     // Other game objects
     /**
      * The initial position of the dude
      */
-    private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
-    /**
-     * The position of the rope bridge
-     */
-    private static Vector2 BRIDGE_POS = new Vector2(9.0f, 3.8f);
+    private static Vector2 MAIN_DUDE_POS = new Vector2(2.5f, 5.0f);
 
     // Physics objects for the game
     /**
      * Reference to the character avatar
      */
-    private DudeModel avatar;
+    private DudeModel mainDude;
 
     /**
      * Mark set to handle more sophisticated collision callbacks
@@ -280,47 +269,53 @@ public class PlatformController extends WorldController implements ContactListen
 
         String wname = "wall";
         for (int i = 0; i < WALLS.length; i++) {
-            PolygonObstacle obj;
-            obj = new PolygonObstacle(WALLS[i], 0, 0);
-            obj.setBodyType(BodyDef.BodyType.StaticBody);
-            obj.setDensity(BASIC_DENSITY);
-            obj.setFriction(BASIC_FRICTION);
-            obj.setRestitution(BASIC_RESTITUTION);
-            obj.setDrawScale(scale);
-            obj.setTexture(earthTile);
-            obj.setName(wname + i);
-            addObject(obj);
+            createTile(WALLS[i],0, 0, wname + i);
         }
 
         String pname = "platform";
         for (int i = 0; i < PLATFORMS.length; i++) {
-            PolygonObstacle obj;
-            obj = new PolygonObstacle(PLATFORMS[i], 0, 0);
-            obj.setBodyType(BodyDef.BodyType.StaticBody);
-            obj.setDensity(BASIC_DENSITY);
-            obj.setFriction(BASIC_FRICTION);
-            obj.setRestitution(BASIC_RESTITUTION);
-            obj.setDrawScale(scale);
-            obj.setTexture(earthTile);
-            obj.setName(pname + i);
-            addObject(obj);
+            createTile(PLATFORMS[i], 0, 0, pname + i);
         }
 
-        // Create dude
+        // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-        avatar = new DudeModel(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
-        avatar.setDrawScale(scale);
-        avatar.setTexture(avatarTexture);
-        addObject(avatar);
+        mainDude = new DudeModel(MAIN_DUDE_POS.x, MAIN_DUDE_POS.y, dwidth, dheight);
+        mainDude.setDrawScale(scale);
+        mainDude.setTexture(avatarTexture);
+        addObject(mainDude);
 
-        // Create rope bridge
-        dwidth = bridgeTexture.getRegionWidth() / scale.x;
-        dheight = bridgeTexture.getRegionHeight() / scale.y;
-        RopeBridge bridge = new RopeBridge(BRIDGE_POS.x, BRIDGE_POS.y, BRIDGE_WIDTH, dwidth, dheight);
-        bridge.setTexture(bridgeTexture);
-        bridge.setDrawScale(scale);
-        addObject(bridge);
+        createCouple(1.0f, 6f, 6f, 6f);
+        createCouple(6.0f, 11.0f, 11.0f, 11.0f);
+        createCouple(8f, 2f, 13f, 2f);
+
+    }
+
+    public void createTile(float[] points, float x, float y, String name) {
+        PolygonObstacle tile = new PolygonObstacle(points, x, y);
+        tile.setBodyType(BodyDef.BodyType.StaticBody);
+        tile.setDensity(BASIC_DENSITY);
+        tile.setFriction(BASIC_FRICTION);
+        tile.setRestitution(BASIC_RESTITUTION);
+        tile.setDrawScale(scale);
+        tile.setTexture(earthTile);
+        tile.setName(name);
+        addObject(tile);
+    }
+
+    /**
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void createCouple(float x1, float y1, float x2, float y2) {
+        float[] points = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
+        createTile(points, x1, y1 - 1f, "tile");
+        createTile(points, x2, y2 - 1f, "tile");
+        Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale);
+        addObject(couple);
     }
 
     /**
@@ -338,7 +333,7 @@ public class PlatformController extends WorldController implements ContactListen
             return false;
         }
 
-        if (!isFailure() && avatar.getY() < -1) {
+        if (!isFailure() && mainDude.getY() < -1) {
             setFailure(true);
             return false;
         }
@@ -358,17 +353,17 @@ public class PlatformController extends WorldController implements ContactListen
      */
     public void update(float dt) {
         // Process actions in object model
-        avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
-        avatar.setJumping(InputController.getInstance().didPrimary());
-        avatar.setShooting(InputController.getInstance().didSecondary());
+        mainDude.setMovement(InputController.getInstance().getHorizontal() * mainDude.getForce());
+        mainDude.setJumping(InputController.getInstance().didPrimary());
+        mainDude.setShooting(InputController.getInstance().didSecondary());
 
         // Add a bullet if we fire
-        if (avatar.isShooting()) {
+        if (mainDude.isShooting()) {
             createBullet();
         }
 
-        avatar.applyForce();
-        if (avatar.isJumping()) {
+        mainDude.applyForce();
+        if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
@@ -380,9 +375,9 @@ public class PlatformController extends WorldController implements ContactListen
      * Add a new bullet to the world and send it in the right direction.
      */
     private void createBullet() {
-        float offset = (avatar.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
+        float offset = (mainDude.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
-        WheelObstacle bullet = new WheelObstacle(avatar.getX() + offset, avatar.getY(), radius);
+        WheelObstacle bullet = new WheelObstacle(mainDude.getX() + offset, mainDude.getY(), radius);
 
         bullet.setName("bullet");
         bullet.setDensity(HEAVY_DENSITY);
@@ -392,7 +387,7 @@ public class PlatformController extends WorldController implements ContactListen
         bullet.setGravityScale(0);
 
         // Compute position and velocity
-        float speed = (avatar.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
+        float speed = (mainDude.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
         bullet.setVX(speed);
         addQueuedObject(bullet);
 
@@ -434,19 +429,19 @@ public class PlatformController extends WorldController implements ContactListen
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
             // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != avatar) {
+            if (bd1.getName().equals("bullet") && bd2 != mainDude) {
                 removeBullet(bd1);
             }
 
-            if (bd2.getName().equals("bullet") && bd1 != avatar) {
+            if (bd2.getName().equals("bullet") && bd1 != mainDude) {
                 removeBullet(bd2);
             }
 
             // See if we have landed on the ground.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                    (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-                avatar.setGrounded(true);
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
+                    (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
+                mainDude.setGrounded(true);
+                sensorFixtures.add(mainDude == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
         } catch (Exception e) {
@@ -475,11 +470,11 @@ public class PlatformController extends WorldController implements ContactListen
         Object bd1 = body1.getUserData();
         Object bd2 = body2.getUserData();
 
-        if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-            sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
+        if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
+                (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
+            sensorFixtures.remove(mainDude == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
+                mainDude.setGrounded(false);
             }
         }
     }
