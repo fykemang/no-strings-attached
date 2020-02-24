@@ -190,7 +190,7 @@ public class PlatformController extends WorldController implements ContactListen
     // Since these appear only once, we do not care about the magic numbers.
     // In an actual game, this information would go in a data file.
     // Wall vertices
-    private float[][] walls;
+    private Wall[] walls;
 
     /**
      * The outlines of all of the platforms
@@ -270,11 +270,13 @@ public class PlatformController extends WorldController implements ContactListen
         String wname = "wall";
         for (int i = 0; i < walls.length; i++) {
             PolygonObstacle obj;
-            obj = new PolygonObstacle(walls[i], 0, 0);
+            obj = new PolygonObstacle(walls[i].getIndices(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(BASIC_DENSITY);
             obj.setFriction(BASIC_FRICTION);
             obj.setRestitution(BASIC_RESTITUTION);
+//            obj.setDrawScale(cloud.getRegionWidth()/walls[i].getWidth(),
+//                    cloud.getRegionHeight()/walls[i].getHeight());
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
             obj.setName(wname + i);

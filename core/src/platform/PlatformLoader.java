@@ -15,7 +15,7 @@ import org.json.simple.parser.*;
 public class PlatformLoader {
     private String filepath;
     private Object rootobj;
-    private float[][] walls;
+    private Wall[] walls;
     private float[][] couples;
     private Vector2 dudePos;
 
@@ -47,8 +47,8 @@ public class PlatformLoader {
      * @param array JSONarray for the walls
      * @return
      */
-    public float[][] parseArray(JSONArray array){
-        float[][] result = new float[array.size()][];
+    public Wall[] parseArray(JSONArray array){
+        Wall[] result = new Wall[array.size()];
         for(int i = 0; i < array.size(); i++) {
             JSONObject wall = ((JSONObject) array.get(i));
             float[] temp = new float[8];
@@ -63,7 +63,8 @@ public class PlatformLoader {
             temp[5] = wallPos.y + height;
             temp[6] = wallPos.x + width;
             temp[7] = wallPos.y;
-            result[i] = temp;
+            Wall w = new Wall(height, width, temp);
+            result[i] = w;
         }
         return result;
     }
@@ -92,7 +93,7 @@ public class PlatformLoader {
      *getter for walls
      * @return the walls array to initialize the level
      */
-    public float[][] getWalls(){
+    public Wall[] getWalls(){
         return walls;
     }
 
