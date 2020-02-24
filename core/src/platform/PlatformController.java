@@ -22,6 +22,7 @@ import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
+import softBody.SimObject;
 import util.SoundController;
 import softBody.Simulation;
 
@@ -266,6 +267,7 @@ public class PlatformController extends WorldController implements ContactListen
             obj.deactivatePhysics(world);
         }
         objects.clear();
+        softBodies.clear();
         addQueue.clear();
         world.dispose();
 
@@ -328,9 +330,16 @@ public class PlatformController extends WorldController implements ContactListen
         bridge.setDrawScale(scale);
         addObject(bridge);
 
-        Vector2 vec1 = new Vector2(30,30);
-        Vector2 vec2 = new Vector2(40, 30);
+        s = new Simulation();
+        Vector2 vec1 = new Vector2(100,100);
+        Vector2 vec2 = new Vector2(200, 100);
         s.populate(vec1, vec2);
+        dwidth = bridgeTexture.getRegionWidth() / scale.x;
+        dheight = bridgeTexture.getRegionHeight() / scale.y;
+        SimObject string = s.getStringObjects().get(0);
+        string.setTexture(bridgeTexture);
+        string.setDrawScale(scale);
+        addSoftBody(string);
     }
 
     /**
@@ -381,6 +390,8 @@ public class PlatformController extends WorldController implements ContactListen
         if (avatar.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
+
+        s.update(dt);
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();

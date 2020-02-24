@@ -1,6 +1,11 @@
 package softBody;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import obstacle.Obstacle;
+import obstacle.SimpleObstacle;
+import root.GameCanvas;
 
 enum SimObjectType {PASSIVE, ACTIVE};
 
@@ -12,6 +17,9 @@ public abstract class SimObject {
     protected Vector2 currVelocity;
     protected Vector2 resultantForce;
     protected Vector2 acceleration;
+    protected TextureRegion texture;
+    private Vector2 drawScale;
+    private Vector2 origin;
 
     public Vector2 getAcceleration() {
         return acceleration;
@@ -24,6 +32,10 @@ public abstract class SimObject {
     public void setAcceleration(float x, float y) {
         this.acceleration.x = x;
         this.acceleration.y = y;
+    }
+    public void setVelocity(float x, float y) {
+        this.currVelocity.x = x;
+        this.currVelocity.y = y;
     }
 
     public Vector2 getResultantForce() {
@@ -90,9 +102,12 @@ public abstract class SimObject {
     public SimObject(float mass, SimObjectType s) {
         this.mass = mass;
         this.simObjectType = s;
-        this.currPosition = Vector2.Zero;
+        this.currPosition = new Vector2();
         this.prevPosition = currPosition;
-        this.currVelocity = Vector2.Zero;
+        this.currVelocity = new Vector2();
+        this.origin = new Vector2();
+        this.resultantForce = new Vector2();
+        this.acceleration = new Vector2();
     }
 
     public SimObject(float mass, SimObjectType s, Vector2 currPosition) {
@@ -100,9 +115,33 @@ public abstract class SimObject {
         this.simObjectType = s;
         this.currPosition = currPosition;
         this.prevPosition = currPosition;
-        this.currVelocity = Vector2.Zero;
+        this.currVelocity = new Vector2();
+        this.origin = new Vector2();
+        this.resultantForce = new Vector2();
+        this.acceleration = new Vector2();
     }
 
     public abstract void update(float dt) ;
 
+    public void setTexture(TextureRegion texture) {
+        this.texture = texture;
+        origin.set(texture.getRegionWidth() / 2.0f, texture.getRegionHeight() / 2.0f);
+    }
+
+    public void setDrawScale(Vector2 scale) {
+        drawScale = scale;
+    }
+
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    public void draw(GameCanvas canvas) {
+        System.out.print("draw");
+        if (texture != null) {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, currPosition.x * drawScale.x, currPosition.y * drawScale.x, 0f, 1, 1);
+        }
+    }
 }

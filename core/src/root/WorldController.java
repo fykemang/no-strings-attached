@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
+import softBody.SimObject;
 import util.FilmStrip;
 import util.PooledList;
 import util.ScreenListener;
@@ -275,6 +276,8 @@ public abstract class WorldController implements Screen {
      * All the objects in the world.
      */
     protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+
+    protected PooledList<SimObject> softBodies = new PooledList<>();
     /**
      * Queue for adding objects
      */
@@ -515,6 +518,10 @@ public abstract class WorldController implements Screen {
         obj.activatePhysics(world);
     }
 
+    protected void addSoftBody(SimObject s) {
+        softBodies.add(s);
+    }
+
     /**
      * Returns true if the object is in bounds.
      * <p>
@@ -642,11 +649,16 @@ public abstract class WorldController implements Screen {
      * The method draws all objects in the order that they were added.
      */
     public void draw(float delta) {
+
         canvas.clear();
 
         canvas.begin();
         for (Obstacle obj : objects) {
             obj.draw(canvas);
+        }
+
+        for (SimObject s : softBodies) {
+            s.draw(canvas);
         }
         canvas.end();
 

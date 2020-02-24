@@ -11,6 +11,10 @@ public class Drag implements ForceGenerator {
         this.drag = d;
     }
 
+    public Drag(){
+        this.drag = 0;// no drag
+    }
+
     public Drag(float d) {
         this.drag = d;
     }
