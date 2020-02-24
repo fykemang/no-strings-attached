@@ -12,6 +12,19 @@
       "height": 1.0,
       "width": 18.0
     }
+  ],
+  "couples": [
+    {
+      "left_x": 5.0,
+      "left_y": 5.0,
+      "right_x": 10.0,
+      "right_y": 5.0
+    },
+    {
+      "left_x": 10.0,
+      "left_y": 15.0,
+      "right_x": 20.0,
+      "right_y": 20.0
+    }
   ]
-
 }

@@ -17,15 +17,21 @@ public class PlatformLoader {
     private String filepath;
     private Object rootobj;
     private float[][] walls;
-    private float[][] platforms;
+    private float[][] couples;
     private Vector2 dudePos;
 
+    /**
+     * construst a platform
+     * @param filePath
+     */
     public PlatformLoader(String filePath){
         this.filepath = filePath;
         try {
             rootobj = new JSONParser().parse(new FileReader(filePath));;
             JSONArray wallArray = (JSONArray) (((JSONObject) rootobj).get("walls"));
             walls = parseArray(wallArray);
+            JSONArray coupleArray = (JSONArray) (((JSONObject) rootobj).get("couples"));
+            couples= parseCouples(coupleArray);
             JSONArray characterPos = (JSONArray) (((JSONObject) rootobj).get("characterPos"));
             dudePos =  new Vector2((float)(double)characterPos.get(0),
                     (float)(double)characterPos.get(1));
@@ -62,13 +68,37 @@ public class PlatformLoader {
         }
         return result;
     }
+
+    /**
+     * parse an Json Couple Array
+     * @param coupleArray
+     * @return
+     */
+    public float[][] parseCouples(JSONArray coupleArray){
+        float[][] result = new float[coupleArray.size()][];
+        for(int i = 0; i < coupleArray.size(); i++) {
+            JSONObject couple = ((JSONObject) coupleArray.get(i));
+            float[] temp = new float[4];
+            temp[0] = (float)(double) couple.get("left_x");
+            temp[1] = (float)(double) couple.get("left_y");
+            temp[2] = (float)(double) couple.get("right_x");
+            temp[3] = (float)(double) couple.get("right_y");
+            result[i] = temp;
+        }
+        System.out.println(Arrays.deepToString(result));
+        return result;
+    }
+
+
     public float[][] getWalls(){
         return walls;
     }
-    public float[][] getPlatforms(){
-        return platforms;
-    }
+
     public Vector2 getCharacterPos(){
         return dudePos;
+    }
+
+    public float[][] getCouples(){
+        return couples;
     }
 }
