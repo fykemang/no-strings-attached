@@ -53,4 +53,18 @@ public class Simulation {
     public void addGlobalForceGenerator(ForceGenerator f) {
         globalForceGenerators.add(f);
     }
+
+    public void update() {
+        for (Spring spr : getSprings()) {
+            spr.applyForce(null);
+        }
+
+        for (SimObject s : getSimObjects()) {
+            if (s.getSimObjectType() == SimObjectType.ACTIVE) {
+                for (ForceGenerator f : globalForceGenerators) {
+                    f.applyForce(s);
+                }
+            }
+        }
+    }
 }
