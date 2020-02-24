@@ -328,9 +328,9 @@ public class PlatformController extends WorldController implements ContactListen
         bridge.setDrawScale(scale);
         addObject(bridge);
 
-        LinkedList<Vector2> l = new LinkedList<>();
-        l.add(new Vector2(30,30));
-        s.populate(l);
+        Vector2 vec1 = new Vector2(30,30);
+        Vector2 vec2 = new Vector2(40, 30);
+        s.populate(vec1, vec2);
     }
 
     /**

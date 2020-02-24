@@ -39,9 +39,10 @@ public class Simulation {
         SimObject o1 = new SimModel(1, SimObjectType.ACTIVE, person1);
         SimObject o2 = new SimModel(1, SimObjectType.ACTIVE, person2);
 
-        this.simObjects.add(o);
+        this.simObjects.add(o1);
+        this.simObjects.add(o2);
 
-        addSpring(0.5, 0.5, person1, person2)
+        addSpring((float) 0.5, (float) 0.5, o1, o2);
     }
 
     public void addSpring(float constant, float damping, SimObject objA, SimObject objB) {
