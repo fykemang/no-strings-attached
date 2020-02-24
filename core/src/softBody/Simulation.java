@@ -14,10 +14,10 @@ public class Simulation {
     protected ArrayList<Spring> springs = new ArrayList<Spring>();
 
     public Simulation(){
-        Gravity g = new Gravity();
-        Drag d = new Drag();
-        globalForceGenerators.add(g);
-        globalForceGenerators.add(d);
+//        Gravity g = new Gravity();
+//        Drag d = new Drag();
+//        globalForceGenerators.add(g);
+//        globalForceGenerators.add(d);
     }
     public void setSprings(ArrayList<Spring> springs) {
         this.springs = springs;

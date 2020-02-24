@@ -331,11 +331,9 @@ public class PlatformController extends WorldController implements ContactListen
         addObject(bridge);
 
         s = new Simulation();
-        Vector2 vec1 = new Vector2(100,100);
-        Vector2 vec2 = new Vector2(200, 100);
+        Vector2 vec1 = new Vector2(0,10);
+        Vector2 vec2 = new Vector2(50, 10);
         s.populate(vec1, vec2);
-        dwidth = bridgeTexture.getRegionWidth() / scale.x;
-        dheight = bridgeTexture.getRegionHeight() / scale.y;
         SimObject string = s.getStringObjects().get(0);
         string.setTexture(bridgeTexture);
         string.setDrawScale(scale);

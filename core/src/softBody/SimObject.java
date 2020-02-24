@@ -18,8 +18,8 @@ public abstract class SimObject {
     protected Vector2 resultantForce;
     protected Vector2 acceleration;
     protected TextureRegion texture;
-    private Vector2 drawScale;
-    private Vector2 origin;
+    protected Vector2 drawScale;
+    protected Vector2 origin;
 
     public Vector2 getAcceleration() {
         return acceleration;
@@ -139,8 +139,8 @@ public abstract class SimObject {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        System.out.print("draw");
         if (texture != null) {
+            System.out.println("here");
             canvas.draw(texture, Color.WHITE, origin.x, origin.y, currPosition.x * drawScale.x, currPosition.y * drawScale.x, 0f, 1, 1);
         }
     }

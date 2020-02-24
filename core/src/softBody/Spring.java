@@ -10,6 +10,10 @@ public class Spring implements ForceGenerator {
     private NPCObject objA;
     private NPCObject objB;
 
+    public float getRestlength(){
+        return restlength;
+    }
+
     public StringObject getString() {
         return string;
     }

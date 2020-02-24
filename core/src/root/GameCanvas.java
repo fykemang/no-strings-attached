@@ -695,6 +695,8 @@ public class GameCanvas {
         computeTransform(ox, oy, x, y, angle, sx, sy);
         spriteBatch.setColor(tint);
         spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     /**
