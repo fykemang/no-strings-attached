@@ -1,0 +1,30 @@
+{
+  "characterPos": [10.0, 10.0],
+  "walls": [
+    {
+      "x": 0.0,
+      "y": 1.0,
+      "height": 18.0,
+      "width": 1.0
+    },
+    { "x": 0.0,
+      "y": 0.0,
+      "height": 1.0,
+      "width": 18.0
+    }
+  ],
+  "couples": [
+    {
+      "left_x": 5.0,
+      "left_y": 5.0,
+      "right_x": 10.0,
+      "right_y": 5.0
+    },
+    {
+      "left_x": 10.0,
+      "left_y": 15.0,
+      "right_x": 20.0,
+      "right_y": 16.0
+    }
+  ]
+}

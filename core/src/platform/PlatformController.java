@@ -22,7 +22,6 @@ import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
-import sun.awt.PlatformFont;
 import util.SoundController;
 
 /**
@@ -185,32 +184,13 @@ public class PlatformController extends WorldController implements ContactListen
     // Since these appear only once, we do not care about the magic numbers.
     // In an actual game, this information would go in a data file.
     // Wall vertices
-    private static final float[][] WALLS = {
-            {16.0f, 18.0f, 16.0f, 17.0f, 1.0f, 17.0f,
-                    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 18.0f},
-            {32.0f, 18.0f, 32.0f, 0.0f, 31.0f, 0.0f,
-                    31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f}
-    };
-
-    /**
-     * The outlines of all of the platforms
-     */
-    private static final float[][] PLATFORMS = {
-            {1.0f, 0.0f, 31.0f, 0.0f, 31.0f, 1f, 1.0f, 1f},
-            {23.0f, 4.0f, 31.0f, 4.0f, 31.0f, 2.5f, 23.0f, 2.5f},
-            {26.0f, 5.5f, 28.0f, 5.5f, 28.0f, 5.0f, 26.0f, 5.0f},
-            {29.0f, 7.0f, 31.0f, 7.0f, 31.0f, 6.5f, 29.0f, 6.5f},
-            {24.0f, 8.5f, 27.0f, 8.5f, 27.0f, 8.0f, 24.0f, 8.0f},
-            {29.0f, 10.0f, 31.0f, 10.0f, 31.0f, 9.5f, 29.0f, 9.5f},
-            {23.0f, 11.5f, 27.0f, 11.5f, 27.0f, 11.0f, 23.0f, 11.0f},
-            {19.0f, 12.5f, 23.0f, 12.5f, 23.0f, 12.0f, 19.0f, 12.0f},
-    };
+    private Wall[] walls;
 
     // Other game objects
     /**
-     * The initial position of the dude
+     * The position of the main dude
      */
-    private static Vector2 MAIN_DUDE_POS = new Vector2(2.5f, 5.0f);
+    private Vector2 mainDudePos;
 
     // Physics objects for the game
     /**
@@ -263,32 +243,30 @@ public class PlatformController extends WorldController implements ContactListen
      * Lays out the game geography.
      */
     private void populateLevel() {
+
+        PlatformLoader loader = new PlatformLoader(
+                "test.json");
+        walls = loader.getTiles();
+        mainDudePos = loader.getCharacterPos();
         // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
         float dheight = goalTile.getRegionHeight() / scale.y;
 
-        String wname = "wall";
-        for (int i = 0; i < WALLS.length; i++) {
-            createTile(WALLS[i],0, 0, wname + i);
+        for (int i = 0; i < walls.length; i++) {
+            createTile(walls[i].getIndices(), 0, 0, "tile" + i);
         }
-
-        String pname = "platform";
-        for (int i = 0; i < PLATFORMS.length; i++) {
-            createTile(PLATFORMS[i], 0, 0, pname + i);
-        }
-
         // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-        mainDude = new DudeModel(MAIN_DUDE_POS.x, MAIN_DUDE_POS.y, dwidth, dheight);
+        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight);
         mainDude.setDrawScale(scale);
         mainDude.setTexture(avatarTexture);
         addObject(mainDude);
 
-        createCouple(1.0f, 6f, 6f, 6f);
-        createCouple(6.0f, 11.0f, 11.0f, 11.0f);
-        createCouple(8f, 2f, 13f, 2f);
-
+        float[][] couples = loader.getCouples();
+        for(float[] couple: couples) {
+            createCouple(couple[0], couple[1], couple[2], couple[3]);
+        }
     }
 
     public void createTile(float[] points, float x, float y, String name) {
