@@ -7,11 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
-import org.json.simple.JSONValue;
 
 
 /**
- * a loader for platforms
+ * a loader to load a level from json
  */
 public class PlatformLoader {
     private String filepath;
@@ -21,8 +20,8 @@ public class PlatformLoader {
     private Vector2 dudePos;
 
     /**
-     * construst a platform
-     * @param filePath
+     * construst a platform given the file path to json
+     * @param filePath file path to json
      */
     public PlatformLoader(String filePath){
         this.filepath = filePath;
@@ -70,7 +69,7 @@ public class PlatformLoader {
     }
 
     /**
-     * parse an Json Couple Array
+     * parses a Json Couple Array
      * @param coupleArray
      * @return
      */
@@ -89,15 +88,26 @@ public class PlatformLoader {
         return result;
     }
 
-
+    /**
+     *getter for walls
+     * @return the walls array to initialize the level
+     */
     public float[][] getWalls(){
         return walls;
     }
 
+    /**
+     *getter for character position
+     * @return the character position to initialize the level
+     */
     public Vector2 getCharacterPos(){
         return dudePos;
     }
 
+    /**
+     * getter for couples
+     * @return the couple array to initialize the level
+     */
     public float[][] getCouples(){
         return couples;
     }
