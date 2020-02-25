@@ -370,7 +370,7 @@ public class DudeModel extends CapsuleObstacle {
      * <p>
      * We use this method to reset cooldowns.
      *
-     * @param delta Number of seconds since last animation frame
+     * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
         // Apply cooldowns

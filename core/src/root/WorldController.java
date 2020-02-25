@@ -274,7 +274,7 @@ public abstract class WorldController implements Screen {
     /**
      * All the objects in the world.
      */
-    protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+    protected PooledList<Obstacle> objects = new PooledList<>();
     /**
      * Queue for adding objects
      */
