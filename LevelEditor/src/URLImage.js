@@ -1,5 +1,4 @@
 import React from 'react';
-import {  } from 'react-dom';
 import { Image } from 'react-konva';
 import useImage from 'use-image';
 

@@ -5,48 +5,56 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Rectangle from "./Rectangle";
 import URLImage from "./URLImage";
-import useImage from 'use-image';
 import dude from "./assets/dude.png"
 
+function Home(){
+  const [walls, setWalls] = useState([]);
+  const [selectedId, selectShape] = useState(null);
+  const [image, setImage] = React.useState(null);
+  const [, updateState] = React.useState();
+  const dragUrl = React.useRef();
+  const stageRef = React.useRef();
 
-export default class Home extends React.Component  {
+ 
+  const addWall = () => {
+    const wall = {
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100,
+      fill: "black",
+      id: `rect${walls.length + 1}`,
+    };
+    const rects = walls.concat([wall]);
+    setWalls(rects); 
+  };
 
+  const loadImage = (image) => {
+
+    return (
+    image!= null &&
+    <URLImage image={image} />  
+    )
+  } 
+
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+  document.addEventListener("keydown", ev => {
    
-    addWall = () => {
-        const rect = {
-          x: 50,
-          y: 50,
-          width: 100,
-          height: 100,
-          fill: "black",
-          id: `rect${this.state.walls.length + 1}`,
-        };
-        var wall = this.state.walls;
-        wall.push(rect);
-        this.setState({walls:wall})
-     
-        console.log(this.state.walls)
-      };
+    if (ev.code == "Backspace") {
+     let index = walls.findIndex(r => 
+      r.id == selectedId);
+      if (index != -1) {
+        walls.splice(index, 1);
+        setWalls(walls);
+      } 
+    }
+    forceUpdate();
+  });
 
-      ifselected = (rect) => {
-        console.log(this.state);
-        return rect.id === this.state.selectedID;
-      }
-        
-    state = {
-     
-        walls: [],
-        couples:[],
-        selectedID: null,
-        
-      };
-      
-  render(){ return(
-  
-    <React.Fragment>
-   
+  return (
+    <React.Fragment>   
     <ButtonGroup>
-        <Button variant="secondary" onClick={this.addWall}>
+        <Button variant="secondary" onClick={addWall}>
          Wall
         </Button>
         <Button variant="secondary" >
@@ -56,8 +64,9 @@ export default class Home extends React.Component  {
             alt="character"
             src={dude}
             draggable="true"
-            onDragStart={e => {      
-             }}
+            onDragStart={e => {
+              dragUrl.current = e.target.src;
+            }}
         />
       </ButtonGroup>
       <input
@@ -69,38 +78,57 @@ export default class Home extends React.Component  {
       backgroundColor: "lightgrey",
       width: "800px"  
     }}
-  >
-        <Stage width={800} height={600} 
+    onDrop={e => {
+      // register event position
+      stageRef.current.setPointersPositions(e);
+      // add image
+      setImage(
+        
+          {
+            ...stageRef.current.getPointerPosition(),
+            src: dragUrl.current
+          }
+        
+      );
+    }}
+    onDragOver={e => e.preventDefault()}
+  >  
+     <Stage width={800} height={600} 
          onMouseDown={e => {
             const clickedOnEmpty = e.target === e.target.getStage();
             if (clickedOnEmpty) {
-             this.setState({selectedID: null});
+             selectShape(null);
             }
           }}
+          style={{ border: '1px solid grey' }}
+          ref={stageRef}
         >
         <Layer>
-        {this.state.walls.map((rect, i) => {
+        {walls.map((rect, i) => {
             return (
               <Rectangle
-                shapeProps={rect}     
-                isSelected={
-                    this.ifselected(rect)}  
+                key={i}
+                shapeProps={rect}
+                isSelected={rect.id === selectedId}
                 onSelect={() => {
-                   this.setState({selectedID: rect.id})
-                }} 
+                  selectShape(rect.id);
+                }}
                 onChange={newAttrs => {
-                    const rects = this.state.walls.slice();
-                    rects[i] = newAttrs;
-                    this.setState({walls: rects})
-                  }}      
+                  const rects = walls.slice();
+                  rects[i] = newAttrs;
+                  setWalls(rects);
+                }}
               />
             );
           })}
+          { 
+            loadImage(image)
+          }         
         </Layer>
       </Stage>
       </div>
       </React.Fragment>
-    )
-    }
+  )
 
 }
+export default Home;
