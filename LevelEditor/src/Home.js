@@ -8,6 +8,7 @@ import URLImage from "./URLImage";
 import dude from "./assets/dude.png"
 
 function Home(){
+  const [c_pos, setPos] = useState(null);
   const [walls, setWalls] = useState([]);
   const [selectedId, selectShape] = useState(null);
   const [image, setImage] = React.useState(null);
@@ -15,7 +16,13 @@ function Home(){
   const dragUrl = React.useRef();
   const stageRef = React.useRef();
 
- 
+  const handler = (xpos, ypos) => {
+    setPos({
+        x: xpos,
+        y: ypos
+    })
+
+  }
   const addWall = () => {
     const wall = {
       x: 10,
@@ -28,14 +35,6 @@ function Home(){
     const rects = walls.concat([wall]);
     setWalls(rects); 
   };
-
-  const loadImage = (image) => {
-
-    return (
-    image!= null &&
-    <URLImage image={image} />  
-    )
-  } 
 
   const forceUpdate = React.useCallback(() => updateState({}), []);
   document.addEventListener("keydown", ev => {
@@ -60,7 +59,9 @@ function Home(){
         <Button variant="secondary" >
           Couple
         </Button>
-        <img
+       
+      </ButtonGroup>
+      <img
             alt="character"
             src={dude}
             draggable="true"
@@ -68,7 +69,6 @@ function Home(){
               dragUrl.current = e.target.src;
             }}
         />
-      </ButtonGroup>
       <input
         style={{ display: "none" }}
         type="file"
@@ -87,9 +87,14 @@ function Home(){
           {
             ...stageRef.current.getPointerPosition(),
             src: dragUrl.current
-          }
-        
+          }    
       );
+      setPos(
+        {
+          x:stageRef.current.getPointerPosition().x,
+          y:stageRef.current.getPointerPosition().y
+        }
+      )
     }}
     onDragOver={e => e.preventDefault()}
   >  
@@ -122,8 +127,9 @@ function Home(){
             );
           })}
           { 
-            loadImage(image)
-          }         
+            image!= null &&
+            <URLImage image={image} draghandler={handler} /> 
+          }       
         </Layer>
       </Stage>
       </div>
