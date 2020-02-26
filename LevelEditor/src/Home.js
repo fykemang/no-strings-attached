@@ -23,6 +23,23 @@ function Home(){
     })
 
   }
+
+  const downloadFile = async () => {
+    const myData = {
+      tiles: walls,
+    }; 
+    const fileName = "file";
+    const json = JSON.stringify(myData);
+    const blob = new Blob([json],{type:'application/json'});
+    const href = await URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = fileName + ".json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const addWall = () => {
     const wall = {
       x: 10,
@@ -133,6 +150,9 @@ function Home(){
         </Layer>
       </Stage>
       </div>
+      <Button variant="secondary"  onClick ={downloadFile}>
+         Download
+        </Button>
       </React.Fragment>
   )
 
