@@ -35,7 +35,7 @@ public class StringObject extends SimModel {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        System.out.println(currPosition);
+//        System.out.println(currPosition);
 
         if (texture != null) {
             canvas.draw(texture, Color.RED, origin.x, origin.y, currPosition.x * drawScale.x,

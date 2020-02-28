@@ -12,8 +12,10 @@ public class Simulation {
     protected ArrayList<StringObject> stringObjects = new ArrayList<StringObject>();
     protected ArrayList<ForceGenerator> globalForceGenerators = new ArrayList<ForceGenerator>();
     protected ArrayList<Spring> springs = new ArrayList<Spring>();
+    private boolean activated;
 
     public Simulation(){
+        activated = false;
 //        Gravity g = new Gravity();
 //        Drag d = new Drag();
 //        globalForceGenerators.add(g);
@@ -22,6 +24,15 @@ public class Simulation {
     public void setSprings(ArrayList<Spring> springs) {
         this.springs = springs;
     }
+
+    public void activatePhysics(){
+        activated = true;
+    }
+
+    public void deactivatePhysics(){
+        activated = false;
+    }
+
 
     public void setGlobalForceGenerators(ArrayList<ForceGenerator> globalForceGenerators) {
         this.globalForceGenerators = globalForceGenerators;
@@ -105,6 +116,7 @@ public class Simulation {
     }
 
     public void update(float dt) {
+        if (!activated) return;
         for (Spring spr : getSprings()) {
             spr.applyForce(spr.getString());
         }
