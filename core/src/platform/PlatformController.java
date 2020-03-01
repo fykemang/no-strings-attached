@@ -71,14 +71,12 @@ public class PlatformController extends WorldController implements ContactListen
      * Texture asset for character avatar
      */
     private TextureRegion avatarTexture;
-    /**
-     * Texture asset for the spinning barrier
-     */
-    private TextureRegion barrierTexture;
+
     /**
      * Texture asset for the bullet
      */
     private TextureRegion bulletTexture;
+
     /**
      * Texture asset for the bridge plank
      */
@@ -140,7 +138,6 @@ public class PlatformController extends WorldController implements ContactListen
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
-        barrierTexture = createTexture(manager, BARRIER_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
 
@@ -173,10 +170,7 @@ public class PlatformController extends WorldController implements ContactListen
      * The restitution for all physics objects
      */
     private static final float BASIC_RESTITUTION = 0.1f;
-    /**
-     * The width of the rope bridge
-     */
-    private static final float BRIDGE_WIDTH = 14.0f;
+
     /**
      * Offset for bullet when firing
      */
@@ -193,44 +187,19 @@ public class PlatformController extends WorldController implements ContactListen
     // Since these appear only once, we do not care about the magic numbers.
     // In an actual game, this information would go in a data file.
     // Wall vertices
-    private static final float[][] WALLS = {
-            {16.0f, 18.0f, 16.0f, 17.0f, 1.0f, 17.0f,
-                    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 18.0f},
-            {32.0f, 18.0f, 32.0f, 0.0f, 31.0f, 0.0f,
-                    31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f}
-    };
-
-    /**
-     * The outlines of all of the platforms
-     */
-    private static final float[][] PLATFORMS = {
-            {1.0f, 0.0f, 31.0f, 0.0f, 31.0f, 1f, 1.0f, 1f},
-            {6.0f, 4.0f, 9.0f, 4.0f, 9.0f, 2.5f, 6.0f, 2.5f},
-            {23.0f, 4.0f, 31.0f, 4.0f, 31.0f, 2.5f, 23.0f, 2.5f},
-            {26.0f, 5.5f, 28.0f, 5.5f, 28.0f, 5.0f, 26.0f, 5.0f},
-            {29.0f, 7.0f, 31.0f, 7.0f, 31.0f, 6.5f, 29.0f, 6.5f},
-            {24.0f, 8.5f, 27.0f, 8.5f, 27.0f, 8.0f, 24.0f, 8.0f},
-            {29.0f, 10.0f, 31.0f, 10.0f, 31.0f, 9.5f, 29.0f, 9.5f},
-            {23.0f, 11.5f, 27.0f, 11.5f, 27.0f, 11.0f, 23.0f, 11.0f},
-            {19.0f, 12.5f, 23.0f, 12.5f, 23.0f, 12.0f, 19.0f, 12.0f},
-            {1.0f, 12.5f, 7.0f, 12.5f, 7.0f, 12.0f, 1.0f, 12.0f}
-    };
+    private Wall[] walls;
 
     // Other game objects
     /**
-     * The initial position of the dude
+     * The position of the main dude
      */
-    private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
-    /**
-     * The position of the rope bridge
-     */
-    private static Vector2 BRIDGE_POS = new Vector2(9.0f, 3.8f);
+    private Vector2 mainDudePos;
 
     // Physics objects for the game
     /**
      * Reference to the character avatar
      */
-    private DudeModel avatar;
+    private DudeModel mainDude;
 
     /**
      * Mark set to handle more sophisticated collision callbacks
@@ -279,54 +248,21 @@ public class PlatformController extends WorldController implements ContactListen
      * Lays out the game geography.
      */
     private void populateLevel() {
+
+        PlatformLoader loader = new PlatformLoader(
+                "test.json");
+        walls = loader.getTiles();
+        mainDudePos = loader.getCharacterPos();
         // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
         float dheight = goalTile.getRegionHeight() / scale.y;
 
-        String wname = "wall";
-        for (int i = 0; i < WALLS.length; i++) {
-            PolygonObstacle obj;
-            obj = new PolygonObstacle(WALLS[i], 0, 0);
-            obj.setBodyType(BodyDef.BodyType.StaticBody);
-            obj.setDensity(BASIC_DENSITY);
-            obj.setFriction(BASIC_FRICTION);
-            obj.setRestitution(BASIC_RESTITUTION);
-            obj.setDrawScale(scale);
-            obj.setTexture(earthTile);
-            obj.setName(wname + i);
-            addObject(obj);
+        for (int i = 0; i < walls.length; i++) {
+            createTile(walls[i].getIndices(), 0, 0, "tile" + i);
         }
-
-        String pname = "platform";
-        for (int i = 0; i < PLATFORMS.length; i++) {
-            PolygonObstacle obj;
-            obj = new PolygonObstacle(PLATFORMS[i], 0, 0);
-            obj.setBodyType(BodyDef.BodyType.StaticBody);
-            obj.setDensity(BASIC_DENSITY);
-            obj.setFriction(BASIC_FRICTION);
-            obj.setRestitution(BASIC_RESTITUTION);
-            obj.setDrawScale(scale);
-            obj.setTexture(earthTile);
-            obj.setName(pname + i);
-            addObject(obj);
-        }
-
-        // Create dude
+        // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-        avatar = new DudeModel(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
-        avatar.setDrawScale(scale);
-        avatar.setTexture(avatarTexture);
-        addObject(avatar);
-
-        // Create rope bridge
-        dwidth = bridgeTexture.getRegionWidth() / scale.x;
-        dheight = bridgeTexture.getRegionHeight() / scale.y;
-        RopeBridge bridge = new RopeBridge(BRIDGE_POS.x, BRIDGE_POS.y, BRIDGE_WIDTH, dwidth, dheight);
-        bridge.setTexture(bridgeTexture);
-        bridge.setDrawScale(scale);
-        addObject(bridge);
-
 //        s = new Simulation();
 //        Vector2 vec1 = new Vector2(10,10);
 //        Vector2 vec2 = new Vector2(50, 0);
@@ -335,6 +271,43 @@ public class PlatformController extends WorldController implements ContactListen
 //        string.setTexture(bridgeTexture);
 //        string.setDrawScale(scale);
 //        addSoftBody(string);
+
+        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight);
+        mainDude.setDrawScale(scale);
+        mainDude.setTexture(avatarTexture);
+        addObject(mainDude);
+
+        float[][] couples = loader.getCouples();
+        for(float[] couple: couples) {
+            createCouple(couple[0], couple[1], couple[2], couple[3]);
+        }
+    }
+
+    public void createTile(float[] points, float x, float y, String name) {
+        PolygonObstacle tile = new PolygonObstacle(points, x, y);
+        tile.setBodyType(BodyDef.BodyType.StaticBody);
+        tile.setDensity(BASIC_DENSITY);
+        tile.setFriction(BASIC_FRICTION);
+        tile.setRestitution(BASIC_RESTITUTION);
+        tile.setDrawScale(scale);
+        tile.setTexture(earthTile);
+        tile.setName(name);
+        addObject(tile);
+    }
+
+    /**
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void createCouple(float x1, float y1, float x2, float y2) {
+        float[] points = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
+        createTile(points, x1, y1 - 1f, "tile");
+        createTile(points, x2, y2 - 1f, "tile");
+        Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale);
+        addObject(couple);
     }
 
     /**
@@ -352,7 +325,7 @@ public class PlatformController extends WorldController implements ContactListen
             return false;
         }
 
-        if (!isFailure() && avatar.getY() < -1) {
+        if (!isFailure() && mainDude.getY() < -1) {
             setFailure(true);
             return false;
         }
@@ -372,17 +345,17 @@ public class PlatformController extends WorldController implements ContactListen
      */
     public void update(float dt) {
         // Process actions in object model
-        avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
-        avatar.setJumping(InputController.getInstance().didPrimary());
-        avatar.setShooting(InputController.getInstance().didSecondary());
+        mainDude.setMovement(InputController.getInstance().getHorizontal() * mainDude.getForce());
+        mainDude.setJumping(InputController.getInstance().didPrimary());
+        mainDude.setShooting(InputController.getInstance().didSecondary());
 
         // Add a bullet if we fire
-        if (avatar.isShooting()) {
+        if (mainDude.isShooting()) {
             createBullet();
         }
 
-        avatar.applyForce();
-        if (avatar.isJumping()) {
+        mainDude.applyForce();
+        if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
@@ -396,9 +369,9 @@ public class PlatformController extends WorldController implements ContactListen
      * Add a new bullet to the world and send it in the right direction.
      */
     private void createBullet() {
-        float offset = (avatar.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
+        float offset = (mainDude.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
-        WheelObstacle bullet = new WheelObstacle(avatar.getX() + offset, avatar.getY(), radius);
+        WheelObstacle bullet = new WheelObstacle(mainDude.getX() + offset, mainDude.getY(), radius);
 
         bullet.setName("bullet");
         bullet.setDensity(HEAVY_DENSITY);
@@ -408,7 +381,7 @@ public class PlatformController extends WorldController implements ContactListen
         bullet.setGravityScale(0);
 
         // Compute position and velocity
-        float speed = (avatar.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
+        float speed = (mainDude.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
         bullet.setVX(speed);
         addQueuedObject(bullet);
 
@@ -450,19 +423,19 @@ public class PlatformController extends WorldController implements ContactListen
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
             // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != avatar) {
+            if (bd1.getName().equals("bullet") && bd2 != mainDude) {
                 removeBullet(bd1);
             }
 
-            if (bd2.getName().equals("bullet") && bd1 != avatar) {
+            if (bd2.getName().equals("bullet") && bd1 != mainDude) {
                 removeBullet(bd2);
             }
 
             // See if we have landed on the ground.
-            if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                    (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-                avatar.setGrounded(true);
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
+                    (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
+                mainDude.setGrounded(true);
+                sensorFixtures.add(mainDude == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
         } catch (Exception e) {
@@ -491,11 +464,11 @@ public class PlatformController extends WorldController implements ContactListen
         Object bd1 = body1.getUserData();
         Object bd2 = body2.getUserData();
 
-        if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-                (avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-            sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
+        if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
+                (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
+            sensorFixtures.remove(mainDude == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                avatar.setGrounded(false);
+                mainDude.setGrounded(false);
             }
         }
     }

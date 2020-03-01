@@ -23,8 +23,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import platform.PlatformController;
-import ragdoll.RagdollController;
-import rocket.RocketController;
 import util.ScreenListener;
 
 /**
@@ -49,14 +47,11 @@ public class GDXRoot extends Game implements ScreenListener {
      * Player mode for the asset loading screen (CONTROLLER CLASS)
      */
     private LoadingMode loading;
+
     /**
-     * Player mode for the the game proper (CONTROLLER CLASS)
+     * The controller for the game mode
      */
-    private int current;
-    /**
-     * List of all WorldControllers
-     */
-    private WorldController[] controllers;
+    private WorldController controller;
 
     /**
      * Creates a new game from the configuration settings.
@@ -84,15 +79,9 @@ public class GDXRoot extends Game implements ScreenListener {
         canvas = new GameCanvas();
         loading = new LoadingMode(canvas, manager, 1);
 
+        controller = new PlatformController();
+        controller.preLoadContent(manager);
         // Initialize the three game worlds
-        controllers = new WorldController[3];
-        controllers[0] = new RocketController();
-        controllers[1] = new PlatformController();
-        controllers[2] = new RagdollController();
-        for (WorldController controller : controllers) {
-            controller.preLoadContent(manager);
-        }
-        current = 1;
         loading.setScreenListener(this);
         setScreen(loading);
     }
@@ -105,11 +94,8 @@ public class GDXRoot extends Game implements ScreenListener {
     public void dispose() {
         // Call dispose on our children
         setScreen(null);
-        for (WorldController controller : controllers) {
-            controller.unloadContent(manager);
-            controller.dispose();
-        }
-
+        controller.unloadContent(manager);
+        controller.dispose();
         canvas.dispose();
         canvas = null;
 
@@ -143,24 +129,13 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         if (screen == loading) {
-            for (WorldController controller : controllers) {
-                controller.loadContent(manager);
-                controller.setScreenListener(this);
-                controller.setCanvas(canvas);
-            }
-            controllers[current].reset();
-            setScreen(controllers[current]);
-
+            controller.loadContent(manager);
+            controller.setScreenListener(this);
+            controller.setCanvas(canvas);
+            controller.reset();
+            setScreen(controller);
             loading.dispose();
             loading = null;
-        } else if (exitCode == WorldController.EXIT_NEXT) {
-            current = (current + 1) % controllers.length;
-            controllers[current].reset();
-            setScreen(controllers[current]);
-        } else if (exitCode == WorldController.EXIT_PREV) {
-            current = (current + controllers.length - 1) % controllers.length;
-            controllers[current].reset();
-            setScreen(controllers[current]);
         } else if (exitCode == WorldController.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();

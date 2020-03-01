@@ -82,7 +82,6 @@ public abstract class ComplexObstacle extends Obstacle {
      * This method affects the root body of this composite structure only.  If you want
      * to set the value for any of the child obstacles, iterate over the children.
      *
-     * @return the body type for Box2D physics
      */
     public void setBodyType(BodyType value) {
         if (body != null) {
@@ -956,8 +955,8 @@ public abstract class ComplexObstacle extends Obstacle {
      */
     protected ComplexObstacle(float x, float y) {
         super(x, y);
-        bodies = new Array<Obstacle>();
-        joints = new Array<Joint>();
+        bodies = new Array<>();
+        joints = new Array<>();
     }
 
     /**
@@ -1034,7 +1033,7 @@ public abstract class ComplexObstacle extends Obstacle {
      * primary purpose is to adjust changes to the fixture, which have to take place
      * after collision.
      *
-     * @param dt Timing values from parent loop
+     * @param delta Timing values from parent loop
      */
     public void update(float delta) {
         // Delegate to components
