@@ -1,14 +1,11 @@
-import React from 'react';
-import { Image } from 'react-konva';
-import useImage from 'use-image';
-import Home from './Home'
-
+import React from "react";
+import { Image } from "react-konva";
+import useImage from "use-image";
 
 const URLImage = ({ image, draghandler }) => {
-  
   const [img] = useImage(image.src);
   return (
-      <Image
+    <Image
       draggable
       image={img}
       x={image.x}
@@ -17,9 +14,9 @@ const URLImage = ({ image, draghandler }) => {
       offsetX={img ? img.width / 2 : 0}
       offsetY={img ? img.height / 2 : 0}
       onDragEnd={e => {
-       draghandler(e.target.x, e.target.y)
+        draghandler(e.target.x, e.target.y);
       }}
-       />
+    />
   );
 };
-export default URLImage
+export default URLImage;

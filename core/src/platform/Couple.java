@@ -17,6 +17,7 @@ public class Couple extends ComplexObstacle {
     private Rope trampoline;
     private TextureRegion avatarTexture;
     private TextureRegion trampolineTexture;
+    private int coupleID;
 
     /**
      *
@@ -28,13 +29,13 @@ public class Couple extends ComplexObstacle {
      * @param trampolineTexture
      * @param drawScale
      */
-    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatarTexture, TextureRegion trampolineTexture, Vector2 drawScale) {
+    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatarTexture, TextureRegion trampolineTexture, Vector2 drawScale, int id) {
         this.drawScale = drawScale;
         this.avatarTexture = avatarTexture;
         this.trampolineTexture = trampolineTexture;
         this.l = createAvatar(x1, y1);
         this.r = createAvatar(x2, y2);
-        this.trampoline = new Rope(x1, y1, x2, y2, trampolineTexture.getRegionWidth() / drawScale.x, trampolineTexture.getRegionHeight() / drawScale.y);
+        this.trampoline = new Rope(x1, y1, x2, y2, trampolineTexture.getRegionWidth() / drawScale.x, trampolineTexture.getRegionHeight() / drawScale.y, id);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
         this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f));
@@ -42,6 +43,7 @@ public class Couple extends ComplexObstacle {
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
+        setName("couples" + coupleID);
     }
 
     /**
@@ -53,7 +55,7 @@ public class Couple extends ComplexObstacle {
     public DudeModel createAvatar(float x, float y) {
         float dWidth = avatarTexture.getRegionWidth() / drawScale.x;
         float dHeight = avatarTexture.getRegionHeight() / drawScale.y;
-        DudeModel avatar = new DudeModel(x, y, dWidth, dHeight);
+        DudeModel avatar = new DudeModel(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);

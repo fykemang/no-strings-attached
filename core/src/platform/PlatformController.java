@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
+import obstacle.ComplexObstacle;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
@@ -33,7 +34,7 @@ import util.SoundController;
  * This is the purpose of our AssetState variable; it ensures that multiple instances
  * place nicely with the static assets.
  */
-public class PlatformController extends WorldController implements ContactListener {
+public class PlatformController extends WorldController {
 
     /**
      * The texture file for the character avatar (no animation)
@@ -69,11 +70,6 @@ public class PlatformController extends WorldController implements ContactListen
      * Texture asset for character avatar
      */
     private TextureRegion avatarTexture;
-
-    /**
-     * Texture asset for the bullet
-     */
-    private TextureRegion bulletTexture;
 
     /**
      * Texture asset for the bridge plank
@@ -136,7 +132,6 @@ public class PlatformController extends WorldController implements ContactListen
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
-        bulletTexture = createTexture(manager, BULLET_FILE, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
@@ -200,11 +195,6 @@ public class PlatformController extends WorldController implements ContactListen
     private DudeModel mainDude;
 
     /**
-     * Mark set to handle more sophisticated collision callbacks
-     */
-    protected ObjectSet<Fixture> sensorFixtures;
-
-    /**
      * Creates and initialize a new instance of the platformer game
      * <p>
      * The game has default gravity and other settings
@@ -214,8 +204,7 @@ public class PlatformController extends WorldController implements ContactListen
         setDebug(false);
         setComplete(false);
         setFailure(false);
-        world.setContactListener(this);
-        sensorFixtures = new ObjectSet<>();
+        world.setContactListener(new CollisionController(mainDude));
     }
 
     /**
@@ -234,17 +223,16 @@ public class PlatformController extends WorldController implements ContactListen
         world.dispose();
 
         world = new World(gravity, false);
-        world.setContactListener(this);
         setComplete(false);
         setFailure(false);
         populateLevel();
+        world.setContactListener(new CollisionController(mainDude));
     }
 
     /**
      * Lays out the game geography.
      */
     private void populateLevel() {
-
         PlatformLoader loader = new PlatformLoader(
                 "test.json");
         walls = loader.getTiles();
@@ -259,23 +247,15 @@ public class PlatformController extends WorldController implements ContactListen
         // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-//        s = new Simulation();
-//        Vector2 vec1 = new Vector2(10,10);
-//        Vector2 vec2 = new Vector2(50, 0);
-//        s.populate(vec1, vec2);
-//        SimObject string = s.getStringObjects().get(0);
-//        string.setTexture(bridgeTexture);
-//        string.setDrawScale(scale);
-//        addSoftBody(string);
-
-        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight);
+        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight, "mainDude", "mainDudeSensor");
         mainDude.setDrawScale(scale);
         mainDude.setTexture(avatarTexture);
         addObject(mainDude);
 
         float[][] couples = loader.getCouples();
-        for(float[] couple: couples) {
-            createCouple(couple[0], couple[1], couple[2], couple[3]);
+        for (int i = 0; i < couples.length; i++) {
+            float[] curr = couples[i];
+            createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
     }
 
@@ -298,11 +278,11 @@ public class PlatformController extends WorldController implements ContactListen
      * @param x2
      * @param y2
      */
-    public void createCouple(float x1, float y1, float x2, float y2) {
+    public void createCouple(float x1, float y1, float x2, float y2, int id) {
         float[] points = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
         createTile(points, x1, y1 - 1f, "tile");
         createTile(points, x2, y2 - 1f, "tile");
-        Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale);
+        Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale, id);
         addObject(couple);
     }
 
@@ -343,12 +323,8 @@ public class PlatformController extends WorldController implements ContactListen
         // Process actions in object model
         mainDude.setMovement(InputController.getInstance().getHorizontal() * mainDude.getForce());
         mainDude.setJumping(InputController.getInstance().didPrimary());
-        mainDude.setShooting(InputController.getInstance().didSecondary());
+        mainDude.setIsCutting(InputController.getInstance().didSecondary() && mainDude.canCut());
 
-        // Add a bullet if we fire
-        if (mainDude.isShooting()) {
-            createBullet();
-        }
 
         mainDude.applyForce();
         if (mainDude.isJumping()) {
@@ -357,125 +333,5 @@ public class PlatformController extends WorldController implements ContactListen
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
-    }
-
-    /**
-     * Add a new bullet to the world and send it in the right direction.
-     */
-    private void createBullet() {
-        float offset = (mainDude.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
-        float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
-        WheelObstacle bullet = new WheelObstacle(mainDude.getX() + offset, mainDude.getY(), radius);
-
-        bullet.setName("bullet");
-        bullet.setDensity(HEAVY_DENSITY);
-        bullet.setDrawScale(scale);
-        bullet.setTexture(bulletTexture);
-        bullet.setBullet(true);
-        bullet.setGravityScale(0);
-
-        // Compute position and velocity
-        float speed = (mainDude.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
-        bullet.setVX(speed);
-        addQueuedObject(bullet);
-
-        SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
-    }
-
-    /**
-     * Remove a new bullet from the world.
-     *
-     * @param bullet the bullet to remove
-     */
-    public void removeBullet(Obstacle bullet) {
-        bullet.markRemoved(true);
-        SoundController.getInstance().play(POP_FILE, POP_FILE, false, EFFECT_VOLUME);
-    }
-
-
-    /**
-     * Callback method for the start of a collision
-     * <p>
-     * This method is called when we first get a collision between two objects.  We use
-     * this method to test if it is the "right" kind of collision.  In particular, we
-     * use it to test if we made it to the win door.
-     *
-     * @param contact The two bodies that collided
-     */
-    public void beginContact(Contact contact) {
-        Fixture fix1 = contact.getFixtureA();
-        Fixture fix2 = contact.getFixtureB();
-
-        Body body1 = fix1.getBody();
-        Body body2 = fix2.getBody();
-
-        Object fd1 = fix1.getUserData();
-        Object fd2 = fix2.getUserData();
-
-        try {
-            Obstacle bd1 = (Obstacle) body1.getUserData();
-            Obstacle bd2 = (Obstacle) body2.getUserData();
-
-            // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != mainDude) {
-                removeBullet(bd1);
-            }
-
-            if (bd2.getName().equals("bullet") && bd1 != mainDude) {
-                removeBullet(bd2);
-            }
-
-            // See if we have landed on the ground.
-            if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
-                    (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
-                mainDude.setGrounded(true);
-                sensorFixtures.add(mainDude == bd1 ? fix2 : fix1); // Could have more than one ground
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Callback method for the start of a collision
-     * <p>
-     * This method is called when two objects cease to touch.  The main use of this method
-     * is to determine when the characer is NOT on the ground.  This is how we prevent
-     * double jumping.
-     */
-    public void endContact(Contact contact) {
-        Fixture fix1 = contact.getFixtureA();
-        Fixture fix2 = contact.getFixtureB();
-
-        Body body1 = fix1.getBody();
-        Body body2 = fix2.getBody();
-
-        Object fd1 = fix1.getUserData();
-        Object fd2 = fix2.getUserData();
-
-        Object bd1 = body1.getUserData();
-        Object bd2 = body2.getUserData();
-
-        if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
-                (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
-            sensorFixtures.remove(mainDude == bd1 ? fix2 : fix1);
-            if (sensorFixtures.size == 0) {
-                mainDude.setGrounded(false);
-            }
-        }
-    }
-
-    /**
-     * Unused ContactListener method
-     */
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-    }
-
-    /**
-     * Unused ContactListener method
-     */
-    public void preSolve(Contact contact, Manifold oldManifold) {
     }
 }

@@ -34,11 +34,11 @@ public class Rope extends ComplexObstacle {
     /**
      * The debug name for the entire obstacle
      */
-    private static final String BRIDGE_NAME = "bridge";
+    private static final String ROPE_NAME = "rope";
     /**
      * The debug name for each plank
      */
-    private static final String PLANK_NAME = "barrier";
+    private static final String PLANK_NAME = "plank";
     /**
      * The density of each plank in the bridge
      */
@@ -69,23 +69,6 @@ public class Rope extends ComplexObstacle {
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
-
-    /**
-     * Creates a new rope bridge at the given position.
-     * <p>
-     * This bridge is straight horizontal. The coordinates given are the
-     * position of the leftmost anchor.
-     *
-     * @param x       The x position of the left anchor
-     * @param y       The y position of the left anchor
-     * @param width   The length of the bridge
-     * @param lwidth  The plank length
-     * @param lheight The bridge thickness
-     */
-    public Rope(float x, float y, float width, float lwidth, float lheight) {
-        this(x, y, x + width, y, lwidth, lheight);
-    }
-
     /**
      * Creates a new rope bridge with the given anchors.
      *
@@ -96,9 +79,9 @@ public class Rope extends ComplexObstacle {
      * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight) {
+    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id) {
         super(x0, y0);
-        setName(BRIDGE_NAME);
+        setName(ROPE_NAME + id);
 
         planksize = new Vector2(lwidth, lheight);
         linksize = planksize.x;
@@ -128,8 +111,7 @@ public class Rope extends ComplexObstacle {
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
-            BoxObstacle plank = new BoxObstacle(pos.x, pos.y, planksize.x, planksize.y);
-            plank.setName(PLANK_NAME + i);
+            Plank plank = new Plank(pos.x, pos.y, planksize.x, planksize.y, id);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
         }
@@ -137,6 +119,7 @@ public class Rope extends ComplexObstacle {
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
+
         contPoints = new Vector2[bodies.size + 2];
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
