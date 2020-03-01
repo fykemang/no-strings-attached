@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
+import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -93,6 +94,11 @@ public class GameCanvas {
     private ShapeRenderer debugRender;
 
     /**
+     * Rendering context for the debug outlines
+     * TODO: change this into ??
+     */
+    private ShapeRenderer splineRender;
+    /**
      * Track whether or not we are active (for error checking)
      */
     private DrawPass active;
@@ -143,11 +149,15 @@ public class GameCanvas {
         spriteBatch = new PolygonSpriteBatch();
         debugRender = new ShapeRenderer();
 
+        splineRender = new ShapeRenderer();
+
         // Set the projection matrix (for proper scaling)
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
+        splineRender.setProjectionMatrix(camera.combined);
+        splineRender.setAutoShapeType(true);
 
         // Initialize the cache objects
         holder = new TextureRegion();
@@ -1206,5 +1216,21 @@ public class GameCanvas {
         local.rotate(180.0f * angle / (float) Math.PI);
         local.scale(sx, sy);
         local.translate(-ox, -oy);
+    }
+
+    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points){
+
+        Gdx.gl20.glLineWidth(2);
+        splineRender.setProjectionMatrix(camera.combined);
+        splineRender.begin(ShapeRenderer.ShapeType.Line);
+        splineRender.setColor(Color.RED);
+
+        for(int i = 1; i < k-9; i++)
+        {
+            splineRender.line(catmull.valueAt(points[i], ((float)i)/((float)k-1)),
+                    catmull.valueAt(points[i+1], ((float)(i+1))/((float)k-1)));
+        }
+        splineRender.end();
+
     }
 }

@@ -15,12 +15,15 @@
 package platform;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.*;
+import root.GameCanvas;
+import softBody.StringObject;
 
 /**
  * A bridge with planks connected by revolute joints.
@@ -77,6 +80,17 @@ public class RopeBridge extends ComplexObstacle {
      */
     protected float spacing = 0.0f;
 
+
+    private CatmullRomSpline<Vector2> splineCurve;
+
+    private StringObject rope;
+
+    Vector2[] contPoints;
+
+    private final int K = 100;
+
+    private Vector2[] POINTS = new Vector2[K];
+
     /**
      * Creates a new rope bridge at the given position.
      * <p>
@@ -121,10 +135,10 @@ public class RopeBridge extends ComplexObstacle {
         if (nLinks <= 1) {
             nLinks = 1;
             linksize = length;
-            spacing = 0;
+//            spacing = 0;
         } else {
-            spacing = length - nLinks * linksize;
-            spacing /= (nLinks - 1);
+//            spacing = length - nLinks * linksize;
+//            spacing /= (nLinks - 1);
         }
 
         // Create the planks
@@ -140,6 +154,15 @@ public class RopeBridge extends ComplexObstacle {
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
         }
+
+        for (int i = 0; i < K; i ++){
+            POINTS[i] = new Vector2();
+        }
+        contPoints = new Vector2[bodies.size+2];
+        for (int i = 0; i < contPoints.length; i++){
+            contPoints[i] = new Vector2();
+        }
+        setCurrentSplineCurve();
     }
 
     /**
@@ -162,6 +185,7 @@ public class RopeBridge extends ComplexObstacle {
         // reasons to not add the anchor to the bodies list.
         Vector2 pos = bodies.get(0).getPosition();
         pos.x -= linksize / 2;
+        contPoints[0].set(pos.x * drawScale.x, pos.y * drawScale.y);
         start = new WheelObstacle(pos.x, pos.y, BRIDGE_PIN_RADIUS);
         start.setName(BRIDGE_PIN_NAME + 0);
         start.setDensity(BASIC_DENSITY);
@@ -215,6 +239,7 @@ public class RopeBridge extends ComplexObstacle {
         joint = world.createJoint(jointDef);
         joints.add(joint);
 
+        contPoints[contPoints.length-1].set(pos.x * drawScale.x, pos.y * drawScale.y);
         return true;
     }
 
@@ -255,5 +280,41 @@ public class RopeBridge extends ComplexObstacle {
             return null;
         }
         return ((SimpleObstacle) bodies.get(0)).getTexture();
+    }
+
+
+    private void extractContPoints(){
+
+        for (int i = 1; i < contPoints.length-1; i++) {
+            Vector2 pos = bodies.get(i-1).getPosition();
+            contPoints[i].set(pos.x * drawScale.x , pos.y * drawScale.y);
+        }
+    }
+
+    private void setCurrentSplineCurve(){
+        extractContPoints();
+        if (splineCurve == null)
+            splineCurve = new CatmullRomSpline<>(contPoints, true);
+        else
+            splineCurve.set(contPoints, true);
+
+    }
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    @Override
+    public void draw(GameCanvas canvas) {
+
+        for (Obstacle obj : bodies) {
+
+            obj.draw(canvas);
+        }
+        // Delegate to components
+        setCurrentSplineCurve();
+        canvas.drawCatmullRom(splineCurve, K, POINTS);
+
     }
 }

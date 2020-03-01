@@ -51,6 +51,7 @@ public abstract class ComplexObstacle extends Obstacle {
      */
     protected Array<Joint> joints;
 
+    protected boolean isSoft = false;
     /// BodyDef Methods
 
     /**
@@ -1004,7 +1005,14 @@ public abstract class ComplexObstacle extends Obstacle {
                 obj.deactivatePhysics(world);
             }
             bodyinfo.active = false;
+            activateSoftBody();
         }
+    }
+
+    public void activateSoftBody(){
+        if(!isSoft)
+            return;
+
     }
 
     /**
