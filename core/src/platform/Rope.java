@@ -23,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.*;
 import root.GameCanvas;
-import softBody.StringObject;
 
 /**
  * A bridge with planks connected by revolute joints.
@@ -64,8 +63,6 @@ public class Rope extends ComplexObstacle {
 
 
     private CatmullRomSpline<Vector2> splineCurve;
-
-    private StringObject rope;
 
     Vector2[] contPoints;
 
