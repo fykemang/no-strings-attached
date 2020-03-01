@@ -1009,8 +1009,8 @@ public abstract class ComplexObstacle extends Obstacle {
         }
     }
 
-    public void activateSoftBody(){
-        if(!isSoft)
+    public void activateSoftBody() {
+        if (!isSoft)
             return;
 
     }

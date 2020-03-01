@@ -1,8 +1,6 @@
 package softBody;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import softBody.SimObjectType;
 
 public class SimModel extends SimObject {
     public SimModel(float mass, SimObjectType s, Vector2 currPosition) {

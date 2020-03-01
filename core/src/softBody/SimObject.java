@@ -3,8 +3,6 @@ package softBody;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import obstacle.Obstacle;
-import obstacle.SimpleObstacle;
 import root.GameCanvas;
 
 enum SimObjectType {PASSIVE, ACTIVE};
@@ -33,6 +31,7 @@ public abstract class SimObject {
         this.acceleration.x = x;
         this.acceleration.y = y;
     }
+
     public void setVelocity(float x, float y) {
         this.currVelocity.x = x;
         this.currVelocity.y = y;
@@ -74,6 +73,7 @@ public abstract class SimObject {
         this.resultantForce.x = x;
         this.resultantForce.y = y;
     }
+
     public void setCurrPosition(float posX, float posY) {
         this.currPosition.x = posX;
         this.currPosition.y = posY;
@@ -121,7 +121,7 @@ public abstract class SimObject {
         this.acceleration = new Vector2();
     }
 
-    public abstract void update(float dt) ;
+    public abstract void update(float dt);
 
     public void setTexture(TextureRegion texture) {
         this.texture = texture;

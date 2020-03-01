@@ -155,11 +155,11 @@ public class RopeBridge extends ComplexObstacle {
             bodies.add(plank);
         }
 
-        for (int i = 0; i < K; i ++){
+        for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
-        contPoints = new Vector2[bodies.size+2];
-        for (int i = 0; i < contPoints.length; i++){
+        contPoints = new Vector2[bodies.size + 2];
+        for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
         setCurrentSplineCurve();
@@ -239,7 +239,7 @@ public class RopeBridge extends ComplexObstacle {
         joint = world.createJoint(jointDef);
         joints.add(joint);
 
-        contPoints[contPoints.length-1].set(pos.x * drawScale.x, pos.y * drawScale.y);
+        contPoints[contPoints.length - 1].set(pos.x * drawScale.x, pos.y * drawScale.y);
         return true;
     }
 
@@ -283,15 +283,14 @@ public class RopeBridge extends ComplexObstacle {
     }
 
 
-    private void extractContPoints(){
-
-        for (int i = 1; i < contPoints.length-1; i++) {
-            Vector2 pos = bodies.get(i-1).getPosition();
-            contPoints[i].set(pos.x * drawScale.x , pos.y * drawScale.y);
+    private void extractContPoints() {
+        for (int i = 1; i < contPoints.length - 1; i++) {
+            Vector2 pos = bodies.get(i - 1).getPosition();
+            contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
     }
 
-    private void setCurrentSplineCurve(){
+    private void setCurrentSplineCurve() {
         extractContPoints();
         if (splineCurve == null)
             splineCurve = new CatmullRomSpline<>(contPoints, true);

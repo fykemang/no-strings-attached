@@ -2,10 +2,7 @@ package softBody;
 
 import com.badlogic.gdx.math.Vector2;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import softBody.Constants;
 
 public class Simulation {
     protected ArrayList<NPCObject> npcObjects = new ArrayList<NPCObject>();
@@ -14,22 +11,23 @@ public class Simulation {
     protected ArrayList<Spring> springs = new ArrayList<Spring>();
     private boolean activated;
 
-    public Simulation(){
+    public Simulation() {
         activated = false;
 //        Gravity g = new Gravity();
 //        Drag d = new Drag();
 //        globalForceGenerators.add(g);
 //        globalForceGenerators.add(d);
     }
+
     public void setSprings(ArrayList<Spring> springs) {
         this.springs = springs;
     }
 
-    public void activatePhysics(){
+    public void activatePhysics() {
         activated = true;
     }
 
-    public void deactivatePhysics(){
+    public void deactivatePhysics() {
         activated = false;
     }
 
@@ -70,8 +68,7 @@ public class Simulation {
         if (person1.x < person2.x) {
             pos = person1;
             angle = (float) (Math.tan((person2.y - person1.y) / (person2.x - person1.x)));
-        }
-        else {
+        } else {
             pos = person2;
             angle = (float) (Math.tan((person1.y - person2.y) / (person1.x - person2.x)));
         }

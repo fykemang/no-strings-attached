@@ -22,11 +22,8 @@ import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
-import softBody.SimObject;
-import util.SoundController;
 import softBody.Simulation;
-
-import java.util.LinkedList;
+import util.SoundController;
 
 /**
  * Gameplay specific controller for the platformer game.

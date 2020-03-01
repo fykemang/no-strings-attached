@@ -1218,17 +1218,16 @@ public class GameCanvas {
         local.translate(-ox, -oy);
     }
 
-    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points){
+    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
 
         Gdx.gl20.glLineWidth(2);
         splineRender.setProjectionMatrix(camera.combined);
         splineRender.begin(ShapeRenderer.ShapeType.Line);
         splineRender.setColor(Color.RED);
 
-        for(int i = 1; i < k-9; i++)
-        {
-            splineRender.line(catmull.valueAt(points[i], ((float)i)/((float)k-1)),
-                    catmull.valueAt(points[i+1], ((float)(i+1))/((float)k-1)));
+        for (int i = 1; i < k - 9; i++) {
+            splineRender.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
+                    catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
         }
         splineRender.end();
 

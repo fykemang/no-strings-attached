@@ -10,7 +10,7 @@ public class Spring implements ForceGenerator {
     private NPCObject objA;
     private NPCObject objB;
 
-    public float getRestlength(){
+    public float getRestlength() {
         return restlength;
     }
 
@@ -62,7 +62,7 @@ public class Spring implements ForceGenerator {
         this.objB = simObjectB;
         double x = Math.pow(simObjectA.currPosition.x - simObjectB.currPosition.x, 2);
         double y = Math.pow(simObjectA.currPosition.y - simObjectB.currPosition.y, 2);
-        this.restlength = (float) Math.pow(x+y, 0.5);
+        this.restlength = (float) Math.pow(x + y, 0.5);
     }
 
     public Spring(float constant, float damping, StringObject str, NPCObject simObjectA, NPCObject simObjectB, float restlength) {
@@ -76,6 +76,7 @@ public class Spring implements ForceGenerator {
 
     private Vector2 direction = new Vector2();
     private float currLength;
+
     @Override
     public void applyForce(SimObject s) {
         direction.x = objA.currPosition.x - objB.currPosition.x;
