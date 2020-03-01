@@ -15,9 +15,12 @@ public class Couple extends ComplexObstacle {
     private DudeModel l;
     private DudeModel r;
     private Rope trampoline;
+    private Rope trampLeft;
+    private Rope trampRight;
     private TextureRegion avatarTexture;
     private TextureRegion trampolineTexture;
-
+    public enum CoupleState{ BROKEN, PAIRED}
+    private CoupleState state;
     /**
      *
      * @param x1
@@ -37,8 +40,8 @@ public class Couple extends ComplexObstacle {
         this.trampoline = new Rope(x1, y1, x2, y2, trampolineTexture.getRegionWidth() / drawScale.x, trampolineTexture.getRegionHeight() / drawScale.y);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
-        this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f));
-        this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f));
+        this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
+        this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f), false);
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
@@ -83,5 +86,16 @@ public class Couple extends ComplexObstacle {
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
         return true;
+    }
+
+    public void breakBond(Rope l, Rope r){
+       this.trampLeft = l;
+       this.trampRight = r;
+       this.bodies.add(l);
+       this.bodies.add(r);
+
+    }
+    public Rope getRope(){
+        return trampoline;
     }
 }

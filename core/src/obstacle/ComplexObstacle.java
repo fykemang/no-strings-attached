@@ -1004,14 +1004,7 @@ public abstract class ComplexObstacle extends Obstacle {
                 obj.deactivatePhysics(world);
             }
             bodyinfo.active = false;
-            activateSoftBody();
         }
-    }
-
-    public void activateSoftBody() {
-        if (!isSoft)
-            return;
-
     }
 
     /**
@@ -1070,7 +1063,8 @@ public abstract class ComplexObstacle extends Obstacle {
     public void draw(GameCanvas canvas) {
         // Delegate to components
         for (Obstacle obj : bodies) {
-            obj.draw(canvas);
+            if (obj.bodyinfo.active)
+                obj.draw(canvas);
         }
     }
 

@@ -259,14 +259,6 @@ public class PlatformController extends WorldController implements ContactListen
         // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-//        s = new Simulation();
-//        Vector2 vec1 = new Vector2(10,10);
-//        Vector2 vec2 = new Vector2(50, 0);
-//        s.populate(vec1, vec2);
-//        SimObject string = s.getStringObjects().get(0);
-//        string.setTexture(bridgeTexture);
-//        string.setDrawScale(scale);
-//        addSoftBody(string);
 
         mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight);
         mainDude.setDrawScale(scale);
@@ -304,6 +296,10 @@ public class PlatformController extends WorldController implements ContactListen
         createTile(points, x2, y2 - 1f, "tile");
         Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale);
         addObject(couple);
+
+        Rope[] ropes = couple.getRope().cut(new Vector2(10, 10), world);
+        couple.breakBond(ropes[0], ropes[1]);
+
     }
 
     /**
@@ -403,6 +399,7 @@ public class PlatformController extends WorldController implements ContactListen
      * @param contact The two bodies that collided
      */
     public void beginContact(Contact contact) {
+
         Fixture fix1 = contact.getFixtureA();
         Fixture fix2 = contact.getFixtureB();
 

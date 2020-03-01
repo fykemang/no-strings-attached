@@ -24,6 +24,11 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.*;
 import root.GameCanvas;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * A bridge with planks connected by revolute joints.
  * <p>
@@ -70,6 +75,14 @@ public class Rope extends ComplexObstacle {
 
     private Vector2[] POINTS = new Vector2[K];
 
+    private BoxObstacle[] planks;
+
+    public RopeState state;
+
+    public enum RopeState{
+        LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
+    }
+
     /**
      * Creates a new rope bridge at the given position.
      * <p>
@@ -86,6 +99,21 @@ public class Rope extends ComplexObstacle {
         this(x, y, x + width, y, lwidth, lheight);
     }
 
+    public Rope(BoxObstacle[] planks, RopeState state){
+        this.state = state;
+        this.planks = planks;
+        bodies.addAll(planks);
+        for (int i = 0; i < K; i++) {
+            POINTS[i] = new Vector2();
+        }
+        contPoints = new Vector2[bodies.size + 1];
+
+        for (int i = 0; i < contPoints.length; i++) {
+            contPoints[i] = new Vector2();
+        }
+        setCurrentSplineCurve();
+    }
+
     /**
      * Creates a new rope bridge with the given anchors.
      *
@@ -98,6 +126,7 @@ public class Rope extends ComplexObstacle {
      */
     public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight) {
         super(x0, y0);
+        state = RopeState.COMPLETE;
         setName(BRIDGE_NAME);
 
         planksize = new Vector2(lwidth, lheight);
@@ -120,6 +149,7 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
+        planks = new BoxObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -132,12 +162,14 @@ public class Rope extends ComplexObstacle {
             plank.setName(PLANK_NAME + i);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
+            planks[i] = plank;
         }
 
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
         contPoints = new Vector2[bodies.size + 2];
+
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
@@ -157,12 +189,14 @@ public class Rope extends ComplexObstacle {
     protected boolean createJoints(World world) {
         assert bodies.size > 0;
 
+        if (state != RopeState.COMPLETE) return true;
         Vector2 anchor1 = new Vector2(linksize / 2, 0);
         Vector2 anchor2 = new Vector2(-linksize / 2, 0);
 
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
+        System.out.println(bodies.size);
         Vector2 pos = bodies.get(0).getPosition();
         pos.x -= linksize / 2;
 
@@ -222,9 +256,13 @@ public class Rope extends ComplexObstacle {
         return ((SimpleObstacle) bodies.get(0)).getTexture();
     }
 
+
     private void extractContPoints() {
-        for (int i = 1; i < contPoints.length - 1; i++) {
-            Vector2 pos = bodies.get(i - 1).getPosition();
+        int startIndex = state == RopeState.RIGHT_BROKEN ? 0 : 1;
+        int endIndex = state == RopeState.LEFT_BROKEN ? contPoints.length  : contPoints.length - 1;
+        for (int i = startIndex; i < endIndex; i++) {
+            int cur = state == RopeState.RIGHT_BROKEN ? i : i-1;
+            Vector2 pos = bodies.get(cur).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
     }
@@ -236,6 +274,50 @@ public class Rope extends ComplexObstacle {
         else
             splineCurve.set(contPoints, true);
 
+    }
+
+
+
+    public Rope[] cut(final Vector2 pos, World w){
+        Rope[] cutRopes = new Rope[2];
+        Arrays.sort(planks, new Comparator<Obstacle>() {
+            @Override
+            public int compare(Obstacle o1, Obstacle o2) {
+               return (int)(o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
+            }
+        });
+        assert planks.length >=2;
+        Body bodyA = planks[0].getBody();
+        Body bodyB = planks[1].getBody();
+        for(Joint j: joints){
+            if ((j.getBodyA() == bodyA && j.getBodyB() == bodyB) ||
+                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)){
+                    w.destroyJoint(j);
+            }
+
+        }
+        ArrayList<BoxObstacle> left = new ArrayList<>();
+        ArrayList<BoxObstacle> right = new ArrayList<>();
+        for (Obstacle body: bodies){
+            left.add((BoxObstacle) body);
+            if (body.getBody() == bodyA || body.getBody() == bodyB  )
+                break;
+        }
+        for(int i = left.size(); i < bodies.size; i++){
+            right.add((BoxObstacle) bodies.get(i));
+        }
+        Rope l =  new Rope(left.toArray(new BoxObstacle[left.size()]), RopeState.LEFT_BROKEN);
+        l.setStart(contPoints[0], true);
+        l.setDrawScale(this.drawScale);
+        cutRopes[0] = l;
+
+        Rope r =  new Rope(right.toArray(new BoxObstacle[right.size()]), RopeState.RIGHT_BROKEN);
+        r.setEnd(contPoints[contPoints.length -1], true);
+        r.setDrawScale(this.drawScale);
+        cutRopes[1] = r;
+
+        this.bodyinfo.active = false;
+        return cutRopes;
     }
 
     /**
@@ -259,11 +341,17 @@ public class Rope extends ComplexObstacle {
         return (bodies.size > 0 ? bodies.get(bodies.size - 1).getBody() : null);
     }
 
-    public void setStart(Vector2 start) {
-        contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
+    public void setStart(Vector2 start, boolean scaled) {
+        if (!scaled)
+             contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
+        else
+            contPoints[0].set(start.x, start.y);
     }
 
-    public void setEnd(Vector2 end) {
-        contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
+    public void setEnd(Vector2 end, boolean scaled) {
+        if (!scaled)
+            contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
+        else
+            contPoints[contPoints.length - 1].set(end.x, end.y);
     }
 }
