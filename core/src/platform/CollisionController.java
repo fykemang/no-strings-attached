@@ -61,7 +61,6 @@ public class CollisionController implements ContactListener {
         try {
             Obstacle bd1 = (Obstacle) body1.getUserData();
             Obstacle bd2 = (Obstacle) body2.getUserData();
-            System.out.println(bd1.getName() +  " vs " + bd2.getName());
 
             if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(mainDude.getName())) {
                mainDude.setCanCut(true);

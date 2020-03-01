@@ -284,6 +284,10 @@ public class PlatformController extends WorldController {
         createTile(points, x2, y2 - 1f, "tile");
         Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale, id);
         addObject(couple);
+
+        Rope[] ropes = couple.getRope().cut(new Vector2(10, 10), world);
+        couple.breakBond(ropes[0], ropes[1]);
+
     }
 
     /**
@@ -334,4 +338,5 @@ public class PlatformController extends WorldController {
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
     }
+
 }
