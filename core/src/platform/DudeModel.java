@@ -354,7 +354,6 @@ public class DudeModel extends CapsuleObstacle {
     }
 
     /**
-     *
      * @param canCut
      */
     public void setCanCut(boolean canCut) {

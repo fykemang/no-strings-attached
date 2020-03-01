@@ -15,12 +15,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.ObjectSet;
-import obstacle.ComplexObstacle;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
-import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
 import util.SoundController;
@@ -272,7 +270,6 @@ public class PlatformController extends WorldController {
     }
 
     /**
-     *
      * @param x1
      * @param y1
      * @param x2
@@ -334,13 +331,13 @@ public class PlatformController extends WorldController {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (InputController.getInstance().didSecondary() && mainDude.canCut()){
+        if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
             int coupleID = mainDude.getClosestCouple();
-            for (Obstacle obs: objects) {
+            for (Obstacle obs : objects) {
                 System.out.println(obs.getName());
                 if (obs.getName().equals("couples" + coupleID)) {
                     Rope[] ropes = ((Couple) obs).getRope().cut(mainDudePos, world);
-                    ((Couple)obs).breakBond(ropes[0], ropes[1]);
+                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
                 }
             }
         }
