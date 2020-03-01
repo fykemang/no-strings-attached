@@ -117,10 +117,10 @@ public class Rope extends ComplexObstacle {
         if (nLinks <= 1) {
             nLinks = 1;
             linksize = length;
-//            spacing = 0;
+            spacing = 0;
         } else {
-//            spacing = length - nLinks * linksize;
-//            spacing /= (nLinks - 1);
+            spacing = length - nLinks * linksize;
+            spacing /= (nLinks - 1);
         }
 
         // Create the planks
@@ -168,7 +168,6 @@ public class Rope extends ComplexObstacle {
         // reasons to not add the anchor to the bodies list.
         Vector2 pos = bodies.get(0).getPosition();
         pos.x -= linksize / 2;
-        contPoints[0].set(pos.x * drawScale.x, pos.y * drawScale.y);
 
         // Definition for a revolute joint
         RevoluteJointDef jointDef = new RevoluteJointDef();
@@ -190,7 +189,6 @@ public class Rope extends ComplexObstacle {
 
         pos = last.getPosition();
         pos.x += linksize / 2;
-        contPoints[contPoints.length - 1].set(pos.x * drawScale.x, pos.y * drawScale.y);
         return true;
     }
 
@@ -250,9 +248,7 @@ public class Rope extends ComplexObstacle {
      */
     @Override
     public void draw(GameCanvas canvas) {
-//        for (Obstacle obj : bodies) {
-//            obj.draw(canvas);
-//        }
+
         // Delegate to components
         setCurrentSplineCurve();
         canvas.drawCatmullRom(splineCurve, K, POINTS);
@@ -264,5 +260,13 @@ public class Rope extends ComplexObstacle {
      */
     public Body getLastLink() {
         return (bodies.size > 0 ? bodies.get(bodies.size - 1).getBody() : null);
+    }
+
+    public void setStart(Vector2 start) {
+        contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
+    }
+
+    public void setEnd(Vector2 end) {
+        contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
     }
 }

@@ -439,7 +439,6 @@ public class GameCanvas {
      * at the given coordinates.
      *
      * @param image The texture to draw
-     * @param tint  The color tint
      * @param x     The x-coordinate of the bottom left corner
      * @param y     The y-coordinate of the bottom left corner
      */
@@ -592,7 +591,6 @@ public class GameCanvas {
      * at the given coordinates.
      *
      * @param region The texture to draw
-     * @param tint   The color tint
      * @param x      The x-coordinate of the bottom left corner
      * @param y      The y-coordinate of the bottom left corner
      */
@@ -618,7 +616,6 @@ public class GameCanvas {
      * at the given coordinates.
      * region
      *
-     * @param image  The texture to draw
      * @param tint   The color tint
      * @param x      The x-coordinate of the bottom left corner
      * @param y      The y-coordinate of the bottom left corner
@@ -757,7 +754,6 @@ public class GameCanvas {
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
      * @param region The polygon to draw
-     * @param tint   The color tint
      * @param x      The x-coordinate of the bottom left corner
      * @param y      The y-coordinate of the bottom left corner
      */
@@ -1221,12 +1217,14 @@ public class GameCanvas {
     public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
         Gdx.gl20.glLineWidth(2);
         splineRender.setProjectionMatrix(camera.combined);
+        spriteBatch.end();
         splineRender.begin(ShapeRenderer.ShapeType.Line);
         splineRender.setColor(Color.RED);
-        for (int i = 1; i < k - 9; i++) {
+        for (int i = 1; i < k - 20; i++) {
             splineRender.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
         }
         splineRender.end();
+        spriteBatch.begin();
     }
 }
