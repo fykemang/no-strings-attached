@@ -110,6 +110,7 @@ public class DudeModel extends CapsuleObstacle {
     private boolean canCut;
     private boolean isCutting;
     private String sensorName;
+    private int closestCouple;
 
     /**
      * Cache for internal force calculations
@@ -294,6 +295,14 @@ public class DudeModel extends CapsuleObstacle {
         sensorFixture.setUserData(getSensorName());
 
         return true;
+    }
+
+    public void setClosestCouple(int coupleID) {
+        this.closestCouple = coupleID;
+    }
+
+    public int getClosestCouple() {
+        return this.closestCouple;
     }
 
 
