@@ -64,10 +64,19 @@ public class CollisionController implements ContactListener {
 
             if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(mainDude.getName())) {
                mainDude.setCanCut(true);
+<<<<<<< HEAD
             } else if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
                 mainDude.setCanCut(true);
             } else {
                 mainDude.setCanCut(false);
+=======
+               mainDude.setClosestCouple(((Plank) bd1).getPlankParentID());
+            }
+
+            if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
+                mainDude.setCanCut(true);
+                mainDude.setClosestCouple(((Plank) bd2).getPlankParentID());
+>>>>>>> 5e222c4f5553613aa8e44d75ab77ca5ec0fbba3b
             }
 
             // See if we have landed on the ground.

@@ -19,7 +19,6 @@ public class Couple extends ComplexObstacle {
     private Rope trampRight;
     private TextureRegion avatarTexture;
     private TextureRegion trampolineTexture;
-    private int coupleID;
 
     public enum CoupleState{ BROKEN, PAIRED}
     private CoupleState state;
@@ -48,7 +47,7 @@ public class Couple extends ComplexObstacle {
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
-        setName("couples" + coupleID);
+        setName("couples" + id);
     }
 
     /**

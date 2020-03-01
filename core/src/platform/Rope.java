@@ -180,7 +180,6 @@ public class Rope extends ComplexObstacle {
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
-        System.out.println(bodies.size);
         Vector2 pos = bodies.get(0).getPosition();
         pos.x -= linksize / 2;
 
@@ -282,9 +281,9 @@ public class Rope extends ComplexObstacle {
         }
         ArrayList<BoxObstacle> left = new ArrayList<>();
         ArrayList<BoxObstacle> right = new ArrayList<>();
-        for (Obstacle body: bodies){
-            left.add((BoxObstacle) body);
-            if (body.getBody() == bodyA || body.getBody() == bodyB  )
+        for (Obstacle obstacle: bodies){
+            left.add((BoxObstacle) obstacle);
+            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB  )
                 break;
         }
         for(int i = left.size(); i < bodies.size; i++){
