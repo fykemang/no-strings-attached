@@ -22,7 +22,6 @@ import obstacle.PolygonObstacle;
 import obstacle.WheelObstacle;
 import root.InputController;
 import root.WorldController;
-import softBody.Simulation;
 import util.SoundController;
 
 /**
@@ -35,7 +34,6 @@ import util.SoundController;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController implements ContactListener {
-    private Simulation s;
 
     /**
      * The texture file for the character avatar (no animation)
@@ -218,7 +216,6 @@ public class PlatformController extends WorldController implements ContactListen
         setFailure(false);
         world.setContactListener(this);
         sensorFixtures = new ObjectSet<>();
-        this.s = new Simulation();
     }
 
     /**
@@ -233,7 +230,6 @@ public class PlatformController extends WorldController implements ContactListen
             obj.deactivatePhysics(world);
         }
         objects.clear();
-        softBodies.clear();
         addQueue.clear();
         world.dispose();
 
@@ -358,8 +354,6 @@ public class PlatformController extends WorldController implements ContactListen
         if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
-
-        s.update(dt);
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();

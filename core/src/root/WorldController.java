@@ -27,7 +27,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
-import softBody.SimObject;
 import util.FilmStrip;
 import util.PooledList;
 import util.ScreenListener;
@@ -277,7 +276,6 @@ public abstract class WorldController implements Screen {
      */
     protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
 
-    protected PooledList<SimObject> softBodies = new PooledList<>();
     /**
      * Queue for adding objects
      */
@@ -516,10 +514,6 @@ public abstract class WorldController implements Screen {
         assert inBounds(obj) : "Object is not in bounds";
         objects.add(obj);
         obj.activatePhysics(world);
-    }
-
-    protected void addSoftBody(SimObject s) {
-        softBodies.add(s);
     }
 
     /**
