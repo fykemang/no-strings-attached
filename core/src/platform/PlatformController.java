@@ -276,15 +276,11 @@ public class PlatformController extends WorldController {
      * @param y2
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
-        float[] points = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
+        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
         createTile(points, x1, y1 - 1f, "tile");
         createTile(points, x2, y2 - 1f, "tile");
         Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale, id);
         addObject(couple);
-
-//        Rope[] ropes = couple.getRope().cut(new Vector2(10, 10), world);
-//        couple.breakBond(ropes[0], ropes[1]);
-
     }
 
     /**
