@@ -1220,7 +1220,7 @@ public class GameCanvas {
         spriteBatch.end();
         splineRender.begin(ShapeRenderer.ShapeType.Line);
         splineRender.setColor(Color.RED);
-        for (int i = 1; i < k - 20; i++) {
+        for (int i = 1; i < k - 1; i++) {
             splineRender.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
         }
