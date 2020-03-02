@@ -61,7 +61,9 @@ public class CollisionController implements ContactListener {
             if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(mainDude.getName())) {
                 mainDude.setCanCut(true);
                 mainDude.setClosestCouple(((Plank) bd1).getPlankParentID());
-            } else if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
+            }
+
+            if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
                 mainDude.setCanCut(true);
                 mainDude.setClosestCouple(((Plank) bd2).getPlankParentID());
             }

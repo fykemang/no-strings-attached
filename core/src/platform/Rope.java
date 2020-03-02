@@ -21,10 +21,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import obstacle.*;
+import obstacle.BoxObstacle;
+import obstacle.ComplexObstacle;
+import obstacle.Obstacle;
+import obstacle.SimpleObstacle;
 import root.GameCanvas;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -78,12 +80,12 @@ public class Rope extends ComplexObstacle {
 
     public RopeState state;
 
-    public enum RopeState{
+    public enum RopeState {
         LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
     }
 
 
-    public Rope(BoxObstacle[] planks, RopeState state){
+    public Rope(BoxObstacle[] planks, RopeState state) {
         this.state = state;
         this.planks = planks;
         bodies.addAll(planks);
@@ -242,17 +244,17 @@ public class Rope extends ComplexObstacle {
 
     private void extractContPoints() {
         int startIndex = state == RopeState.RIGHT_BROKEN ? 1 : 2;
-        int endIndex = state == RopeState.LEFT_BROKEN ? contPoints.length-2  : contPoints.length - 3;
+        int endIndex = state == RopeState.LEFT_BROKEN ? contPoints.length - 2 : contPoints.length - 3;
 
         for (int i = startIndex; i <= endIndex; i++) {
-            int cur = state == RopeState.RIGHT_BROKEN ? i-1 : i-2;
+            int cur = state == RopeState.RIGHT_BROKEN ? i - 1 : i - 2;
             Vector2 pos = bodies.get(cur).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
-        if (state == RopeState.LEFT_BROKEN){
-            contPoints[contPoints.length -1] = contPoints[contPoints.length -2];
+        if (state == RopeState.LEFT_BROKEN) {
+            contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
         }
-        if (state == RopeState.RIGHT_BROKEN){
+        if (state == RopeState.RIGHT_BROKEN) {
             contPoints[0] = contPoints[1];
         }
     }
@@ -267,42 +269,41 @@ public class Rope extends ComplexObstacle {
     }
 
 
-
-    public Rope[] cut(final Vector2 pos, World w){
+    public Rope[] cut(final Vector2 pos, World w) {
         Rope[] cutRopes = new Rope[2];
         Arrays.sort(planks, new Comparator<Obstacle>() {
             @Override
             public int compare(Obstacle o1, Obstacle o2) {
-                return (int)(o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
+                return (int) (o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
             }
         });
-        assert planks.length >=2;
+        assert planks.length >= 2;
         Body bodyA = planks[0].getBody();
         Body bodyB = planks[1].getBody();
-        for(Joint j: joints){
+        for (Joint j : joints) {
             if ((j.getBodyA() == bodyA && j.getBodyB() == bodyB) ||
-                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)){
+                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)) {
                 w.destroyJoint(j);
             }
 
         }
         ArrayList<BoxObstacle> left = new ArrayList<>();
         ArrayList<BoxObstacle> right = new ArrayList<>();
-        for (Obstacle obstacle: bodies){
+        for (Obstacle obstacle : bodies) {
             left.add((BoxObstacle) obstacle);
-            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB  )
+            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB)
                 break;
         }
-        for(int i = left.size(); i < bodies.size; i++){
+        for (int i = left.size(); i < bodies.size; i++) {
             right.add((BoxObstacle) bodies.get(i));
         }
-        Rope l =  new Rope(left.toArray(new BoxObstacle[left.size()]), RopeState.LEFT_BROKEN);
+        Rope l = new Rope(left.toArray(new BoxObstacle[0]), RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
         cutRopes[0] = l;
 
-        Rope r =  new Rope(right.toArray(new BoxObstacle[right.size()]), RopeState.RIGHT_BROKEN);
-        r.setEnd(contPoints[contPoints.length -1], true);
+        Rope r = new Rope(right.toArray(new BoxObstacle[0]), RopeState.RIGHT_BROKEN);
+        r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
         cutRopes[1] = r;
 
@@ -324,7 +325,6 @@ public class Rope extends ComplexObstacle {
     }
 
     /**
-     *
      * @return retrieve the last link in the rope
      */
     public Body getLastLink() {
@@ -335,8 +335,7 @@ public class Rope extends ComplexObstacle {
         if (!scaled) {
             contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
             contPoints[1].set(start.x * drawScale.x, start.y * drawScale.y);
-        }
-        else {
+        } else {
             contPoints[0].set(start.x, start.y);
             contPoints[1].set(start.x, start.y);
         }
@@ -346,8 +345,7 @@ public class Rope extends ComplexObstacle {
         if (!scaled) {
             contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
             contPoints[contPoints.length - 2].set(end.x * drawScale.x, end.y * drawScale.y);
-        }
-        else {
+        } else {
             contPoints[contPoints.length - 1].set(end.x, end.y);
             contPoints[contPoints.length - 2].set(end.x, end.y);
         }
