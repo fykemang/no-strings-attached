@@ -3,7 +3,6 @@ package platform;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.ComplexObstacle;
@@ -20,11 +19,11 @@ public class Couple extends ComplexObstacle {
     private TextureRegion avatarTexture;
     private TextureRegion trampolineTexture;
 
-    public enum CoupleState{ BROKEN, PAIRED}
+    public enum CoupleState {BROKEN, PAIRED}
+
     private CoupleState state;
 
     /**
-     *
      * @param x1
      * @param y1
      * @param x2
@@ -51,7 +50,6 @@ public class Couple extends ComplexObstacle {
     }
 
     /**
-     *
      * @param x
      * @param y
      * @return
@@ -91,14 +89,15 @@ public class Couple extends ComplexObstacle {
         return true;
     }
 
-    public void breakBond(Rope l, Rope r){
-       this.trampLeft = l;
-       this.trampRight = r;
-       this.bodies.add(l);
-       this.bodies.add(r);
+    public void breakBond(Rope l, Rope r) {
+        this.trampLeft = l;
+        this.trampRight = r;
+        this.bodies.add(l);
+        this.bodies.add(r);
 
     }
-    public Rope getRope(){
+
+    public Rope getRope() {
         return trampoline;
     }
 }

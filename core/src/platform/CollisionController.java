@@ -1,12 +1,8 @@
 package platform;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import obstacle.BoxObstacle;
 import obstacle.Obstacle;
-
-import java.util.Iterator;
 
 public class CollisionController implements ContactListener {
     /**
@@ -63,11 +59,9 @@ public class CollisionController implements ContactListener {
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
             if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(mainDude.getName())) {
-               mainDude.setCanCut(true);
-               mainDude.setClosestCouple(((Plank) bd1).getPlankParentID());
-            }
-
-            if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
+                mainDude.setCanCut(true);
+                mainDude.setClosestCouple(((Plank) bd1).getPlankParentID());
+            } else if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
                 mainDude.setCanCut(true);
                 mainDude.setClosestCouple(((Plank) bd2).getPlankParentID());
             }
@@ -101,8 +95,14 @@ public class CollisionController implements ContactListener {
         Object fd1 = fix1.getUserData();
         Object fd2 = fix2.getUserData();
 
-        Object bd1 = body1.getUserData();
-        Object bd2 = body2.getUserData();
+        Obstacle bd1 = (Obstacle) body1.getUserData();
+        Obstacle bd2 = (Obstacle) body2.getUserData();
+
+        if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME) ||
+                bd2.getName().equals(mainDude.getName()) && bd1.getName().equals(Plank.PLANK_NAME)) {
+            mainDude.setCanCut(false);
+        }
+
 
         if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
                 (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {

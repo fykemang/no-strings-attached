@@ -108,7 +108,6 @@ public class DudeModel extends CapsuleObstacle {
     private Fixture sensorFixture;
     private PolygonShape sensorShape;
     private boolean canCut;
-    private boolean isCutting;
     private String sensorName;
     private int closestCouple;
 
@@ -355,7 +354,6 @@ public class DudeModel extends CapsuleObstacle {
     }
 
     /**
-     *
      * @param canCut
      */
     public void setCanCut(boolean canCut) {
@@ -364,18 +362,6 @@ public class DudeModel extends CapsuleObstacle {
 
     public boolean canCut() {
         return canCut;
-    }
-
-    /**
-     *
-     * @param isCutting
-     */
-    public void setIsCutting(boolean isCutting) {
-        this.isCutting = isCutting;
-    }
-
-    public boolean isCutting() {
-        return isCutting;
     }
 
     /**

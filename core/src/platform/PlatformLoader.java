@@ -1,12 +1,13 @@
 package platform;
 
-import java.util.*;
-import java.io.*;
-
 import com.badlogic.gdx.math.Vector2;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileReader;
+import java.io.IOException;
 
 
 /**
@@ -21,19 +22,21 @@ public class PlatformLoader {
 
     /**
      * construst a platform given the file path to json
+     *
      * @param filePath file path to json
      */
-    public PlatformLoader(String filePath){
+    public PlatformLoader(String filePath) {
         this.filepath = filePath;
         try {
-            rootobj = new JSONParser().parse(new FileReader(filePath));;
+            rootobj = new JSONParser().parse(new FileReader(filePath));
+            ;
             JSONArray wallArray = (JSONArray) (((JSONObject) rootobj).get("walls"));
             tiles = parseArray(wallArray);
             JSONArray coupleArray = (JSONArray) (((JSONObject) rootobj).get("couples"));
-            couples= parseCouples(coupleArray);
+            couples = parseCouples(coupleArray);
             JSONArray characterPos = (JSONArray) (((JSONObject) rootobj).get("characterPos"));
-            dudePos =  new Vector2((float)(double)characterPos.get(0),
-                    (float)(double)characterPos.get(1));
+            dudePos = new Vector2((float) (double) characterPos.get(0),
+                    (float) (double) characterPos.get(1));
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -42,17 +45,18 @@ public class PlatformLoader {
 
     /**
      * parses a walls array to Polygon obstacle input
+     *
      * @param array JSONarray for the walls
      * @return
      */
-    public Wall[] parseArray(JSONArray array){
+    public Wall[] parseArray(JSONArray array) {
         Wall[] result = new Wall[array.size()];
-        for(int i = 0; i < array.size(); i++) {
+        for (int i = 0; i < array.size(); i++) {
             JSONObject wall = ((JSONObject) array.get(i));
             float[] temp = new float[8];
-            Vector2 wallPos = new Vector2((float)(double)wall.get("x"), (float)(double)wall.get("y"));
-            float width = (float)(double) wall.get("width");
-            float height = (float)(double) wall.get("height");
+            Vector2 wallPos = new Vector2((float) (double) wall.get("x"), (float) (double) wall.get("y"));
+            float width = (float) (double) wall.get("width");
+            float height = (float) (double) wall.get("height");
             temp[0] = wallPos.x;
             temp[1] = wallPos.y;
             temp[2] = wallPos.x;
@@ -69,44 +73,48 @@ public class PlatformLoader {
 
     /**
      * parses a Json Couple Array
+     *
      * @param coupleArray
      * @return
      */
-    public float[][] parseCouples(JSONArray coupleArray){
+    public float[][] parseCouples(JSONArray coupleArray) {
         float[][] result = new float[coupleArray.size()][];
-        for(int i = 0; i < coupleArray.size(); i++) {
+        for (int i = 0; i < coupleArray.size(); i++) {
             JSONObject couple = ((JSONObject) coupleArray.get(i));
             float[] temp = new float[4];
-            temp[0] = (float)(double) couple.get("left_x");
-            temp[1] = (float)(double) couple.get("left_y");
-            temp[2] = (float)(double) couple.get("right_x");
-            temp[3] = (float)(double) couple.get("right_y");
+            temp[0] = (float) (double) couple.get("left_x");
+            temp[1] = (float) (double) couple.get("left_y");
+            temp[2] = (float) (double) couple.get("right_x");
+            temp[3] = (float) (double) couple.get("right_y");
             result[i] = temp;
         }
         return result;
     }
 
     /**
-     *getter for walls
+     * getter for walls
+     *
      * @return the walls array to initialize the level
      */
-    public Wall[] getTiles(){
+    public Wall[] getTiles() {
         return tiles;
     }
 
     /**
-     *getter for character position
+     * getter for character position
+     *
      * @return the character position to initialize the level
      */
-    public Vector2 getCharacterPos(){
+    public Vector2 getCharacterPos() {
         return dudePos;
     }
 
     /**
      * getter for couples
+     *
      * @return the couple array to initialize the level
      */
-    public float[][] getCouples(){
+    public float[][] getCouples() {
         return couples;
     }
 }
