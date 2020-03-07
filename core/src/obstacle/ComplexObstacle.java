@@ -51,6 +51,7 @@ public abstract class ComplexObstacle extends Obstacle {
      */
     protected Array<Joint> joints;
 
+    protected boolean isSoft = false;
     /// BodyDef Methods
 
     /**
@@ -80,7 +81,6 @@ public abstract class ComplexObstacle extends Obstacle {
      * <p>
      * This method affects the root body of this composite structure only.  If you want
      * to set the value for any of the child obstacles, iterate over the children.
-     *
      */
     public void setBodyType(BodyType value) {
         if (body != null) {
@@ -1062,7 +1062,8 @@ public abstract class ComplexObstacle extends Obstacle {
     public void draw(GameCanvas canvas) {
         // Delegate to components
         for (Obstacle obj : bodies) {
-            obj.draw(canvas);
+            if (obj.bodyinfo.active)
+                obj.draw(canvas);
         }
     }
 

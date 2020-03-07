@@ -20,7 +20,7 @@ import obstacle.CapsuleObstacle;
 import root.GameCanvas;
 
 /**
- * Player avatar for the plaform game.
+ * Player avatar for the platform game.
  * <p>
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
@@ -63,10 +63,6 @@ public class DudeModel extends CapsuleObstacle {
      * Height of the sensor attached to the player's feet
      */
     private static final float SENSOR_HEIGHT = 0.05f;
-    /**
-     * Identifier to allow us to track the sensor in ContactListener
-     */
-    private static final String SENSOR_NAME = "DudeGroundSensor";
 
     // This is to fit the image to a tigher hitbox
     /**
@@ -107,14 +103,13 @@ public class DudeModel extends CapsuleObstacle {
      */
     private boolean isGrounded;
     /**
-     * Whether we are actively shooting
-     */
-    private boolean isShooting;
-    /**
      * Ground sensor to represent our feet
      */
     private Fixture sensorFixture;
     private PolygonShape sensorShape;
+    private boolean canCut;
+    private String sensorName;
+    private int closestCouple;
 
     /**
      * Cache for internal force calculations
@@ -147,24 +142,6 @@ public class DudeModel extends CapsuleObstacle {
         } else if (movement > 0) {
             faceRight = true;
         }
-    }
-
-    /**
-     * Returns true if the dude is actively firing.
-     *
-     * @return true if the dude is actively firing.
-     */
-    public boolean isShooting() {
-        return isShooting && shootCooldown <= 0;
-    }
-
-    /**
-     * Sets whether the dude is actively firing.
-     *
-     * @param value whether the dude is actively firing.
-     */
-    public void setShooting(boolean value) {
-        isShooting = value;
     }
 
     /**
@@ -242,7 +219,7 @@ public class DudeModel extends CapsuleObstacle {
      * @return the name of the ground sensor
      */
     public String getSensorName() {
-        return SENSOR_NAME;
+        return sensorName;
     }
 
     /**
@@ -252,20 +229,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     public boolean isFacingRight() {
         return faceRight;
-    }
-
-    /**
-     * Creates a new dude at the origin.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
-     *
-     * @param width  The object width in physics units
-     * @param height The object width in physics units
-     */
-    public DudeModel(float width, float height) {
-        this(0, 0, width, height);
     }
 
     /**
@@ -280,7 +243,7 @@ public class DudeModel extends CapsuleObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public DudeModel(float x, float y, float width, float height) {
+    public DudeModel(float x, float y, float width, float height, String dudeName, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
@@ -288,13 +251,13 @@ public class DudeModel extends CapsuleObstacle {
 
         // Gameplay attributes
         isGrounded = false;
-        isShooting = false;
         isJumping = false;
         faceRight = true;
+        this.sensorName = sensorName;
 
         shootCooldown = 0;
         jumpCooldown = 0;
-        setName("dude");
+        setName(dudeName);
     }
 
     /**
@@ -331,6 +294,14 @@ public class DudeModel extends CapsuleObstacle {
         sensorFixture.setUserData(getSensorName());
 
         return true;
+    }
+
+    public void setClosestCouple(int coupleID) {
+        this.closestCouple = coupleID;
+    }
+
+    public int getClosestCouple() {
+        return this.closestCouple;
     }
 
 
@@ -379,14 +350,18 @@ public class DudeModel extends CapsuleObstacle {
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
-
-        if (isShooting()) {
-            shootCooldown = SHOOT_COOLDOWN;
-        } else {
-            shootCooldown = Math.max(0, shootCooldown - 1);
-        }
-
         super.update(dt);
+    }
+
+    /**
+     * @param canCut
+     */
+    public void setCanCut(boolean canCut) {
+        this.canCut = canCut;
+    }
+
+    public boolean canCut() {
+        return canCut;
     }
 
     /**

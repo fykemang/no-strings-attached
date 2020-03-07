@@ -15,12 +15,21 @@
 package platform;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import obstacle.*;
+import obstacle.BoxObstacle;
+import obstacle.ComplexObstacle;
+import obstacle.Obstacle;
+import obstacle.SimpleObstacle;
+import root.GameCanvas;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * A bridge with planks connected by revolute joints.
@@ -32,11 +41,11 @@ public class Rope extends ComplexObstacle {
     /**
      * The debug name for the entire obstacle
      */
-    private static final String BRIDGE_NAME = "bridge";
+    private static final String ROPE_NAME = "rope";
     /**
      * The debug name for each plank
      */
-    private static final String PLANK_NAME = "barrier";
+    private static final String PLANK_NAME = "plank";
     /**
      * The density of each plank in the bridge
      */
@@ -59,20 +68,36 @@ public class Rope extends ComplexObstacle {
      */
     protected float spacing = 0.0f;
 
-    /**
-     * Creates a new rope bridge at the given position.
-     * <p>
-     * This bridge is straight horizontal. The coordinates given are the
-     * position of the leftmost anchor.
-     *
-     * @param x       The x position of the left anchor
-     * @param y       The y position of the left anchor
-     * @param width   The length of the bridge
-     * @param lwidth  The plank length
-     * @param lheight The bridge thickness
-     */
-    public Rope(float x, float y, float width, float lwidth, float lheight) {
-        this(x, y, x + width, y, lwidth, lheight);
+
+    private CatmullRomSpline<Vector2> splineCurve;
+
+    Vector2[] contPoints;
+
+    private final int K = 100;
+
+    private Vector2[] POINTS = new Vector2[K];
+    private BoxObstacle[] planks;
+
+    public RopeState state;
+
+    public enum RopeState {
+        LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
+    }
+
+
+    public Rope(BoxObstacle[] planks, RopeState state) {
+        this.state = state;
+        this.planks = planks;
+        bodies.addAll(planks);
+        for (int i = 0; i < K; i++) {
+            POINTS[i] = new Vector2();
+        }
+        contPoints = new Vector2[bodies.size + 3];
+
+        for (int i = 0; i < contPoints.length; i++) {
+            contPoints[i] = new Vector2();
+        }
+        setCurrentSplineCurve();
     }
 
     /**
@@ -85,9 +110,10 @@ public class Rope extends ComplexObstacle {
      * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight) {
+    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id) {
         super(x0, y0);
-        setName(BRIDGE_NAME);
+        setName(ROPE_NAME + id);
+        state = RopeState.COMPLETE;
 
         planksize = new Vector2(lwidth, lheight);
         linksize = planksize.x;
@@ -109,6 +135,7 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
+        planks = new BoxObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -117,11 +144,22 @@ public class Rope extends ComplexObstacle {
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
-            BoxObstacle plank = new BoxObstacle(pos.x, pos.y, planksize.x, planksize.y);
-            plank.setName(PLANK_NAME + i);
+            Plank plank = new Plank(pos.x, pos.y, planksize.x, planksize.y, id);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
+            planks[i] = plank;
         }
+
+        for (int i = 0; i < K; i++) {
+            POINTS[i] = new Vector2();
+        }
+
+        contPoints = new Vector2[bodies.size + 4];
+
+        for (int i = 0; i < contPoints.length; i++) {
+            contPoints[i] = new Vector2();
+        }
+        setCurrentSplineCurve();
     }
 
     /**
@@ -137,12 +175,15 @@ public class Rope extends ComplexObstacle {
     protected boolean createJoints(World world) {
         assert bodies.size > 0;
 
+        if (state != RopeState.COMPLETE) return true;
         Vector2 anchor1 = new Vector2(linksize / 2, 0);
         Vector2 anchor2 = new Vector2(-linksize / 2, 0);
 
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
+        Vector2 pos = bodies.get(0).getPosition();
+        pos.x -= linksize / 2;
 
         // Definition for a revolute joint
         RevoluteJointDef jointDef = new RevoluteJointDef();
@@ -158,6 +199,12 @@ public class Rope extends ComplexObstacle {
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
         }
+
+        // Create the rightmost anchor
+        Obstacle last = bodies.get(bodies.size - 1);
+
+        pos = last.getPosition();
+        pos.x += linksize / 2;
         return true;
     }
 
@@ -194,11 +241,113 @@ public class Rope extends ComplexObstacle {
         return ((SimpleObstacle) bodies.get(0)).getTexture();
     }
 
+
+    private void extractContPoints() {
+        int startIndex = state == RopeState.RIGHT_BROKEN ? 1 : 2;
+        int endIndex = state == RopeState.LEFT_BROKEN ? contPoints.length - 2 : contPoints.length - 3;
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            int cur = state == RopeState.RIGHT_BROKEN ? i - 1 : i - 2;
+            Vector2 pos = bodies.get(cur).getPosition();
+            contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
+        }
+        if (state == RopeState.LEFT_BROKEN) {
+            contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
+        }
+        if (state == RopeState.RIGHT_BROKEN) {
+            contPoints[0] = contPoints[1];
+        }
+    }
+
+    private void setCurrentSplineCurve() {
+        extractContPoints();
+        if (splineCurve == null)
+            splineCurve = new CatmullRomSpline<>(contPoints, false);
+        else
+            splineCurve.set(contPoints, false);
+
+    }
+
+
+    public Rope[] cut(final Vector2 pos, World w) {
+        Rope[] cutRopes = new Rope[2];
+        Arrays.sort(planks, new Comparator<Obstacle>() {
+            @Override
+            public int compare(Obstacle o1, Obstacle o2) {
+                return (int) (o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
+            }
+        });
+        assert planks.length >= 2;
+        Body bodyA = planks[0].getBody();
+        Body bodyB = planks[1].getBody();
+        for (Joint j : joints) {
+            if ((j.getBodyA() == bodyA && j.getBodyB() == bodyB) ||
+                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)) {
+                w.destroyJoint(j);
+            }
+
+        }
+        ArrayList<BoxObstacle> left = new ArrayList<>();
+        ArrayList<BoxObstacle> right = new ArrayList<>();
+        for (Obstacle obstacle : bodies) {
+            left.add((BoxObstacle) obstacle);
+            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB)
+                break;
+        }
+        for (int i = left.size(); i < bodies.size; i++) {
+            right.add((BoxObstacle) bodies.get(i));
+        }
+        Rope l = new Rope(left.toArray(new BoxObstacle[0]), RopeState.LEFT_BROKEN);
+        l.setStart(contPoints[0], true);
+        l.setDrawScale(this.drawScale);
+        cutRopes[0] = l;
+
+        Rope r = new Rope(right.toArray(new BoxObstacle[0]), RopeState.RIGHT_BROKEN);
+        r.setEnd(contPoints[contPoints.length - 1], true);
+        r.setDrawScale(this.drawScale);
+        cutRopes[1] = r;
+
+        this.bodyinfo.active = false;
+        return cutRopes;
+    }
+
     /**
+     * Draws the physics object.
      *
+     * @param canvas Drawing context
+     */
+    @Override
+    public void draw(GameCanvas canvas) {
+
+        // Delegate to components
+        setCurrentSplineCurve();
+        canvas.drawCatmullRom(splineCurve, K, POINTS);
+    }
+
+    /**
      * @return retrieve the last link in the rope
      */
     public Body getLastLink() {
         return (bodies.size > 0 ? bodies.get(bodies.size - 1).getBody() : null);
+    }
+
+    public void setStart(Vector2 start, boolean scaled) {
+        if (!scaled) {
+            contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
+            contPoints[1].set(start.x * drawScale.x, start.y * drawScale.y);
+        } else {
+            contPoints[0].set(start.x, start.y);
+            contPoints[1].set(start.x, start.y);
+        }
+    }
+
+    public void setEnd(Vector2 end, boolean scaled) {
+        if (!scaled) {
+            contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
+            contPoints[contPoints.length - 2].set(end.x * drawScale.x, end.y * drawScale.y);
+        } else {
+            contPoints[contPoints.length - 1].set(end.x, end.y);
+            contPoints[contPoints.length - 2].set(end.x, end.y);
+        }
     }
 }

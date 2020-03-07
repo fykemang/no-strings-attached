@@ -5,7 +5,7 @@ public class Wall {
     float height;
     float width;
 
-    public Wall(float height, float width, float[] indices){
+    public Wall(float height, float width, float[] indices) {
         this.indices = indices;
         this.height = height;
         this.width = width;
@@ -35,5 +35,4 @@ public class Wall {
     public float getWidth() {
         return width;
     }
-
 }

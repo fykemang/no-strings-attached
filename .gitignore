@@ -128,4 +128,4 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 # Web
-node_modules
+/LevelEditor/node_modules/

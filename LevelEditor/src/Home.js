@@ -13,8 +13,8 @@ function Home() {
   const [c_pos, setPos] = useState(null);
   const [walls, setWalls] = useState([]);
   const [selectedId, selectShape] = useState(null);
-  const [image, setImage] = React.useState(null);
-  const [, updateState] = React.useState();
+  const [image, setImage] = useState(null);
+  const [, updateState] = useState();
   const dragUrl = React.useRef();
   const stageRef = React.useRef();
   const { ReactDraggable: Draggable } = window;
@@ -141,13 +141,13 @@ function Home() {
     const json = JSON.stringify(myData);
     const blob = new Blob([json], { type: 'application/json' });
     const href = await URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = href;
     link.download = fileName + ".json";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+  };
 
   const addWall = () => {
     const wall = {
@@ -156,7 +156,7 @@ function Home() {
       width: 100,
       height: 100,
       fill: "black",
-      id: `rect${walls.length + 1}`,
+      id: `rect${walls.length + 1}`
     };
     // canvas.add(new fabric.Rect({
     //   left: 10,
@@ -242,7 +242,7 @@ function Home() {
               selectShape(null);
             }
           }}
-          style={{ border: '1px solid grey' }}
+          style={{ border: "1px solid grey" }}
           ref={stageRef}
         >
           <Layer>

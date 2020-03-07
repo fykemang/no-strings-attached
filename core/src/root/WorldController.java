@@ -274,7 +274,8 @@ public abstract class WorldController implements Screen {
     /**
      * All the objects in the world.
      */
-    protected PooledList<Obstacle> objects = new PooledList<>();
+    protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+
     /**
      * Queue for adding objects
      */
@@ -642,12 +643,17 @@ public abstract class WorldController implements Screen {
      * The method draws all objects in the order that they were added.
      */
     public void draw(float delta) {
+
         canvas.clear();
 
         canvas.begin();
         for (Obstacle obj : objects) {
             obj.draw(canvas);
         }
+
+//        for (SimObject s : softBodies) {
+//            s.draw(canvas);
+//        }
         canvas.end();
 
         if (debug) {

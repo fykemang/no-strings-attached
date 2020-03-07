@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Rect, Transformer } from 'react-konva';
 import Konva from 'konva';
@@ -25,6 +26,10 @@ import Konva from 'konva';
 
 //   })
 // }
+=======
+import React from "react";
+import { Rect, Transformer } from "react-konva";
+>>>>>>> af5e5c31623add54e6f1ff309dc141799f186e91
 
 const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
   const shapeRef = React.useRef();
@@ -40,7 +45,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
   }, [isSelected]);
 
   return (
-    <React.Fragment>
+    <>
       <Rect
         onClick={onSelect}
         ref={shapeRef}
@@ -87,7 +92,8 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
           }}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
+
 export default Rectangle;
