@@ -130,7 +130,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Amount to scale the play button
      */
-    private static float BUTTON_SCALE = 0.75f;
+    private static float BUTTON_SCALE = 0.3f;
 
     /**
      * Start button for XBox controller on Windows
@@ -342,7 +342,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private void draw() {
         canvas.begin();
-        canvas.draw(background, 0, 0);
+        canvas.drawbackground(background);
         if (playButton == null) {
             drawProgress(canvas);
         } else {

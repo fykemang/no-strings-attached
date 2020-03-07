@@ -918,6 +918,11 @@ public class GameCanvas {
         computeVertices(local, region.getVertices());
     }
 
+    public void drawbackground(Texture image){
+        computeTransform(getWidth()/2, getHeight()/2, getWidth()/2, getHeight()/2, 0, 1f, 1f);
+        spriteBatch.draw(new TextureRegion(image),getWidth(), getHeight(), local);
+    }
+
     /**
      * Transform the given vertices by the affine transform
      */
@@ -1147,6 +1152,7 @@ public class GameCanvas {
         y1 = vertex.y;
         debugRender.line(x0, y0, x1, y1);
     }
+
 
     /**
      * Draws the outline of the given shape in the specified color
