@@ -12,6 +12,7 @@ package platform;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -46,6 +47,9 @@ public class PlatformController extends WorldController {
      * The texture file for the bullet
      */
     private static final String BULLET_FILE = "platform/bullet.png";
+
+    private static final String BACKG_FILE = "platform/background.png";
+
     /**
      * The texture file for the bridge plank
      */
@@ -74,6 +78,8 @@ public class PlatformController extends WorldController {
      */
     private TextureRegion bridgeTexture;
 
+    private TextureRegion backgroundTexture;
+
     /**
      * Track asset loading from all instances and subclasses
      */
@@ -97,6 +103,8 @@ public class PlatformController extends WorldController {
         platformAssetState = AssetState.LOADING;
         manager.load(DUDE_FILE, Texture.class);
         assets.add(DUDE_FILE);
+        manager.load(BACKG_FILE, Texture.class);
+        assets.add(BACKG_FILE);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
         manager.load(BULLET_FILE, Texture.class);
@@ -131,6 +139,7 @@ public class PlatformController extends WorldController {
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
+        backgroundTexture = createTexture(manager, BACKG_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -342,5 +351,18 @@ public class PlatformController extends WorldController {
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
     }
+
+    public void draw(float dt) {
+        canvas.begin();
+        canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.end();
+
+        canvas.begin();
+        for (Obstacle obj : objects) {
+            obj.draw(canvas);
+        }
+        canvas.end();
+    }
+
 
 }
