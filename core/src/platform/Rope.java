@@ -74,7 +74,7 @@ public class Rope extends ComplexObstacle {
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
-    private WheelObstacle[] planks;
+//    private WheelObstacle[] planks;
     private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
     private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
     public RopeState state;
@@ -84,10 +84,16 @@ public class Rope extends ComplexObstacle {
     }
 
 
-    public Rope(WheelObstacle[] planks, RopeState state) {
+    public Rope(ArrayList<WheelObstacle> upper,  ArrayList<WheelObstacle> lower , RopeState state) {
         this.state = state;
-        this.planks = planks;
-        bodies.addAll(planks);
+        this.lowerLayer = lower;
+        this.upperLayer = upper;
+        for (WheelObstacle o : upper){
+           bodies.add(o);
+          }
+        for (WheelObstacle o : lower){
+            bodies.add(o);
+        }
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
@@ -134,7 +140,7 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-        planks = new WheelObstacle[nLinks];
+   //     planks = new WheelObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -147,7 +153,7 @@ public class Rope extends ComplexObstacle {
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
             upperLayer.add(plank);
-            planks[i] = plank;
+       //     planks[i] = plank;
         }
 
         Vector2 pos2 = new Vector2();
@@ -326,41 +332,47 @@ public class Rope extends ComplexObstacle {
 
     }
 
+    private boolean closer(WheelObstacle a, WheelObstacle b, Vector2 pos){
+
+        return  (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
+    }
+
 
     public Rope[] cut(final Vector2 pos, World w) {
         Rope[] cutRopes = new Rope[2];
-        Arrays.sort(planks, new Comparator<Obstacle>() {
-            @Override
-            public int compare(Obstacle o1, Obstacle o2) {
-                return (int) (o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
+        WheelObstacle cloest = null;
+        int index =0;
+        for (int i= 0; i< upperLayer.size(); i++){
+            WheelObstacle cur = upperLayer.get(i);
+            if (cloest == null) {
+                cloest = cur;
+                index = i;
             }
-        });
-        assert planks.length >= 2;
-        Body bodyA = planks[0].getBody();
-        Body bodyB = planks[1].getBody();
-        for (Joint j : joints) {
-            if ((j.getBodyA() == bodyA && j.getBodyB() == bodyB) ||
-                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)) {
-                w.destroyJoint(j);
+            else{
+                if (closer(cur, cloest, pos)){
+                    cloest = cur;
+                    index = i;
+                }
             }
+        }
+        upperLayer.remove(index);
+        lowerLayer.remove(index);
+        w.destroyBody(upperLayer.get(index).getBody());
+        w.destroyBody(lowerLayer.get(index).getBody());
 
-        }
-        ArrayList<BoxObstacle> left = new ArrayList<>();
-        ArrayList<BoxObstacle> right = new ArrayList<>();
-        for (Obstacle obstacle : bodies) {
-            left.add((BoxObstacle) obstacle);
-            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB)
-                break;
-        }
-        for (int i = left.size(); i < bodies.size; i++) {
-            right.add((BoxObstacle) bodies.get(i));
-        }
-        Rope l = new Rope(left.toArray(new WheelObstacle[0]), RopeState.LEFT_BROKEN);
+        ArrayList<WheelObstacle> leftUpper =  new ArrayList<>(upperLayer.subList(0, index)) ;
+        ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, index));
+
+        ArrayList<WheelObstacle> rightUpper =  new ArrayList<>(upperLayer.subList(index+1, upperLayer.size())) ;
+        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index+1, lowerLayer.size()));
+
+
+        Rope l = new Rope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
         cutRopes[0] = l;
 
-        Rope r = new Rope(right.toArray(new WheelObstacle[0]), RopeState.RIGHT_BROKEN);
+        Rope r = new Rope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
         r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
         cutRopes[1] = r;
