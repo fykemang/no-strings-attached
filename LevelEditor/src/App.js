@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './Home.js';
 import { Layout } from './componets/Layout';
 import { NavigationBar } from './componets/NavigationBar';
+// const { ReactDraggable: Draggable } = window;
 
-class App extends Component {
+
+class App extends React.Component {
   render() {
     return (
       <React.Fragment>
         <Router>
-          <NavigationBar/>
+          <NavigationBar />
           <Layout>
             <Switch>
               <Route exact path="/" component={Home} />
