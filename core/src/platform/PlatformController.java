@@ -362,6 +362,15 @@ public class PlatformController extends WorldController {
             obj.draw(canvas);
         }
         canvas.end();
+
+        if (isDebug()) {
+            canvas.beginDebug();
+            for (Obstacle obj : objects) {
+                obj.drawDebug(canvas);
+            }
+            canvas.endDebug();
+        }
+
     }
 
 
