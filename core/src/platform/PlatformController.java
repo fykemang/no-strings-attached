@@ -20,8 +20,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
 import root.InputController;
+import root.Level;
 import root.WorldController;
 import util.SoundController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gameplay specific controller for the platformer game.
@@ -63,6 +67,10 @@ public class PlatformController extends WorldController {
      * The sound file for a bullet collision
      */
     private static final String POP_FILE = "platform/plop.mp3";
+    /**
+     * The folder with all levels
+     */
+    private static String TEST_LEVEL = "levels/test_level.json";
 
     /**
      * Texture asset for character avatar
@@ -111,6 +119,9 @@ public class PlatformController extends WorldController {
         manager.load(POP_FILE, Sound.class);
         assets.add(POP_FILE);
 
+        manager.load(TEST_LEVEL, Level.class);
+        assets.add(TEST_LEVEL);
+
         super.preLoadContent(manager);
     }
 
@@ -127,6 +138,10 @@ public class PlatformController extends WorldController {
     public void loadContent(AssetManager manager) {
         if (platformAssetState != AssetState.LOADING) {
             return;
+        }
+
+        if (manager.isLoaded(TEST_LEVEL)) {
+            levels.add(manager.get(TEST_LEVEL, Level.class));
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
@@ -175,23 +190,13 @@ public class PlatformController extends WorldController {
      */
     private static final float EFFECT_VOLUME = 0.8f;
 
-    // Since these appear only once, we do not care about the magic numbers.
-    // In an actual game, this information would go in a data file.
-    // Wall vertices
-    private Wall[] walls;
-
-    // Other game objects
-    /**
-     * The position of the main dude
-     */
-    private Vector2 mainDudePos;
-
     // Physics objects for the game
     /**
      * Reference to the character avatar
      */
     private DudeModel mainDude;
 
+    private List<Level> levels;
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -203,6 +208,7 @@ public class PlatformController extends WorldController {
         setComplete(false);
         setFailure(false);
         world.setContactListener(new CollisionController(mainDude));
+        this.levels = new ArrayList<>();
     }
 
     /**
@@ -231,33 +237,34 @@ public class PlatformController extends WorldController {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        PlatformLoader loader = new PlatformLoader(
-                "test.json");
-        walls = loader.getTiles();
-        mainDudePos = loader.getCharacterPos();
-        // Add level goal
         float dwidth = goalTile.getRegionWidth() / scale.x;
         float dheight = goalTile.getRegionHeight() / scale.y;
 
-        for (int i = 0; i < walls.length; i++) {
-            createTile(walls[i].getIndices(), 0, 0, "tile" + i);
+        Level testLevel = levels.get(0);
+
+        Vector2 playerPos = testLevel.getPlayerPos();
+        List<Tile> tiles = testLevel.getTiles();
+        List<float[]> couples = testLevel.getCouples();
+
+
+        for (int i = 0; i < tiles.size(); i++) {
+            simulateTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
         }
         // Create main dude
         dwidth = avatarTexture.getRegionWidth() / scale.x;
         dheight = avatarTexture.getRegionHeight() / scale.y;
-        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight, "mainDude", "mainDudeSensor");
+        mainDude = new DudeModel(playerPos.x, playerPos.y, dwidth, dheight, "mainDude", "mainDudeSensor");
         mainDude.setDrawScale(scale);
         mainDude.setTexture(avatarTexture);
         addObject(mainDude);
 
-        float[][] couples = loader.getCouples();
-        for (int i = 0; i < couples.length; i++) {
-            float[] curr = couples[i];
+        for (int i = 0; i < couples.size(); i++) {
+            float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
     }
 
-    public void createTile(float[] points, float x, float y, String name) {
+    public void simulateTile(float[] points, float x, float y, String name) {
         PolygonObstacle tile = new PolygonObstacle(points, x, y);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
@@ -277,8 +284,8 @@ public class PlatformController extends WorldController {
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
-        createTile(points, x1, y1 - 1f, "tile");
-        createTile(points, x2, y2 - 1f, "tile");
+        simulateTile(points, x1, y1 - 1f, "tile");
+        simulateTile(points, x2, y2 - 1f, "tile");
         Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale, id);
         addObject(couple);
     }

@@ -43,10 +43,6 @@ public class Rope extends ComplexObstacle {
      */
     private static final String ROPE_NAME = "rope";
     /**
-     * The debug name for each plank
-     */
-    private static final String PLANK_NAME = "plank";
-    /**
      * The density of each plank in the bridge
      */
     private static final float BASIC_DENSITY = 1.0f;

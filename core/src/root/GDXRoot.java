@@ -67,6 +67,7 @@ public class GDXRoot extends Game implements ScreenListener {
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        manager.setLoader(Level.class, ".json", new LevelLoader(resolver));
     }
 
     /**
@@ -81,6 +82,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
         controller = new PlatformController();
         controller.preLoadContent(manager);
+
         // Initialize the three game worlds
         loading.setScreenListener(this);
         setScreen(loading);
