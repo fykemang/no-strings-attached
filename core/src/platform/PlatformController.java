@@ -374,23 +374,23 @@ public class PlatformController extends WorldController {
         mainDude.applyForce();
         if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-
-            mainDude.setWidth(jumpTexture.getRegionWidth() / scale.x);
-            mainDude.setHeight(jumpTexture.getRegionHeight() / scale.y);
-            mainDude.setTexture(jumpTexture);
+//
+//            mainDude.setWidth(jumpTexture.getRegionWidth() * 0.1f / scale.x);
+//            mainDude.setHeight(jumpTexture.getRegionHeight() * 0.1f / scale.y);
+//            mainDude.setTexture(jumpTexture);
         }
-
-        if (mainDude.getMovement() < 0) {
-            mainDude.setWidth(leftTexture.getRegionWidth() / scale.x);
-            mainDude.setHeight(leftTexture.getRegionHeight() / scale.y);
-            mainDude.setTexture(leftTexture);
-        }
-
-        if (mainDude.getMovement() > 0) {
-            mainDude.setWidth(rightTexture.getRegionWidth() / scale.x);
-            mainDude.setHeight(rightTexture.getRegionHeight() / scale.y);
-            mainDude.setTexture(rightTexture);
-        }
+//
+//        if (mainDude.getMovement() < 0) {
+//            mainDude.setWidth(leftTexture.getRegionWidth() * 0.1f / scale.x);
+//            mainDude.setHeight(leftTexture.getRegionHeight() * 0.1f / scale.y);
+//            mainDude.setTexture(leftTexture);
+//        }
+//
+//        if (mainDude.getMovement() > 0) {
+//            mainDude.setWidth(rightTexture.getRegionWidth() * 0.1f / scale.x);
+//            mainDude.setHeight(rightTexture.getRegionHeight() * 0.1f / scale.y);
+//            mainDude.setTexture(rightTexture);
+//        }
 
         if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
             int coupleID = mainDude.getClosestCouple();
