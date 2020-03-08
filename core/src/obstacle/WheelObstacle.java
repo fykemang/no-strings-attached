@@ -95,9 +95,9 @@ public class WheelObstacle extends SimpleObstacle {
         // Create the fixture
         fixture.shape = shape;
 
-        fixture.density=2f;
-        fixture.restitution=0.4f;
-        fixture.friction=1f;
+        fixture.density = 2f;
+        fixture.restitution = 0.4f;
+        fixture.friction = 1f;
         body.setFixedRotation(true);
         geometry = body.createFixture(fixture);
         markDirty(false);

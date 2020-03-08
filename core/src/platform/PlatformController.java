@@ -41,7 +41,6 @@ public class PlatformController extends WorldController {
 
     /**
      * The texture file for the character avatar (no animation)
-     *
      */
     private static final String DUDE_FILE = "platform/pc_idle.png";
 
@@ -88,7 +87,7 @@ public class PlatformController extends WorldController {
     private TextureRegion rightTexture;
     private TextureRegion jumpTexture;
     private TextureRegion fallTexture;
-    private  TextureRegion backgroundTexture;
+    private TextureRegion backgroundTexture;
 
 
     /**
@@ -381,10 +380,6 @@ public class PlatformController extends WorldController {
         if (mainDude.isGrounded()) {
             mainDude.setTexture(avatarTexture);
         }
-
-//        if (! mainDude.isJumping() && ! mainDude.isGrounded()) {
-//            mainDude.setTexture(fallTexture);
-//        }
 
         if (mainDude.getMovement() < 0) {
             mainDude.setTexture(leftTexture);

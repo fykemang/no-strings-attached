@@ -21,13 +21,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import obstacle.*;
+import obstacle.ComplexObstacle;
+import obstacle.Obstacle;
+import obstacle.SimpleObstacle;
+import obstacle.WheelObstacle;
 import root.GameCanvas;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * A bridge with planks connected by revolute joints.
@@ -74,7 +74,7 @@ public class Rope extends ComplexObstacle {
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
-//    private WheelObstacle[] planks;
+    //    private WheelObstacle[] planks;
     private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
     private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
     public RopeState state;
@@ -84,20 +84,20 @@ public class Rope extends ComplexObstacle {
     }
 
 
-    public Rope(ArrayList<WheelObstacle> upper,  ArrayList<WheelObstacle> lower , RopeState state) {
+    public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
         this.state = state;
         this.lowerLayer = lower;
         this.upperLayer = upper;
-        for (WheelObstacle o : upper){
-           bodies.add(o);
-          }
-        for (WheelObstacle o : lower){
+        for (WheelObstacle o : upper) {
+            bodies.add(o);
+        }
+        for (WheelObstacle o : lower) {
             bodies.add(o);
         }
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
-        contPoints = new Vector2[bodies.size/2 + 3];
+        contPoints = new Vector2[bodies.size / 2 + 3];
 
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
@@ -130,7 +130,7 @@ public class Rope extends ComplexObstacle {
         norm.nor();
 
         // If too small, only make one plank.
-        int nLinks = (int) (length / linksize)-4;
+        int nLinks = (int) (length / linksize) - 4;
         if (nLinks <= 1) {
             nLinks = 1;
             linksize = length;
@@ -140,7 +140,7 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-   //     planks = new WheelObstacle[nLinks];
+        //     planks = new WheelObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -153,7 +153,7 @@ public class Rope extends ComplexObstacle {
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
             upperLayer.add(plank);
-       //     planks[i] = plank;
+            //     planks[i] = plank;
         }
 
         Vector2 pos2 = new Vector2();
@@ -162,7 +162,7 @@ public class Rope extends ComplexObstacle {
             pos2.set(norm);
             pos2.scl(t);
             pos2.add(x0, y0);
-            Plank plank = new Plank(pos2.x, pos2.y-0.2f, 0.1f, id);
+            Plank plank = new Plank(pos2.x, pos2.y - 0.2f, 0.1f, id);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
             lowerLayer.add(plank);
@@ -193,7 +193,7 @@ public class Rope extends ComplexObstacle {
     @Override
     protected boolean createJoints(World world) {
         assert upperLayer.size() > 0;
-         linksize = 0.1f;
+        linksize = 0.1f;
         if (state != RopeState.COMPLETE) return true;
         Vector2 anchor1 = new Vector2(linksize / 2, 0);
         Vector2 anchor2 = new Vector2(-linksize / 2, 0);
@@ -256,7 +256,7 @@ public class Rope extends ComplexObstacle {
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
 
-            Obstacle curr1 = upperLayer.get(i+1);
+            Obstacle curr1 = upperLayer.get(i + 1);
             Obstacle next1 = lowerLayer.get(i);
             jointDef.bodyA = curr1.getBody();
             jointDef.bodyB = next1.getBody();
@@ -332,24 +332,23 @@ public class Rope extends ComplexObstacle {
 
     }
 
-    private boolean closer(WheelObstacle a, WheelObstacle b, Vector2 pos){
+    private boolean closer(WheelObstacle a, WheelObstacle b, Vector2 pos) {
 
-        return  (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
+        return (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
     }
 
 
     public Rope[] cut(final Vector2 pos, World w) {
         Rope[] cutRopes = new Rope[2];
         WheelObstacle cloest = null;
-        int index =0;
-        for (int i= 0; i< upperLayer.size(); i++){
+        int index = 0;
+        for (int i = 0; i < upperLayer.size(); i++) {
             WheelObstacle cur = upperLayer.get(i);
             if (cloest == null) {
                 cloest = cur;
                 index = i;
-            }
-            else{
-                if (closer(cur, cloest, pos)){
+            } else {
+                if (closer(cur, cloest, pos)) {
                     cloest = cur;
                     index = i;
                 }
@@ -360,11 +359,11 @@ public class Rope extends ComplexObstacle {
         w.destroyBody(upperLayer.get(index).getBody());
         w.destroyBody(lowerLayer.get(index).getBody());
 
-        ArrayList<WheelObstacle> leftUpper =  new ArrayList<>(upperLayer.subList(0, index)) ;
+        ArrayList<WheelObstacle> leftUpper = new ArrayList<>(upperLayer.subList(0, index));
         ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, index));
 
-        ArrayList<WheelObstacle> rightUpper =  new ArrayList<>(upperLayer.subList(index+1, upperLayer.size())) ;
-        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index+1, lowerLayer.size()));
+        ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index + 1, upperLayer.size()));
+        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index + 1, lowerLayer.size()));
 
 
         Rope l = new Rope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
