@@ -85,9 +85,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     private float movement;
 
-    private Vector2 lastLocation;
-    public boolean goingUp;
-
     /**
      * Which direction is the character facing
      */
@@ -251,7 +248,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     public DudeModel(float x, float y, float width, float height, String dudeName, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
-        this.lastLocation = new Vector2(x, y);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
