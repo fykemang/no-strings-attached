@@ -214,6 +214,7 @@ public class PlatformController extends WorldController {
     private DudeModel player;
 
     private List<Level> levels;
+
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -379,8 +380,8 @@ public class PlatformController extends WorldController {
 
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                     if (ropes != null)
-                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                  }
+                        ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                }
 
             }
         }

@@ -125,7 +125,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //        int viewportWidth = (int)size.x;
 //        int viewportHeight = (int)size.y;
 //        Gdx.gl.glViewport(viewportX, viewportY, viewportWidth, viewportHeight);
-         canvas.resize(width, height);
+        canvas.resize(width, height);
     }
 
     /**

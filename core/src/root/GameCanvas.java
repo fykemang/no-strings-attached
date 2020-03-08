@@ -326,7 +326,7 @@ public class GameCanvas {
         // Resizing screws up the spriteBatch projection matrix
         camera.viewportWidth = width;
         camera.viewportHeight = height;
-       // spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+        // spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
     }
 
 
