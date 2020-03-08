@@ -1,6 +1,5 @@
 package platform;
 
-import obstacle.BoxObstacle;
 import obstacle.WheelObstacle;
 
 public class Plank extends WheelObstacle {

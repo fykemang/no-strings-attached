@@ -38,8 +38,7 @@ public class Couple extends ComplexObstacle {
         this.trampolineTexture = trampolineTexture;
         this.l = createAvatar(x1, y1);
         this.r = createAvatar(x2, y2);
-    //    this.trampoline = new Rope(x1, y1, x2, y2, trampolineTexture.getRegionWidth() / drawScale.x, trampolineTexture.getRegionHeight() / drawScale.y, id);
-        this.trampoline = new Rope(x1+l.getWidth() / 1.5f+0.1f, y1+0.1f, x2-r.getWidth() / 1.5f-0.1f, y2+0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
+        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
         this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
@@ -95,7 +94,6 @@ public class Couple extends ComplexObstacle {
         this.trampRight = r;
         this.bodies.add(l);
         this.bodies.add(r);
-
     }
 
     public Rope getRope() {
