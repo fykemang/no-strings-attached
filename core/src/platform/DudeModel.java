@@ -73,12 +73,15 @@ public class DudeModel extends CapsuleObstacle {
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
     private static final float DUDE_SSHRINK = 0.8f;
+    /**
+     * Cooldown (in animation frames) for shooting
+     */
+    private static final int SHOOT_COOLDOWN = 40;
 
     /**
      * The current horizontal movement of the character
      */
     private float movement;
-
     /**
      * How long until we can jump again
      */
@@ -95,11 +98,23 @@ public class DudeModel extends CapsuleObstacle {
      * Ground sensor to represent our feet
      */
     private Fixture sensorFixture;
+    /**
+     * Whether we are actively shooting
+     */
+    private boolean isShooting;
+    /**
+     * How long until we can shoot again
+     */
+    private int shootCooldown;
     private PolygonShape sensorShape;
     private boolean canCut;
     private String sensorName;
     private int closestCouple;
 
+    /**
+     * Which direction is the character facing
+     */
+    private boolean isFacingRight;
     /**
      * Cache for internal force calculations
      */
@@ -125,6 +140,12 @@ public class DudeModel extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         movement = value;
+        // Change facing if appropriate
+        if (movement < 0) {
+            isFacingRight = false;
+        } else if (movement > 0) {
+            isFacingRight = true;
+        }
     }
 
     /**
@@ -152,6 +173,15 @@ public class DudeModel extends CapsuleObstacle {
      */
     public boolean isGrounded() {
         return isGrounded;
+    }
+
+    /**
+     * Returns true if this character is facing right
+     *
+     * @return true if this character is facing right
+     */
+    public boolean isFacingRight() {
+        return isFacingRight;
     }
 
     /**
@@ -323,7 +353,12 @@ public class DudeModel extends CapsuleObstacle {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
 
-//        lastLocation = this.getPosition();
+        if (isShooting()) {
+            shootCooldown = SHOOT_COOLDOWN;
+        } else {
+            shootCooldown = Math.max(0, shootCooldown - 1);
+        }
+
         super.update(dt);
     }
 
@@ -336,6 +371,24 @@ public class DudeModel extends CapsuleObstacle {
 
     public boolean canCut() {
         return canCut;
+    }
+
+    /**
+     * Returns true if the dude is actively firing.
+     *
+     * @return true if the dude is actively firing.
+     */
+    public boolean isShooting() {
+        return isShooting && shootCooldown <= 0;
+    }
+
+    /**
+     * Sets whether the dude is actively firing.
+     *
+     * @param value whether the dude is actively firing.
+     */
+    public void setShooting(boolean value) {
+        isShooting = value;
     }
 
     /**

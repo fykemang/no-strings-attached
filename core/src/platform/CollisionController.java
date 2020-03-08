@@ -4,17 +4,20 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 
+/**
+ * ContactListener that detects and handles collisions in the Box2D World
+ */
 public class CollisionController implements ContactListener {
     /**
      * Mark set to handle more sophisticated collision callbacks
      */
     private ObjectSet<Fixture> sensorFixtures;
-    private DudeModel mainDude;
+    private DudeModel player;
 
 
-    public CollisionController(DudeModel mainDude) {
+    public CollisionController(DudeModel player) {
         this.sensorFixtures = new ObjectSet<>();
-        this.mainDude = mainDude;
+        this.player = player;
     }
 
 //    public boolean checkForRopeCollision(Obstacle obs) {
@@ -58,21 +61,29 @@ public class CollisionController implements ContactListener {
             Obstacle bd1 = (Obstacle) body1.getUserData();
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
-            if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(mainDude.getName())) {
-                mainDude.setCanCut(true);
-                mainDude.setClosestCouple(((Plank) bd1).getPlankParentID());
+            if (bd1.getName().equals("bullet") && bd2 != player) {
+                bd1.markRemoved(true);
             }
 
-            if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
-                mainDude.setCanCut(true);
-                mainDude.setClosestCouple(((Plank) bd2).getPlankParentID());
+            if (bd2.getName().equals("bullet") && bd1 != player) {
+                bd2.markRemoved(true);
+            }
+
+            if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(player.getName())) {
+                player.setCanCut(true);
+                player.setClosestCouple(((Plank) bd1).getPlankParentID());
+            }
+
+            if (bd1.getName().equals(player.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
+                player.setCanCut(true);
+                player.setClosestCouple(((Plank) bd2).getPlankParentID());
             }
 
             // See if we have landed on the ground.
-            if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
-                    (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
-                mainDude.setGrounded(true);
-                sensorFixtures.add(mainDude == bd1 ? fix2 : fix1); // Could have more than one ground
+            if ((player.getSensorName().equals(fd2) && player != bd1) ||
+                    (player.getSensorName().equals(fd1) && player != bd2)) {
+                player.setGrounded(true);
+                sensorFixtures.add(player == bd1 ? fix2 : fix1); // Could have more than one ground
             }
 
         } catch (Exception e) {
@@ -100,17 +111,17 @@ public class CollisionController implements ContactListener {
         Obstacle bd1 = (Obstacle) body1.getUserData();
         Obstacle bd2 = (Obstacle) body2.getUserData();
 
-        if (bd1.getName().equals(mainDude.getName()) && bd2.getName().equals(Plank.PLANK_NAME) ||
-                bd2.getName().equals(mainDude.getName()) && bd1.getName().equals(Plank.PLANK_NAME)) {
-            mainDude.setCanCut(false);
+        if (bd1.getName().equals(player.getName()) && bd2.getName().equals(Plank.PLANK_NAME) ||
+                bd2.getName().equals(player.getName()) && bd1.getName().equals(Plank.PLANK_NAME)) {
+            player.setCanCut(false);
         }
 
 
-        if ((mainDude.getSensorName().equals(fd2) && mainDude != bd1) ||
-                (mainDude.getSensorName().equals(fd1) && mainDude != bd2)) {
-            sensorFixtures.remove(mainDude == bd1 ? fix2 : fix1);
+        if ((player.getSensorName().equals(fd2) && player != bd1) ||
+                (player.getSensorName().equals(fd1) && player != bd2)) {
+            sensorFixtures.remove(player == bd1 ? fix2 : fix1);
             if (sensorFixtures.size == 0) {
-                mainDude.setGrounded(false);
+                player.setGrounded(false);
             }
         }
     }

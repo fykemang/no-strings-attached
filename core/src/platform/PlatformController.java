@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
+import obstacle.WheelObstacle;
 import root.InputController;
 import root.Level;
 import root.WorldController;
@@ -81,6 +82,7 @@ public class PlatformController extends WorldController {
 
     private static final String BKG_FILE = "platform/background.png";
 
+
     /**
      * Texture assets for character avatar
      */
@@ -90,7 +92,10 @@ public class PlatformController extends WorldController {
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     private TextureRegion backgroundTexture;
-
+    /**
+     * Texture asset for the bullet
+     */
+    private TextureRegion bulletTexture;
     /**
      * Texture asset for the bridge plank
      */
@@ -176,6 +181,7 @@ public class PlatformController extends WorldController {
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
+        bulletTexture = createTexture(manager, BULLET_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -206,6 +212,14 @@ public class PlatformController extends WorldController {
      * The volume for sound effects
      */
     private static final float EFFECT_VOLUME = 0.8f;
+    /**
+     * Offset for bullet when firing
+     */
+    private static final float BULLET_OFFSET = 0.2f;
+    /**
+     * The speed of the bullet after firing
+     */
+    private static final float BULLET_SPEED = 20.0f;
 
     // Physics objects for the game
     /**
@@ -346,7 +360,9 @@ public class PlatformController extends WorldController {
         // Process actions in object model
         player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
         player.setJumping(InputController.getInstance().didPrimary());
+        player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
+
 
         if (player.isJumping()) {
             player.setTexture(playerJumpTexture);
@@ -373,6 +389,11 @@ public class PlatformController extends WorldController {
             player.setTexture(playerRightTexture);
         }
 
+        // Add a bullet if we fire
+        if (player.isShooting()) {
+            createBullet();
+        }
+
         if (InputController.getInstance().didSecondary() && player.canCut()) {
             int coupleID = player.getClosestCouple();
             for (Obstacle obs : objects) {
@@ -388,6 +409,28 @@ public class PlatformController extends WorldController {
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
+    }
+
+    /**
+     * Add a new bullet to the world and send it in the right direction.
+     */
+    private void createBullet() {
+        float offset = (player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET);
+        float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
+        WheelObstacle bullet = new WheelObstacle(player.getX() + offset, player.getY(), radius);
+
+        bullet.setName("bullet");
+        bullet.setDrawScale(scale);
+        bullet.setTexture(bulletTexture);
+        bullet.setBullet(true);
+        bullet.setGravityScale(0);
+
+        // Compute position and velocity
+        float speed = (player.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED);
+        bullet.setVX(speed);
+        addQueuedObject(bullet);
+
+        SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
     }
 
     public void draw(float dt) {
