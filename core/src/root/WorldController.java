@@ -31,7 +31,9 @@ import util.FilmStrip;
 import util.PooledList;
 import util.ScreenListener;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Base class for a world-specific controller.
@@ -89,6 +91,7 @@ public abstract class WorldController implements Screen {
      * Retro font for displaying messages
      */
     private static String FONT_FILE = "shared/RetroGame.ttf";
+
     private static int FONT_SIZE = 64;
 
     /**
@@ -749,5 +752,4 @@ public abstract class WorldController implements Screen {
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
-
 }

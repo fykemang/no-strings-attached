@@ -41,10 +41,6 @@ public class Rope extends ComplexObstacle {
      */
     private static final String ROPE_NAME = "rope";
     /**
-     * The debug name for each plank
-     */
-    private static final String PLANK_NAME = "plank";
-    /**
      * The density of each plank in the bridge
      */
     private static final float BASIC_DENSITY = 1.0f;
@@ -336,16 +332,16 @@ public class Rope extends ComplexObstacle {
             return null;
         }
         Rope[] cutRopes = new Rope[2];
-        WheelObstacle cloest = null;
+        WheelObstacle closest = null;
         int index = 0;
         for (int i = 0; i < upperLayer.size(); i++) {
             WheelObstacle cur = upperLayer.get(i);
-            if (cloest == null) {
-                cloest = cur;
+            if (closest == null) {
+                closest = cur;
                 index = i;
             } else {
-                if (closer(cur, cloest, pos)) {
-                    cloest = cur;
+                if (closer(cur, closest, pos)) {
+                    closest = cur;
                     index = i;
                 }
             }

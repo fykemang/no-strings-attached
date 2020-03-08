@@ -1,7 +1,9 @@
 {
-  "characterPos": [10.0, 20.0],
-  "walls": [
-
+  "playerPos": {
+    "x": 10.0,
+    "y": 20.0
+  },
+  "tiles": [
   ],
   "couples": [
     {

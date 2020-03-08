@@ -22,8 +22,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
 import root.InputController;
+import root.Level;
 import root.WorldController;
 import util.SoundController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gameplay specific controller for the platformer game.
@@ -75,6 +79,10 @@ public class PlatformController extends WorldController {
      * The sound file for a bullet collision
      */
     private static final String POP_FILE = "platform/plop.mp3";
+    /**
+     * The folder with all levels
+     */
+    private static String TEST_LEVEL = "levels/test_level.json";
 
     private static final String BKG_FILE = "platform/background.png";
 
@@ -141,7 +149,8 @@ public class PlatformController extends WorldController {
         manager.load(POP_FILE, Sound.class);
         assets.add(POP_FILE);
 
-        local = new Affine2();
+        manager.load(TEST_LEVEL, Level.class);
+        assets.add(TEST_LEVEL);
 
         super.preLoadContent(manager);
     }
@@ -159,6 +168,10 @@ public class PlatformController extends WorldController {
     public void loadContent(AssetManager manager) {
         if (platformAssetState != AssetState.LOADING) {
             return;
+        }
+
+        if (manager.isLoaded(TEST_LEVEL)) {
+            levels.add(manager.get(TEST_LEVEL, Level.class));
         }
 
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
@@ -201,23 +214,13 @@ public class PlatformController extends WorldController {
      */
     private static final float EFFECT_VOLUME = 0.8f;
 
-    // Since these appear only once, we do not care about the magic numbers.
-    // In an actual game, this information would go in a data file.
-    // Wall vertices
-    private Wall[] walls;
-
-    // Other game objects
-    /**
-     * The position of the main dude
-     */
-    private Vector2 mainDudePos;
-
     // Physics objects for the game
     /**
      * Reference to the player avatar
      */
     private DudeModel player;
 
+    private List<Level> levels;
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -229,6 +232,7 @@ public class PlatformController extends WorldController {
         setComplete(false);
         setFailure(false);
         world.setContactListener(new CollisionController(player));
+        this.levels = new ArrayList<>();
     }
 
     /**
@@ -257,29 +261,29 @@ public class PlatformController extends WorldController {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        PlatformLoader loader = new PlatformLoader(
-                "test.json");
-        walls = loader.getTiles();
-        mainDudePos = loader.getCharacterPos();
-        // Add level goal
         float dWidth = goalTile.getRegionWidth() / scale.x;
         float dHeight = goalTile.getRegionHeight() / scale.y;
 
-        for (int i = 0; i < walls.length; i++) {
-            createTile(walls[i].getIndices(), 0, 0, "tile" + i);
+        Level testLevel = levels.get(0);
+
+        Vector2 playerPos = testLevel.getPlayerPos();
+        List<Tile> tiles = testLevel.getTiles();
+        List<float[]> couples = testLevel.getCouples();
+
+
+        for (int i = 0; i < tiles.size(); i++) {
+            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
         }
         // Create main dude
         dWidth = playerTexture.getRegionWidth() / scale.x;
         dHeight = playerTexture.getRegionHeight() / scale.y;
-        player = new DudeModel(mainDudePos.x, mainDudePos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
+        player = new DudeModel(playerPos.x, playerPos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
         player.setDrawScale(scale);
         player.setTexture(playerTexture);
         addObject(player);
-        lastLocation = player.getPosition();
 
-        float[][] couples = loader.getCouples();
-        for (int i = 0; i < couples.length; i++) {
-            float[] curr = couples[i];
+        for (int i = 0; i < couples.size(); i++) {
+            float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
     }
