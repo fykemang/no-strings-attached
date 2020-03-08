@@ -351,12 +351,12 @@ public class DudeModel extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        if (this.getPosition().y > lastLocation.y) {
-            goingUp = true;
-        }
-        else {
-            goingUp = false;
-        }
+//        if (this.getPosition().y > lastLocation.y) {
+//            goingUp = true;
+//        }
+//        else {
+//            goingUp = false;
+//        }
 
         // Apply cooldowns
         if (isJumping()) {
@@ -365,7 +365,7 @@ public class DudeModel extends CapsuleObstacle {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
 
-        lastLocation = this.getPosition();
+//        lastLocation = this.getPosition();
         super.update(dt);
     }
 

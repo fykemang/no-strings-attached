@@ -370,11 +370,11 @@ public class PlatformController extends WorldController {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (mainDude.goingUp) {
+        if (mainDude.getVY() > 0) {
             mainDude.setTexture(jumpTexture);
         }
 
-        if (! mainDude.goingUp) {
+        if (mainDude.getVY() < 0) {
             mainDude.setTexture(fallTexture);
         }
 
