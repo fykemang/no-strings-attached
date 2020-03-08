@@ -12,8 +12,10 @@ package platform;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -33,11 +35,22 @@ import util.SoundController;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController {
+    private Affine2 local;
+
+    private Vector2 lastLocation;
 
     /**
-     * The texture file for the character avatar (no animation)
+     * The texture file for the player (no animation)
      */
-    private static final String DUDE_FILE = "platform/dude.png";
+    private static final String PLAYER_IDLE = "platform/pc_idle.png";
+
+    private static final String PLAYER_LEFT = "platform/pc_left.png";
+
+    private static final String PLAYER_RIGHT = "platform/pc_right.png";
+
+    private static final String PLAYER_JUMP = "platform/pc_jump.png";
+
+    private static final String PLAYER_FALL = "platform/pc_fall.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -50,7 +63,6 @@ public class PlatformController extends WorldController {
      * The texture file for the bridge plank
      */
     private static final String ROPE_FILE = "platform/ropebridge.png";
-
     /**
      * The sound file for a jump
      */
@@ -64,10 +76,17 @@ public class PlatformController extends WorldController {
      */
     private static final String POP_FILE = "platform/plop.mp3";
 
+    private static final String BKG_FILE = "platform/background.png";
+
     /**
-     * Texture asset for character avatar
+     * Texture assets for character avatar
      */
-    private TextureRegion avatarTexture;
+    private TextureRegion playerTexture;
+    private TextureRegion playerLeftTexture;
+    private TextureRegion playerRightTexture;
+    private TextureRegion playerJumpTexture;
+    private TextureRegion playerFallTexture;
+    private TextureRegion backgroundTexture;
 
     /**
      * Texture asset for the bridge plank
@@ -95,8 +114,16 @@ public class PlatformController extends WorldController {
         }
 
         platformAssetState = AssetState.LOADING;
-        manager.load(DUDE_FILE, Texture.class);
-        assets.add(DUDE_FILE);
+        manager.load(PLAYER_IDLE, Texture.class);
+        assets.add(PLAYER_IDLE);
+        manager.load(PLAYER_LEFT, Texture.class);
+        assets.add(PLAYER_LEFT);
+        manager.load(PLAYER_RIGHT, Texture.class);
+        assets.add(PLAYER_RIGHT);
+        manager.load(PLAYER_JUMP, Texture.class);
+        assets.add(PLAYER_JUMP);
+        manager.load(PLAYER_FALL, Texture.class);
+        assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
         manager.load(BULLET_FILE, Texture.class);
@@ -106,10 +133,15 @@ public class PlatformController extends WorldController {
 
         manager.load(JUMP_FILE, Sound.class);
         assets.add(JUMP_FILE);
+
+        manager.load(BKG_FILE, Texture.class);
+        assets.add(BKG_FILE);
         manager.load(PEW_FILE, Sound.class);
         assets.add(PEW_FILE);
         manager.load(POP_FILE, Sound.class);
         assets.add(POP_FILE);
+
+        local = new Affine2();
 
         super.preLoadContent(manager);
     }
@@ -129,8 +161,15 @@ public class PlatformController extends WorldController {
             return;
         }
 
-        avatarTexture = createTexture(manager, DUDE_FILE, false);
+        playerTexture = createTexture(manager, PLAYER_IDLE, false);
+        backgroundTexture = createTexture(manager, BKG_FILE, false);
+        playerLeftTexture = createTexture(manager, PLAYER_LEFT, false);
+        playerRightTexture = createTexture(manager, PLAYER_RIGHT, false);
+        playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
+        playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
+
+        local = new Affine2();
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -150,10 +189,6 @@ public class PlatformController extends WorldController {
      */
     private static final float BASIC_DENSITY = 0.0f;
     /**
-     * The density for a bullet
-     */
-    private static final float HEAVY_DENSITY = 10.0f;
-    /**
      * Friction of most platforms
      */
     private static final float BASIC_FRICTION = 0.4f;
@@ -161,15 +196,6 @@ public class PlatformController extends WorldController {
      * The restitution for all physics objects
      */
     private static final float BASIC_RESTITUTION = 0.1f;
-
-    /**
-     * Offset for bullet when firing
-     */
-    private static final float BULLET_OFFSET = 0.2f;
-    /**
-     * The speed of the bullet after firing
-     */
-    private static final float BULLET_SPEED = 20.0f;
     /**
      * The volume for sound effects
      */
@@ -188,9 +214,9 @@ public class PlatformController extends WorldController {
 
     // Physics objects for the game
     /**
-     * Reference to the character avatar
+     * Reference to the player avatar
      */
-    private DudeModel mainDude;
+    private DudeModel player;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -202,7 +228,7 @@ public class PlatformController extends WorldController {
         setDebug(false);
         setComplete(false);
         setFailure(false);
-        world.setContactListener(new CollisionController(mainDude));
+        world.setContactListener(new CollisionController(player));
     }
 
     /**
@@ -224,7 +250,7 @@ public class PlatformController extends WorldController {
         setComplete(false);
         setFailure(false);
         populateLevel();
-        world.setContactListener(new CollisionController(mainDude));
+        world.setContactListener(new CollisionController(player));
     }
 
     /**
@@ -236,19 +262,20 @@ public class PlatformController extends WorldController {
         walls = loader.getTiles();
         mainDudePos = loader.getCharacterPos();
         // Add level goal
-        float dwidth = goalTile.getRegionWidth() / scale.x;
-        float dheight = goalTile.getRegionHeight() / scale.y;
+        float dWidth = goalTile.getRegionWidth() / scale.x;
+        float dHeight = goalTile.getRegionHeight() / scale.y;
 
         for (int i = 0; i < walls.length; i++) {
             createTile(walls[i].getIndices(), 0, 0, "tile" + i);
         }
         // Create main dude
-        dwidth = avatarTexture.getRegionWidth() / scale.x;
-        dheight = avatarTexture.getRegionHeight() / scale.y;
-        mainDude = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight, "mainDude", "mainDudeSensor");
-        mainDude.setDrawScale(scale);
-        mainDude.setTexture(avatarTexture);
-        addObject(mainDude);
+        dWidth = playerTexture.getRegionWidth() / scale.x;
+        dHeight = playerTexture.getRegionHeight() / scale.y;
+        player = new DudeModel(mainDudePos.x, mainDudePos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
+        player.setDrawScale(scale);
+        player.setTexture(playerTexture);
+        addObject(player);
+        lastLocation = player.getPosition();
 
         float[][] couples = loader.getCouples();
         for (int i = 0; i < couples.length; i++) {
@@ -279,7 +306,7 @@ public class PlatformController extends WorldController {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
         createTile(points, x1, y1 - 1f, "tile");
         createTile(points, x2, y2 - 1f, "tile");
-        Couple couple = new Couple(x1, y1, x2, y2, avatarTexture, bridgeTexture, scale, id);
+        Couple couple = new Couple(x1, y1, x2, y2, playerTexture, bridgeTexture, scale, id);
         addObject(couple);
     }
 
@@ -298,7 +325,7 @@ public class PlatformController extends WorldController {
             return false;
         }
 
-        if (!isFailure() && mainDude.getY() < -1) {
+        if (!isFailure() && player.getY() < -1) {
             setFailure(true);
             return false;
         }
@@ -318,29 +345,72 @@ public class PlatformController extends WorldController {
      */
     public void update(float dt) {
         // Process actions in object model
-        mainDude.setMovement(InputController.getInstance().getHorizontal() * mainDude.getForce());
-        mainDude.setJumping(InputController.getInstance().didPrimary());
+        player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
+        player.setJumping(InputController.getInstance().didPrimary());
+        player.applyForce();
 
-
-        mainDude.applyForce();
-        if (mainDude.isJumping()) {
+        if (player.isJumping()) {
+            player.setTexture(playerJumpTexture);
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
-            int coupleID = mainDude.getClosestCouple();
-            for (Obstacle obs : objects) {
-                // System.out.println(obs.getName());
-                if (obs.getName().equals("couples" + coupleID)) {
-                    Rope[] ropes = ((Couple) obs).getRope().cut(mainDude.getPosition(), world);
-                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
+        if (player.getVY() > 0) {
+            player.setTexture(playerJumpTexture);
+        }
 
-                }
+        if (player.getVY() < 0) {
+            player.setTexture(playerFallTexture);
+        }
+
+        if (player.isGrounded()) {
+            player.setTexture(playerTexture);
+        }
+
+        if (player.getMovement() < 0) {
+            player.setTexture(playerLeftTexture);
+        }
+
+        if (player.getMovement() > 0) {
+            player.setTexture(playerRightTexture);
+        }
+
+        if (InputController.getInstance().didSecondary() && player.canCut()) {
+            int coupleID = player.getClosestCouple();
+            for (Obstacle obs : objects) {
+                if (obs.getName().equals("couples" + coupleID)) {
+
+                    Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                    if (ropes != null)
+                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                  }
+
             }
         }
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
     }
+
+    public void draw(float dt) {
+        canvas.begin();
+        canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.end();
+
+        canvas.begin();
+        for (Obstacle obj : objects) {
+            obj.draw(canvas);
+        }
+        canvas.end();
+
+        if (isDebug()) {
+            canvas.beginDebug();
+            for (Obstacle obj : objects) {
+                obj.drawDebug(canvas);
+            }
+            canvas.endDebug();
+        }
+
+    }
+
 
 }

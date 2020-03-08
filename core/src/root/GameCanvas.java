@@ -296,8 +296,8 @@ public class GameCanvas {
      * This method raises an IllegalStateException if called while drawing is
      * active (e.g. in-between a begin-end pair).
      *
-     * @param fullscreen Whether this canvas should change to fullscreen.
-     * @param desktop    Whether to use the current desktop resolution
+     * @param value   Whether this canvas should change to fullscreen.
+     * @param desktop Whether to use the current desktop resolution
      */
     public void setFullscreen(boolean value, boolean desktop) {
         if (active != DrawPass.INACTIVE) {
@@ -719,11 +719,11 @@ public class GameCanvas {
      * The local transformations in this method are applied in the following order:
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
-     * @param image     The region to draw
-     * @param tint      The color tint
-     * @param ox        The x-coordinate of texture origin (in pixels)
-     * @param oy        The y-coordinate of texture origin (in pixels)
-     * @param transform The image transform
+     * @param region The region to draw
+     * @param tint   The color tint
+     * @param ox     The x-coordinate of texture origin (in pixels)
+     * @param oy     The y-coordinate of texture origin (in pixels)
+     * @param affine The image transform
      */
     public void draw(TextureRegion region, Color tint, float ox, float oy, Affine2 affine) {
         if (active != DrawPass.STANDARD) {
@@ -894,11 +894,11 @@ public class GameCanvas {
      * The local transformations in this method are applied in the following order:
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
-     * @param region    The polygon to draw
-     * @param tint      The color tint
-     * @param ox        The x-coordinate of texture origin (in pixels)
-     * @param oy        The y-coordinate of texture origin (in pixels)
-     * @param transform The image transform
+     * @param region The polygon to draw
+     * @param tint   The color tint
+     * @param ox     The x-coordinate of texture origin (in pixels)
+     * @param oy     The y-coordinate of texture origin (in pixels)
+     * @param affine The image transform
      */
     public void draw(PolygonRegion region, Color tint, float ox, float oy, Affine2 affine) {
         if (active != DrawPass.STANDARD) {
@@ -916,6 +916,11 @@ public class GameCanvas {
         // Invert and restore
         local.inv();
         computeVertices(local, region.getVertices());
+    }
+
+    public void drawBackground(Texture image) {
+        computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
+        spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
     /**
@@ -1079,12 +1084,12 @@ public class GameCanvas {
 
         float x0, y0, x1, y1;
         debugRender.setColor(color);
-        for (int ii = 0; ii < shape.getVertexCount() - 1; ii++) {
-            shape.getVertex(ii, vertex);
+        for (int i = 0; i < shape.getVertexCount() - 1; i++) {
+            shape.getVertex(i, vertex);
             local.applyTo(vertex);
             x0 = vertex.x;
             y0 = vertex.y;
-            shape.getVertex(ii + 1, vertex);
+            shape.getVertex(i + 1, vertex);
             local.applyTo(vertex);
             x1 = vertex.x;
             y1 = vertex.y;
@@ -1125,12 +1130,12 @@ public class GameCanvas {
 
         float x0, y0, x1, y1;
         debugRender.setColor(color);
-        for (int ii = 0; ii < shape.getVertexCount() - 1; ii++) {
-            shape.getVertex(ii, vertex);
+        for (int i = 0; i < shape.getVertexCount() - 1; i++) {
+            shape.getVertex(i, vertex);
             local.applyTo(vertex);
             x0 = vertex.x;
             y0 = vertex.y;
-            shape.getVertex(ii + 1, vertex);
+            shape.getVertex(i + 1, vertex);
             local.applyTo(vertex);
             x1 = vertex.x;
             y1 = vertex.y;
@@ -1147,6 +1152,7 @@ public class GameCanvas {
         y1 = vertex.y;
         debugRender.line(x0, y0, x1, y1);
     }
+
 
     /**
      * Draws the outline of the given shape in the specified color
@@ -1180,7 +1186,7 @@ public class GameCanvas {
      * @param x     The x-coordinate of the shape position
      * @param y     The y-coordinate of the shape position
      * @param sx    The amount to scale the x-axis
-     * @param sx    The amount to scale the y-axis
+     * @param sy    The amount to scale the y-axis
      */
     public void drawPhysics(CircleShape shape, Color color, float x, float y, float sx, float sy) {
         if (active != DrawPass.DEBUG) {

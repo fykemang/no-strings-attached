@@ -651,9 +651,6 @@ public abstract class WorldController implements Screen {
             obj.draw(canvas);
         }
 
-//        for (SimObject s : softBodies) {
-//            s.draw(canvas);
-//        }
         canvas.end();
 
         if (debug) {

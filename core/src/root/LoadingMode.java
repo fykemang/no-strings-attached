@@ -33,7 +33,9 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import util.ScreenListener;
 
@@ -130,7 +132,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Amount to scale the play button
      */
-    private static float BUTTON_SCALE = 0.75f;
+    private static float BUTTON_SCALE = 0.3f;
 
     /**
      * Start button for XBox controller on Windows
@@ -342,7 +344,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private void draw() {
         canvas.begin();
-        canvas.draw(background, 0, 0);
+
+        canvas.drawBackground(background);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        BitmapFont font = generator.generateFont(parameter);
+        canvas.drawText("No Strings Attached", font, 200, 500);
+
         if (playButton == null) {
             drawProgress(canvas);
         } else {
@@ -412,7 +421,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         // Compute the drawing scale
         float sx = ((float) width) / STANDARD_WIDTH;
         float sy = ((float) height) / STANDARD_HEIGHT;
-        scale = (sx < sy ? sx : sy);
+        scale = (Math.min(sx, sy));
 
         this.width = (int) (BAR_WIDTH_RATIO * width);
         centerY = (int) (BAR_HEIGHT_RATIO * height);
@@ -570,7 +579,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Called when a key is typed (UNSUPPORTED)
      *
-     * @param keycode the key typed
+     * @param character the key typed
      * @return whether to hand the event to other listeners.
      */
     public boolean keyTyped(char character) {
