@@ -344,10 +344,12 @@ public class Rope extends ComplexObstacle {
                 }
             }
         }
-        upperLayer.remove(index);
-        lowerLayer.remove(index);
+
         w.destroyBody(upperLayer.get(index).getBody());
         w.destroyBody(lowerLayer.get(index).getBody());
+
+        upperLayer.remove(index);
+        lowerLayer.remove(index);
 
         ArrayList<WheelObstacle> leftUpper = new ArrayList<>(upperLayer.subList(0, index));
         ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, index));
