@@ -20,16 +20,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import obstacle.BoxObstacle;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import obstacle.ComplexObstacle;
 import obstacle.Obstacle;
 import obstacle.SimpleObstacle;
+import obstacle.WheelObstacle;
 import root.GameCanvas;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * A bridge with planks connected by revolute joints.
@@ -72,8 +70,9 @@ public class Rope extends ComplexObstacle {
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
-    private BoxObstacle[] planks;
-
+    //    private WheelObstacle[] planks;
+    private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
+    private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
     public RopeState state;
 
     public enum RopeState {
@@ -81,14 +80,20 @@ public class Rope extends ComplexObstacle {
     }
 
 
-    public Rope(BoxObstacle[] planks, RopeState state) {
+    public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
         this.state = state;
-        this.planks = planks;
-        bodies.addAll(planks);
+        this.lowerLayer = lower;
+        this.upperLayer = upper;
+        for (WheelObstacle o : upper) {
+            bodies.add(o);
+        }
+        for (WheelObstacle o : lower) {
+            bodies.add(o);
+        }
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
-        contPoints = new Vector2[bodies.size + 3];
+        contPoints = new Vector2[bodies.size / 2 + 3];
 
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
@@ -111,8 +116,8 @@ public class Rope extends ComplexObstacle {
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
 
-        planksize = new Vector2(lwidth, lheight);
-        linksize = planksize.x;
+        planksize = new Vector2(0.2f, 0.2f);
+        linksize = 0.2f;
 
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
@@ -121,7 +126,7 @@ public class Rope extends ComplexObstacle {
         norm.nor();
 
         // If too small, only make one plank.
-        int nLinks = (int) (length / linksize);
+        int nLinks = (int) (length / linksize) - 4;
         if (nLinks <= 1) {
             nLinks = 1;
             linksize = length;
@@ -131,7 +136,6 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-        planks = new BoxObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -140,17 +144,30 @@ public class Rope extends ComplexObstacle {
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
-            Plank plank = new Plank(pos.x, pos.y, planksize.x, planksize.y, id);
+            Plank plank = new Plank(pos.x, pos.y, 0.1f, id);
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
-            planks[i] = plank;
+            upperLayer.add(plank);
         }
+
+        Vector2 pos2 = new Vector2();
+        for (int i = 0; i < nLinks; i++) {
+            float t = i * (linksize + spacing) + linksize / 2.0f;
+            pos2.set(norm);
+            pos2.scl(t);
+            pos2.add(x0, y0);
+            Plank plank = new Plank(pos2.x, pos2.y - 0.2f, 0.1f, id);
+            plank.setDensity(BASIC_DENSITY);
+            bodies.add(plank);
+            lowerLayer.add(plank);
+        }
+
 
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
 
-        contPoints = new Vector2[bodies.size + 4];
+        contPoints = new Vector2[upperLayer.size() + 4];
 
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
@@ -169,8 +186,8 @@ public class Rope extends ComplexObstacle {
      */
     @Override
     protected boolean createJoints(World world) {
-        assert bodies.size > 0;
-
+        assert upperLayer.size() > 0;
+        linksize = 0.1f;
         if (state != RopeState.COMPLETE) return true;
         Vector2 anchor1 = new Vector2(linksize / 2, 0);
         Vector2 anchor2 = new Vector2(-linksize / 2, 0);
@@ -178,29 +195,69 @@ public class Rope extends ComplexObstacle {
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
-        Vector2 pos = bodies.get(0).getPosition();
-        pos.x -= linksize / 2;
 
         // Definition for a revolute joint
-        RevoluteJointDef jointDef = new RevoluteJointDef();
+        DistanceJointDef jointDef = new DistanceJointDef();
+        jointDef.dampingRatio = 1f;
+        jointDef.frequencyHz = 18f;
+
         // Link the planks together
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
-        for (int i = 0; i < bodies.size - 1; i++) {
+        for (int i = 0; i < upperLayer.size() - 1; i++) {
+            jointDef.length = 0.05f;
             // Look at what we did above and join the planks
-            Obstacle curr = bodies.get(i);
-            Obstacle next = bodies.get(i + 1);
+            Obstacle curr = upperLayer.get(i);
+            Obstacle next = upperLayer.get(i + 1);
             jointDef.bodyA = curr.getBody();
             jointDef.bodyB = next.getBody();
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
+
+
+        }
+
+        for (int i = 0; i < lowerLayer.size() - 1; i++) {
+            jointDef.length = 0.2f;
+            Obstacle currl = lowerLayer.get(i);
+            Obstacle nextl = lowerLayer.get(i + 1);
+            jointDef.bodyA = currl.getBody();
+            jointDef.bodyB = nextl.getBody();
+            Joint jointl = world.createJoint(jointDef);
+            joints.add(jointl);
+        }
+
+
+        for (int i = 0; i < upperLayer.size(); i++) {
+            jointDef.length = 0.2f;
+            Obstacle top = upperLayer.get(i);
+            Obstacle bottom = lowerLayer.get(i);
+            jointDef.bodyA = top.getBody();
+            jointDef.bodyB = bottom.getBody();
+            Joint joint2 = world.createJoint(jointDef);
+            joints.add(joint2);
+
+        }
+        for (int i = 0; i < upperLayer.size() - 1; i++) {
+            jointDef.length = 0.3f;
+            // Look at what we did above and join the planks
+            Obstacle curr = upperLayer.get(i);
+            Obstacle next = lowerLayer.get(i + 1);
+            jointDef.bodyA = curr.getBody();
+            jointDef.bodyB = next.getBody();
+            Joint joint = world.createJoint(jointDef);
+            joints.add(joint);
+
+            Obstacle curr1 = upperLayer.get(i + 1);
+            Obstacle next1 = lowerLayer.get(i);
+            jointDef.bodyA = curr1.getBody();
+            jointDef.bodyB = next1.getBody();
+            Joint joint1 = world.createJoint(jointDef);
+            joints.add(joint1);
         }
 
         // Create the rightmost anchor
-        Obstacle last = bodies.get(bodies.size - 1);
-
-        pos = last.getPosition();
-        pos.x += linksize / 2;
+        Obstacle last = upperLayer.get(upperLayer.size() - 1);
         return true;
     }
 
@@ -244,7 +301,7 @@ public class Rope extends ComplexObstacle {
 
         for (int i = startIndex; i <= endIndex; i++) {
             int cur = state == RopeState.RIGHT_BROKEN ? i - 1 : i - 2;
-            Vector2 pos = bodies.get(cur).getPosition();
+            Vector2 pos = upperLayer.get(cur).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
         if (state == RopeState.LEFT_BROKEN) {
@@ -264,41 +321,49 @@ public class Rope extends ComplexObstacle {
 
     }
 
+    private boolean closer(WheelObstacle a, WheelObstacle b, Vector2 pos) {
+
+        return (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
+    }
+
 
     public Rope[] cut(final Vector2 pos, World w) {
+        if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)){
+            return null;
+        }
         Rope[] cutRopes = new Rope[2];
-        Arrays.sort(planks, new Comparator<Obstacle>() {
-            @Override
-            public int compare(Obstacle o1, Obstacle o2) {
-                return (int) (o1.getPosition().dst2(pos) - o2.getPosition().dst2(pos));
+        WheelObstacle closest = null;
+        int index = 0;
+        for (int i = 0; i < upperLayer.size(); i++) {
+            WheelObstacle cur = upperLayer.get(i);
+            if (closest == null) {
+                closest = cur;
+                index = i;
+            } else {
+                if (closer(cur, closest, pos)) {
+                    closest = cur;
+                    index = i;
+                }
             }
-        });
-        assert planks.length >= 2;
-        Body bodyA = planks[0].getBody();
-        Body bodyB = planks[1].getBody();
-        for (Joint j : joints) {
-            if ((j.getBodyA() == bodyA && j.getBodyB() == bodyB) ||
-                    (j.getBodyA() == bodyB && j.getBodyB() == bodyA)) {
-                w.destroyJoint(j);
-            }
+        }
+        upperLayer.remove(index);
+        lowerLayer.remove(index);
+        w.destroyBody(upperLayer.get(index).getBody());
+        w.destroyBody(lowerLayer.get(index).getBody());
 
-        }
-        ArrayList<BoxObstacle> left = new ArrayList<>();
-        ArrayList<BoxObstacle> right = new ArrayList<>();
-        for (Obstacle obstacle : bodies) {
-            left.add((BoxObstacle) obstacle);
-            if (obstacle.getBody() == bodyA || obstacle.getBody() == bodyB)
-                break;
-        }
-        for (int i = left.size(); i < bodies.size; i++) {
-            right.add((BoxObstacle) bodies.get(i));
-        }
-        Rope l = new Rope(left.toArray(new BoxObstacle[0]), RopeState.LEFT_BROKEN);
+        ArrayList<WheelObstacle> leftUpper = new ArrayList<>(upperLayer.subList(0, index));
+        ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, index));
+
+        ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index + 1, upperLayer.size()));
+        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index + 1, lowerLayer.size()));
+
+
+        Rope l = new Rope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
         cutRopes[0] = l;
 
-        Rope r = new Rope(right.toArray(new BoxObstacle[0]), RopeState.RIGHT_BROKEN);
+        Rope r = new Rope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
         r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
         cutRopes[1] = r;
@@ -324,7 +389,7 @@ public class Rope extends ComplexObstacle {
      * @return retrieve the last link in the rope
      */
     public Body getLastLink() {
-        return (bodies.size > 0 ? bodies.get(bodies.size - 1).getBody() : null);
+        return (upperLayer.size() > 0 ? upperLayer.get(upperLayer.size() - 1).getBody() : null);
     }
 
     public void setStart(Vector2 start, boolean scaled) {

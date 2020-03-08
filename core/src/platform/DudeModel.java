@@ -50,42 +50,35 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float DUDE_JUMP = 5.5f;
+    private static final float DUDE_JUMP = 10f;
     /**
      * Cooldown (in animation frames) for jumping
      */
     private static final int JUMP_COOLDOWN = 30;
     /**
-     * Cooldown (in animation frames) for shooting
-     */
-    private static final int SHOOT_COOLDOWN = 40;
-    /**
      * Height of the sensor attached to the player's feet
      */
-    private static final float SENSOR_HEIGHT = 0.05f;
+    private static final float SENSOR_HEIGHT = 0.1f;
 
     // This is to fit the image to a tigher hitbox
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.95f;
+    private static final float DUDE_VSHRINK = 0.08f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.7f;
+    private static final float DUDE_HSHRINK = 0.08f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
-    private static final float DUDE_SSHRINK = 0.6f;
+    private static final float DUDE_SSHRINK = 0.8f;
 
     /**
      * The current horizontal movement of the character
      */
     private float movement;
-    /**
-     * Which direction is the character facing
-     */
-    private boolean faceRight;
+
     /**
      * How long until we can jump again
      */
@@ -94,10 +87,6 @@ public class DudeModel extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
-    /**
-     * How long until we can shoot again
-     */
-    private int shootCooldown;
     /**
      * Whether our feet are on the ground
      */
@@ -136,12 +125,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         movement = value;
-        // Change facing if appropriate
-        if (movement < 0) {
-            faceRight = false;
-        } else if (movement > 0) {
-            faceRight = true;
-        }
     }
 
     /**
@@ -223,15 +206,6 @@ public class DudeModel extends CapsuleObstacle {
     }
 
     /**
-     * Returns true if this character is facing right
-     *
-     * @return true if this character is facing right
-     */
-    public boolean isFacingRight() {
-        return faceRight;
-    }
-
-    /**
      * Creates a new dude avatar at the given position.
      * <p>
      * The size is expressed in physics units NOT pixels.  In order for
@@ -252,10 +226,8 @@ public class DudeModel extends CapsuleObstacle {
         // Gameplay attributes
         isGrounded = false;
         isJumping = false;
-        faceRight = true;
         this.sensorName = sensorName;
 
-        shootCooldown = 0;
         jumpCooldown = 0;
         setName(dudeName);
     }
@@ -350,6 +322,8 @@ public class DudeModel extends CapsuleObstacle {
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
+
+//        lastLocation = this.getPosition();
         super.update(dt);
     }
 
@@ -370,8 +344,7 @@ public class DudeModel extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        float effect = faceRight ? 1.0f : -1.0f;
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect, 1.0f);
+        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
     /**
