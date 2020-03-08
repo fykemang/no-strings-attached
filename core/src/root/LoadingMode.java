@@ -345,9 +345,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private void draw() {
         canvas.begin();
         canvas.drawbackground(background);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/Pacifico.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40;
+        parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);
         canvas.drawText("No Strings Attached", font, 200, 500);
         if (playButton == null) {
