@@ -50,7 +50,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float DUDE_JUMP = 20f;
+    private static final float DUDE_JUMP = 15f;
     /**
      * Cooldown (in animation frames) for jumping
      */
@@ -68,15 +68,15 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.1f;
+    private static final float DUDE_VSHRINK = 0.08f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.1f;
+    private static final float DUDE_HSHRINK = 0.08f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
-    private static final float DUDE_SSHRINK = 0.1f;
+    private static final float DUDE_SSHRINK = 0.08f;
 
     private float factor;
 
