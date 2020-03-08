@@ -33,7 +33,9 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import util.ScreenListener;
 
@@ -343,6 +345,11 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private void draw() {
         canvas.begin();
         canvas.drawbackground(background);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/Pacifico.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 40;
+        BitmapFont font = generator.generateFont(parameter);
+        canvas.drawText("No Strings Attached", font, 200, 500);
         if (playButton == null) {
             drawProgress(canvas);
         } else {
