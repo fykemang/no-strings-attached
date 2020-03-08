@@ -50,7 +50,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float DUDE_JUMP = 5.5f;
+    private static final float DUDE_JUMP = 20f;
     /**
      * Cooldown (in animation frames) for jumping
      */
@@ -372,8 +372,8 @@ public class DudeModel extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        float effect = faceRight ? 1.0f : -1.0f;
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect*DUDE_HSHRINK, 1f*DUDE_VSHRINK);
+        float effect = !faceRight ? 1.0f : -1.0f;
+        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect*DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
     /**
