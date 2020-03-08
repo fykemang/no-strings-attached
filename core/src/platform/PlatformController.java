@@ -262,16 +262,16 @@ public class PlatformController extends WorldController {
         walls = loader.getTiles();
         mainDudePos = loader.getCharacterPos();
         // Add level goal
-        float dwidth = goalTile.getRegionWidth() / scale.x;
-        float dheight = goalTile.getRegionHeight() / scale.y;
+        float dWidth = goalTile.getRegionWidth() / scale.x;
+        float dHeight = goalTile.getRegionHeight() / scale.y;
 
         for (int i = 0; i < walls.length; i++) {
             createTile(walls[i].getIndices(), 0, 0, "tile" + i);
         }
         // Create main dude
-        dwidth = playerTexture.getRegionWidth() / scale.x;
-        dheight = playerTexture.getRegionHeight() / scale.y;
-        player = new DudeModel(mainDudePos.x, mainDudePos.y, dwidth, dheight, "mainDude", "mainDudeSensor");
+        dWidth = playerTexture.getRegionWidth() / scale.x;
+        dHeight = playerTexture.getRegionHeight() / scale.y;
+        player = new DudeModel(mainDudePos.x, mainDudePos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
         player.setDrawScale(scale);
         player.setTexture(playerTexture);
         addObject(player);

@@ -296,8 +296,8 @@ public class GameCanvas {
      * This method raises an IllegalStateException if called while drawing is
      * active (e.g. in-between a begin-end pair).
      *
-     * @param value Whether this canvas should change to fullscreen.
-     * @param desktop    Whether to use the current desktop resolution
+     * @param value   Whether this canvas should change to fullscreen.
+     * @param desktop Whether to use the current desktop resolution
      */
     public void setFullscreen(boolean value, boolean desktop) {
         if (active != DrawPass.INACTIVE) {
@@ -719,10 +719,10 @@ public class GameCanvas {
      * The local transformations in this method are applied in the following order:
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
-     * @param region     The region to draw
-     * @param tint      The color tint
-     * @param ox        The x-coordinate of texture origin (in pixels)
-     * @param oy        The y-coordinate of texture origin (in pixels)
+     * @param region The region to draw
+     * @param tint   The color tint
+     * @param ox     The x-coordinate of texture origin (in pixels)
+     * @param oy     The y-coordinate of texture origin (in pixels)
      * @param affine The image transform
      */
     public void draw(TextureRegion region, Color tint, float ox, float oy, Affine2 affine) {
@@ -894,10 +894,10 @@ public class GameCanvas {
      * The local transformations in this method are applied in the following order:
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
-     * @param region    The polygon to draw
-     * @param tint      The color tint
-     * @param ox        The x-coordinate of texture origin (in pixels)
-     * @param oy        The y-coordinate of texture origin (in pixels)
+     * @param region The polygon to draw
+     * @param tint   The color tint
+     * @param ox     The x-coordinate of texture origin (in pixels)
+     * @param oy     The y-coordinate of texture origin (in pixels)
      * @param affine The image transform
      */
     public void draw(PolygonRegion region, Color tint, float ox, float oy, Affine2 affine) {
@@ -1186,7 +1186,7 @@ public class GameCanvas {
      * @param x     The x-coordinate of the shape position
      * @param y     The y-coordinate of the shape position
      * @param sx    The amount to scale the x-axis
-     * @param sx    The amount to scale the y-axis
+     * @param sy    The amount to scale the y-axis
      */
     public void drawPhysics(CircleShape shape, Color color, float x, float y, float sx, float sy) {
         if (active != DrawPass.DEBUG) {
