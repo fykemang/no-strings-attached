@@ -381,11 +381,9 @@ public class PlatformController extends WorldController {
         if (InputController.getInstance().didSecondary() && player.canCut()) {
             int coupleID = player.getClosestCouple();
             for (Obstacle obs : objects) {
-                // System.out.println(obs.getName());
                 if (obs.getName().equals("couples" + coupleID)) {
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
-
                 }
             }
         }
