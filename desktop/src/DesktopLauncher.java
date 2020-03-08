@@ -28,14 +28,14 @@ public class DesktopLauncher {
 	 * 
 	 * This method simply exists to start a new LwjglApplication.  For desktop games,
 	 * LibGDX is built on top of LWJGL (this is not the case for Android).
-	 * 
+	 *
 	 * @param arg Command line arguments
 	 */
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width  = 1024;
 		config.height = 576;
-		config.samples =5; // number of sample to take
+		config.samples = 5; // number of sample to take
 		config.resizable = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}

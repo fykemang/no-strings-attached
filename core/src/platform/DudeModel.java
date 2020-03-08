@@ -217,7 +217,7 @@ public class DudeModel extends CapsuleObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public DudeModel(float x, float y, float width, float height, String dudeName, String sensorName) {
+    public DudeModel(float x, float y, float width, float height, String name, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
@@ -229,7 +229,7 @@ public class DudeModel extends CapsuleObstacle {
         this.sensorName = sensorName;
 
         jumpCooldown = 0;
-        setName(dudeName);
+        setName(name);
     }
 
     /**
