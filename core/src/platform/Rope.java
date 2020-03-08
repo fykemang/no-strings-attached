@@ -62,6 +62,7 @@ public class Rope extends ComplexObstacle {
      */
     protected float spacing = 0.0f;
 
+    private float stringConstant = 1f;
 
     private CatmullRomSpline<Vector2> splineCurve;
 
