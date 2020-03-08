@@ -322,6 +322,14 @@ public class GameCanvas {
         spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
     }
 
+    public void resize(int width, int height) {
+        // Resizing screws up the spriteBatch projection matrix
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
+       // spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+    }
+
+
     /**
      * Returns the current color blending state for this canvas.
      * <p>

@@ -36,7 +36,7 @@ public class DesktopLauncher {
 		config.width  = 1024;
 		config.height = 576;
 		config.samples =5; // number of sample to take
-		config.resizable = false;
+		config.resizable = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }
