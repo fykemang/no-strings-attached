@@ -256,8 +256,6 @@ public class Rope extends ComplexObstacle {
             joints.add(joint1);
         }
 
-        // Create the rightmost anchor
-        Obstacle last = upperLayer.get(upperLayer.size() - 1);
         return true;
     }
 
@@ -321,7 +319,7 @@ public class Rope extends ComplexObstacle {
 
     }
 
-    private boolean closer(WheelObstacle a, WheelObstacle b, Vector2 pos) {
+    private boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos) {
 
         return (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
     }
@@ -340,7 +338,7 @@ public class Rope extends ComplexObstacle {
                 closest = cur;
                 index = i;
             } else {
-                if (closer(cur, closest, pos)) {
+                if (isCloser(cur, closest, pos)) {
                     closest = cur;
                     index = i;
                 }
