@@ -37,6 +37,8 @@ import util.SoundController;
 public class PlatformController extends WorldController {
     private Affine2 local;
 
+    private Vector2 lastLocation;
+
     /**
      * The texture file for the character avatar (no animation)
      *
@@ -289,6 +291,7 @@ public class PlatformController extends WorldController {
         mainDude.setDrawScale(scale);
         mainDude.setTexture(avatarTexture);
         addObject(mainDude);
+        lastLocation = mainDude.getPosition();
 
         float[][] couples = loader.getCouples();
         for (int i = 0; i < couples.length; i++) {
@@ -367,23 +370,27 @@ public class PlatformController extends WorldController {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
+        if (mainDude.goingUp) {
+            mainDude.setTexture(jumpTexture);
+        }
+
+        if (! mainDude.goingUp) {
+            mainDude.setTexture(fallTexture);
+        }
+
         if (mainDude.isGrounded()) {
             mainDude.setTexture(avatarTexture);
         }
 
-        if (! mainDude.isJumping() && ! mainDude.isGrounded()) {
-            mainDude.setTexture(fallTexture);
-        }
+//        if (! mainDude.isJumping() && ! mainDude.isGrounded()) {
+//            mainDude.setTexture(fallTexture);
+//        }
 
         if (mainDude.getMovement() < 0) {
-//            mainDude.setWidth(leftTexture.getRegionWidth() * 0.1f / scale.x);
-//            mainDude.setHeight(leftTexture.getRegionHeight() * 0.1f / scale.y);
             mainDude.setTexture(leftTexture);
         }
-//
+
         if (mainDude.getMovement() > 0) {
-//            mainDude.setWidth(rightTexture.getRegionWidth() * 0.1f / scale.x);
-//            mainDude.setHeight(rightTexture.getRegionHeight() * 0.1f / scale.y);
             mainDude.setTexture(rightTexture);
         }
 
