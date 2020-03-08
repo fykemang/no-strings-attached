@@ -68,15 +68,15 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.95f;
+    private static final float DUDE_VSHRINK = 0.1f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.7f;
+    private static final float DUDE_HSHRINK = 0.1f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
-    private static final float DUDE_SSHRINK = 0.6f;
+    private static final float DUDE_SSHRINK = 0.1f;
 
     private float factor;
 
@@ -247,9 +247,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     public DudeModel(float x, float y, float width, float height, String dudeName, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
-//        this.factor = width / 100;
-//        this.setWidth(this.getWidth() * factor);
-//        this.setWidth(this.getHeight() * factor);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
@@ -376,7 +373,7 @@ public class DudeModel extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         float effect = faceRight ? 1.0f : -1.0f;
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect, 1.0f);
+        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect*DUDE_HSHRINK, 1f*DUDE_VSHRINK);
     }
 
     /**

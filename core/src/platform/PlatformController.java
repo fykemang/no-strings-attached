@@ -41,7 +41,7 @@ public class PlatformController extends WorldController {
      * The texture file for the character avatar (no animation)
      *
      */
-    private static final String DUDE_FILE = "platform/dude.png";
+    private static final String DUDE_FILE = "platform/pc_idle.png";
 
     private static final String DUDE_LEFT = "platform/pc_left.png";
 
@@ -375,23 +375,23 @@ public class PlatformController extends WorldController {
         if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
 
-//            mainDude.setWidth(jumpTexture.getRegionWidth() / scale.x);
-//            mainDude.setHeight(jumpTexture.getRegionHeight() / scale.y);
-//            mainDude.setTexture(jumpTexture);
+            mainDude.setWidth(jumpTexture.getRegionWidth() / scale.x);
+            mainDude.setHeight(jumpTexture.getRegionHeight() / scale.y);
+            mainDude.setTexture(jumpTexture);
         }
 
-//        if (mainDude.getMovement() < 0) {
-//            mainDude.setWidth(leftTexture.getRegionWidth() / scale.x);
-//            mainDude.setHeight(leftTexture.getRegionHeight() / scale.y);
-//            mainDude.setTexture(leftTexture);
-//        }
-//
-//        if (mainDude.getMovement() > 0) {
-//            mainDude.setWidth(rightTexture.getRegionWidth() / scale.x);
-//            mainDude.setHeight(rightTexture.getRegionHeight() / scale.y);
-//            mainDude.setTexture(rightTexture);
-//        }
-//
+        if (mainDude.getMovement() < 0) {
+            mainDude.setWidth(leftTexture.getRegionWidth() / scale.x);
+            mainDude.setHeight(leftTexture.getRegionHeight() / scale.y);
+            mainDude.setTexture(leftTexture);
+        }
+
+        if (mainDude.getMovement() > 0) {
+            mainDude.setWidth(rightTexture.getRegionWidth() / scale.x);
+            mainDude.setHeight(rightTexture.getRegionHeight() / scale.y);
+            mainDude.setTexture(rightTexture);
+        }
+
         if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
             int coupleID = mainDude.getClosestCouple();
             for (Obstacle obs : objects) {
