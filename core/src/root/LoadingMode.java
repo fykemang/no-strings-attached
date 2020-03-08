@@ -342,7 +342,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private void draw() {
         canvas.begin();
-        canvas.drawbackground(background);
+        canvas.drawBackground(background);
         if (playButton == null) {
             drawProgress(canvas);
         } else {
@@ -412,7 +412,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         // Compute the drawing scale
         float sx = ((float) width) / STANDARD_WIDTH;
         float sy = ((float) height) / STANDARD_HEIGHT;
-        scale = (sx < sy ? sx : sy);
+        scale = (Math.min(sx, sy));
 
         this.width = (int) (BAR_WIDTH_RATIO * width);
         centerY = (int) (BAR_HEIGHT_RATIO * height);
@@ -570,7 +570,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Called when a key is typed (UNSUPPORTED)
      *
-     * @param keycode the key typed
+     * @param character the key typed
      * @return whether to hand the event to other listeners.
      */
     public boolean keyTyped(char character) {
