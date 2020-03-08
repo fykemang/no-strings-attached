@@ -58,7 +58,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * Height of the sensor attached to the player's feet
      */
-    private static final float SENSOR_HEIGHT = 0.1f;
+    private static final float SENSOR_HEIGHT = 0.15f;
 
     // This is to fit the image to a tigher hitbox
     /**
