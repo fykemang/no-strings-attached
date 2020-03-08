@@ -78,6 +78,8 @@ public class DudeModel extends CapsuleObstacle {
      */
     private static final float DUDE_SSHRINK = 0.6f;
 
+    private float factor;
+
     /**
      * The current horizontal movement of the character
      */
@@ -245,6 +247,9 @@ public class DudeModel extends CapsuleObstacle {
      */
     public DudeModel(float x, float y, float width, float height, String dudeName, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
+//        this.factor = width / 100;
+//        this.setWidth(this.getWidth() * factor);
+//        this.setWidth(this.getHeight() * factor);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);

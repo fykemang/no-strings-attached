@@ -15,6 +15,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,11 +35,21 @@ import util.SoundController;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController {
+    private Affine2 local;
 
     /**
      * The texture file for the character avatar (no animation)
+     *
      */
     private static final String DUDE_FILE = "platform/dude.png";
+
+    private static final String DUDE_LEFT = "platform/pc_left.png";
+
+    private static final String DUDE_RIGHT = "platform/pc_right.png";
+
+    private static final String DUDE_JUMP = "platform/pc_jump.png";
+
+    private static final String DUDE_FALL = "platform/pc_fall.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -47,9 +58,6 @@ public class PlatformController extends WorldController {
      * The texture file for the bullet
      */
     private static final String BULLET_FILE = "platform/bullet.png";
-
-    private static final String BACKG_FILE = "platform/background.png";
-
     /**
      * The texture file for the bridge plank
      */
@@ -68,17 +76,23 @@ public class PlatformController extends WorldController {
      */
     private static final String POP_FILE = "platform/plop.mp3";
 
+    private static final String BKG_FILE = "platform/background.png";
+
     /**
      * Texture asset for character avatar
      */
     private TextureRegion avatarTexture;
+    private TextureRegion leftTexture;
+    private TextureRegion rightTexture;
+    private TextureRegion jumpTexture;
+    private TextureRegion fallTexture;
+    private  TextureRegion backgroundTexture;
+
 
     /**
      * Texture asset for the bridge plank
      */
     private TextureRegion bridgeTexture;
-
-    private TextureRegion backgroundTexture;
 
     /**
      * Track asset loading from all instances and subclasses
@@ -103,8 +117,14 @@ public class PlatformController extends WorldController {
         platformAssetState = AssetState.LOADING;
         manager.load(DUDE_FILE, Texture.class);
         assets.add(DUDE_FILE);
-        manager.load(BACKG_FILE, Texture.class);
-        assets.add(BACKG_FILE);
+        manager.load(DUDE_LEFT, Texture.class);
+        assets.add(DUDE_LEFT);
+        manager.load(DUDE_RIGHT, Texture.class);
+        assets.add(DUDE_RIGHT);
+        manager.load(DUDE_JUMP, Texture.class);
+        assets.add(DUDE_JUMP);
+        manager.load(DUDE_FALL, Texture.class);
+        assets.add(DUDE_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
         manager.load(BULLET_FILE, Texture.class);
@@ -114,10 +134,15 @@ public class PlatformController extends WorldController {
 
         manager.load(JUMP_FILE, Sound.class);
         assets.add(JUMP_FILE);
+
+        manager.load(BKG_FILE, Texture.class);
+        assets.add(BKG_FILE);
         manager.load(PEW_FILE, Sound.class);
         assets.add(PEW_FILE);
         manager.load(POP_FILE, Sound.class);
         assets.add(POP_FILE);
+
+        local = new Affine2();
 
         super.preLoadContent(manager);
     }
@@ -138,8 +163,24 @@ public class PlatformController extends WorldController {
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
+
+        backgroundTexture = createTexture(manager, BKG_FILE, false);
+//        final float s = avatarTexture.getRegionWidth() / 32;
+//        avatarTexture.setRegionWidth(32);
+//        avatarTexture.setRegionHeight((int) (avatarTexture.getRegionHeight()*s));
+        leftTexture = createTexture(manager, DUDE_LEFT, false);
+//        leftTexture.setRegionWidth(32);
+//        leftTexture.setRegionHeight((int) (leftTexture.getRegionHeight()*s));
+        rightTexture = createTexture(manager, DUDE_RIGHT, false);
+//        rightTexture.setRegionWidth(32);
+//        rightTexture.setRegionHeight((int) (rightTexture.getRegionHeight()*s));
+        jumpTexture = createTexture(manager, DUDE_JUMP, false);
+//        jumpTexture.setRegionWidth(32);
+//        jumpTexture.setRegionHeight((int) (jumpTexture.getRegionHeight()*s));
+        fallTexture = createTexture(manager, DUDE_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
-        backgroundTexture = createTexture(manager, BACKG_FILE, false);
+
+        local = new Affine2();
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -330,12 +371,27 @@ public class PlatformController extends WorldController {
         mainDude.setMovement(InputController.getInstance().getHorizontal() * mainDude.getForce());
         mainDude.setJumping(InputController.getInstance().didPrimary());
 
-
         mainDude.applyForce();
         if (mainDude.isJumping()) {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
+
+//            mainDude.setWidth(jumpTexture.getRegionWidth() / scale.x);
+//            mainDude.setHeight(jumpTexture.getRegionHeight() / scale.y);
+//            mainDude.setTexture(jumpTexture);
         }
 
+//        if (mainDude.getMovement() < 0) {
+//            mainDude.setWidth(leftTexture.getRegionWidth() / scale.x);
+//            mainDude.setHeight(leftTexture.getRegionHeight() / scale.y);
+//            mainDude.setTexture(leftTexture);
+//        }
+//
+//        if (mainDude.getMovement() > 0) {
+//            mainDude.setWidth(rightTexture.getRegionWidth() / scale.x);
+//            mainDude.setHeight(rightTexture.getRegionHeight() / scale.y);
+//            mainDude.setTexture(rightTexture);
+//        }
+//
         if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
             int coupleID = mainDude.getClosestCouple();
             for (Obstacle obs : objects) {
