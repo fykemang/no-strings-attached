@@ -393,9 +393,9 @@ public class PlatformController extends WorldController {
                 // System.out.println(obs.getName());
                 if (obs.getName().equals("couples" + coupleID)) {
                     Rope[] ropes = ((Couple) obs).getRope().cut(mainDude.getPosition(), world);
+                    if (ropes != null)
                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
-
-                }
+                  }
             }
         }
 

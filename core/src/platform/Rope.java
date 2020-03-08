@@ -339,6 +339,9 @@ public class Rope extends ComplexObstacle {
 
 
     public Rope[] cut(final Vector2 pos, World w) {
+        if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)){
+            return null;
+        }
         Rope[] cutRopes = new Rope[2];
         WheelObstacle cloest = null;
         int index =0;
