@@ -78,17 +78,11 @@ public class DudeModel extends CapsuleObstacle {
      */
     private static final float DUDE_SSHRINK = 0.8f;
 
-    private float factor;
-
     /**
      * The current horizontal movement of the character
      */
     private float movement;
 
-    /**
-     * Which direction is the character facing
-     */
-    private boolean faceRight;
     /**
      * How long until we can jump again
      */
@@ -97,10 +91,6 @@ public class DudeModel extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
-    /**
-     * How long until we can shoot again
-     */
-    private int shootCooldown;
     /**
      * Whether our feet are on the ground
      */
@@ -139,12 +129,6 @@ public class DudeModel extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         movement = value;
-        // Change facing if appropriate
-        if (movement < 0) {
-            faceRight = false;
-        } else if (movement > 0) {
-            faceRight = true;
-        }
     }
 
     /**
@@ -226,15 +210,6 @@ public class DudeModel extends CapsuleObstacle {
     }
 
     /**
-     * Returns true if this character is facing right
-     *
-     * @return true if this character is facing right
-     */
-    public boolean isFacingRight() {
-        return faceRight;
-    }
-
-    /**
      * Creates a new dude avatar at the given position.
      * <p>
      * The size is expressed in physics units NOT pixels.  In order for
@@ -255,10 +230,8 @@ public class DudeModel extends CapsuleObstacle {
         // Gameplay attributes
         isGrounded = false;
         isJumping = false;
-        faceRight = true;
         this.sensorName = sensorName;
 
-        shootCooldown = 0;
         jumpCooldown = 0;
         setName(dudeName);
     }
@@ -375,7 +348,6 @@ public class DudeModel extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-//        float effect = !faceRight ? 1.0f : -1.0f;
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
