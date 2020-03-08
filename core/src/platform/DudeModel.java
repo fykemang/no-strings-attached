@@ -50,7 +50,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float DUDE_JUMP = 20f;
+    private static final float DUDE_JUMP = 15f;
     /**
      * Cooldown (in animation frames) for jumping
      */
