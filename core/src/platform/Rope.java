@@ -140,7 +140,6 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-        //     planks = new WheelObstacle[nLinks];
         // Create the planks
         planksize.x = linksize;
         Vector2 pos = new Vector2();
@@ -153,7 +152,6 @@ public class Rope extends ComplexObstacle {
             plank.setDensity(BASIC_DENSITY);
             bodies.add(plank);
             upperLayer.add(plank);
-            //     planks[i] = plank;
         }
 
         Vector2 pos2 = new Vector2();
@@ -201,8 +199,6 @@ public class Rope extends ComplexObstacle {
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
         // reasons to not add the anchor to the bodies list.
-//        Vector2 pos = upperLayer.get(0).getPosition();
-//        pos.x -= linksize / 2;
 
         // Definition for a revolute joint
         DistanceJointDef jointDef = new DistanceJointDef();
@@ -266,9 +262,6 @@ public class Rope extends ComplexObstacle {
 
         // Create the rightmost anchor
         Obstacle last = upperLayer.get(upperLayer.size() - 1);
-
-//        pos = last.getPosition();
-//        pos.x += linksize / 2;
         return true;
     }
 
@@ -339,6 +332,9 @@ public class Rope extends ComplexObstacle {
 
 
     public Rope[] cut(final Vector2 pos, World w) {
+        if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)){
+            return null;
+        }
         Rope[] cutRopes = new Rope[2];
         WheelObstacle cloest = null;
         int index = 0;
