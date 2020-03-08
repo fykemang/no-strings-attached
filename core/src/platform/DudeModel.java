@@ -84,6 +84,9 @@ public class DudeModel extends CapsuleObstacle {
      * The current horizontal movement of the character
      */
     private float movement;
+
+    private boolean goingUp;
+
     /**
      * Which direction is the character facing
      */
@@ -372,8 +375,8 @@ public class DudeModel extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        float effect = !faceRight ? 1.0f : -1.0f;
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), effect*DUDE_HSHRINK, DUDE_VSHRINK);
+//        float effect = !faceRight ? 1.0f : -1.0f;
+        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
     /**

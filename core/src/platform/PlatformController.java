@@ -163,20 +163,10 @@ public class PlatformController extends WorldController {
         }
 
         avatarTexture = createTexture(manager, DUDE_FILE, false);
-
         backgroundTexture = createTexture(manager, BKG_FILE, false);
-//        final float s = avatarTexture.getRegionWidth() / 32;
-//        avatarTexture.setRegionWidth(32);
-//        avatarTexture.setRegionHeight((int) (avatarTexture.getRegionHeight()*s));
         leftTexture = createTexture(manager, DUDE_LEFT, false);
-//        leftTexture.setRegionWidth(32);
-//        leftTexture.setRegionHeight((int) (leftTexture.getRegionHeight()*s));
         rightTexture = createTexture(manager, DUDE_RIGHT, false);
-//        rightTexture.setRegionWidth(32);
-//        rightTexture.setRegionHeight((int) (rightTexture.getRegionHeight()*s));
         jumpTexture = createTexture(manager, DUDE_JUMP, false);
-//        jumpTexture.setRegionWidth(32);
-//        jumpTexture.setRegionHeight((int) (jumpTexture.getRegionHeight()*s));
         fallTexture = createTexture(manager, DUDE_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
 
@@ -373,24 +363,29 @@ public class PlatformController extends WorldController {
 
         mainDude.applyForce();
         if (mainDude.isJumping()) {
+            mainDude.setTexture(jumpTexture);
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-//
-//            mainDude.setWidth(jumpTexture.getRegionWidth() * 0.1f / scale.x);
-//            mainDude.setHeight(jumpTexture.getRegionHeight() * 0.1f / scale.y);
-//            mainDude.setTexture(jumpTexture);
         }
-//
-//        if (mainDude.getMovement() < 0) {
+
+        if (mainDude.isGrounded()) {
+            mainDude.setTexture(avatarTexture);
+        }
+
+        if (! mainDude.isJumping() && ! mainDude.isGrounded()) {
+            mainDude.setTexture(fallTexture);
+        }
+
+        if (mainDude.getMovement() < 0) {
 //            mainDude.setWidth(leftTexture.getRegionWidth() * 0.1f / scale.x);
 //            mainDude.setHeight(leftTexture.getRegionHeight() * 0.1f / scale.y);
-//            mainDude.setTexture(leftTexture);
-//        }
+            mainDude.setTexture(leftTexture);
+        }
 //
-//        if (mainDude.getMovement() > 0) {
+        if (mainDude.getMovement() > 0) {
 //            mainDude.setWidth(rightTexture.getRegionWidth() * 0.1f / scale.x);
 //            mainDude.setHeight(rightTexture.getRegionHeight() * 0.1f / scale.y);
-//            mainDude.setTexture(rightTexture);
-//        }
+            mainDude.setTexture(rightTexture);
+        }
 
         if (InputController.getInstance().didSecondary() && mainDude.canCut()) {
             int coupleID = mainDude.getClosestCouple();
