@@ -69,14 +69,14 @@ public class CollisionController implements ContactListener {
                 bd2.markRemoved(true);
             }
 
-            if (bd1.getName().equals(Plank.PLANK_NAME) && bd2.getName().equals(player.getName())) {
-                player.setCanCut(true);
-                player.setClosestCouple(((Plank) bd1).getPlankParentID());
-            }
-
-            if (bd1.getName().equals(player.getName()) && bd2.getName().equals(Plank.PLANK_NAME)) {
+            if (player.getSensorName().equals(fd1) && bd2.getName().equals(Plank.PLANK_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCouple(((Plank) bd2).getPlankParentID());
+            }
+
+            if (player.getSensorName().equals(fd2) && bd1.getName().equals(Plank.PLANK_NAME)) {
+                player.setCanCut(true);
+                player.setClosestCouple(((Plank) bd1).getPlankParentID());
             }
 
             // See if we have landed on the ground.
@@ -111,8 +111,8 @@ public class CollisionController implements ContactListener {
         Obstacle bd1 = (Obstacle) body1.getUserData();
         Obstacle bd2 = (Obstacle) body2.getUserData();
 
-        if (bd1.getName().equals(player.getName()) && bd2.getName().equals(Plank.PLANK_NAME) ||
-                bd2.getName().equals(player.getName()) && bd1.getName().equals(Plank.PLANK_NAME)) {
+        if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Plank.PLANK_NAME)) ||
+                (player.getSensorName().equals(fd2) && bd1.getName().equals(Plank.PLANK_NAME))) {
             player.setCanCut(false);
         }
 
