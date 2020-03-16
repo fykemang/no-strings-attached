@@ -14,6 +14,8 @@ package root;/*
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import util.XBox360Controller;
@@ -240,6 +242,12 @@ public class InputController {
      * if it exists.  Otherwise, it falls back to the keyboard control.
      */
     public InputController() {
+        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
+        int xHotspot = pixMap.getWidth() / 2;
+        int yHotspot = pixMap.getHeight() / 2;
+        Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);
+        Gdx.graphics.setCursor(cursor);
+        pixMap.dispose();
         // If we have a game-pad for id, then use it.
         xbox = new XBox360Controller(0);
         crosshair = new Vector2();

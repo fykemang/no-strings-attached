@@ -12,32 +12,13 @@ public class CollisionController implements ContactListener {
      * Mark set to handle more sophisticated collision callbacks
      */
     private ObjectSet<Fixture> sensorFixtures;
-    private DudeModel player;
+    private Character player;
 
 
-    public CollisionController(DudeModel player) {
+    public CollisionController(Character player) {
         this.sensorFixtures = new ObjectSet<>();
         this.player = player;
     }
-
-//    public boolean checkForRopeCollision(Obstacle obs) {
-//        if (obs.getName().equals("rope")) {
-//            Rope rope = (Rope) obs;
-//            Iterable<Obstacle> links = rope.getBodies();
-//            for (Obstacle link : links) {
-//                BoxObstacle l = (BoxObstacle) link;
-//                float linkWidth = l.getWidth();
-//                Vector2 linkPos = link.getPosition();
-//
-//                normal.set(mainDude.getPosition()).sub(linkPos);
-//                float normDist = normal.len();
-//                float impactDist =
-//
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
 
     /**
      * Callback method for the start of a collision
@@ -115,7 +96,6 @@ public class CollisionController implements ContactListener {
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Plank.PLANK_NAME))) {
             player.setCanCut(false);
         }
-
 
         if ((player.getSensorName().equals(fd2) && player != bd1) ||
                 (player.getSensorName().equals(fd1) && player != bd2)) {

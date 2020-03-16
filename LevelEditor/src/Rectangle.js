@@ -1,6 +1,5 @@
-import React from 'react';
-import { Rect, Transformer } from 'react-konva';
-import Konva from 'konva';
+import React from "react";
+import { Rect, Transformer } from "react-konva";
 
 // var width = window.innerWidth;
 // var height = window.innerHeight;
@@ -50,7 +49,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
           onChange({
             ...shapeProps,
             x: Math.round(e.target.x() / blockSize) * blockSize,
-            y: Math.round(e.target.y() / blockSize) * blockSize,
+            y: Math.round(e.target.y() / blockSize) * blockSize
           });
         }}
         onTransformEnd={e => {
@@ -71,7 +70,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
             y: Math.round(e.target.y() / blockSize) * blockSize,
             // set minimal value
             width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY),
+            height: Math.max(node.height() * scaleY)
           });
         }}
       />

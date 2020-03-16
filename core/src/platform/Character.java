@@ -25,7 +25,7 @@ import root.GameCanvas;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class DudeModel extends CapsuleObstacle {
+public class Character extends CapsuleObstacle {
     // Physics constants
     /**
      * The density of the character
@@ -58,7 +58,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * Height of the sensor attached to the player's feet
      */
-    private static final float SENSOR_HEIGHT = 0.15f;
+    private static final float SENSOR_HEIGHT = 0.25f;
 
     // This is to fit the image to a tigher hitbox
     /**
@@ -247,7 +247,7 @@ public class DudeModel extends CapsuleObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public DudeModel(float x, float y, float width, float height, String name, String sensorName) {
+    public Character(float x, float y, float width, float height, String name, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET

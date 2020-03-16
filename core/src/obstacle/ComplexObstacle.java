@@ -51,7 +51,6 @@ public abstract class ComplexObstacle extends Obstacle {
      */
     protected Array<Joint> joints;
 
-    protected boolean isSoft = false;
     /// BodyDef Methods
 
     /**
