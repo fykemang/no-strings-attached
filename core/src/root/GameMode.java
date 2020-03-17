@@ -396,7 +396,8 @@ public class GameMode implements Screen {
     /**
      * The speed of the bullet after firing
      */
-    private static final float BULLET_SPEED = 5.0f;
+    private static final float BULLET_SPEED = 25.0f;
+    private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     // Physics objects for the game
     /**
@@ -628,9 +629,15 @@ public class GameMode implements Screen {
         Vector2 playerPosition = player.getPosition();
         crossHairLocation.sub(playerPosition);
         float firingAngle = (float) Math.atan(crossHairLocation.y / crossHairLocation.x);
+        System.out.println(firingAngle);
         float offsetX = player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET;
         float offsetY = (float) (Math.tan(firingAngle) * offsetX);
-        System.out.println(offsetY);
+        if (offsetY > MAX_BULLET_OFFSET_Y) {
+            offsetY = MAX_BULLET_OFFSET_Y;
+        } else if (offsetY < -MAX_BULLET_OFFSET_Y) {
+            offsetY = -MAX_BULLET_OFFSET_Y;
+        }
+        System.out.println("Position: " + offsetX + ", " + offsetY);
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
         WheelObstacle bullet = new WheelObstacle(player.getX() + offsetX, player.getY() + offsetY, radius);
         bullet.setName("bullet");
