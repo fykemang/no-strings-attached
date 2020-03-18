@@ -657,6 +657,7 @@ public class GameMode implements Screen {
 
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
         Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
+        projectile.setName("player_rope");
         projectile.setDrawScale(scale);
         projectile.setTexture(bulletTexture);
         projectile.setBullet(true);
