@@ -12,11 +12,9 @@ package platform;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
+import obstacle.Obstacle;
 import root.GameCanvas;
 
 /**
@@ -109,7 +107,8 @@ public class Character extends CapsuleObstacle {
     private PolygonShape sensorShape;
     private boolean canCut;
     private String sensorName;
-    private int closestCouple;
+    private int closestCoupleID;
+    private Obstacle target;
 
     /**
      * Which direction is the character facing
@@ -119,6 +118,7 @@ public class Character extends CapsuleObstacle {
      * Cache for internal force calculations
      */
     private Vector2 forceCache = new Vector2();
+    private Joint swingJoint;
 
     /**
      * Returns left/right movement of this character.
@@ -298,12 +298,12 @@ public class Character extends CapsuleObstacle {
         return true;
     }
 
-    public void setClosestCouple(int coupleID) {
-        this.closestCouple = coupleID;
+    public void setClosestCoupleID(int coupleID) {
+        this.closestCoupleID = coupleID;
     }
 
-    public int getClosestCouple() {
-        return this.closestCouple;
+    public int getClosestCoupleID() {
+        return this.closestCoupleID;
     }
 
 
@@ -363,7 +363,7 @@ public class Character extends CapsuleObstacle {
     }
 
     /**
-     * @param canCut
+     * @param canCut whether the character can cut a trampoline rope
      */
     public void setCanCut(boolean canCut) {
         this.canCut = canCut;
@@ -389,6 +389,22 @@ public class Character extends CapsuleObstacle {
      */
     public void setShooting(boolean value) {
         isShooting = value;
+    }
+
+    public void setTarget(Obstacle target) {
+       this.target = target;
+    }
+
+    public Obstacle getTarget() {
+        return target;
+    }
+
+    public void setSwingJoint(Joint swingJoint) {
+        this.swingJoint = swingJoint;
+    }
+
+    public Joint getSwingJoint() {
+        return swingJoint;
     }
 
     /**

@@ -1,8 +1,12 @@
-package platform;
+package root;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
+import platform.Character;
+import platform.Plank;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -42,22 +46,25 @@ public class CollisionController implements ContactListener {
             Obstacle bd1 = (Obstacle) body1.getUserData();
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
-            if (bd1.getName().equals("bullet") && bd2 != player) {
+            if (bd1.getName().equals("player_rope") && bd2 != player) {
                 bd1.markRemoved(true);
             }
 
-            if (bd2.getName().equals("bullet") && bd1 != player) {
+            if (bd2.getName().equals("player_rope") && bd1 != player) {
+                if (bd1.getName().equals("npc")) {
+                    player.setTarget(bd1);
+                }
                 bd2.markRemoved(true);
             }
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Plank.PLANK_NAME)) {
                 player.setCanCut(true);
-                player.setClosestCouple(((Plank) bd2).getPlankParentID());
+                player.setClosestCoupleID(((Plank) bd2).getPlankParentID());
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Plank.PLANK_NAME)) {
                 player.setCanCut(true);
-                player.setClosestCouple(((Plank) bd1).getPlankParentID());
+                player.setClosestCoupleID(((Plank) bd1).getPlankParentID());
             }
 
             // See if we have landed on the ground.

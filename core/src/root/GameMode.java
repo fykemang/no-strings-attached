@@ -21,7 +21,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
@@ -231,7 +233,6 @@ public class GameMode implements Screen {
      * Countdown active for winning or losing
      */
     private int countdown;
-    private Vector2 temp;
 
     /**
      * Creates a new game world
@@ -396,7 +397,7 @@ public class GameMode implements Screen {
     /**
      * The speed of the bullet after firing
      */
-    private static final float BULLET_SPEED = 25.0f;
+    private static final float BULLET_SPEED = 20.0f;
     private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     // Physics objects for the game
@@ -406,6 +407,8 @@ public class GameMode implements Screen {
     private Character player;
 
     private List<Level> levels;
+
+    private RopeJointDef jointDef;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -419,6 +422,7 @@ public class GameMode implements Screen {
         setFailure(false);
         world.setContactListener(new CollisionController(player));
         this.levels = new ArrayList<>();
+        jointDef = new RopeJointDef();
     }
 
     /**
@@ -604,17 +608,30 @@ public class GameMode implements Screen {
             createBullet();
         }
 
+        if (player.isShooting() && player.getSwingJoint() != null) {
+            world.destroyJoint(player.getSwingJoint());
+            player.setSwingJoint(null);
+            player.setTarget(null);
+        }
+
+        // Cutting the rope
         if (InputController.getInstance().didSecondary() && player.canCut()) {
-            int coupleID = player.getClosestCouple();
+            int coupleID = player.getClosestCoupleID();
             for (Obstacle obs : objects) {
                 if (obs.getName().equals("couples" + coupleID)) {
-
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                     if (ropes != null)
                         ((Couple) obs).breakBond(ropes[0], ropes[1]);
                 }
-
             }
+        }
+
+        if (player.getTarget() != null && player.getSwingJoint() == null) {
+            jointDef.bodyA = player.getBody();
+            jointDef.bodyB = player.getTarget().getBody();
+            jointDef.maxLength = 4.0f;
+            Joint swingJoint = world.createJoint(jointDef);
+            player.setSwingJoint(swingJoint);
         }
 
         // If we use sound, we must remember this.
@@ -637,22 +654,21 @@ public class GameMode implements Screen {
         } else if (offsetY < -MAX_BULLET_OFFSET_Y) {
             offsetY = -MAX_BULLET_OFFSET_Y;
         }
-        System.out.println("Position: " + offsetX + ", " + offsetY);
+
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
-        WheelObstacle bullet = new WheelObstacle(player.getX() + offsetX, player.getY() + offsetY, radius);
-        bullet.setName("bullet");
-        bullet.setDrawScale(scale);
-        bullet.setTexture(bulletTexture);
-        bullet.setBullet(true);
-        bullet.setGravityScale(0);
+        Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
+        projectile.setDrawScale(scale);
+        projectile.setTexture(bulletTexture);
+        projectile.setBullet(true);
+        projectile.setGravityScale(0);
 
         // Compute position and velocity
         float speed = player.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED;
         float vx = (float) (speed * Math.cos(firingAngle));
         float vy = (float) (speed * Math.sin(firingAngle));
-        bullet.setVX(vx);
-        bullet.setVY(vy);
-        addQueuedObject(bullet);
+        projectile.setVX(vx);
+        projectile.setVY(vy);
+        addQueuedObject(projectile);
 
         SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
     }
