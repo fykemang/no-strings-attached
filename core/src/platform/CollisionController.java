@@ -129,7 +129,8 @@ public class CollisionController implements ContactListener {
             player.setCanCut(false);
             dt = System.currentTimeMillis() * 0.001f - startTime;
             startContact = false;
-            float k = ((Blob)bd2).getK();
+            player.setIsTrampolining(true);
+//            float k = ((Blob)bd2).getK();
 //                    float ax = player.;
 //                    accel.set();
 
