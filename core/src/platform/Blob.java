@@ -2,14 +2,19 @@ package platform;
 
 import obstacle.WheelObstacle;
 
-public class Plank extends WheelObstacle {
-    public static final String PLANK_NAME = "plank";
+public class Blob extends WheelObstacle {
+    public static final String BLOB_NAME = "blob";
     private int id;
+    private final float STRING_CONSTANT = 0.5f;
 
-    public Plank(float x, float y, float r, int id) {
+    public Blob(float x, float y, float r, int id) {
         super(x, y, r);
-        setName(PLANK_NAME);
+        setName(BLOB_NAME);
         this.id = id;
+    }
+
+    public float getK(){
+        return STRING_CONSTANT;
     }
 
     @Override
