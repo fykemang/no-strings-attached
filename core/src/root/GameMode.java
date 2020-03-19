@@ -27,7 +27,6 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
-import obstacle.WheelObstacle;
 import platform.Character;
 import platform.*;
 import util.FilmStrip;
@@ -397,7 +396,7 @@ public class GameMode implements Screen {
     /**
      * The speed of the bullet after firing
      */
-    private static final float BULLET_SPEED = 20.0f;
+    private static final float BULLET_SPEED = 40.0f;
     private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     // Physics objects for the game

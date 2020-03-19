@@ -16,7 +16,7 @@ public class Projectile extends WheelObstacle {
     public void update(float delta) {
         super.update(delta);
         if (age == maxAge) {
-           markRemoved(true);
+            markRemoved(true);
         } else {
             age++;
         }

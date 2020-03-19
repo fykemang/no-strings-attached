@@ -392,7 +392,7 @@ public class Character extends CapsuleObstacle {
     }
 
     public void setTarget(Obstacle target) {
-       this.target = target;
+        this.target = target;
     }
 
     public Obstacle getTarget() {
