@@ -31,9 +31,7 @@ import util.FilmStrip;
 import util.PooledList;
 import util.ScreenListener;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Base class for a world-specific controller.

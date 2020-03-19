@@ -15,7 +15,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -39,10 +38,6 @@ import java.util.List;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController {
-    private Affine2 local;
-
-    private Vector2 lastLocation;
-
     /**
      * The texture file for the player (no animation)
      */
@@ -182,8 +177,6 @@ public class PlatformController extends WorldController {
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
 
-        local = new Affine2();
-
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, PEW_FILE);
@@ -221,6 +214,7 @@ public class PlatformController extends WorldController {
     private DudeModel player;
 
     private List<Level> levels;
+
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -274,6 +268,7 @@ public class PlatformController extends WorldController {
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
         }
+
         // Create main dude
         dWidth = playerTexture.getRegionWidth() / scale.x;
         dHeight = playerTexture.getRegionHeight() / scale.y;
@@ -385,8 +380,8 @@ public class PlatformController extends WorldController {
 
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                     if (ropes != null)
-                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                  }
+                        ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                }
 
             }
         }
@@ -413,8 +408,5 @@ public class PlatformController extends WorldController {
             }
             canvas.endDebug();
         }
-
     }
-
-
 }

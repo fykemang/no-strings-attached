@@ -25,11 +25,11 @@ function Home() {
       y: ypos
     })
   }
-  const lineStyle = {
-    stroke: "lightcoral",
-    strokeWidth: 1,
-    strokeDasharray: 5.5
-  }
+//  const lineStyle = {
+//    stroke: "lightcoral",
+//    strokeWidth: 1,
+//    strokeDasharray: 5.5
+//  }
 
   // var width = window.innerWidth;
   // var height = window.innerHeight;
@@ -93,27 +93,27 @@ function Home() {
   //   height: height
   // });
 
-  var gridLayer = new Konva.Layer();
-  var padding = blockSnapSize;
-  console.log(width, padding, width / padding);
-  for (var i = 0; i < width / padding; i++) {
-    gridLayer.add(new Konva.Line({
-      points: [Math.round(i * padding) + 0.5, 0, Math.round(i * padding) + 0.5, height],
-      stroke: '#ddd',
-      strokeWidth: 1,
-    }));
-  }
-
-  gridLayer.add(new Konva.Line({ points: [0, 0, 10, 10] }));
-  for (var j = 0; j < height / padding; j++) {
-    gridLayer.add(new Konva.Line({
-      points: [0, Math.round(j * padding), width, Math.round(j * padding)],
-      stroke: '#ddd',
-      strokeWidth: 0.5,
-    }));
-  }
-
-  var layer = new Konva.Layer();
+//  var gridLayer = new Konva.Layer();
+//  var padding = blockSnapSize;
+//  console.log(width, padding, width / padding);
+//  for (var i = 0; i < width / padding; i++) {
+//    gridLayer.add(new Konva.Line({
+//      points: [Math.round(i * padding) + 0.5, 0, Math.round(i * padding) + 0.5, height],
+//      stroke: '#ddd',
+//      strokeWidth: 1,
+//    }));
+//  }
+//
+//  gridLayer.add(new Konva.Line({ points: [0, 0, 10, 10] }));
+//  for (var j = 0; j < height / padding; j++) {
+//    gridLayer.add(new Konva.Line({
+//      points: [0, Math.round(j * padding), width, Math.round(j * padding)],
+//      stroke: '#ddd',
+//      strokeWidth: 0.5,
+//    }));
+//  }
+//
+//  var layer = new Konva.Layer();
   // shadowRectangle.hide();
   // layer.add(shadowRectangle);
   // newRectangle(blockSnapSize * 3, blockSnapSize * 3, layer, stage);
