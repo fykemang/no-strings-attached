@@ -58,7 +58,7 @@ public class DudeModel extends CapsuleObstacle {
     /**
      * Height of the sensor attached to the player's feet
      */
-    private static final float SENSOR_HEIGHT = 0.1f;
+    private static final float SENSOR_HEIGHT = 0.15f;
 
     // This is to fit the image to a tigher hitbox
     /**
@@ -87,6 +87,8 @@ public class DudeModel extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
+
+    private boolean isTrampolining;
     /**
      * Whether our feet are on the ground
      */
@@ -194,6 +196,10 @@ public class DudeModel extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
+    public void setIsTrampolining(boolean t) {
+        isTrampolining = t;
+    }
+
     /**
      * Returns the name of the ground sensor
      * <p>
@@ -226,6 +232,7 @@ public class DudeModel extends CapsuleObstacle {
         // Gameplay attributes
         isGrounded = false;
         isJumping = false;
+        isTrampolining = false;
         this.sensorName = sensorName;
 
         jumpCooldown = 0;
@@ -306,7 +313,17 @@ public class DudeModel extends CapsuleObstacle {
             forceCache.set(0, DUDE_JUMP);
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
+
+        if (isTrampolining) {
+
+            forceCache.set(0, body.getLinearVelocity().y / 8f);
+            body.applyLinearImpulse(forceCache, getPosition(), true);
+            isTrampolining = false;
+        }
+
+
     }
+
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
