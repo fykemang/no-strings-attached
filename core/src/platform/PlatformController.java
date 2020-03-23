@@ -12,7 +12,6 @@ package platform;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Affine2;
@@ -59,7 +58,7 @@ public class PlatformController extends WorldController {
 
     private static final String BKG_SUN = "platform/sun_background.png";
 
-    private static final String BKG_CITY= "platform/city_background.png";
+    private static final String BKG_CITY = "platform/city_background.png";
 
     private static final String BKG_CLOUD = "platform/cloud_background.png";
 
@@ -247,6 +246,7 @@ public class PlatformController extends WorldController {
     private DudeModel player;
 
     private List<Level> levels;
+
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -411,8 +411,8 @@ public class PlatformController extends WorldController {
 
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                     if (ropes != null)
-                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                  }
+                        ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                }
 
             }
         }
@@ -423,19 +423,18 @@ public class PlatformController extends WorldController {
 
     public void draw(float dt) {
         canvas.begin();
-        float camera = player.getX()*scale.x;
-        canvas.drawWrapped(SkyTexture,  0f * camera, 0f, SkyTexture.getRegionWidth()/2, SkyTexture.getRegionHeight()/2)
+        float camera = player.getX() * scale.x;
+        canvas.drawWrapped(SkyTexture, 0f * camera, 0f, SkyTexture.getRegionWidth() / 2, SkyTexture.getRegionHeight() / 2)
         ;
-        canvas.drawWrapped(SunTexture,  0f * camera, 0f, SunTexture.getRegionWidth()/2, SunTexture.getRegionHeight()/2)
+        canvas.drawWrapped(SunTexture, 0f * camera, 0f, SunTexture.getRegionWidth() / 2, SunTexture.getRegionHeight() / 2)
         ;
-        canvas.drawWrapped(CityTexture,  -0.1f * camera, 0f, CityTexture.getRegionWidth()/2, CityTexture.getRegionHeight()/2)
+        canvas.drawWrapped(CityTexture, -0.1f * camera, 0f, CityTexture.getRegionWidth() / 2, CityTexture.getRegionHeight() / 2)
         ;
-        canvas.drawWrapped(CloudTexture,  -0.5f * camera, 0f, CloudTexture.getRegionWidth()/2, CloudTexture.getRegionHeight()/2)
+        canvas.drawWrapped(CloudTexture, -0.5f * camera, 0f, CloudTexture.getRegionWidth() / 2, CloudTexture.getRegionHeight() / 2)
         ;
 
         canvas.end();
-        canvas.moveCamera(player.getX()*scale.x, player.getY()*scale.y);
-
+        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
 
 
         canvas.begin();
