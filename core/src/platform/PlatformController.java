@@ -80,7 +80,7 @@ public class PlatformController extends WorldController {
     /**
      * The sound file for a jump
      */
-    private static final String JUMP_FILE = "platform/bounce.mp3";
+    private static final String JUMP_FILE = "platform/jump.mp3";
     /**
      * The sound file for a bullet fire
      */
