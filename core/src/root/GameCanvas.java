@@ -1274,8 +1274,8 @@ public class GameCanvas {
     public void moveCamera(float x, float y){
             camera.position.x = x;
             camera.position.y = y;
-            camera.viewportHeight = getHeight()/2;
-            camera.viewportWidth = getWidth()/2;
+            camera.viewportHeight = getHeight()*3/5;
+            camera.viewportWidth = getWidth()*3/5;
             camera.update();
     }
 }
