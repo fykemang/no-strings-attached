@@ -123,18 +123,19 @@ public class GameMode implements Screen {
     /**
      * The folder with all levels
      */
-    private static String TEST_LEVEL = "levels/test_level.json";
-    private static String CROSSHAIR_FILE = "platform/crosshair.png";
+    private static final String TEST_LEVEL = "levels/test_level.json";
+    private static final String CROSSHAIR_FILE = "platform/crosshair.png";
 
     private static final String BKG_FILE = "platform/background.png";
     /**
      * File to texture for walls and platforms
      */
-    private static String EARTH_FILE = "shared/earthtile.png";
+    private static final String EARTH_FILE = "shared/earthtile.png";
     /**
      * File to texture for the win door
      */
-    private static String GOAL_FILE = "shared/goaldoor.png";
+    private static final String GOAL_FILE = "shared/goaldoor.png";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/walking-animation.PNG";
     /**
      * Retro font for displaying messages
      */
@@ -194,6 +195,7 @@ public class GameMode implements Screen {
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     private TextureRegion backgroundTexture;
+    private FilmStrip playerWalkingAnimation;
     /**
      * Texture asset for the bullet
      */
@@ -294,6 +296,8 @@ public class GameMode implements Screen {
         assets.add(EARTH_FILE);
         manager.load(GOAL_FILE, Texture.class);
         assets.add(GOAL_FILE);
+        manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
+        assets.add(PLAYER_WALKING_ANIMATION_FILE);
 
         // Load Sound Assets
         manager.load(JUMP_FILE, Sound.class);
@@ -349,6 +353,7 @@ public class GameMode implements Screen {
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
+        playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -589,11 +594,11 @@ public class GameMode implements Screen {
             player.setTexture(playerFallTexture);
         }
 
-        if (!player.isFacingRight() && player.isGrounded()) {
+        if (player.getVX() == 0 && !player.isFacingRight() && player.isGrounded()) {
             player.setTexture(playerLeftTexture);
         }
 
-        if (player.isFacingRight() && player.isGrounded()) {
+        if (player.getVX() == 0 && player.isFacingRight() && player.isGrounded()) {
             player.setTexture(playerRightTexture);
         }
 
@@ -619,8 +624,9 @@ public class GameMode implements Screen {
             for (Obstacle obs : objects) {
                 if (obs.getName().equals("couples" + coupleID)) {
                     Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                    if (ropes != null)
+                    if (ropes != null) {
                         ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                    }
                 }
             }
         }
