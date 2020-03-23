@@ -12,9 +12,9 @@ package platform;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -38,6 +38,10 @@ import java.util.List;
  * place nicely with the static assets.
  */
 public class PlatformController extends WorldController {
+    private Affine2 local;
+
+    private Vector2 lastLocation;
+
     /**
      * The texture file for the player (no animation)
      */
@@ -52,6 +56,15 @@ public class PlatformController extends WorldController {
     private static final String PLAYER_FALL = "platform/pc_fall.png";
 
     private static final String ITEM = "platform/dude.png";
+
+    private static final String BKG_SUN = "platform/sun_background.png";
+
+    private static final String BKG_CITY = "platform/city_background.png";
+
+    private static final String BKG_CLOUD = "platform/cloud_background.png";
+
+    private static final String BKG_SKY = "platform/background_sky.png";
+
     /**
      * The texture file for the spinning barrier
      */
@@ -94,6 +107,10 @@ public class PlatformController extends WorldController {
     private TextureRegion backgroundTexture;
     private TextureRegion itemTexture;
 
+    private TextureRegion SkyTexture;
+    private TextureRegion CloudTexture;
+    private TextureRegion SunTexture;
+    private TextureRegion CityTexture;
     /**
      * Texture asset for the bridge plank
      */
@@ -150,6 +167,15 @@ public class PlatformController extends WorldController {
         manager.load(TEST_LEVEL, Level.class);
         assets.add(TEST_LEVEL);
 
+        manager.load(BKG_CLOUD, Texture.class);
+        assets.add(BKG_CLOUD);
+        manager.load(BKG_SKY, Texture.class);
+        assets.add(BKG_SKY);
+        manager.load(BKG_SUN, Texture.class);
+        assets.add(BKG_SUN);
+        manager.load(BKG_CITY, Texture.class);
+        assets.add(BKG_CITY);
+
         super.preLoadContent(manager);
     }
 
@@ -179,6 +205,12 @@ public class PlatformController extends WorldController {
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
+        CityTexture = createTexture(manager, BKG_CITY, false);
+        SkyTexture = createTexture(manager, BKG_SKY, false);
+        CloudTexture = createTexture(manager, BKG_CLOUD, false);
+        SunTexture = createTexture(manager, BKG_SUN, false);
+
+        local = new Affine2();
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -271,7 +303,6 @@ public class PlatformController extends WorldController {
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
         }
-
         // Create main dude
         dWidth = playerTexture.getRegionWidth() / scale.x;
         dHeight = playerTexture.getRegionHeight() / scale.y;
@@ -400,8 +431,19 @@ public class PlatformController extends WorldController {
 
     public void draw(float dt) {
         canvas.begin();
-        canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+        float camera = player.getX() * scale.x;
+        canvas.drawWrapped(SkyTexture, 0f * camera, 0f, SkyTexture.getRegionWidth() / 2, SkyTexture.getRegionHeight() / 2)
+        ;
+        canvas.drawWrapped(SunTexture, 0f * camera, 0f, SunTexture.getRegionWidth() / 2, SunTexture.getRegionHeight() / 2)
+        ;
+        canvas.drawWrapped(CityTexture, -0.1f * camera, 0f, CityTexture.getRegionWidth() / 2, CityTexture.getRegionHeight() / 2)
+        ;
+        canvas.drawWrapped(CloudTexture, -0.5f * camera, 0f, CloudTexture.getRegionWidth() / 2, CloudTexture.getRegionHeight() / 2)
+        ;
+
         canvas.end();
+        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
+
 
         canvas.begin();
         for (Obstacle obj : objects) {
@@ -416,5 +458,8 @@ public class PlatformController extends WorldController {
             }
             canvas.endDebug();
         }
+
     }
+
+
 }

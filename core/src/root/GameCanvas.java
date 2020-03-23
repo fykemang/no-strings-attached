@@ -148,10 +148,9 @@ public class GameCanvas {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
         debugRender = new ShapeRenderer();
-
         splineRender = new ShapeRenderer();
-
         // Set the projection matrix (for proper scaling)
+
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -180,6 +179,26 @@ public class GameCanvas {
         global = null;
         vertex = null;
         holder = null;
+    }
+
+    private Vector2 positionCache = new Vector2();
+
+    /**
+     * Private method to process the wrap offset of an image.
+     *
+     * @param pos The center of the background image
+     * @return the vector, wrapped to the screen
+     */
+    private Vector2 wrapPosition(Vector2 pos) {
+        float w = getWidth();
+        if (pos.x < 0) {
+            float n = (float) Math.floor((-pos.x) / w);
+            pos.x += (1 + n) * w;
+        } else if (pos.x > 0) {
+            pos.x %= w;
+        }
+
+        return pos;
     }
 
     /**
@@ -935,11 +954,11 @@ public class GameCanvas {
      * Transform the given vertices by the affine transform
      */
     private void computeVertices(Affine2 affine, float[] vertices) {
-        for (int ii = 0; ii < vertices.length; ii += 2) {
-            vertex.set(vertices[2 * ii], vertices[2 * ii + 1]);
+        for (int i = 0; i < vertices.length; i += 2) {
+            vertex.set(vertices[2 * i], vertices[2 * i + 1]);
             affine.applyTo(vertex);
-            vertices[2 * ii] = vertex.x;
-            vertices[2 * ii + 1] = vertex.y;
+            vertices[2 * i] = vertex.x;
+            vertices[2 * i + 1] = vertex.y;
         }
     }
 
@@ -1240,5 +1259,23 @@ public class GameCanvas {
         }
         splineRender.end();
         spriteBatch.begin();
+    }
+
+    public void drawWrapped(TextureRegion image, float x, float y, float width, float height) {
+        positionCache.set(x, y);
+        wrapPosition(positionCache);
+
+        float w = getWidth();
+        // Have to draw the background twice for continuous scrolling.
+        spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
+        spriteBatch.draw(image, positionCache.x - w, positionCache.y, width, height);
+    }
+
+    public void moveCamera(float x, float y){
+            camera.position.x = x;
+            camera.position.y = y;
+            camera.viewportHeight = getHeight()*3/5;
+            camera.viewportWidth = getWidth()*3/5;
+            camera.update();
     }
 }
