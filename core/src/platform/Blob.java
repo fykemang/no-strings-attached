@@ -13,12 +13,12 @@ public class Blob extends WheelObstacle {
         this.id = id;
     }
 
-    public float getK(){
+    public float getK() {
         return STRING_CONSTANT;
     }
 
     @Override
-    protected void createFixtures(){
+    protected void createFixtures() {
 
         if (body == null) {
             return;

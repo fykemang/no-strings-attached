@@ -46,7 +46,7 @@ public class CollisionController implements ContactListener {
 //    }
 
 
-    public void reflect(Vector2 d, Vector2 n, float mass){
+    public void reflect(Vector2 d, Vector2 n, float mass) {
         n.nor();
         float dot = d.dot(n);
         float rx = d.x - 2f * dot * n.x, ry = d.x - 2f * dot * n.y;
@@ -79,7 +79,7 @@ public class CollisionController implements ContactListener {
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCouple(((Blob) bd2).getPlankParentID());
-                if (!startContact){
+                if (!startContact) {
                     startTime = System.currentTimeMillis() * 0.001f;
                     startContact = true;
 //                    float ax = player.;

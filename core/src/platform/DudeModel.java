@@ -196,7 +196,7 @@ public class DudeModel extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
-    public void setIsTrampolining(boolean t){
+    public void setIsTrampolining(boolean t) {
         isTrampolining = t;
     }
 
@@ -314,16 +314,15 @@ public class DudeModel extends CapsuleObstacle {
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
 
-        if (isTrampolining){
+        if (isTrampolining) {
 
-            forceCache.set(0, body.getLinearVelocity().y/5f);
+            forceCache.set(0, body.getLinearVelocity().y / 8f);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }
 
 
     }
-
 
 
     /**
