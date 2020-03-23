@@ -316,7 +316,7 @@ public class DudeModel extends CapsuleObstacle {
 
         if (isTrampolining){
 
-            forceCache.set(0, body.getLinearVelocity().y/4);
+            forceCache.set(0, body.getLinearVelocity().y/5f);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }
