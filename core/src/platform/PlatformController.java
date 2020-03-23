@@ -50,6 +50,8 @@ public class PlatformController extends WorldController {
     private static final String PLAYER_JUMP = "platform/pc_jump.png";
 
     private static final String PLAYER_FALL = "platform/pc_fall.png";
+
+    private static final String ITEM = "platform/dude.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -65,7 +67,7 @@ public class PlatformController extends WorldController {
     /**
      * The sound file for a jump
      */
-    private static final String JUMP_FILE = "platform/jump.mp3";
+    private static final String JUMP_FILE = "platform/bounce.mp3";
     /**
      * The sound file for a bullet fire
      */
@@ -90,6 +92,7 @@ public class PlatformController extends WorldController {
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     private TextureRegion backgroundTexture;
+    private TextureRegion itemTexture;
 
     /**
      * Texture asset for the bridge plank
@@ -308,6 +311,11 @@ public class PlatformController extends WorldController {
         Couple couple = new Couple(x1, y1, x2, y2, playerTexture, bridgeTexture, scale, id);
         addObject(couple);
     }
+//
+//    public void createItem(float x, float y, itemTexture, ) {
+//        Item i = new Item(x,y);
+//        addObject(i);
+//    }
 
     /**
      * Returns whether to process the update loop
