@@ -43,7 +43,7 @@ public class FilmStrip extends TextureRegion {
     /**
      * The width of a single frame; computed from column count
      */
-    private int rwidth;
+    private int rWidth;
 
     /**
      * The height of a single frame; computed from row count
@@ -91,7 +91,7 @@ public class FilmStrip extends TextureRegion {
         }
         this.cols = cols;
         this.size = size;
-        rwidth = texture.getWidth() / cols;
+        rWidth = texture.getWidth() / cols;
         rheight = texture.getHeight() / rows;
         setFrame(0);
     }
@@ -127,9 +127,9 @@ public class FilmStrip extends TextureRegion {
             return;
         }
         this.frame = frame;
-        int x = (frame % cols) * rwidth;
+        int x = (frame % cols) * rWidth;
         int y = (frame / cols) * rheight;
-        setRegion(x, y, rwidth, rheight);
+        setRegion(x, y, rWidth, rheight);
     }
 
 }

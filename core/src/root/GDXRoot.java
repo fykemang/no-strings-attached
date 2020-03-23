@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
-import platform.PlatformController;
+import platform.Level;
 import util.ScreenListener;
 
 /**
@@ -53,7 +53,7 @@ public class GDXRoot extends Game implements ScreenListener {
     /**
      * The controller for the game mode
      */
-    private WorldController controller;
+    private GameMode controller;
 
     /**
      * Creates a new game from the configuration settings.
@@ -82,10 +82,9 @@ public class GDXRoot extends Game implements ScreenListener {
         canvas = new GameCanvas();
         loading = new LoadingMode(canvas, manager, 1);
 
-        controller = new PlatformController();
+        controller = new GameMode();
         controller.preLoadContent(manager);
 
-        // Initialize the three game worlds
         loading.setScreenListener(this);
         setScreen(loading);
     }
@@ -145,7 +144,7 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(controller);
             loading.dispose();
             loading = null;
-        } else if (exitCode == WorldController.EXIT_QUIT) {
+        } else if (exitCode == GameMode.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();
         }

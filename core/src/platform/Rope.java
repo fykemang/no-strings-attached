@@ -51,16 +51,16 @@ public class Rope extends ComplexObstacle {
      */
     protected Vector2 dimension;
     /**
-     * The size of a single plank
+     * The size of a single bloc
      */
-    protected Vector2 blobsize;
+    protected Vector2 blobSize;
 
     /* The length of each link */
-    protected float linksize = 1.0f;
+    protected float linkSize;
     /**
      * The spacing between each link
      */
-    protected float spacing = 0.0f;
+    protected float spacing;
 
     private float stringConstant = 1f;
 
@@ -116,8 +116,8 @@ public class Rope extends ComplexObstacle {
         super(x0, y0);
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
-        blobsize = new Vector2(0.2f, 0.2f);
-        linksize = 0.2f;
+        blobSize = new Vector2(0.2f, 0.2f);
+        linkSize = 0.2f;
 
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
@@ -126,21 +126,21 @@ public class Rope extends ComplexObstacle {
         norm.nor();
 
         // If too small, only make one plank.
-        int nLinks = (int) (length / linksize) - 4;
+        int nLinks = (int) (length / linkSize) - 4;
         if (nLinks <= 1) {
             nLinks = 1;
-            linksize = length;
+            linkSize = length;
             spacing = 0;
         } else {
-            spacing = length - nLinks * linksize;
+            spacing = length - nLinks * linkSize;
             spacing /= (nLinks - 1);
         }
 
         // Create the planks
-        blobsize.x = linksize;
+        blobSize.x = linkSize;
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
-            float t = i * (linksize + spacing) + linksize / 2.0f;
+            float t = i * (linkSize + spacing) + linkSize / 2.0f;
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
@@ -152,7 +152,7 @@ public class Rope extends ComplexObstacle {
 
         Vector2 pos2 = new Vector2();
         for (int i = 0; i < nLinks; i++) {
-            float t = i * (linksize + spacing) + linksize / 2.0f;
+            float t = i * (linkSize + spacing) + linkSize / 2.0f;
             pos2.set(norm);
             pos2.scl(t);
             pos2.add(x0, y0);
@@ -187,10 +187,10 @@ public class Rope extends ComplexObstacle {
     @Override
     protected boolean createJoints(World world) {
         assert upperLayer.size() > 0;
-        linksize = 0.1f;
+        linkSize = 0.1f;
         if (state != RopeState.COMPLETE) return true;
-        Vector2 anchor1 = new Vector2(linksize / 2, 0);
-        Vector2 anchor2 = new Vector2(-linksize / 2, 0);
+        Vector2 anchor1 = new Vector2(linkSize / 2, 0);
+        Vector2 anchor2 = new Vector2(-linkSize / 2, 0);
 
         // Create the leftmost anchor
         // Normally, we would do this in constructor, but we have
@@ -320,8 +320,7 @@ public class Rope extends ComplexObstacle {
     }
 
     private boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos) {
-
-        return (a.getPosition().dst2(pos) < b.getPosition().dst2(pos));
+        return a.getPosition().dst2(pos) < b.getPosition().dst2(pos);
     }
 
 
@@ -389,7 +388,7 @@ public class Rope extends ComplexObstacle {
      * @return retrieve the last link in the rope
      */
     public Body getLastLink() {
-        return (upperLayer.size() > 0 ? upperLayer.get(upperLayer.size() - 1).getBody() : null);
+        return upperLayer.size() > 0 ? upperLayer.get(upperLayer.size() - 1).getBody() : null;
     }
 
     public void setStart(Vector2 start, boolean scaled) {

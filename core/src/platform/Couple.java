@@ -11,8 +11,8 @@ import obstacle.ComplexObstacle;
  * A obstacle made up of two dudes and a trampoline
  */
 public class Couple extends ComplexObstacle {
-    private DudeModel l;
-    private DudeModel r;
+    private Character l;
+    private Character r;
     private Rope trampoline;
     private Rope trampLeft;
     private Rope trampRight;
@@ -54,10 +54,10 @@ public class Couple extends ComplexObstacle {
      * @param y
      * @return
      */
-    public DudeModel createAvatar(float x, float y) {
+    public Character createAvatar(float x, float y) {
         float dWidth = avatarTexture.getRegionWidth() / drawScale.x;
         float dHeight = avatarTexture.getRegionHeight() / drawScale.y;
-        DudeModel avatar = new DudeModel(x, y, dWidth, dHeight, "npc", "npcSensor");
+        Character avatar = new Character(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
@@ -74,7 +74,7 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = l.getBody();
         jointDef.bodyB = trampoline.getBody();
         anchor1.x = l.getWidth() / 2;
-        anchor2.x = -trampoline.linksize / 2;
+        anchor2.x = -trampoline.linkSize / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
@@ -82,7 +82,7 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = trampoline.getLastLink();
         jointDef.bodyB = r.getBody();
         anchor1.x = r.getWidth() / 2;
-        anchor2.x = -trampoline.linksize / 2;
+        anchor2.x = -trampoline.linkSize / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));

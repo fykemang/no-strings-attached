@@ -1271,12 +1271,12 @@ public class GameCanvas {
         spriteBatch.draw(image, positionCache.x - w, positionCache.y, width, height);
     }
 
-    public void moveCamera(float x, float y){
-            float yPos = y>=170f?y:170f;
-            camera.position.x = x;
-            camera.position.y = yPos;
-            camera.viewportHeight = getHeight()*3/5;
-            camera.viewportWidth = getWidth()*3/5;
-            camera.update();
+    public void moveCamera(float x, float y) {
+        float yPos = Math.max(y, 170f);
+        camera.position.x = x;
+        camera.position.y = yPos;
+        camera.viewportHeight = getHeight() * 3 / 5;
+        camera.viewportWidth = getWidth() * 3 / 5;
+        camera.update();
     }
 }

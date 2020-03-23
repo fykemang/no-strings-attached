@@ -61,8 +61,6 @@ public class CapsuleObstacle extends SimpleObstacle {
         RIGHT
     }
 
-    ;
-
     /**
      * Shape information for this box
      */

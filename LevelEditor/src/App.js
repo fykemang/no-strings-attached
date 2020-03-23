@@ -6,11 +6,10 @@ import { Layout } from './components/Layout';
 import { NavigationBar } from './components/NavigationBar';
 // const { ReactDraggable: Draggable } = window;
 
-
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
-      <React.Fragment>
+      <>
         <Router>
           <NavigationBar />
           <Layout>
@@ -19,7 +18,7 @@ class App extends React.Component {
             </Switch>
           </Layout>
         </Router>
-      </React.Fragment>
+      </>
     );
   }
 }

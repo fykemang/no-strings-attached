@@ -1,13 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { Stage, Layer, Text, Image } from 'react-konva';
+import React, { useState } from "react";
+import { Layer, Stage } from "react-konva";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Rectangle from "./Rectangle";
 import URLImage from "./URLImage";
-import dude from "./assets/dude.png"
-import { Rect, Transformer } from 'react-konva';
-import Konva from 'konva';
-import Draggable from "react-draggable";
+import dude from "./assets/dude.png";
+import Konva from "konva";
 
 function Home() {
   const [c_pos, setPos] = useState(null);
@@ -23,75 +21,75 @@ function Home() {
     setPos({
       x: xpos,
       y: ypos
-    })
+    });
+  };
+  const lineStyle = {
+    stroke: "lightcoral",
+    strokeWidth: 1,
+    strokeDasharray: 5.5
+  };
+
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  var shadowOffset = 20;
+  var tween = null;
+  var blockSnapSize = 30;
+
+  var shadowRectangle = new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: blockSnapSize * 6,
+    height: blockSnapSize * 3,
+    fill: '#FF7B17',
+    opacity: 0.6,
+    stroke: '#CF6412',
+    strokeWidth: 3,
+    dash: [20, 2]
+  });
+
+  function newRectangle(x, y, layer, stage) {
+    let rectangle = new Konva.Rect({
+      x: x,
+      y: y,
+      width: blockSnapSize * 6,
+      height: blockSnapSize * 3,
+      fill: '#fff',
+      stroke: '#ddd',
+      strokeWidth: 1,
+      shadowColor: 'black',
+      shadowBlur: 2,
+      shadowOffset: { x: 1, y: 1 },
+      shadowOpacity: 0.4,
+      draggable: true
+    });
+    rectangle.on('dragstart', (e) => {
+      shadowRectangle.show();
+      shadowRectangle.moveToTop();
+      rectangle.moveToTop();
+    });
+    rectangle.on('dragend', (e) => {
+      rectangle.position({
+        x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
+        y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
+      });
+      stage.batchDraw();
+      shadowRectangle.hide();
+    });
+    rectangle.on('dragmove', (e) => {
+      shadowRectangle.position({
+        x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
+        y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
+      });
+      stage.batchDraw();
+    });
+    layer.add(rectangle);
   }
-//  const lineStyle = {
-//    stroke: "lightcoral",
-//    strokeWidth: 1,
-//    strokeDasharray: 5.5
-//  }
 
-  // var width = window.innerWidth;
-  // var height = window.innerHeight;
-  // var shadowOffset = 20;
-  // var tween = null;
-  // var blockSnapSize = 30;
-
-  // var shadowRectangle = new Konva.Rect({
-  //   x: 0,
-  //   y: 0,
-  //   width: blockSnapSize * 6,
-  //   height: blockSnapSize * 3,
-  //   fill: '#FF7B17',
-  //   opacity: 0.6,
-  //   stroke: '#CF6412',
-  //   strokeWidth: 3,
-  //   dash: [20, 2]
-  // });
-
-  // function newRectangle(x, y, layer, stage) {
-  //   let rectangle = new Konva.Rect({
-  //     x: x,
-  //     y: y,
-  //     width: blockSnapSize * 6,
-  //     height: blockSnapSize * 3,
-  //     fill: '#fff',
-  //     stroke: '#ddd',
-  //     strokeWidth: 1,
-  //     shadowColor: 'black',
-  //     shadowBlur: 2,
-  //     shadowOffset: { x: 1, y: 1 },
-  //     shadowOpacity: 0.4,
-  //     draggable: true
-  //   });
-  //   rectangle.on('dragstart', (e) => {
-  //     shadowRectangle.show();
-  //     shadowRectangle.moveToTop();
-  //     rectangle.moveToTop();
-  //   });
-  //   rectangle.on('dragend', (e) => {
-  //     rectangle.position({
-  //       x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
-  //       y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
-  //     });
-  //     stage.batchDraw();
-  //     shadowRectangle.hide();
-  //   });
-  //   rectangle.on('dragmove', (e) => {
-  //     shadowRectangle.position({
-  //       x: Math.round(rectangle.x() / blockSnapSize) * blockSnapSize,
-  //       y: Math.round(rectangle.y() / blockSnapSize) * blockSnapSize
-  //     });
-  //     stage.batchDraw();
-  //   });
-  //   layer.add(rectangle);
-  // }
-
-  // var stage = new Konva.Stage({
-  //   container: 'container',
-  //   width: width,
-  //   height: height
-  // });
+  var stage = new Konva.Stage({
+    container: 'container',
+    width: width,
+    height: height
+  });
 
 //  var gridLayer = new Konva.Layer();
 //  var padding = blockSnapSize;
@@ -135,11 +133,11 @@ function Home() {
 
   const downloadFile = async () => {
     const myData = {
-      tiles: walls,
+      tiles: walls
     };
     const fileName = "file";
     const json = JSON.stringify(myData);
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: "application/json" });
     const href = await URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = href;
@@ -175,10 +173,8 @@ function Home() {
 
   const forceUpdate = React.useCallback(() => updateState({}), []);
   document.addEventListener("keydown", ev => {
-
     if (ev.code == "Backspace") {
-      let index = walls.findIndex(r =>
-        r.id == selectedId);
+      let index = walls.findIndex(r => r.id == selectedId);
       if (index != -1) {
         walls.splice(index, 1);
         setWalls(walls);
@@ -193,10 +189,7 @@ function Home() {
         <Button variant="secondary" onClick={addWall}>
           Wall
         </Button>
-        <Button variant="secondary" >
-          Couple
-        </Button>
-
+        <Button variant="secondary">Couple</Button>
       </ButtonGroup>
       <img
         alt="character"
@@ -206,10 +199,7 @@ function Home() {
           dragUrl.current = e.target.src;
         }}
       />
-      <input
-        style={{ display: "none" }}
-        type="file"
-      />
+      <input style={{ display: "none" }} type="file" />
       <div
         style={{
           backgroundColor: "lightgrey",
@@ -219,23 +209,20 @@ function Home() {
           // register event position
           stageRef.current.setPointersPositions(e);
           // add image
-          setImage(
-
-            {
-              ...stageRef.current.getPointerPosition(),
-              src: dragUrl.current
-            }
-          );
-          setPos(
-            {
-              x: stageRef.current.getPointerPosition().x,
-              y: stageRef.current.getPointerPosition().y
-            }
-          )
+          setImage({
+            ...stageRef.current.getPointerPosition(),
+            src: dragUrl.current
+          });
+          setPos({
+            x: stageRef.current.getPointerPosition().x,
+            y: stageRef.current.getPointerPosition().y
+          });
         }}
         onDragOver={e => e.preventDefault()}
       >
-        <Stage width={800} height={600}
+        <Stage
+          width={800}
+          height={600}
           onMouseDown={e => {
             const clickedOnEmpty = e.target === e.target.getStage();
             if (clickedOnEmpty) {
@@ -265,18 +252,15 @@ function Home() {
                 // </Draggable>
               );
             })}
-            {
-              image != null &&
-              <URLImage image={image} draghandler={handler} />
-            }
+            {image != null && <URLImage image={image} draghandler={handler} />}
           </Layer>
         </Stage>
       </div>
       <Button variant="secondary" onClick={downloadFile}>
         Download
-        </Button>
-    </React.Fragment >
-  )
-
+      </Button>
+    </React.Fragment>
+  );
 }
+
 export default Home;

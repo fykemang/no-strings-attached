@@ -1,16 +1,21 @@
-package platform;
+package root;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
+import platform.Blob;
+import platform.Character;
 
+/**
+ * ContactListener that detects and handles collisions in the Box2D World
+ */
 public class CollisionController implements ContactListener {
     /**
      * Mark set to handle more sophisticated collision callbacks
      */
     private ObjectSet<Fixture> sensorFixtures;
-    private DudeModel player;
+    private Character player;
 
     private float startTime;
     private float dt;
@@ -19,32 +24,12 @@ public class CollisionController implements ContactListener {
     private Vector2 trampolineForce;
 
 
-    public CollisionController(DudeModel player) {
+    public CollisionController(Character player) {
         this.sensorFixtures = new ObjectSet<>();
         this.player = player;
         this.startContact = false;
         this.trampolineForce = new Vector2();
     }
-
-//    public boolean checkForRopeCollision(Obstacle obs) {
-//        if (obs.getName().equals("rope")) {
-//            Rope rope = (Rope) obs;
-//            Iterable<Obstacle> links = rope.getBodies();
-//            for (Obstacle link : links) {
-//                BoxObstacle l = (BoxObstacle) link;
-//                float linkWidth = l.getWidth();
-//                Vector2 linkPos = link.getPosition();
-//
-//                normal.set(mainDude.getPosition()).sub(linkPos);
-//                float normDist = normal.len();
-//                float impactDist =
-//
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
-
 
     public void reflect(Vector2 d, Vector2 n, float mass) {
         n.nor();
@@ -76,20 +61,29 @@ public class CollisionController implements ContactListener {
             Obstacle bd1 = (Obstacle) body1.getUserData();
             Obstacle bd2 = (Obstacle) body2.getUserData();
 
+            if (bd1.getName().equals("player_rope") && bd2 != player) {
+                bd1.markRemoved(true);
+            }
+
+            if (bd2.getName().equals("player_rope") && bd1 != player) {
+                if (bd1.getName().equals("npc")) {
+                    player.setTarget(bd1);
+                }
+                bd2.markRemoved(true);
+            }
+
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
-                player.setClosestCouple(((Blob) bd2).getPlankParentID());
+                player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
                 if (!startContact) {
                     startTime = System.currentTimeMillis() * 0.001f;
                     startContact = true;
-//                    float ax = player.;
-//                    accel.set();
                 }
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
-                player.setClosestCouple(((Blob) bd1).getPlankParentID());
+                player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
             }
 
             // See if we have landed on the ground.
@@ -135,7 +129,6 @@ public class CollisionController implements ContactListener {
 //                    accel.set();
 
         }
-
 
         if ((player.getSensorName().equals(fd2) && player != bd1) ||
                 (player.getSensorName().equals(fd1) && player != bd2)) {
