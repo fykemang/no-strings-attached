@@ -1,8 +1,10 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./Home.js";
-import { Layout } from "./components/Layout";
-import { NavigationBar } from "./components/NavigationBar";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './Home.js';
+import { Layout } from './components/Layout';
+import { NavigationBar } from './components/NavigationBar';
+// const { ReactDraggable: Draggable } = window;
 
 class App extends Component {
   render() {

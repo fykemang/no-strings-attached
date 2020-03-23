@@ -51,9 +51,9 @@ public class Rope extends ComplexObstacle {
      */
     protected Vector2 dimension;
     /**
-     * The size of a single plank
+     * The size of a single bloc
      */
-    protected Vector2 plankSize;
+    protected Vector2 blobSize;
 
     /* The length of each link */
     protected float linkSize;
@@ -62,6 +62,7 @@ public class Rope extends ComplexObstacle {
      */
     protected float spacing;
 
+    private float stringConstant = 1f;
 
     private CatmullRomSpline<Vector2> splineCurve;
 
@@ -115,8 +116,7 @@ public class Rope extends ComplexObstacle {
         super(x0, y0);
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
-
-        plankSize = new Vector2(0.2f, 0.2f);
+        blobSize = new Vector2(0.2f, 0.2f);
         linkSize = 0.2f;
 
         // Compute the bridge length
@@ -137,17 +137,17 @@ public class Rope extends ComplexObstacle {
         }
 
         // Create the planks
-        plankSize.x = linkSize;
+        blobSize.x = linkSize;
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
             float t = i * (linkSize + spacing) + linkSize / 2.0f;
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
-            Plank plank = new Plank(pos.x, pos.y, 0.1f, id);
-            plank.setDensity(BASIC_DENSITY);
-            bodies.add(plank);
-            upperLayer.add(plank);
+            Blob blob = new Blob(pos.x, pos.y, 0.1f, id);
+            blob.setDensity(BASIC_DENSITY);
+            bodies.add(blob);
+            upperLayer.add(blob);
         }
 
         Vector2 pos2 = new Vector2();
@@ -156,10 +156,10 @@ public class Rope extends ComplexObstacle {
             pos2.set(norm);
             pos2.scl(t);
             pos2.add(x0, y0);
-            Plank plank = new Plank(pos2.x, pos2.y - 0.2f, 0.1f, id);
-            plank.setDensity(BASIC_DENSITY);
-            bodies.add(plank);
-            lowerLayer.add(plank);
+            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, 0.1f, id);
+            blob.setDensity(BASIC_DENSITY);
+            bodies.add(blob);
+            lowerLayer.add(blob);
         }
 
 

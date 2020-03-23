@@ -29,7 +29,7 @@ public class WheelObstacle extends SimpleObstacle {
     /**
      * A cache value for the fixture (for resizing)
      */
-    private Fixture geometry;
+    protected Fixture geometry;
 
     /**
      * Returns the radius of this circle
@@ -95,10 +95,10 @@ public class WheelObstacle extends SimpleObstacle {
         // Create the fixture
         fixture.shape = shape;
 
-        fixture.density = 2f;
-        fixture.restitution = 0.4f;
-        fixture.friction = 1f;
-        body.setFixedRotation(true);
+//        fixture.density = 2f;
+//        fixture.restitution = 0.4f;
+//        fixture.friction = 1f;
+//        body.setFixedRotation(true);
         geometry = body.createFixture(fixture);
         markDirty(false);
     }

@@ -85,6 +85,16 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
     /**
+     * Background
+     */
+    private static final String BKG_SUN = "platform/sun_background.png";
+
+    private static final String BKG_CITY = "platform/city_background.png";
+
+    private static final String BKG_CLOUD = "platform/cloud_background.png";
+
+    private static final String BKG_SKY = "platform/background_sky.png";
+    /**
      * The texture file for the player (no animation)
      */
     private static final String PLAYER_IDLE = "platform/pc_idle.png";
@@ -126,7 +136,6 @@ public class GameMode implements Screen {
     private static final String TEST_LEVEL = "levels/test_level.json";
     private static final String CROSSHAIR_FILE = "platform/crosshair.png";
 
-    private static final String BKG_FILE = "platform/background.png";
     /**
      * File to texture for walls and platforms
      */
@@ -140,6 +149,7 @@ public class GameMode implements Screen {
      * Retro font for displaying messages
      */
     private static String FONT_FILE = "shared/RetroGame.ttf";
+
     private static int FONT_SIZE = 64;
     /**
      * Track asset loading from all instances and subclasses
@@ -234,6 +244,10 @@ public class GameMode implements Screen {
      * Countdown active for winning or losing
      */
     private int countdown;
+    private TextureRegion cityTexture;
+    private TextureRegion skyTexture;
+    private TextureRegion cloudTexture;
+    private TextureRegion sunTexture;
 
     /**
      * Creates a new game world
@@ -290,12 +304,18 @@ public class GameMode implements Screen {
         assets.add(ROPE_FILE);
         manager.load(CROSSHAIR_FILE, Texture.class);
         assets.add(CROSSHAIR_FILE);
-        manager.load(BKG_FILE, Texture.class);
-        assets.add(BKG_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
         manager.load(GOAL_FILE, Texture.class);
         assets.add(GOAL_FILE);
+        manager.load(BKG_CLOUD, Texture.class);
+        assets.add(BKG_CLOUD);
+        manager.load(BKG_SKY, Texture.class);
+        assets.add(BKG_SKY);
+        manager.load(BKG_SUN, Texture.class);
+        assets.add(BKG_SUN);
+        manager.load(BKG_CITY, Texture.class);
+        assets.add(BKG_CITY);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
         assets.add(PLAYER_WALKING_ANIMATION_FILE);
 
@@ -345,7 +365,6 @@ public class GameMode implements Screen {
         }
 
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
-        backgroundTexture = createTexture(manager, BKG_FILE, false);
         playerLeftTexture = createTexture(manager, PLAYER_LEFT, false);
         playerRightTexture = createTexture(manager, PLAYER_RIGHT, false);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
@@ -354,6 +373,10 @@ public class GameMode implements Screen {
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
+        cityTexture = createTexture(manager, BKG_CITY, false);
+        skyTexture = createTexture(manager, BKG_SKY, false);
+        cloudTexture = createTexture(manager, BKG_CLOUD, false);
+        sunTexture = createTexture(manager, BKG_SUN, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -651,7 +674,6 @@ public class GameMode implements Screen {
         Vector2 playerPosition = player.getPosition();
         crossHairLocation.sub(playerPosition);
         float firingAngle = (float) Math.atan(crossHairLocation.y / crossHairLocation.x);
-        System.out.println(firingAngle);
         float offsetX = player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET;
         float offsetY = (float) (Math.tan(firingAngle) * offsetX);
         if (offsetY > MAX_BULLET_OFFSET_Y) {
@@ -681,8 +703,14 @@ public class GameMode implements Screen {
 
     public void draw(float dt) {
         canvas.begin();
-        canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+        float camera = player.getX() * scale.x;
+        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
+        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
+        canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
+        canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
+
         canvas.end();
+        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
 
         canvas.begin();
         for (Obstacle obj : objects) {
