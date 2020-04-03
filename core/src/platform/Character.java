@@ -359,11 +359,10 @@ public class Character extends CapsuleObstacle {
         }
 
         if (isTrampolining) {
-            forceCache.set(0, body.getLinearVelocity().y / 5f);
+            forceCache.set(0, body.getLinearVelocity().y / 6.7f);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }
-
 
     }
 
