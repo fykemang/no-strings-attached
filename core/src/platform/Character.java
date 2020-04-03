@@ -379,6 +379,11 @@ public class Character extends CapsuleObstacle {
         // Apply cooldowns
 
         frameCount++;
+        int frameRate = 3;
+        if (movement != 0){
+            int temp = Math.abs(((int)(frameRate * 0.16 / movement)));
+            frameRate = temp == 0 ? frameRate : temp;
+        }
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
@@ -391,7 +396,7 @@ public class Character extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % 3 == 0){
+        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0){
             frameCount = 0;
             ((FilmStrip) texture).setNextFrame();
         }

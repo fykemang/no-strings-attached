@@ -292,10 +292,6 @@ public class GameMode implements Screen {
         platformAssetState = AssetState.LOADING;
         manager.load(PLAYER_IDLE, Texture.class);
         assets.add(PLAYER_IDLE);
-        manager.load(PLAYER_LEFT, Texture.class);
-        assets.add(PLAYER_LEFT);
-        manager.load(PLAYER_RIGHT, Texture.class);
-        assets.add(PLAYER_RIGHT);
         manager.load(PLAYER_JUMP, Texture.class);
         assets.add(PLAYER_JUMP);
         manager.load(PLAYER_FALL, Texture.class);
