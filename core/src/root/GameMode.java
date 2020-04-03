@@ -143,7 +143,7 @@ public class GameMode implements Screen {
      * File to texture for the win door
      */
     private static final String GOAL_FILE = "shared/goaldoor.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/walking-animation.PNG";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.PNG";
     /**
      * Retro font for displaying messages
      */
@@ -204,7 +204,8 @@ public class GameMode implements Screen {
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     private TextureRegion backgroundTexture;
-    private FilmStrip playerWalkingAnimation;
+    private FilmStrip playerWalkingLeftAnimation;
+    private FilmStrip playerWalkingRightAnimation;
     /**
      * Texture asset for the bullet
      */
@@ -371,7 +372,8 @@ public class GameMode implements Screen {
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
-        playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
+        playerWalkingLeftAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, false);
+        playerWalkingRightAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, true);
         cityTexture = createTexture(manager, BKG_CITY, false);
         skyTexture = createTexture(manager, BKG_SKY, false);
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
@@ -610,19 +612,23 @@ public class GameMode implements Screen {
 
         if (player.getVY() > 0) {
             player.setTexture(playerJumpTexture);
-        }
 
-        if (player.getVY() < 0) {
+        }else if (player.getVY() < 0) {
             player.setTexture(playerFallTexture);
+
+        }else if (player.getVX() > 0 && player.isGrounded()) {
+            player.setTexture(playerWalkingLeftAnimation);
+
+        }else if (player.getVX() < 0 && player.isGrounded()) {
+            System.out.println(playerWalkingRightAnimation.isFlipX());
+            player.setTexture(playerWalkingRightAnimation);
+
+        }
+        if (player.getVX() == 0 && player.isGrounded()){
+            player.setTexture(playerTexture);
+
         }
 
-        if (player.getVX() == 0 && !player.isFacingRight() && player.isGrounded()) {
-            player.setTexture(playerLeftTexture);
-        }
-
-        if (player.getVX() == 0 && player.isFacingRight() && player.isGrounded()) {
-            player.setTexture(playerRightTexture);
-        }
 
         // Add a bullet if we fire
         if (player.isShooting()) {
@@ -762,9 +768,9 @@ public class GameMode implements Screen {
      * @param size    The number of frames in the filmstrip
      * @return a newly loaded texture region for the given file.
      */
-    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size) {
+    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size, boolean flipped) {
         if (manager.isLoaded(file)) {
-            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size);
+            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size, flipped);
             strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             return strip;
         }

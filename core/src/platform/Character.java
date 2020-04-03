@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
 import root.GameCanvas;
+import util.FilmStrip;
 
 /**
  * Player avatar for the platform game.
@@ -75,6 +76,8 @@ public class Character extends CapsuleObstacle {
      * Cooldown (in animation frames) for shooting
      */
     private static final int SHOOT_COOLDOWN = 40;
+
+    private int frameCount = 0;
 
     /**
      * The current horizontal movement of the character
@@ -364,6 +367,8 @@ public class Character extends CapsuleObstacle {
      */
     public void update(float dt) {
         // Apply cooldowns
+
+        frameCount++;
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
@@ -374,6 +379,10 @@ public class Character extends CapsuleObstacle {
             shootCooldown = SHOOT_COOLDOWN;
         } else {
             shootCooldown = Math.max(0, shootCooldown - 1);
+        }
+
+        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % 3 == 0){
+            ((FilmStrip) texture).setNextFrame();
         }
 
         super.update(dt);
@@ -430,7 +439,8 @@ public class Character extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), DUDE_HSHRINK, DUDE_VSHRINK);
+        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+                getY() * drawScale.y, getAngle(), DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
     /**

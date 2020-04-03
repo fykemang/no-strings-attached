@@ -60,6 +60,8 @@ public class FilmStrip extends TextureRegion {
      */
     private int frame;
 
+    private boolean flipped;
+
     /**
      * Creates a new filmstrip from the given texture.
      *
@@ -68,7 +70,7 @@ public class FilmStrip extends TextureRegion {
      * @param cols    The number of columns in the filmstrip
      */
     public FilmStrip(Texture texture, int rows, int cols) {
-        this(texture, rows, cols, rows * cols);
+        this(texture, rows, cols, rows * cols, false);
     }
 
     /**
@@ -83,7 +85,7 @@ public class FilmStrip extends TextureRegion {
      * @param cols    The number of columns in the filmstrip
      * @param size    The number of frames in the filmstrip
      */
-    public FilmStrip(Texture texture, int rows, int cols, int size) {
+    public FilmStrip(Texture texture, int rows, int cols, int size, boolean flipped) {
         super(texture);
         if (size > rows * cols) {
             Gdx.app.error("FilmStrip", "Invalid strip size", new IllegalArgumentException());
@@ -93,7 +95,11 @@ public class FilmStrip extends TextureRegion {
         this.size = size;
         rWidth = texture.getWidth() / cols;
         rheight = texture.getHeight() / rows;
-        setFrame(0);
+        if (flipped){
+            flip(true, false);
+            setFrame(size - 1);
+        }else
+            setFrame(0);
     }
 
     /**
@@ -127,6 +133,17 @@ public class FilmStrip extends TextureRegion {
             return;
         }
         this.frame = frame;
+        int x = (frame % cols) * rWidth;
+        int y = (frame / cols) * rheight;
+        setRegion(x, y, rWidth, rheight);
+    }
+
+    public void setNextFrame() {
+        if(!flipped)
+            frame = frame + 1 >= size ? 0 : frame + 1;
+        else
+            frame = frame - 1 < 0 ? size - 1 : frame - 1;
+
         int x = (frame % cols) * rWidth;
         int y = (frame / cols) * rheight;
         setRegion(x, y, rWidth, rheight);
