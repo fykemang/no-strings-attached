@@ -100,10 +100,6 @@ public class GameMode implements Screen {
      */
     private static final String PLAYER_IDLE = "platform/pc_idle.png";
 
-    private static final String PLAYER_LEFT = "platform/pc_left.png";
-
-    private static final String PLAYER_RIGHT = "platform/pc_right.png";
-
     private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
 
     private static final String PLAYER_FALL = "platform/pc_jump_down_256x256.png";
@@ -289,10 +285,6 @@ public class GameMode implements Screen {
         platformAssetState = AssetState.LOADING;
         manager.load(PLAYER_IDLE, Texture.class);
         assets.add(PLAYER_IDLE);
-        manager.load(PLAYER_LEFT, Texture.class);
-        assets.add(PLAYER_LEFT);
-        manager.load(PLAYER_RIGHT, Texture.class);
-        assets.add(PLAYER_RIGHT);
         manager.load(PLAYER_JUMP, Texture.class);
         assets.add(PLAYER_JUMP);
         manager.load(PLAYER_FALL, Texture.class);
@@ -366,8 +358,6 @@ public class GameMode implements Screen {
         }
 
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
-        playerLeftTexture = createTexture(manager, PLAYER_LEFT, false);
-        playerRightTexture = createTexture(manager, PLAYER_RIGHT, false);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
