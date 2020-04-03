@@ -86,7 +86,7 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
-    private final float EPSILON = 0.05f;
+    private final float EPSILON = 0.5f;
     /**
      * Background
      */
@@ -100,7 +100,14 @@ public class GameMode implements Screen {
     /**
      * The texture file for the player (no animation)
      */
+
     private static final String PLAYER_IDLE = "platform/pc_idle.png";
+
+    private static final String PLAYER_IDLE_ANIMATION = "platform/pc_idle_256x256.png";
+
+    private static final String PLAYER_LEFT = "platform/pc_left.png";
+
+    private static final String PLAYER_RIGHT = "platform/pc_right.png";
 
     private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
 
@@ -213,6 +220,7 @@ public class GameMode implements Screen {
     private TextureRegion playerTexture;
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
+
     private TextureRegion npcCozyTexture;
     private TextureRegion npcCheeseTexture;
     private TextureRegion npcNervyTexture;
@@ -221,6 +229,11 @@ public class GameMode implements Screen {
     private TextureRegion npcwelcomeTexture;
 
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
+
+    private TextureRegion backgroundTexture;
+
+    private FilmStrip playerIdleAnimation;
+
     private FilmStrip playerWalkingAnimation;
     /**
      * Texture asset for the bullet
@@ -344,6 +357,8 @@ public class GameMode implements Screen {
         assets.add(BKG_SUN);
         manager.load(BKG_CITY, Texture.class);
         assets.add(BKG_CITY);
+        manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
+        assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
         assets.add(PLAYER_WALKING_ANIMATION_FILE);
 
@@ -392,7 +407,9 @@ public class GameMode implements Screen {
             levels.add(manager.get(TEST_LEVEL, Level.class));
         }
 
+
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
+        playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1,24,24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
@@ -662,7 +679,7 @@ public class GameMode implements Screen {
             player.setTexture(playerWalkingAnimation);
 
         }else if (player.isGrounded()){
-            player.setTexture(playerTexture);
+            player.setTexture(playerIdleAnimation);
 
         }
 
