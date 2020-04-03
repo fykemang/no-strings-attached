@@ -157,7 +157,7 @@ public class GameMode implements Screen {
     /**
      * File to texture for walls and platforms
      */
-    private static final String EARTH_FILE = "platform/tile_cloud.png";
+    private static final String EARTH_FILE = "shared/earthtile.png";
     /**
      * File to texture for the win door
      */
@@ -666,10 +666,10 @@ public class GameMode implements Screen {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (player.getVY() > EPSILON) {
+        if (player.getVY() > EPSILON * 3f) {
             player.setTexture(playerJumpTexture);
 
-        }else if (player.getVY() < -EPSILON) {
+        }else if (player.getVY() < -EPSILON * 3f) {
             player.setTexture(playerFallTexture);
 
         }else if (player.getVX() > EPSILON && player.isGrounded()) {
