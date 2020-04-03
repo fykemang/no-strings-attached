@@ -204,8 +204,7 @@ public class GameMode implements Screen {
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     private TextureRegion backgroundTexture;
-    private FilmStrip playerWalkingLeftAnimation;
-    private FilmStrip playerWalkingRightAnimation;
+    private FilmStrip playerWalkingAnimation;
     /**
      * Texture asset for the bullet
      */
@@ -372,8 +371,7 @@ public class GameMode implements Screen {
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
-        playerWalkingLeftAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, false);
-        playerWalkingRightAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, true);
+        playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
         cityTexture = createTexture(manager, BKG_CITY, false);
         skyTexture = createTexture(manager, BKG_SKY, false);
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
@@ -617,14 +615,12 @@ public class GameMode implements Screen {
             player.setTexture(playerFallTexture);
 
         }else if (player.getVX() > 0 && player.isGrounded()) {
-            player.setTexture(playerWalkingLeftAnimation);
+            player.setTexture(playerWalkingAnimation);
 
         }else if (player.getVX() < 0 && player.isGrounded()) {
-            System.out.println(playerWalkingRightAnimation.isFlipX());
-            player.setTexture(playerWalkingRightAnimation);
+            player.setTexture(playerWalkingAnimation);
 
-        }
-        if (player.getVX() == 0 && player.isGrounded()){
+        }else if (player.isGrounded()){
             player.setTexture(playerTexture);
 
         }
@@ -768,9 +764,9 @@ public class GameMode implements Screen {
      * @param size    The number of frames in the filmstrip
      * @return a newly loaded texture region for the given file.
      */
-    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size, boolean flipped) {
+    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size) {
         if (manager.isLoaded(file)) {
-            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size, flipped);
+            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size);
             strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             return strip;
         }
