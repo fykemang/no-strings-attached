@@ -29,7 +29,7 @@ public class Character extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 1.2f;
+    private static final float DUDE_DENSITY = 1.0f;
     /**
      * The factor to multiply by the input
      */
