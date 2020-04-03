@@ -456,7 +456,7 @@ public class Character extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
 
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
+                getY() * drawScale.y, getAngle(), (!isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
     /**

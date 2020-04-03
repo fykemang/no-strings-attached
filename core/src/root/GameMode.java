@@ -157,7 +157,7 @@ public class GameMode implements Screen {
     /**
      * File to texture for walls and platforms
      */
-    private static final String EARTH_FILE = "shared/earthtile.png";
+    private static final String EARTH_FILE = "platform/tile_cloud.png";
     /**
      * File to texture for the win door
      */
