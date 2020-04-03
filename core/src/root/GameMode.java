@@ -36,6 +36,7 @@ import util.SoundController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Gameplay specific controller for the platformer game.
@@ -47,6 +48,7 @@ import java.util.List;
  * place nicely with the static assets.
  */
 public class GameMode implements Screen {
+    Random rand = new Random();
     /**
      * Exit code for quitting the game
      */
@@ -103,6 +105,18 @@ public class GameMode implements Screen {
     private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
 
     private static final String PLAYER_FALL = "platform/pc_jump_down_256x256.png";
+
+    private static final String NPC_COZY = "platform/cozy.png";
+
+    private static final String NPC_CHEESE = "platform/cheese.png";
+
+    private static final String NPC_NERVY = "platform/nervy.png";
+
+    private static final String NPC_SPIKY = "platform/spiky.png";
+
+    private static final String NPC_HEYO = "platform/heyo.png";
+
+    private static final String NPC_WELCOME = "platform/welcome.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -197,11 +211,16 @@ public class GameMode implements Screen {
      * Texture assets for character avatar
      */
     private TextureRegion playerTexture;
-    private TextureRegion playerLeftTexture;
-    private TextureRegion playerRightTexture;
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
-    private TextureRegion backgroundTexture;
+    private TextureRegion npcCozyTexture;
+    private TextureRegion npcCheeseTexture;
+    private TextureRegion npcNervyTexture;
+    private TextureRegion npcheyoTexture;
+    private TextureRegion npcspikyTexture;
+    private TextureRegion npcwelcomeTexture;
+
+    private ArrayList<TextureRegion> npcs = new ArrayList<>();
     private FilmStrip playerWalkingAnimation;
     /**
      * Texture asset for the bullet
@@ -291,6 +310,22 @@ public class GameMode implements Screen {
         assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
+
+        manager.load(NPC_CHEESE, Texture.class);
+        assets.add(NPC_CHEESE);
+        manager.load(NPC_COZY, Texture.class);
+        assets.add(NPC_COZY);
+        manager.load(NPC_NERVY, Texture.class);
+        assets.add(NPC_NERVY);
+        manager.load(NPC_SPIKY, Texture.class);
+        assets.add(NPC_SPIKY);
+        manager.load(NPC_HEYO, Texture.class);
+        assets.add(NPC_HEYO);
+        manager.load(NPC_WELCOME, Texture.class);
+        assets.add(NPC_WELCOME);
+
+
+
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
         manager.load(ROPE_FILE, Texture.class);
@@ -368,6 +403,14 @@ public class GameMode implements Screen {
         skyTexture = createTexture(manager, BKG_SKY, false);
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
         sunTexture = createTexture(manager, BKG_SUN, false);
+        npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
+        npcCozyTexture = createTexture(manager, NPC_COZY, false);
+        npcNervyTexture = createTexture(manager, NPC_NERVY, false);
+        npcheyoTexture = createTexture(manager, NPC_HEYO, false);
+        npcspikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcwelcomeTexture = createTexture(manager, NPC_WELCOME, false);
+        npcs.add(npcCheeseTexture); npcs.add(npcCozyTexture); npcs.add(npcNervyTexture);npcs.add(npcheyoTexture);
+        npcs.add(npcspikyTexture);npcs.add(npcwelcomeTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -519,7 +562,13 @@ public class GameMode implements Screen {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
         createTile(points, x1, y1 - 1f, "tile");
         createTile(points, x2, y2 - 1f, "tile");
-        Couple couple = new Couple(x1, y1, x2, y2, playerTexture, bridgeTexture, scale, id);
+        int n1 = rand.nextInt(npcs.size());
+        int n2 = rand.nextInt(npcs.size());
+        while (n2 == n1) n2 = rand.nextInt(npcs.size());
+        TextureRegion randTex1 = npcs.get(n1);
+        TextureRegion randTex2 = npcs.get(n2);
+//        System.out.println("n1 " + n1 + "n2 " + n2);
+        Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
     }
 
