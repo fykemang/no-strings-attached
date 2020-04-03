@@ -16,7 +16,6 @@ public class Couple extends ComplexObstacle {
     private Rope trampoline;
     private Rope trampLeft;
     private Rope trampRight;
-    private TextureRegion avatarTexture;
     private TextureRegion trampolineTexture;
 
     public enum CoupleState {BROKEN, PAIRED}
@@ -28,16 +27,16 @@ public class Couple extends ComplexObstacle {
      * @param y1
      * @param x2
      * @param y2
-     * @param avatarTexture
+     * @param avatarTexture1
+     *  @param avatarTexture2
      * @param trampolineTexture
      * @param drawScale
      */
-    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatarTexture, TextureRegion trampolineTexture, Vector2 drawScale, int id) {
+    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatar1, TextureRegion avatar2, TextureRegion trampolineTexture, Vector2 drawScale, int id) {
         this.drawScale = drawScale;
-        this.avatarTexture = avatarTexture;
         this.trampolineTexture = trampolineTexture;
-        this.l = createAvatar(x1, y1);
-        this.r = createAvatar(x2, y2);
+        this.l = createAvatar(x1, y1, avatar1);
+        this.r = createAvatar(x2, y2, avatar2);
         this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
@@ -54,14 +53,14 @@ public class Couple extends ComplexObstacle {
      * @param y
      * @return
      */
-    public Character createAvatar(float x, float y) {
-        float dWidth = avatarTexture.getRegionWidth() / drawScale.x;
-        float dHeight = avatarTexture.getRegionHeight() / drawScale.y;
+    public Character createAvatar(float x, float y, TextureRegion t) {
+        float dWidth = t.getRegionWidth() / drawScale.x;
+        float dHeight = t.getRegionHeight() / drawScale.y;
         Character avatar = new Character(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
-        avatar.setTexture(this.avatarTexture);
+        avatar.setTexture(t);
         return avatar;
     }
 
