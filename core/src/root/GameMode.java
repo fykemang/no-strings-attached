@@ -83,6 +83,8 @@ public class GameMode implements Screen {
      * Height of the game world in Box2d units
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
+
+    private final float EPSILON = 0.05f;
     /**
      * Background
      */
@@ -102,9 +104,9 @@ public class GameMode implements Screen {
 
     private static final String PLAYER_RIGHT = "platform/pc_right.png";
 
-    private static final String PLAYER_JUMP = "platform/pc_jump.png";
+    private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
 
-    private static final String PLAYER_FALL = "platform/pc_fall.png";
+    private static final String PLAYER_FALL = "platform/pc_jump_down_256x256.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -608,16 +610,16 @@ public class GameMode implements Screen {
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (player.getVY() > 0) {
+        if (player.getVY() > EPSILON) {
             player.setTexture(playerJumpTexture);
 
-        }else if (player.getVY() < 0) {
+        }else if (player.getVY() < -EPSILON) {
             player.setTexture(playerFallTexture);
 
-        }else if (player.getVX() > 0 && player.isGrounded()) {
+        }else if (player.getVX() > EPSILON && player.isGrounded()) {
             player.setTexture(playerWalkingAnimation);
 
-        }else if (player.getVX() < 0 && player.isGrounded()) {
+        }else if (player.getVX() < -EPSILON && player.isGrounded()) {
             player.setTexture(playerWalkingAnimation);
 
         }else if (player.isGrounded()){

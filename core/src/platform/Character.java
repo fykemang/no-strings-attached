@@ -29,7 +29,7 @@ public class Character extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 1.0f;
+    private static final float DUDE_DENSITY = 1.2f;
     /**
      * The factor to multiply by the input
      */
@@ -45,7 +45,7 @@ public class Character extends CapsuleObstacle {
     /**
      * The maximum character speed
      */
-    private static final float DUDE_MAXSPEED = 5.0f;
+    private static final float DUDE_MAXSPEED = 3.0f;
     /**
      * The impulse for the character jump
      */
@@ -63,15 +63,15 @@ public class Character extends CapsuleObstacle {
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.08f;
+    private static final float DUDE_VSHRINK = 0.2f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.08f;
+    private static final float DUDE_HSHRINK = 0.2f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
-    private static final float DUDE_SSHRINK = 0.8f;
+    private static final float DUDE_SSHRINK = 0.5f;
     /**
      * Cooldown (in animation frames) for shooting
      */
