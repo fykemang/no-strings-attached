@@ -23,12 +23,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.CatmullRomSpline;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -114,6 +113,10 @@ public class GameCanvas {
     private OrthographicCamera camera;
 
     /**
+     * The Viewport used to manage the camera
+     */
+    private ScalingViewport viewport;
+    /**
      * Value to cache window width (if we are currently full screen)
      */
     int width;
@@ -132,6 +135,12 @@ public class GameCanvas {
      */
     private Matrix4 global;
     private Vector2 vertex;
+    /**
+     * Used to project screen to world coordinates
+     */
+    private Vector3 cacheVector3;
+    private Vector2 cacheVector2;
+
     /**
      * Cache object to handle raw textures
      */
@@ -153,6 +162,8 @@ public class GameCanvas {
 
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
+        viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
+
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
         splineRender.setProjectionMatrix(camera.combined);
@@ -162,6 +173,8 @@ public class GameCanvas {
         holder = new TextureRegion();
         local = new Affine2();
         global = new Matrix4();
+        cacheVector3 = new Vector3();
+        cacheVector2 = new Vector2();
         vertex = new Vector2();
     }
 
@@ -343,8 +356,7 @@ public class GameCanvas {
 
     public void resize(int width, int height) {
         // Resizing screws up the spriteBatch projection matrix
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
+        viewport.update(width, height);
         // spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
     }
 
@@ -729,7 +741,6 @@ public class GameCanvas {
         computeTransform(ox, oy, x, y, angle, sx, sy);
         spriteBatch.setColor(tint);
         spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
-
         spriteBatch.setColor(Color.WHITE);
     }
 
@@ -1272,11 +1283,17 @@ public class GameCanvas {
     }
 
     public void moveCamera(float x, float y) {
-        float yPos = Math.max(y, 170f);
         camera.position.x = x;
-        camera.position.y = yPos;
-        camera.viewportHeight = getHeight() * 3 / 5;
-        camera.viewportWidth = getWidth() * 3 / 5;
+        camera.position.y = Math.max(y, 170f);
+        camera.viewportHeight = (float) getHeight() * 3 / 5;
+        camera.viewportWidth = (float) getWidth() * 3 / 5;
         camera.update();
+    }
+
+    public Vector2 getMouseCoordinates(float x, float y) {
+        y = getHeight() - y;
+        cacheVector3.set(x, y, 0);
+        Vector3 worldLocation = viewport.unproject(cacheVector3);
+        return cacheVector2.set(worldLocation.x, worldLocation.y);
     }
 }

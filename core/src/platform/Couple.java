@@ -27,8 +27,8 @@ public class Couple extends ComplexObstacle {
      * @param y1
      * @param x2
      * @param y2
-     * @param avatarTexture1
-     *  @param avatarTexture2
+     * @param avatar1
+     * @param avatar2
      * @param trampolineTexture
      * @param drawScale
      */

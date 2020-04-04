@@ -86,7 +86,6 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
-    private final float EPSILON = 0.5f;
     /**
      * Background
      */
@@ -158,10 +157,7 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
-    /**
-     * File to texture for the win door
-     */
-    private static final String GOAL_FILE = "shared/goaldoor.png";
+
     private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.PNG";
     /**
      * Retro font for displaying messages
@@ -224,9 +220,9 @@ public class GameMode implements Screen {
     private TextureRegion npcCozyTexture;
     private TextureRegion npcCheeseTexture;
     private TextureRegion npcNervyTexture;
-    private TextureRegion npcheyoTexture;
-    private TextureRegion npcspikyTexture;
-    private TextureRegion npcwelcomeTexture;
+    private TextureRegion npcHeyoTexture;
+    private TextureRegion npcSpikyTexture;
+    private TextureRegion npcWelcomeTexture;
 
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
 
@@ -338,7 +334,6 @@ public class GameMode implements Screen {
         assets.add(NPC_WELCOME);
 
 
-
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
         manager.load(ROPE_FILE, Texture.class);
@@ -347,8 +342,6 @@ public class GameMode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
-        manager.load(GOAL_FILE, Texture.class);
-        assets.add(GOAL_FILE);
         manager.load(BKG_CLOUD, Texture.class);
         assets.add(BKG_CLOUD);
         manager.load(BKG_SKY, Texture.class);
@@ -409,7 +402,7 @@ public class GameMode implements Screen {
 
 
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
-        playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1,24,24);
+        playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
@@ -423,11 +416,15 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createTexture(manager, NPC_COZY, false);
         npcNervyTexture = createTexture(manager, NPC_NERVY, false);
-        npcheyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcspikyTexture = createTexture(manager, NPC_SPIKY, false);
-        npcwelcomeTexture = createTexture(manager, NPC_WELCOME, false);
-        npcs.add(npcCheeseTexture); npcs.add(npcCozyTexture); npcs.add(npcNervyTexture);npcs.add(npcheyoTexture);
-        npcs.add(npcspikyTexture);npcs.add(npcwelcomeTexture);
+        npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
+        npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
+        npcs.add(npcCheeseTexture);
+        npcs.add(npcCozyTexture);
+        npcs.add(npcNervyTexture);
+        npcs.add(npcHeyoTexture);
+        npcs.add(npcSpikyTexture);
+        npcs.add(npcWelcomeTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -435,7 +432,6 @@ public class GameMode implements Screen {
         sounds.allocate(manager, POP_FILE);
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
             earthTile = createTexture(manager, EARTH_FILE, true);
-            goalTile = createTexture(manager, GOAL_FILE, true);// Allocate the font
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
             } else {
@@ -476,6 +472,10 @@ public class GameMode implements Screen {
      * The speed of the bullet after firing
      */
     private static final float BULLET_SPEED = 40.0f;
+    /**
+     * The maximum y-axis offset from which a bullet
+     * can appear from the person's body
+     */
     private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     // Physics objects for the game
@@ -529,8 +529,8 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        float dWidth = goalTile.getRegionWidth() / scale.x;
-        float dHeight = goalTile.getRegionHeight() / scale.y;
+        float dWidth;
+        float dHeight;
 
         Level testLevel = levels.get(0);
 
@@ -584,7 +584,6 @@ public class GameMode implements Screen {
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
         TextureRegion randTex1 = npcs.get(n1);
         TextureRegion randTex2 = npcs.get(n2);
-//        System.out.println("n1 " + n1 + "n2 " + n2);
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
     }
@@ -662,31 +661,23 @@ public class GameMode implements Screen {
 
 
         if (player.isJumping()) {
-            player.setTexture(playerJumpTexture);
             SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
-        if (player.getVY() > EPSILON) {
+        if (player.isRising()) {
             player.setTexture(playerJumpTexture);
-
-        }else if (player.getVY() < -EPSILON) {
+        } else if (player.isFalling()) {
             player.setTexture(playerFallTexture);
-
-        }else if (player.getVX() > EPSILON && player.isGrounded()) {
+        } else if(player.isWalking()) {
             player.setTexture(playerWalkingAnimation);
-
-        }else if (player.getVX() < -EPSILON && player.isGrounded()) {
-            player.setTexture(playerWalkingAnimation);
-
-        }else if (player.isGrounded()){
+        } else if (player.isGrounded()) {
             player.setTexture(playerIdleAnimation);
-
         }
 
 
         // Add a bullet if we fire
         if (player.isShooting()) {
-            if (InputController.getInstance().getCrossHair().x - player.getX() >= 0) {
+            if (screenToWorldCoordinates(InputController.getInstance().getCrossHair()).x - player.getX() >= 0) {
                 player.setMovement(0.01f);
             } else {
                 player.setMovement(-0.01f);
@@ -725,12 +716,19 @@ public class GameMode implements Screen {
         SoundController.getInstance().update();
     }
 
+    private Vector2 screenToWorldCoordinates(Vector2 screenCoordinate) {
+        screenCoordinate.scl(this.scale);
+        Vector2 worldCoordinates = canvas.getMouseCoordinates(screenCoordinate.x, screenCoordinate.y);
+        worldCoordinates.scl(1 / scale.x, 1 / scale.y);
+        return worldCoordinates;
+    }
+
     /**
      * Add a new bullet to the world and send it in the right direction.
      */
     private void createBullet() {
-        Vector2 crossHairLocation = InputController.getInstance().getCrossHair();
         Vector2 playerPosition = player.getPosition();
+        Vector2 crossHairLocation = screenToWorldCoordinates(InputController.getInstance().getCrossHair());
         crossHairLocation.sub(playerPosition);
         float firingAngle = (float) Math.atan(crossHairLocation.y / crossHairLocation.x);
         float offsetX = player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET;
@@ -740,7 +738,6 @@ public class GameMode implements Screen {
         } else if (offsetY < -MAX_BULLET_OFFSET_Y) {
             offsetY = -MAX_BULLET_OFFSET_Y;
         }
-
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
         Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
         projectile.setName("player_rope");
@@ -756,7 +753,6 @@ public class GameMode implements Screen {
         projectile.setVX(vx);
         projectile.setVY(vy);
         addQueuedObject(projectile);
-
         SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
     }
 
@@ -1073,7 +1069,6 @@ public class GameMode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        // TODO Auto-generated method stub
     }
 
     /**
@@ -1082,7 +1077,6 @@ public class GameMode implements Screen {
      * This is usually when it regains focus.
      */
     public void resume() {
-        // TODO Auto-generated method stub
     }
 
     /**

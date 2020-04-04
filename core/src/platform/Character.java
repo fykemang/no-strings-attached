@@ -37,7 +37,7 @@ public class Character extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float DUDE_DAMPING = 10.0f;
+    private static final float DUDE_DAMPING = 20.0f;
     /**
      * The dude is a slippery one
      */
@@ -51,7 +51,7 @@ public class Character extends CapsuleObstacle {
      */
     private static final float DUDE_JUMP = 10f;
 
-    private static final float FRICT = 0.67f;
+    private static final float FRICTION = 0.67f;
 
     private static final float EPSILON = 0.03f;
     /**
@@ -150,16 +150,17 @@ public class Character extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         // Change facing if appropriate
+        movement = value;
         if (value < 0) {
             isFacingRight = false;
-            movement = value;
         } else if (value > 0) {
             isFacingRight = true;
-            movement = value;
         }
-        if (isWalking && value==0){
-            movement = Math.abs(movement * FRICT) < EPSILON ? 0 : movement * FRICT;
+
+        if (isWalking && value == 0) {
+            movement = Math.abs(movement * FRICTION) < EPSILON ? 0 : movement * FRICTION;
         }
+
         isWalking = movement != 0;
     }
 
@@ -347,10 +348,10 @@ public class Character extends CapsuleObstacle {
         // Velocity too high, clamp it
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
-        } else {
-            forceCache.set(getMovement(), 0);
-            body.applyForce(forceCache, getPosition(), true);
         }
+
+        forceCache.set(getMovement(), 0);
+        body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {
@@ -375,14 +376,13 @@ public class Character extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        // Apply cooldowns
-
         frameCount++;
         int frameRate = 3;
-        if (movement != 0){
-            int temp = Math.abs(((int)(frameRate * 0.16 / movement)));
+        if (movement != 0) {
+            int temp = Math.abs(((int) (frameRate * 0.16 / movement)));
             frameRate = temp == 0 ? frameRate : temp;
         }
+
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
@@ -395,7 +395,7 @@ public class Character extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0){
+        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
             ((FilmStrip) texture).setNextFrame();
         }
@@ -454,11 +454,24 @@ public class Character extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-
+        int isFacingRight = this.isFacingRight ? 1 : -1;
+        float sx = this.isWalking ? isFacingRight * DUDE_HSHRINK : -isFacingRight * DUDE_HSHRINK;
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
+                getY() * drawScale.y, getAngle(), sx, DUDE_VSHRINK);
     }
 
+
+    public boolean isWalking() {
+        return isWalking;
+    }
+
+    public boolean isRising() {
+        return getVY() > EPSILON;
+    }
+
+    public boolean isFalling() {
+        return getVY() < -EPSILON;
+    }
     /**
      * Draws the outline of the physics body.
      * <p>
