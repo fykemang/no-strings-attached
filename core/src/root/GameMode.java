@@ -663,7 +663,7 @@ public class GameMode implements Screen {
 
         if (player.isJumping()) {
             player.setTexture(playerJumpTexture);
-            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
+           // SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
         if (player.getVY() > EPSILON * 3f) {
