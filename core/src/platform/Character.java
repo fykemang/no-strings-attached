@@ -284,6 +284,10 @@ public class Character extends CapsuleObstacle {
         setName(name);
     }
 
+    public boolean isAttached() {
+        return target != null;
+    }
+
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
      * <p>
@@ -472,6 +476,7 @@ public class Character extends CapsuleObstacle {
     public boolean isFalling() {
         return getVY() < -EPSILON;
     }
+
     /**
      * Draws the outline of the physics body.
      * <p>

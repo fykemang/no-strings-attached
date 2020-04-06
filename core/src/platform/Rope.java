@@ -54,15 +54,15 @@ public class Rope extends ComplexObstacle {
      * The size of a single bloc
      */
     protected Vector2 blobSize;
-
-    /* The length of each link */
+    /**
+     *  The length of each link
+     */
     protected float linkSize;
     /**
      * The spacing between each link
      */
     protected float spacing;
-
-    private float stringConstant = 1f;
+    protected float length;
 
     private CatmullRomSpline<Vector2> splineCurve;
 
@@ -71,7 +71,6 @@ public class Rope extends ComplexObstacle {
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
-    //    private WheelObstacle[] planks;
     private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
     private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
     public RopeState state;
@@ -79,7 +78,6 @@ public class Rope extends ComplexObstacle {
     public enum RopeState {
         LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
     }
-
 
     public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
         this.state = state;
@@ -121,7 +119,7 @@ public class Rope extends ComplexObstacle {
 
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
-        float length = dimension.len();
+        this.length = dimension.len();
         Vector2 norm = new Vector2(dimension);
         norm.nor();
 
@@ -136,7 +134,6 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-        // Create the planks
         blobSize.x = linkSize;
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
@@ -192,16 +189,10 @@ public class Rope extends ComplexObstacle {
         Vector2 anchor1 = new Vector2(linkSize / 2, 0);
         Vector2 anchor2 = new Vector2(-linkSize / 2, 0);
 
-        // Create the leftmost anchor
-        // Normally, we would do this in constructor, but we have
-        // reasons to not add the anchor to the bodies list.
-
-        // Definition for a revolute joint
         DistanceJointDef jointDef = new DistanceJointDef();
         jointDef.dampingRatio = 1f;
         jointDef.frequencyHz = 18f;
 
-        // Link the planks together
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         for (int i = 0; i < upperLayer.size() - 1; i++) {
@@ -213,8 +204,6 @@ public class Rope extends ComplexObstacle {
             jointDef.bodyB = next.getBody();
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
-
-
         }
 
         for (int i = 0; i < lowerLayer.size() - 1; i++) {
@@ -227,7 +216,6 @@ public class Rope extends ComplexObstacle {
             joints.add(jointl);
         }
 
-
         for (int i = 0; i < upperLayer.size(); i++) {
             jointDef.length = 0.2f;
             Obstacle top = upperLayer.get(i);
@@ -236,8 +224,8 @@ public class Rope extends ComplexObstacle {
             jointDef.bodyB = bottom.getBody();
             Joint joint2 = world.createJoint(jointDef);
             joints.add(joint2);
-
         }
+
         for (int i = 0; i < upperLayer.size() - 1; i++) {
             jointDef.length = 0.3f;
             // Look at what we did above and join the planks
@@ -302,9 +290,11 @@ public class Rope extends ComplexObstacle {
             Vector2 pos = upperLayer.get(cur).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
+
         if (state == RopeState.LEFT_BROKEN) {
             contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
         }
+
         if (state == RopeState.RIGHT_BROKEN) {
             contPoints[0] = contPoints[1];
         }
@@ -316,7 +306,6 @@ public class Rope extends ComplexObstacle {
             splineCurve = new CatmullRomSpline<>(contPoints, false);
         else
             splineCurve.set(contPoints, false);
-
     }
 
     private boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos) {
@@ -356,7 +345,6 @@ public class Rope extends ComplexObstacle {
         ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index + 1, upperLayer.size()));
         ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index + 1, lowerLayer.size()));
 
-
         Rope l = new Rope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
@@ -378,7 +366,6 @@ public class Rope extends ComplexObstacle {
      */
     @Override
     public void draw(GameCanvas canvas) {
-
         // Delegate to components
         setCurrentSplineCurve();
         canvas.drawCatmullRom(splineCurve, K, POINTS);
@@ -409,5 +396,9 @@ public class Rope extends ComplexObstacle {
             contPoints[contPoints.length - 1].set(end.x, end.y);
             contPoints[contPoints.length - 2].set(end.x, end.y);
         }
+    }
+
+    public float getLength() {
+       return length;
     }
 }

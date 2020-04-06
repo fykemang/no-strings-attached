@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
@@ -486,7 +487,11 @@ public class GameMode implements Screen {
 
     private List<Level> levels;
 
-    private RopeJointDef jointDef;
+    private RopeJointDef ropeJointDef;
+
+    private RevoluteJointDef revoluteJointDef;
+
+    private Rope playerRope;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -500,7 +505,8 @@ public class GameMode implements Screen {
         setFailure(false);
         world.setContactListener(new CollisionController(player));
         this.levels = new ArrayList<>();
-        jointDef = new RopeJointDef();
+        ropeJointDef = new RopeJointDef();
+        revoluteJointDef = new RevoluteJointDef();
     }
 
     /**
@@ -538,7 +544,6 @@ public class GameMode implements Screen {
         List<Tile> tiles = testLevel.getTiles();
         List<float[]> couples = testLevel.getCouples();
 
-
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
         }
@@ -555,6 +560,8 @@ public class GameMode implements Screen {
             float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
+
+
     }
 
     public void createTile(float[] points, float x, float y, String name) {
@@ -668,7 +675,7 @@ public class GameMode implements Screen {
             player.setTexture(playerJumpTexture);
         } else if (player.isFalling()) {
             player.setTexture(playerFallTexture);
-        } else if(player.isWalking()) {
+        } else if (player.isWalking()) {
             player.setTexture(playerWalkingAnimation);
         } else if (player.isGrounded()) {
             player.setTexture(playerIdleAnimation);
@@ -704,11 +711,31 @@ public class GameMode implements Screen {
             }
         }
 
+        if (player.isAttached() && playerRope != null) {
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope.setStart(playerPos, false);
+            playerRope.setEnd(targetPos, false);
+        }
+
         if (player.getTarget() != null && player.getSwingJoint() == null) {
-            jointDef.bodyA = player.getBody();
-            jointDef.bodyB = player.getTarget().getBody();
-            jointDef.maxLength = 4.0f;
-            Joint swingJoint = world.createJoint(jointDef);
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1);
+            playerRope.setDrawScale(scale);
+            addObject(playerRope);
+            revoluteJointDef.bodyB = player.getBody();
+            revoluteJointDef.bodyA = playerRope.getBody();
+            world.createJoint(revoluteJointDef);
+
+            revoluteJointDef.bodyB = playerRope.getLastLink();
+            revoluteJointDef.bodyA = player.getTarget().getBody();
+            world.createJoint(revoluteJointDef);
+
+            ropeJointDef.bodyA = player.getBody();
+            ropeJointDef.bodyB = player.getTarget().getBody();
+            ropeJointDef.maxLength = playerRope.getLength();
+            Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
         }
 
