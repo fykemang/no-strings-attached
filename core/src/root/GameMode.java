@@ -162,7 +162,7 @@ public class GameMode implements Screen {
      * File to texture for the win door
      */
     private static final String GOAL_FILE = "shared/goaldoor.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.PNG";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.png";
     /**
      * Retro font for displaying messages
      */
