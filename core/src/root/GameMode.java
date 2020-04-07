@@ -61,6 +61,8 @@ public class GameMode implements Screen {
      * Exit code for jumping back to previous level
      */
     public static final int EXIT_PREV = 2;
+
+    public static final int EXIT_INTO_GAME = 3;
     /**
      * How many frames after winning/losing do we continue?
      */

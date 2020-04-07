@@ -29,6 +29,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -1279,4 +1280,12 @@ public class GameCanvas {
         camera.viewportWidth = getWidth() * 3 / 5;
         camera.update();
     }
+
+//    public void drawStage(Stage stage){
+//
+//        stage.act();
+//        spriteBatch.begin();
+//        stage.draw();
+//        spriteBatch.end();
+//    }
 }
