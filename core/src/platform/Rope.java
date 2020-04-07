@@ -55,7 +55,7 @@ public class Rope extends ComplexObstacle {
      */
     protected Vector2 blobSize;
     /**
-     *  The length of each link
+     * The length of each link
      */
     protected float linkSize;
     /**
@@ -403,6 +403,6 @@ public class Rope extends ComplexObstacle {
     }
 
     public float getLength() {
-       return length;
+        return length;
     }
 }

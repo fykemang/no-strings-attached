@@ -33,11 +33,8 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import util.FilmStrip;
 import util.ScreenListener;
 
@@ -177,8 +174,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private int buttonY3;
 
 
-
-
     /**
      * The width of the progress bar
      */
@@ -222,7 +217,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Whether or not this player mode is still active
      */
     private boolean active;
-    private enum MouseState{
+
+    private enum MouseState {
         NONE, QUIT, START, SETTINGS, OTHER
     }
 
@@ -289,7 +285,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         budget = millis;
 
         manager.load(CHAR_ANIMATION_FILE, Texture.class);
-       // assets.add(CHAR_ANIMATION_FILE);
+        // assets.add(CHAR_ANIMATION_FILE);
         // Compute the dimensions from the canvas
         resize(canvas.getWidth(), canvas.getHeight());
 
@@ -402,7 +398,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 quitButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             }
         }
-        if(animatedBkg == null){
+        if (animatedBkg == null) {
             animatedBkg = createFilmStrip(manager, CHAR_ANIMATION_FILE, 1, 4, 4);
         }
     }
@@ -418,33 +414,33 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         canvas.begin();
 
 
-        if (animatedBkg != null){
-            frameCount ++;
+        if (animatedBkg != null) {
+            frameCount++;
             if (frameCount % 8 == 0) {
                 animatedBkg.setNextFrame();
                 frameCount = 0;
             }
             canvas.drawAnimatedBkg(animatedBkg);
-        }else{
+        } else {
             canvas.drawBackground(background);
         }
 
-        if (startGameButton != null){
+        if (startGameButton != null) {
             Color tint = (pressState == MouseState.START ? Color.GRAY : Color.WHITE);
             canvas.draw(startGameButton, tint, startGameButton.getWidth() / 2, startGameButton.getHeight() / 2,
                     buttonX, buttonY1, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
-        if (settingsButton != null){
+        if (settingsButton != null) {
             Color tint = (pressState == MouseState.SETTINGS ? Color.GRAY : Color.WHITE);
             canvas.draw(settingsButton, tint, settingsButton.getWidth() / 2, settingsButton.getHeight() / 2,
                     buttonX, buttonY2, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
-        if (quitButton != null){
+        if (quitButton != null) {
             Color tint = (pressState == MouseState.QUIT ? Color.GRAY : Color.WHITE);
             canvas.draw(quitButton, tint, quitButton.getWidth() / 2, quitButton.getHeight() / 2,
                     buttonX, buttonY3, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
-        if (selectState != MouseState.NONE && selectState != MouseState.OTHER){
+        if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
             int y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
             Color tint = Color.WHITE;
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
@@ -630,7 +626,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         if (pressState == MouseState.START) {
             pressState = MouseState.OTHER;
             return false;
-        }else if (pressState == MouseState.QUIT){
+        } else if (pressState == MouseState.QUIT) {
             listener.exitScreen(this, 0);
             return false;
         }

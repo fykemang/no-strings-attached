@@ -26,8 +26,6 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
-import obstacle.PolygonObstacle;
-import platform.Person;
 import platform.*;
 import util.FilmStrip;
 import util.PooledList;
@@ -742,7 +740,6 @@ public class GameMode implements Screen {
             playerRope.setStart(playerPos, false);
             playerRope.setEnd(targetPos, false);
         }
-
 
 
         // If we use sound, we must remember this.
