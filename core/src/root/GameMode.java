@@ -124,6 +124,11 @@ public class GameMode implements Screen {
     private static final String NPC_HEYO = "platform/heyo.png";
 
     private static final String NPC_WELCOME = "platform/welcome.png";
+
+    private static final String NEEDLE = "platform/needles.png";
+    private static final String BUTTON = "platform/button.png";
+    private static final String YARN = "platform/yarn.png";
+
     /**
      * The texture file for the spinning barrier
      */
@@ -228,7 +233,12 @@ public class GameMode implements Screen {
     private TextureRegion npcspikyTexture;
     private TextureRegion npcwelcomeTexture;
 
+    private TextureRegion buttonTexture;
+    private TextureRegion needleTexture;
+    private TextureRegion yarnTexture;
+
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
+    private ArrayList<TextureRegion> items = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
 
@@ -337,7 +347,12 @@ public class GameMode implements Screen {
         manager.load(NPC_WELCOME, Texture.class);
         assets.add(NPC_WELCOME);
 
-
+        manager.load(NEEDLE, Texture.class);
+        assets.add(NEEDLE);
+        manager.load(BUTTON, Texture.class);
+        assets.add(BUTTON);
+        manager.load(YARN, Texture.class);
+        assets.add(YARN);
 
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
@@ -428,6 +443,10 @@ public class GameMode implements Screen {
         npcwelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         npcs.add(npcCheeseTexture); npcs.add(npcCozyTexture); npcs.add(npcNervyTexture);npcs.add(npcheyoTexture);
         npcs.add(npcspikyTexture);npcs.add(npcwelcomeTexture);
+        buttonTexture = createTexture(manager, BUTTON, false);
+        needleTexture = createTexture(manager, NEEDLE, false);
+        yarnTexture = createTexture(manager, YARN, false);
+        items.add(buttonTexture); items.add(needleTexture); items.add(yarnTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -537,7 +556,7 @@ public class GameMode implements Screen {
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
         List<float[]> couples = testLevel.getCouples();
-
+        List<float[]> items = testLevel.getItems();
 
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
@@ -555,6 +574,11 @@ public class GameMode implements Screen {
             float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
+
+        for (int i = 0; i < items.size(); i++) {
+            float[] curr = items.get(i);
+            createItem(curr[0], curr[1], i);
+        }
     }
 
     public void createTile(float[] points, float x, float y, String name) {
@@ -567,6 +591,15 @@ public class GameMode implements Screen {
         tile.setTexture(earthTile);
         tile.setName(name);
         addObject(tile);
+    }
+
+    public void createItem(float x, float y, int id) {
+        int n = rand.nextInt(items.size());
+        TextureRegion randTex = items.get(n);
+        Item item = new Item(x, y, randTex, scale, id);
+        addObject(item);
+        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
+//        createTile(points, x, y - 1f, "tile");
     }
 
     /**
