@@ -636,10 +636,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             pressState = MouseState.OTHER;
             return false;
         }else if (pressState == MouseState.QUIT){
-
             listener.exitScreen(this, 0);
             return false;
         }
+        pressState = MouseState.NONE;
         return true;
     }
 
