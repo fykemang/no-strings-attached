@@ -24,7 +24,7 @@ import util.FilmStrip;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class Character extends CapsuleObstacle {
+public class Person extends CapsuleObstacle {
     // Physics constants
     /**
      * The density of the character
@@ -117,7 +117,7 @@ public class Character extends CapsuleObstacle {
     private boolean canCut;
     private String sensorName;
     private int closestCoupleID;
-    private Obstacle target;
+    private Person target;
 
     /**
      * Which direction is the character facing
@@ -267,7 +267,7 @@ public class Character extends CapsuleObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public Character(float x, float y, float width, float height, String name, String sensorName) {
+    public Person(float x, float y, float width, float height, String name, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
@@ -436,7 +436,7 @@ public class Character extends CapsuleObstacle {
         isShooting = value;
     }
 
-    public void setTarget(Obstacle target) {
+    public void setTarget(Person target) {
         this.target = target;
     }
 
@@ -458,10 +458,8 @@ public class Character extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        int isFacingRight = this.isFacingRight ? 1 : -1;
-        float sx = this.isWalking ? isFacingRight * DUDE_HSHRINK : -isFacingRight * DUDE_HSHRINK;
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), sx, DUDE_VSHRINK);
+                getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
     }
 
 

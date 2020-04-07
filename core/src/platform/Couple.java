@@ -11,8 +11,8 @@ import obstacle.ComplexObstacle;
  * A obstacle made up of two dudes and a trampoline
  */
 public class Couple extends ComplexObstacle {
-    private Character l;
-    private Character r;
+    private Person l;
+    private Person r;
     private Rope trampoline;
     private Rope trampLeft;
     private Rope trampRight;
@@ -53,10 +53,10 @@ public class Couple extends ComplexObstacle {
      * @param y
      * @return
      */
-    public Character createAvatar(float x, float y, TextureRegion t) {
+    public Person createAvatar(float x, float y, TextureRegion t) {
         float dWidth = t.getRegionWidth() / drawScale.x;
         float dHeight = t.getRegionHeight() / drawScale.y;
-        Character avatar = new Character(x, y, dWidth, dHeight, "npc", "npcSensor");
+        Person avatar = new Person(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);

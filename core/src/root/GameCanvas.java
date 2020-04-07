@@ -96,7 +96,7 @@ public class GameCanvas {
      * Rendering context for the debug outlines
      * TODO: change this into ??
      */
-    private ShapeRenderer splineRender;
+    private ShapeRenderer shapeRenderer;
     /**
      * Track whether or not we are active (for error checking)
      */
@@ -157,7 +157,7 @@ public class GameCanvas {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
         debugRender = new ShapeRenderer();
-        splineRender = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer();
         // Set the projection matrix (for proper scaling)
 
         camera = new OrthographicCamera(getWidth(), getHeight());
@@ -166,8 +166,8 @@ public class GameCanvas {
 
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
-        splineRender.setProjectionMatrix(camera.combined);
-        splineRender.setAutoShapeType(true);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setAutoShapeType(true);
 
         // Initialize the cache objects
         holder = new TextureRegion();
@@ -1260,15 +1260,15 @@ public class GameCanvas {
 
     public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
         Gdx.gl20.glLineWidth(2);
-        splineRender.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
-        splineRender.begin(ShapeRenderer.ShapeType.Line);
-        splineRender.setColor(Color.RED);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
         for (int i = 1; i < k - 1; i++) {
-            splineRender.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
+            shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
         }
-        splineRender.end();
+        shapeRenderer.end();
         spriteBatch.begin();
     }
 

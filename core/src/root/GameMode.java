@@ -27,7 +27,7 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
 import obstacle.PolygonObstacle;
-import platform.Character;
+import platform.Person;
 import platform.*;
 import util.FilmStrip;
 import util.PooledList;
@@ -97,21 +97,15 @@ public class GameMode implements Screen {
     private static final String BKG_CLOUD = "platform/cloud_background.png";
 
     private static final String BKG_SKY = "platform/background_sky.png";
+    private static final String PLAYER_IDLE = "platform/player_idle.png";
     /**
-     * The texture file for the player (no animation)
+     * The texture file for the player
      */
+    private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
 
-    private static final String PLAYER_IDLE = "platform/pc_idle.png";
+    private static final String PLAYER_JUMP = "platform/player_jump.png";
 
-    private static final String PLAYER_IDLE_ANIMATION = "platform/pc_idle_256x256.png";
-
-    private static final String PLAYER_LEFT = "platform/pc_left.png";
-
-    private static final String PLAYER_RIGHT = "platform/pc_right.png";
-
-    private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
-
-    private static final String PLAYER_FALL = "platform/pc_jump_down_256x256.png";
+    private static final String PLAYER_FALL = "platform/player_fall.png";
 
     private static final String NPC_COZY = "platform/cozy.png";
 
@@ -159,7 +153,7 @@ public class GameMode implements Screen {
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
 
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.PNG";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
      * Retro font for displaying messages
      */
@@ -483,7 +477,7 @@ public class GameMode implements Screen {
     /**
      * Reference to the player avatar
      */
-    private Character player;
+    private Person player;
 
     private List<Level> levels;
 
@@ -492,6 +486,8 @@ public class GameMode implements Screen {
     private RevoluteJointDef revoluteJointDef;
 
     private Rope playerRope;
+
+    private RopeQueryCallback ropeQueryCallback;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -503,7 +499,6 @@ public class GameMode implements Screen {
         setDebug(false);
         setComplete(false);
         setFailure(false);
-        world.setContactListener(new CollisionController(player));
         this.levels = new ArrayList<>();
         ropeJointDef = new RopeJointDef();
         revoluteJointDef = new RevoluteJointDef();
@@ -529,6 +524,7 @@ public class GameMode implements Screen {
         setFailure(false);
         populateLevel();
         world.setContactListener(new CollisionController(player));
+        ropeQueryCallback = new RopeQueryCallback(player);
     }
 
     /**
@@ -551,7 +547,7 @@ public class GameMode implements Screen {
         // Create main dude
         dWidth = playerTexture.getRegionWidth() / scale.x;
         dHeight = playerTexture.getRegionHeight() / scale.y;
-        player = new Character(playerPos.x, playerPos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
+        player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
         player.setTexture(playerTexture);
         addObject(player);
@@ -667,9 +663,9 @@ public class GameMode implements Screen {
         player.applyForce();
 
 
-        if (player.isJumping()) {
-            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-        }
+//        if (player.isJumping()) {
+//            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
+//        }
 
         if (player.isRising()) {
             player.setTexture(playerJumpTexture);
@@ -682,17 +678,14 @@ public class GameMode implements Screen {
         }
 
 
-        // Add a bullet if we fire
         if (player.isShooting()) {
-            if (screenToWorldCoordinates(InputController.getInstance().getCrossHair()).x - player.getX() >= 0) {
-                player.setMovement(0.01f);
-            } else {
-                player.setMovement(-0.01f);
-            }
-            createBullet();
+            Vector2 playerPosition = player.getPosition();
+            world.QueryAABB(ropeQueryCallback, playerPosition.x - 5, playerPosition.y - 5, playerPosition.x + 5, playerPosition.y + 5);
+            ropeQueryCallback.selectTarget();
         }
 
         if (player.isShooting() && player.getSwingJoint() != null) {
+            playerRope.markRemoved(true);
             world.destroyJoint(player.getSwingJoint());
             player.setSwingJoint(null);
             player.setTarget(null);
@@ -711,17 +704,11 @@ public class GameMode implements Screen {
             }
         }
 
-        if (player.isAttached() && playerRope != null) {
-            Vector2 playerPos = player.getPosition();
-            Vector2 targetPos = player.getTarget().getPosition();
-            playerRope.setStart(playerPos, false);
-            playerRope.setEnd(targetPos, false);
-        }
-
         if (player.getTarget() != null && player.getSwingJoint() == null) {
             Vector2 playerPos = player.getPosition();
             Vector2 targetPos = player.getTarget().getPosition();
             playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1);
+            playerRope.setName("player_rope");
             playerRope.setDrawScale(scale);
             addObject(playerRope);
             revoluteJointDef.bodyB = player.getBody();
@@ -738,6 +725,19 @@ public class GameMode implements Screen {
             Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
         }
+
+        /*
+         * Continuously update the rope position to match the player
+         * position
+         */
+        if (player.isAttached() && playerRope != null) {
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope.setStart(playerPos, false);
+            playerRope.setEnd(targetPos, false);
+        }
+
+
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
@@ -767,7 +767,6 @@ public class GameMode implements Screen {
         }
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
         Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
-        projectile.setName("player_rope");
         projectile.setDrawScale(scale);
         projectile.setTexture(bulletTexture);
         projectile.setBullet(true);
@@ -780,7 +779,6 @@ public class GameMode implements Screen {
         projectile.setVX(vx);
         projectile.setVY(vy);
         addQueuedObject(projectile);
-        SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
     }
 
     public void draw(float dt) {
@@ -796,7 +794,13 @@ public class GameMode implements Screen {
 
         canvas.begin();
         for (Obstacle obj : objects) {
-            obj.draw(canvas);
+            if (obj.getName().equals("player_rope")) {
+                if (player.getTarget() != null) {
+                    obj.draw(canvas);
+                }
+            } else {
+                obj.draw(canvas);
+            }
         }
         canvas.end();
 
@@ -806,6 +810,7 @@ public class GameMode implements Screen {
                 obj.drawDebug(canvas);
             }
             canvas.endDebug();
+
         }
     }
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 import platform.Blob;
-import platform.Character;
+import platform.Person;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -15,7 +15,7 @@ public class CollisionController implements ContactListener {
      * Mark set to handle more sophisticated collision callbacks
      */
     private ObjectSet<Fixture> sensorFixtures;
-    private Character player;
+    private Person player;
 
     private float startTime;
     private float dt;
@@ -24,19 +24,11 @@ public class CollisionController implements ContactListener {
     private Vector2 trampolineForce;
 
 
-    public CollisionController(Character player) {
+    public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
         this.player = player;
         this.startContact = false;
         this.trampolineForce = new Vector2();
-    }
-
-    public void reflect(Vector2 d, Vector2 n, float mass) {
-        n.nor();
-        float dot = d.dot(n);
-        float rx = d.x - 2f * dot * n.x, ry = d.x - 2f * dot * n.y;
-        trampolineForce.set(rx * mass, ry * mass);
-
     }
 
     /**
@@ -67,7 +59,7 @@ public class CollisionController implements ContactListener {
 
             if (bd2.getName().equals("player_rope") && bd1 != player) {
                 if (bd1.getName().equals("npc")) {
-                    player.setTarget(bd1);
+                    player.setTarget((Person) bd1);
                 }
                 bd2.markRemoved(true);
             }

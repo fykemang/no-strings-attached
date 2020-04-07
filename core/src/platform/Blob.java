@@ -21,7 +21,6 @@ public class Blob extends WheelObstacle {
         releaseFixtures();
         // Create the fixture
         fixture.shape = shape;
-
         fixture.density = 2f;
         fixture.restitution = 0.4f;
         fixture.friction = 1f;
