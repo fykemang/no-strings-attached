@@ -34,7 +34,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width  = 1024;
-		config.height = 576;
+		config.height = 700;
 		config.samples = 5; // number of sample to take
 		config.resizable = true;
 		new LwjglApplication(new GDXRoot(), config);

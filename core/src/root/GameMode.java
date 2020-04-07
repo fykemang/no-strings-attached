@@ -62,6 +62,8 @@ public class GameMode implements Screen {
      * Exit code for jumping back to previous level
      */
     public static final int EXIT_PREV = 2;
+
+    public static final int EXIT_INTO_GAME = 3;
     /**
      * How many frames after winning/losing do we continue?
      */
@@ -660,7 +662,6 @@ public class GameMode implements Screen {
         player.setJumping(InputController.getInstance().didPrimary());
         player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
-
 
 //        if (player.isJumping()) {
 //            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);

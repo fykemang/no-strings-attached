@@ -28,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -1296,4 +1297,12 @@ public class GameCanvas {
         Vector3 worldLocation = viewport.unproject(cacheVector3);
         return cacheVector2.set(worldLocation.x, worldLocation.y);
     }
+
+//    public void drawStage(Stage stage){
+//
+//        stage.act();
+//        spriteBatch.begin();
+//        stage.draw();
+//        spriteBatch.end();
+//    }
 }
