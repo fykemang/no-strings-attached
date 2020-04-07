@@ -61,6 +61,8 @@ public class GameMode implements Screen {
      * Exit code for jumping back to previous level
      */
     public static final int EXIT_PREV = 2;
+
+    public static final int EXIT_INTO_GAME = 3;
     /**
      * How many frames after winning/losing do we continue?
      */
@@ -663,7 +665,7 @@ public class GameMode implements Screen {
 
         if (player.isJumping()) {
             player.setTexture(playerJumpTexture);
-            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
+           // SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
         }
 
         if (player.getVY() > EPSILON * 3f) {

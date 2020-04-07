@@ -136,7 +136,7 @@ public class GDXRoot extends Game implements ScreenListener {
      * @param exitCode The state of the screen upon exit
      */
     public void exitScreen(Screen screen, int exitCode) {
-        if (screen == loading) {
+        if (screen == loading && exitCode == GameMode.EXIT_INTO_GAME) {
             controller.loadContent(manager);
             controller.setScreenListener(this);
             controller.setCanvas(canvas);
