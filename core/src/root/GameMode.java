@@ -152,7 +152,6 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
-
     private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
      * Retro font for displaying messages
