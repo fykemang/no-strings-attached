@@ -321,9 +321,13 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         startButton = (System.getProperty("os.name").equals("Mac OS X") ? MAC_OS_X_START : WINDOWS_START);
         Gdx.input.setInputProcessor(this);
-        // Let ANY connected controller start the game.
-        for (Controller controller : Controllers.getControllers()) {
-            controller.addListener(this);
+        try {
+            // Let ANY connected controller start the game.
+            for (Controller controller : Controllers.getControllers()) {
+                controller.addListener(this);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: Game Controllers could not be initialized");
         }
         active = true;
     }
@@ -627,7 +631,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             pressState = MouseState.OTHER;
             return false;
         }else if (pressState == MouseState.QUIT){
-
             listener.exitScreen(this, 0);
             return false;
         }
