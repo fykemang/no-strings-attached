@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import util.FilmStrip;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -705,6 +706,7 @@ public class GameCanvas {
      * (both the local and global).
      * <p>
      * The local transformations in this method are applied in the following order:
+     *
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
      * @param region The texture to draw
@@ -951,6 +953,12 @@ public class GameCanvas {
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
+    public void drawAnimatedBkg(FilmStrip bkg){
+
+        computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
+        spriteBatch.draw(bkg, getWidth(), getHeight(), local);
+
+    }
     /**
      * Transform the given vertices by the affine transform
      */
@@ -1281,11 +1289,4 @@ public class GameCanvas {
         camera.update();
     }
 
-//    public void drawStage(Stage stage){
-//
-//        stage.act();
-//        spriteBatch.begin();
-//        stage.draw();
-//        spriteBatch.end();
-//    }
 }

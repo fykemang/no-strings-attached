@@ -38,6 +38,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import util.FilmStrip;
 import util.ScreenListener;
 
 /**
@@ -56,6 +57,7 @@ import util.ScreenListener;
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
     private static final String BACKGROUND_FILE = "shared/background.png";
+    private static final String CHAR_ANIMATION_FILE = "shared/background_sc.png";
     private static final String PROGRESS_FILE = "shared/progressbar.png";
     private static final String PLAY_BTN_FILE = "shared/play.png";
     private static final String SETTINGS_FILE = "shared/settings.png";
@@ -67,10 +69,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Background texture for start-up
      */
     private Texture background;
-    /**
-     * Play button to display when done
-     */
-    private Texture playButton;
+
+    private FilmStrip animatedBkg;
 
     /**
      * Play button to display when done
@@ -80,6 +80,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private Texture quitButton;
     private Texture select;
 
+    private int frameCount;
     /**
      * Texture atlas to support a progress bar
      */
@@ -287,20 +288,23 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         this.canvas = canvas;
         budget = millis;
 
+        manager.load(CHAR_ANIMATION_FILE, Texture.class);
+       // assets.add(CHAR_ANIMATION_FILE);
         // Compute the dimensions from the canvas
         resize(canvas.getWidth(), canvas.getHeight());
 
         // Load the next two images immediately.
-        playButton = null;
         startGameButton = null;
         settingsButton = null;
         quitButton = null;
+        animatedBkg = null;
         select = new Texture(SELECT_FILE);
         background = new Texture(BACKGROUND_FILE);
         statusBar = new Texture(PROGRESS_FILE);
 
         // No progress so far.
         progress = 0;
+        frameCount = 0;
         pressState = MouseState.NONE;
         selectState = MouseState.OTHER;
         active = false;
@@ -341,10 +345,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         background = null;
         statusBar = null;
         select = null;
-        if (playButton != null) {
-            playButton.dispose();
-            playButton = null;
-        }
+        animatedBkg = null;
         if (quitButton != null) {
             quitButton.dispose();
             quitButton = null;
@@ -370,16 +371,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @param delta Number of seconds since last animation frame
      */
     private void update(float delta) {
-        if (playButton == null) {
-            manager.update(budget);
-            this.progress = manager.getProgress();
-            if (progress >= 1.0f) {
-                this.progress = 1.0f;
-                playButton = new Texture(PLAY_BTN_FILE);
-                playButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-            }
-        }
-
         if (startGameButton == null) {
             manager.update(budget);
             this.progress = manager.getProgress();
@@ -407,6 +398,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 quitButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             }
         }
+        if(animatedBkg == null){
+            animatedBkg = createFilmStrip(manager, CHAR_ANIMATION_FILE, 1, 4, 4);
+        }
     }
 
     /**
@@ -419,16 +413,17 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private void draw() {
         canvas.begin();
 
-        canvas.drawBackground(background);
 
-//        if (playButton == null) {
-//            drawProgress(canvas);
-       // } else {
-//        if (playButton != null){
-//            Color tint = (pressState == 1 ? Color.GRAY : Color.WHITE);
-//            canvas.draw(playButton, tint, playButton.getWidth() / 2, playButton.getHeight() / 2,
-//                    centerX, centerY, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
-//        }
+        if (animatedBkg != null){
+            frameCount ++;
+            if (frameCount % 8 == 0) {
+                animatedBkg.setNextFrame();
+                frameCount = 0;
+            }
+            canvas.drawAnimatedBkg(animatedBkg);
+        }else{
+            canvas.drawBackground(background);
+        }
 
         if (startGameButton != null){
             Color tint = (pressState == MouseState.START ? Color.GRAY : Color.WHITE);
@@ -636,6 +631,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             listener.exitScreen(this, 0);
             return false;
         }
+        pressState = MouseState.NONE;
         return true;
     }
 
@@ -866,6 +862,15 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return true;
+    }
+
+    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size) {
+        if (manager.isLoaded(file)) {
+            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size);
+            strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            return strip;
+        }
+        return null;
     }
 
 }
