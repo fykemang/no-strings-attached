@@ -160,6 +160,7 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
+    private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
     /**
      * File to texture for the win door
      */
@@ -183,6 +184,7 @@ public class GameMode implements Screen {
      * The texture for walls and platforms
      */
     protected TextureRegion earthTile;
+    protected TextureRegion smEarthTile;
     /**
      * The texture for the exit condition
      */
@@ -229,6 +231,7 @@ public class GameMode implements Screen {
     private TextureRegion npcheyoTexture;
     private TextureRegion npcspikyTexture;
     private TextureRegion npcwelcomeTexture;
+
 
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
 
@@ -349,6 +352,8 @@ public class GameMode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
+        manager.load(SM_CLOUD_FILE, Texture.class);
+        assets.add(SM_CLOUD_FILE);
         manager.load(GOAL_FILE, Texture.class);
         assets.add(GOAL_FILE);
         manager.load(BKG_CLOUD, Texture.class);
@@ -436,7 +441,8 @@ public class GameMode implements Screen {
         sounds.allocate(manager, PEW_FILE);
         sounds.allocate(manager, POP_FILE);
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
-            earthTile = createTexture(manager, EARTH_FILE, true);
+            earthTile = createTexture(manager, EARTH_FILE, false);
+            smEarthTile = createTexture(manager, SM_CLOUD_FILE, false);
             goalTile = createTexture(manager, GOAL_FILE, true);// Allocate the font
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
@@ -542,7 +548,7 @@ public class GameMode implements Screen {
 
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
+            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
 
         // Create main dude
@@ -559,14 +565,14 @@ public class GameMode implements Screen {
         }
     }
 
-    public void createTile(float[] points, float x, float y, String name) {
-        PolygonObstacle tile = new PolygonObstacle(points, x, y);
+    public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
+        Stone tile = new Stone(points, x, y, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(earthTile);
+        tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
     }
@@ -579,8 +585,8 @@ public class GameMode implements Screen {
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
-        createTile(points, x1, y1 - 1f, "tile");
-        createTile(points, x2, y2 - 1f, "tile");
+        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
+        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
         int n1 = rand.nextInt(npcs.size());
         int n2 = rand.nextInt(npcs.size());
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
