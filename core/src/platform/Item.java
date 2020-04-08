@@ -13,7 +13,11 @@ public class Item extends CapsuleObstacle {
     private PolygonShape sensorShape;
     private FixtureDef sensorDef;
     private Fixture sensorFixture;
+    private int id;
 
+    public enum ItemState {COLLECTED, NOTCOLLECTED}
+
+    private Item.ItemState state;
 
     public Item(float x, float y, TextureRegion t, Vector2 drawScale, int id) {
 //        super(x, y, t.getRegionWidth() * 0.2f, t.getRegionHeight() * 0.2f);
@@ -26,7 +30,12 @@ public class Item extends CapsuleObstacle {
         this.setTexture(t);
         this.texture = t;
         this.sensorName = sensorName;
-        setName("couples" + id);
+        this.id = id;
+        setName("item" + id);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void draw(GameCanvas canvas) {

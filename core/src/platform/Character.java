@@ -118,6 +118,8 @@ public class Character extends CapsuleObstacle {
     private String sensorName;
     private int closestCoupleID;
     private Obstacle target;
+    private boolean canCollect;
+    private int closestItemID;
 
     /**
      * Which direction is the character facing
@@ -327,6 +329,21 @@ public class Character extends CapsuleObstacle {
         return this.closestCoupleID;
     }
 
+    public void setClosestItemID(int itemID) {
+        this.closestItemID = itemID;
+    }
+
+    public int getClosestItemID() {
+        return this.closestItemID;
+    }
+
+    public void setCanCollect(boolean b) {
+        this.canCollect = b;
+    }
+
+    public boolean getCanCollect() {
+        return this.canCollect;
+    }
 
     /**
      * Applies the force to the body of this dude

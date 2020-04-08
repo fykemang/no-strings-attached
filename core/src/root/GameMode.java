@@ -202,6 +202,8 @@ public class GameMode implements Screen {
      * All the objects in the world.
      */
     protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+
+    protected PooledList<Obstacle> itemObjects = new PooledList<Obstacle>();
     /**
      * Queue for adding objects
      */
@@ -597,8 +599,8 @@ public class GameMode implements Screen {
         int n = rand.nextInt(items.size());
         TextureRegion randTex = items.get(n);
         Item item = new Item(x, y, randTex, scale, id);
-        addObject(item);
-        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
+        addItem(item);
+//        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
 //        createTile(points, x, y - 1f, "tile");
     }
 
@@ -753,6 +755,26 @@ public class GameMode implements Screen {
             Joint swingJoint = world.createJoint(jointDef);
             player.setSwingJoint(swingJoint);
         }
+
+
+
+        if (player.getCanCollect()) {
+            for (Obstacle obs : itemObjects) {
+                if (obs.getName().equals("item" + ((Item) obs).getId())) {
+                    ((Item) obs).markRemoved(true);
+                    obs.markRemoved(true);
+                }
+            }
+        }
+//            //need to implement closest item
+//            int itemID = player.getClosestItemID();
+//            for (Obstacle obs : objects) {
+//                if (obs.getName().equals("item" + itemID)) {
+//                    ((Item) obs).markRemoved(true);
+//                    //them remove and add to inventory
+//                }
+//            }
+//        }
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
@@ -1015,6 +1037,13 @@ public class GameMode implements Screen {
      */
     protected void addObject(Obstacle obj) {
         assert inBounds(obj) : "Object is not in bounds";
+        objects.add(obj);
+        obj.activatePhysics(world);
+    }
+
+    protected void addItem(Obstacle obj) {
+        assert inBounds(obj) : "Object is not in bounds";
+        itemObjects.add(obj);
         objects.add(obj);
         obj.activatePhysics(world);
     }

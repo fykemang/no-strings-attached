@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 import platform.Blob;
 import platform.Character;
+import platform.Item;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -70,6 +71,14 @@ public class CollisionController implements ContactListener {
                     player.setTarget(bd1);
                 }
                 bd2.markRemoved(true);
+            }
+
+            if (bd1 == player && bd2.getName().contains("item")) {
+                player.setCanCollect(true);
+            }
+
+            if (bd2 == player && bd1.getName().contains("item")) {
+                player.setCanCollect(true);
             }
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
