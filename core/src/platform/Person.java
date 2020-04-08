@@ -29,7 +29,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 3.3f;
+    private static final float DUDE_DENSITY = 1.1f;
     /**
      * The factor to multiply by the input
      */
@@ -51,7 +51,7 @@ public class Person extends CapsuleObstacle {
      */
     private static final float DUDE_JUMP = 10f;
 
-    private static final float FRICTION = 0.67f;
+    private static final float FRICTION = 0.6f;
 
     private static final float EPSILON = 0.03f;
     /**
@@ -67,11 +67,11 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.21f;
+    private static final float DUDE_VSHRINK = 0.22f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.21f;
+    private static final float DUDE_HSHRINK = 0.22f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
@@ -150,11 +150,12 @@ public class Person extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         // Change facing if appropriate
-        movement = value;
         if (value < 0) {
             isFacingRight = false;
+            movement = value;
         } else if (value > 0) {
             isFacingRight = true;
+            movement = value;
         }
 
         if (isWalking && value == 0) {
@@ -383,7 +384,7 @@ public class Person extends CapsuleObstacle {
         frameCount++;
         int frameRate = 3;
         if (movement != 0) {
-            int temp = Math.abs(((int) (frameRate * 0.16 / movement)));
+            int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
         }
 
