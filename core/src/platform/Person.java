@@ -24,12 +24,12 @@ import util.FilmStrip;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class Character extends CapsuleObstacle {
+public class Person extends CapsuleObstacle {
     // Physics constants
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 1.0f;
+    private static final float DUDE_DENSITY = 3.3f;
     /**
      * The factor to multiply by the input
      */
@@ -37,7 +37,7 @@ public class Character extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float DUDE_DAMPING = 10.0f;
+    private static final float DUDE_DAMPING = 20.0f;
     /**
      * The dude is a slippery one
      */
@@ -51,7 +51,7 @@ public class Character extends CapsuleObstacle {
      */
     private static final float DUDE_JUMP = 10f;
 
-    private static final float FRICT = 0.67f;
+    private static final float FRICTION = 0.67f;
 
     private static final float EPSILON = 0.03f;
     /**
@@ -117,9 +117,10 @@ public class Character extends CapsuleObstacle {
     private boolean canCut;
     private String sensorName;
     private int closestCoupleID;
-    private Obstacle target;
+//    private Obstacle target;
     private boolean canCollect;
     private int closestItemID;
+    private Person target;
 
     /**
      * Which direction is the character facing
@@ -152,16 +153,17 @@ public class Character extends CapsuleObstacle {
      */
     public void setMovement(float value) {
         // Change facing if appropriate
+        movement = value;
         if (value < 0) {
             isFacingRight = false;
-            movement = value;
         } else if (value > 0) {
             isFacingRight = true;
-            movement = value;
         }
-        if (isWalking && value==0){
-            movement = Math.abs(movement * FRICT) < EPSILON ? 0 : movement * FRICT;
+
+        if (isWalking && value == 0) {
+            movement = Math.abs(movement * FRICTION) < EPSILON ? 0 : movement * FRICTION;
         }
+
         isWalking = movement != 0;
     }
 
@@ -268,7 +270,7 @@ public class Character extends CapsuleObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public Character(float x, float y, float width, float height, String name, String sensorName) {
+    public Person(float x, float y, float width, float height, String name, String sensorName) {
         super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
@@ -283,6 +285,10 @@ public class Character extends CapsuleObstacle {
 
         jumpCooldown = 0;
         setName(name);
+    }
+
+    public boolean isAttached() {
+        return target != null;
     }
 
     /**
@@ -364,10 +370,10 @@ public class Character extends CapsuleObstacle {
         // Velocity too high, clamp it
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
-        } else {
-            forceCache.set(getMovement(), 0);
-            body.applyForce(forceCache, getPosition(), true);
         }
+
+        forceCache.set(getMovement(), 0);
+        body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {
@@ -392,14 +398,13 @@ public class Character extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        // Apply cooldowns
-
         frameCount++;
         int frameRate = 3;
-        if (movement != 0){
-            int temp = Math.abs(((int)(frameRate * 0.16 / movement)));
+        if (movement != 0) {
+            int temp = Math.abs(((int) (frameRate * 0.16 / movement)));
             frameRate = temp == 0 ? frameRate : temp;
         }
+
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
@@ -412,7 +417,7 @@ public class Character extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0){
+        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
             ((FilmStrip) texture).setNextFrame();
         }
@@ -449,7 +454,7 @@ public class Character extends CapsuleObstacle {
         isShooting = value;
     }
 
-    public void setTarget(Obstacle target) {
+    public void setTarget(Person target) {
         this.target = target;
     }
 
@@ -473,6 +478,19 @@ public class Character extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
+    }
+
+
+    public boolean isWalking() {
+        return isWalking;
+    }
+
+    public boolean isRising() {
+        return getVY() > EPSILON;
+    }
+
+    public boolean isFalling() {
+        return getVY() < -EPSILON;
     }
 
     /**

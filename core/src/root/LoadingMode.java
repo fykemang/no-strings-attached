@@ -33,10 +33,9 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
+import util.FilmStrip;
 import util.ScreenListener;
 
 /**
@@ -54,18 +53,31 @@ import util.ScreenListener;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
-    private static final String BACKGROUND_FILE = "shared/loading.png";
+    private static final String BACKGROUND_FILE = "shared/background.png";
+    private static final String CHAR_ANIMATION_FILE = "shared/background_sc.png";
     private static final String PROGRESS_FILE = "shared/progressbar.png";
     private static final String PLAY_BTN_FILE = "shared/play.png";
+    private static final String SETTINGS_FILE = "shared/settings.png";
+    private static final String QUIT_FILE = "shared/quit.png";
+    private static final String START_FILE = "shared/start.png";
+    private static final String SELECT_FILE = "shared/select.png";
 
     /**
      * Background texture for start-up
      */
     private Texture background;
+
+    private FilmStrip animatedBkg;
+
     /**
      * Play button to display when done
      */
-    private Texture playButton;
+    private Texture startGameButton;
+    private Texture settingsButton;
+    private Texture quitButton;
+    private Texture select;
+
+    private int frameCount;
     /**
      * Texture atlas to support a progress bar
      */
@@ -132,7 +144,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Amount to scale the play button
      */
-    private static float BUTTON_SCALE = 0.3f;
+    private static float BUTTON_SCALE = 0.9f;
 
     /**
      * Start button for XBox controller on Windows
@@ -155,6 +167,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Listener that will update the player mode when we are done
      */
     private ScreenListener listener;
+
+    private int buttonX;
+    private int buttonY1;
+    private int buttonY2;
+    private int buttonY3;
+
 
     /**
      * The width of the progress bar
@@ -184,7 +202,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * The current state of the play button
      */
-    private int pressState;
+    private MouseState pressState;
+
+    private MouseState selectState;
     /**
      * The amount of time to devote to loading assets (as opposed to on screen hints, etc.)
      */
@@ -197,6 +217,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Whether or not this player mode is still active
      */
     private boolean active;
+
+    private enum MouseState {
+        NONE, QUIT, START, SETTINGS, OTHER
+    }
 
     /**
      * Returns the budget for the asset loader.
@@ -232,7 +256,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return true if the player is ready to go
      */
     public boolean isReady() {
-        return pressState == 2;
+        return pressState == MouseState.OTHER;
     }
 
     /**
@@ -260,17 +284,25 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         this.canvas = canvas;
         budget = millis;
 
+        manager.load(CHAR_ANIMATION_FILE, Texture.class);
+        // assets.add(CHAR_ANIMATION_FILE);
         // Compute the dimensions from the canvas
         resize(canvas.getWidth(), canvas.getHeight());
 
         // Load the next two images immediately.
-        playButton = null;
+        startGameButton = null;
+        settingsButton = null;
+        quitButton = null;
+        animatedBkg = null;
+        select = new Texture(SELECT_FILE);
         background = new Texture(BACKGROUND_FILE);
         statusBar = new Texture(PROGRESS_FILE);
 
         // No progress so far.
         progress = 0;
-        pressState = 0;
+        frameCount = 0;
+        pressState = MouseState.NONE;
+        selectState = MouseState.OTHER;
         active = false;
 
         // Break up the status bar texture into regions
@@ -285,9 +317,13 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         startButton = (System.getProperty("os.name").equals("Mac OS X") ? MAC_OS_X_START : WINDOWS_START);
         Gdx.input.setInputProcessor(this);
-        // Let ANY connected controller start the game.
-        for (Controller controller : Controllers.getControllers()) {
-            controller.addListener(this);
+        try {
+            // Let ANY connected controller start the game.
+            for (Controller controller : Controllers.getControllers()) {
+                controller.addListener(this);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: Game Controllers could not be initialized");
         }
         active = true;
     }
@@ -308,10 +344,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusBar.dispose();
         background = null;
         statusBar = null;
-        if (playButton != null) {
-            playButton.dispose();
-            playButton = null;
+        select = null;
+        animatedBkg = null;
+        if (quitButton != null) {
+            quitButton.dispose();
+            quitButton = null;
         }
+        if (startGameButton != null) {
+            startGameButton.dispose();
+            startGameButton = null;
+        }
+        if (settingsButton != null) {
+            settingsButton.dispose();
+            settingsButton = null;
+        }
+
     }
 
     /**
@@ -324,14 +371,35 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @param delta Number of seconds since last animation frame
      */
     private void update(float delta) {
-        if (playButton == null) {
+        if (startGameButton == null) {
             manager.update(budget);
             this.progress = manager.getProgress();
             if (progress >= 1.0f) {
                 this.progress = 1.0f;
-                playButton = new Texture(PLAY_BTN_FILE);
-                playButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+                startGameButton = new Texture(START_FILE);
+                startGameButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             }
+        }
+        if (settingsButton == null) {
+            manager.update(budget);
+            this.progress = manager.getProgress();
+            if (progress >= 1.0f) {
+                this.progress = 1.0f;
+                settingsButton = new Texture(SETTINGS_FILE);
+                settingsButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            }
+        }
+        if (quitButton == null) {
+            manager.update(budget);
+            this.progress = manager.getProgress();
+            if (progress >= 1.0f) {
+                this.progress = 1.0f;
+                quitButton = new Texture(QUIT_FILE);
+                quitButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            }
+        }
+        if (animatedBkg == null) {
+            animatedBkg = createFilmStrip(manager, CHAR_ANIMATION_FILE, 1, 4, 4);
         }
     }
 
@@ -345,19 +413,38 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private void draw() {
         canvas.begin();
 
-        canvas.drawBackground(background);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
-        BitmapFont font = generator.generateFont(parameter);
-        canvas.drawText("No Strings Attached", font, 200, 500);
 
-        if (playButton == null) {
-            drawProgress(canvas);
+        if (animatedBkg != null) {
+            frameCount++;
+            if (frameCount % 8 == 0) {
+                animatedBkg.setNextFrame();
+                frameCount = 0;
+            }
+            canvas.drawAnimatedBkg(animatedBkg);
         } else {
-            Color tint = (pressState == 1 ? Color.GRAY : Color.WHITE);
-            canvas.draw(playButton, tint, playButton.getWidth() / 2, playButton.getHeight() / 2,
-                    centerX, centerY, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+            canvas.drawBackground(background);
+        }
+
+        if (startGameButton != null) {
+            Color tint = (pressState == MouseState.START ? Color.GRAY : Color.WHITE);
+            canvas.draw(startGameButton, tint, startGameButton.getWidth() / 2, startGameButton.getHeight() / 2,
+                    buttonX, buttonY1, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+        }
+        if (settingsButton != null) {
+            Color tint = (pressState == MouseState.SETTINGS ? Color.GRAY : Color.WHITE);
+            canvas.draw(settingsButton, tint, settingsButton.getWidth() / 2, settingsButton.getHeight() / 2,
+                    buttonX, buttonY2, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+        }
+        if (quitButton != null) {
+            Color tint = (pressState == MouseState.QUIT ? Color.GRAY : Color.WHITE);
+            canvas.draw(quitButton, tint, quitButton.getWidth() / 2, quitButton.getHeight() / 2,
+                    buttonX, buttonY3, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+        }
+        if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
+            int y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
+            Color tint = Color.WHITE;
+            canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
+                    buttonX, y, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
         canvas.end();
     }
@@ -403,7 +490,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                listener.exitScreen(this, 0);
+                listener.exitScreen(this, 3);
             }
         }
     }
@@ -427,6 +514,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         centerY = (int) (BAR_HEIGHT_RATIO * height);
         centerX = width / 2;
         heightY = height;
+        buttonX = (3 * width) / 4;
+        buttonY1 = 5 * height / 9;
+        buttonY2 = 4 * height / 9;
+        buttonY3 = height / 3;
     }
 
     /**
@@ -490,20 +581,33 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (playButton == null || pressState == 2) {
+        if (settingsButton == null || quitButton == null || startGameButton == null
+                || pressState == MouseState.OTHER) {
             return true;
         }
 
         // Flip to match graphics coordinates
         screenY = heightY - screenY;
 
-        // TODO: Fix scaling
-        // Play button is a circle.
-        float radius = BUTTON_SCALE * scale * playButton.getWidth() / 2.0f;
-        float dist = (screenX - centerX) * (screenX - centerX) + (screenY - centerY) * (screenY - centerY);
-        if (dist < radius * radius) {
-            pressState = 1;
+        float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
+        float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
+            pressState = MouseState.START;
         }
+
+        float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
+        float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
+            pressState = MouseState.SETTINGS;
+        }
+
+        float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
+        float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
+            pressState = MouseState.QUIT;
+        }
+
+
         return false;
     }
 
@@ -519,10 +623,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (pressState == 1) {
-            pressState = 2;
+        if (pressState == MouseState.START) {
+            pressState = MouseState.OTHER;
+            return false;
+        } else if (pressState == MouseState.QUIT) {
+            listener.exitScreen(this, 0);
             return false;
         }
+        pressState = MouseState.NONE;
         return true;
     }
 
@@ -538,8 +646,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean buttonDown(Controller controller, int buttonCode) {
-        if (buttonCode == startButton && pressState == 0) {
-            pressState = 1;
+        if (buttonCode == startButton && pressState == MouseState.NONE) {
+            pressState = MouseState.START;
             return false;
         }
         return true;
@@ -557,8 +665,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean buttonUp(Controller controller, int buttonCode) {
-        if (pressState == 1 && buttonCode == startButton) {
-            pressState = 2;
+        if (pressState == MouseState.START && buttonCode == startButton) {
+            pressState = MouseState.OTHER;
             return false;
         }
         return true;
@@ -596,7 +704,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.N || keycode == Input.Keys.P) {
-            pressState = 2;
+            pressState = MouseState.OTHER;
             return false;
         }
         return true;
@@ -610,6 +718,37 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean mouseMoved(int screenX, int screenY) {
+        if (settingsButton == null || quitButton == null || startGameButton == null
+                || pressState == MouseState.OTHER) {
+            return true;
+        }
+
+        screenY = heightY - screenY;
+
+        float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
+        float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
+            selectState = MouseState.START;
+
+            return false;
+        }
+
+        float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
+        float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
+            selectState = MouseState.SETTINGS;
+
+            return false;
+        }
+
+        float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
+        float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
+            selectState = MouseState.QUIT;
+
+            return false;
+        }
+        selectState = MouseState.NONE;
         return true;
     }
 
@@ -722,6 +861,15 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
         return true;
+    }
+
+    protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size) {
+        if (manager.isLoaded(file)) {
+            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size);
+            strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            return strip;
+        }
+        return null;
     }
 
 }

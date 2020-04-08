@@ -23,12 +23,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.CatmullRomSpline;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import util.FilmStrip;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -97,7 +97,7 @@ public class GameCanvas {
      * Rendering context for the debug outlines
      * TODO: change this into ??
      */
-    private ShapeRenderer splineRender;
+    private ShapeRenderer shapeRenderer;
     /**
      * Track whether or not we are active (for error checking)
      */
@@ -113,6 +113,10 @@ public class GameCanvas {
      */
     private OrthographicCamera camera;
 
+    /**
+     * The Viewport used to manage the camera
+     */
+    private ScalingViewport viewport;
     /**
      * Value to cache window width (if we are currently full screen)
      */
@@ -133,6 +137,12 @@ public class GameCanvas {
     private Matrix4 global;
     private Vector2 vertex;
     /**
+     * Used to project screen to world coordinates
+     */
+    private Vector3 cacheVector3;
+    private Vector2 cacheVector2;
+
+    /**
      * Cache object to handle raw textures
      */
     private TextureRegion holder;
@@ -148,20 +158,24 @@ public class GameCanvas {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
         debugRender = new ShapeRenderer();
-        splineRender = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer();
         // Set the projection matrix (for proper scaling)
 
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
+        viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
+
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
-        splineRender.setProjectionMatrix(camera.combined);
-        splineRender.setAutoShapeType(true);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setAutoShapeType(true);
 
         // Initialize the cache objects
         holder = new TextureRegion();
         local = new Affine2();
         global = new Matrix4();
+        cacheVector3 = new Vector3();
+        cacheVector2 = new Vector2();
         vertex = new Vector2();
     }
 
@@ -343,8 +357,7 @@ public class GameCanvas {
 
     public void resize(int width, int height) {
         // Resizing screws up the spriteBatch projection matrix
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
+        viewport.update(width, height);
         // spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
     }
 
@@ -704,6 +717,7 @@ public class GameCanvas {
      * (both the local and global).
      * <p>
      * The local transformations in this method are applied in the following order:
+     * <p>
      * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
      *
      * @param region The texture to draw
@@ -729,7 +743,6 @@ public class GameCanvas {
         computeTransform(ox, oy, x, y, angle, sx, sy);
         spriteBatch.setColor(tint);
         spriteBatch.draw(region, region.getRegionWidth(), region.getRegionHeight(), local);
-
         spriteBatch.setColor(Color.WHITE);
     }
 
@@ -948,6 +961,13 @@ public class GameCanvas {
     public void drawBackground(Texture image) {
         computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
+    }
+
+    public void drawAnimatedBkg(FilmStrip bkg) {
+
+        computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
+        spriteBatch.draw(bkg, getWidth(), getHeight(), local);
+
     }
 
     /**
@@ -1249,15 +1269,15 @@ public class GameCanvas {
 
     public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
         Gdx.gl20.glLineWidth(2);
-        splineRender.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
-        splineRender.begin(ShapeRenderer.ShapeType.Line);
-        splineRender.setColor(Color.RED);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
         for (int i = 1; i < k - 1; i++) {
-            splineRender.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
+            shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
         }
-        splineRender.end();
+        shapeRenderer.end();
         spriteBatch.begin();
     }
 
@@ -1272,11 +1292,25 @@ public class GameCanvas {
     }
 
     public void moveCamera(float x, float y) {
-        float yPos = Math.max(y, 170f);
         camera.position.x = x;
-        camera.position.y = yPos;
-        camera.viewportHeight = getHeight() * 3 / 5;
-        camera.viewportWidth = getWidth() * 3 / 5;
+        camera.position.y = Math.max(y, 170f);
+        camera.viewportHeight = (float) getHeight() * 3 / 5;
+        camera.viewportWidth = (float) getWidth() * 3 / 5;
         camera.update();
     }
+
+    public Vector2 getMouseCoordinates(float x, float y) {
+        y = getHeight() - y;
+        cacheVector3.set(x, y, 0);
+        Vector3 worldLocation = viewport.unproject(cacheVector3);
+        return cacheVector2.set(worldLocation.x, worldLocation.y);
+    }
+
+//    public void drawStage(Stage stage){
+//
+//        stage.act();
+//        spriteBatch.begin();
+//        stage.draw();
+//        spriteBatch.end();
+//    }
 }

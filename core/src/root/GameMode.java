@@ -22,11 +22,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
-import obstacle.PolygonObstacle;
-import platform.Character;
 import platform.*;
 import util.FilmStrip;
 import util.PooledList;
@@ -61,6 +60,8 @@ public class GameMode implements Screen {
      * Exit code for jumping back to previous level
      */
     public static final int EXIT_PREV = 2;
+
+    public static final int EXIT_INTO_GAME = 3;
     /**
      * How many frames after winning/losing do we continue?
      */
@@ -86,7 +87,6 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
-    private final float EPSILON = 0.5f;
     /**
      * Background
      */
@@ -97,21 +97,15 @@ public class GameMode implements Screen {
     private static final String BKG_CLOUD = "platform/cloud_background.png";
 
     private static final String BKG_SKY = "platform/background_sky.png";
+    private static final String PLAYER_IDLE = "platform/player_idle.png";
     /**
-     * The texture file for the player (no animation)
+     * The texture file for the player
      */
+    private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
 
-    private static final String PLAYER_IDLE = "platform/pc_idle.png";
+    private static final String PLAYER_JUMP = "platform/player_jump.png";
 
-    private static final String PLAYER_IDLE_ANIMATION = "platform/pc_idle_256x256.png";
-
-    private static final String PLAYER_LEFT = "platform/pc_left.png";
-
-    private static final String PLAYER_RIGHT = "platform/pc_right.png";
-
-    private static final String PLAYER_JUMP = "platform/pc_jump_up_256x256.png";
-
-    private static final String PLAYER_FALL = "platform/pc_jump_down_256x256.png";
+    private static final String PLAYER_FALL = "platform/player_fall.png";
 
     private static final String NPC_COZY = "platform/cozy.png";
 
@@ -163,11 +157,8 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
-    /**
-     * File to texture for the win door
-     */
-    private static final String GOAL_FILE = "shared/goaldoor.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/pc_walk.PNG";
+    private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
      * Retro font for displaying messages
      */
@@ -186,6 +177,7 @@ public class GameMode implements Screen {
      * The texture for walls and platforms
      */
     protected TextureRegion earthTile;
+    protected TextureRegion smEarthTile;
     /**
      * The texture for the exit condition
      */
@@ -231,9 +223,10 @@ public class GameMode implements Screen {
     private TextureRegion npcCozyTexture;
     private TextureRegion npcCheeseTexture;
     private TextureRegion npcNervyTexture;
-    private TextureRegion npcheyoTexture;
-    private TextureRegion npcspikyTexture;
-    private TextureRegion npcwelcomeTexture;
+    private TextureRegion npcHeyoTexture;
+    private TextureRegion npcSpikyTexture;
+    private TextureRegion npcWelcomeTexture;
+
 
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
@@ -364,8 +357,8 @@ public class GameMode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
-        manager.load(GOAL_FILE, Texture.class);
-        assets.add(GOAL_FILE);
+        manager.load(SM_CLOUD_FILE, Texture.class);
+        assets.add(SM_CLOUD_FILE);
         manager.load(BKG_CLOUD, Texture.class);
         assets.add(BKG_CLOUD);
         manager.load(BKG_SKY, Texture.class);
@@ -426,7 +419,7 @@ public class GameMode implements Screen {
 
 
         playerTexture = createTexture(manager, PLAYER_IDLE, false);
-        playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1,24,24);
+        playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bridgeTexture = createTexture(manager, ROPE_FILE, false);
@@ -440,23 +433,27 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createTexture(manager, NPC_COZY, false);
         npcNervyTexture = createTexture(manager, NPC_NERVY, false);
-        npcheyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcspikyTexture = createTexture(manager, NPC_SPIKY, false);
-        npcwelcomeTexture = createTexture(manager, NPC_WELCOME, false);
-        npcs.add(npcCheeseTexture); npcs.add(npcCozyTexture); npcs.add(npcNervyTexture);npcs.add(npcheyoTexture);
-        npcs.add(npcspikyTexture);npcs.add(npcwelcomeTexture);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
         items.add(buttonTexture); items.add(needleTexture); items.add(yarnTexture);
+        npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
+        npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
+        npcs.add(npcCheeseTexture);
+        npcs.add(npcCozyTexture);
+        npcs.add(npcNervyTexture);
+        npcs.add(npcHeyoTexture);
+        npcs.add(npcSpikyTexture);
+        npcs.add(npcWelcomeTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, PEW_FILE);
         sounds.allocate(manager, POP_FILE);
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
-            earthTile = createTexture(manager, EARTH_FILE, true);
-            goalTile = createTexture(manager, GOAL_FILE, true);// Allocate the font
+            earthTile = createTexture(manager, EARTH_FILE, false);
+            smEarthTile = createTexture(manager, SM_CLOUD_FILE, false);
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
             } else {
@@ -497,17 +494,27 @@ public class GameMode implements Screen {
      * The speed of the bullet after firing
      */
     private static final float BULLET_SPEED = 40.0f;
+    /**
+     * The maximum y-axis offset from which a bullet
+     * can appear from the person's body
+     */
     private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     // Physics objects for the game
     /**
      * Reference to the player avatar
      */
-    private Character player;
+    private Person player;
 
     private List<Level> levels;
 
-    private RopeJointDef jointDef;
+    private RopeJointDef ropeJointDef;
+
+    private RevoluteJointDef revoluteJointDef;
+
+    private Rope playerRope;
+
+    private RopeQueryCallback ropeQueryCallback;
 
     /**
      * Creates and initialize a new instance of the platformer game
@@ -519,9 +526,9 @@ public class GameMode implements Screen {
         setDebug(false);
         setComplete(false);
         setFailure(false);
-        world.setContactListener(new CollisionController(player));
         this.levels = new ArrayList<>();
-        jointDef = new RopeJointDef();
+        ropeJointDef = new RopeJointDef();
+        revoluteJointDef = new RevoluteJointDef();
     }
 
     /**
@@ -544,14 +551,15 @@ public class GameMode implements Screen {
         setFailure(false);
         populateLevel();
         world.setContactListener(new CollisionController(player));
+        ropeQueryCallback = new RopeQueryCallback(player);
     }
 
     /**
      * Lays out the game geography.
      */
     private void populateLevel() {
-        float dWidth = goalTile.getRegionWidth() / scale.x;
-        float dHeight = goalTile.getRegionHeight() / scale.y;
+        float dWidth;
+        float dHeight;
 
         Level testLevel = levels.get(0);
 
@@ -561,13 +569,13 @@ public class GameMode implements Screen {
         List<float[]> items = testLevel.getItems();
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i);
+            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
 
         // Create main dude
         dWidth = playerTexture.getRegionWidth() / scale.x;
         dHeight = playerTexture.getRegionHeight() / scale.y;
-        player = new Character(playerPos.x, playerPos.y, dWidth, dHeight, "mainDude", "mainDudeSensor");
+        player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
         player.setTexture(playerTexture);
         addObject(player);
@@ -583,14 +591,14 @@ public class GameMode implements Screen {
         }
     }
 
-    public void createTile(float[] points, float x, float y, String name) {
-        PolygonObstacle tile = new PolygonObstacle(points, x, y);
+    public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
+        Stone tile = new Stone(points, x, y, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(earthTile);
+        tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
     }
@@ -612,14 +620,13 @@ public class GameMode implements Screen {
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
-        createTile(points, x1, y1 - 1f, "tile");
-        createTile(points, x2, y2 - 1f, "tile");
+        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
+        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
         int n1 = rand.nextInt(npcs.size());
         int n2 = rand.nextInt(npcs.size());
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
         TextureRegion randTex1 = npcs.get(n1);
         TextureRegion randTex2 = npcs.get(n2);
-//        System.out.println("n1 " + n1 + "n2 " + n2);
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
     }
@@ -695,41 +702,29 @@ public class GameMode implements Screen {
         player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
 
+//        if (player.isJumping()) {
+//            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
+//        }
 
-        if (player.isJumping()) {
+        if (player.isRising()) {
             player.setTexture(playerJumpTexture);
-            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-        }
-
-        if (player.getVY() > EPSILON * 3f) {
-            player.setTexture(playerJumpTexture);
-
-        }else if (player.getVY() < -EPSILON * 3f) {
+        } else if (player.isFalling()) {
             player.setTexture(playerFallTexture);
-
-        }else if (player.getVX() > EPSILON && player.isGrounded()) {
+        } else if (player.isWalking()) {
             player.setTexture(playerWalkingAnimation);
-
-        }else if (player.getVX() < -EPSILON && player.isGrounded()) {
-            player.setTexture(playerWalkingAnimation);
-
-        }else if (player.isGrounded()){
+        } else if (player.isGrounded()) {
             player.setTexture(playerIdleAnimation);
-
         }
 
 
-        // Add a bullet if we fire
         if (player.isShooting()) {
-            if (InputController.getInstance().getCrossHair().x - player.getX() >= 0) {
-                player.setMovement(0.01f);
-            } else {
-                player.setMovement(-0.01f);
-            }
-            createBullet();
+            Vector2 playerPosition = player.getPosition();
+            world.QueryAABB(ropeQueryCallback, playerPosition.x - 5, playerPosition.y - 5, playerPosition.x + 5, playerPosition.y + 5);
+            ropeQueryCallback.selectTarget();
         }
 
         if (player.isShooting() && player.getSwingJoint() != null) {
+            playerRope.markRemoved(true);
             world.destroyJoint(player.getSwingJoint());
             player.setSwingJoint(null);
             player.setTarget(null);
@@ -749,13 +744,26 @@ public class GameMode implements Screen {
         }
 
         if (player.getTarget() != null && player.getSwingJoint() == null) {
-            jointDef.bodyA = player.getBody();
-            jointDef.bodyB = player.getTarget().getBody();
-            jointDef.maxLength = 4.0f;
-            Joint swingJoint = world.createJoint(jointDef);
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1);
+            playerRope.setName("player_rope");
+            playerRope.setDrawScale(scale);
+            addObject(playerRope);
+            revoluteJointDef.bodyB = player.getBody();
+            revoluteJointDef.bodyA = playerRope.getBody();
+            world.createJoint(revoluteJointDef);
+
+            revoluteJointDef.bodyB = playerRope.getLastLink();
+            revoluteJointDef.bodyA = player.getTarget().getBody();
+            world.createJoint(revoluteJointDef);
+
+            ropeJointDef.bodyA = player.getBody();
+            ropeJointDef.bodyB = player.getTarget().getBody();
+            ropeJointDef.maxLength = playerRope.getLength();
+            Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
         }
-
 
 
         if (player.getCanCollect()) {
@@ -775,17 +783,34 @@ public class GameMode implements Screen {
 //                }
 //            }
 //        }
+        /*
+         * Continuously update the rope position to match the player
+         * position
+         */
+        if (player.isAttached() && playerRope != null) {
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope.setStart(playerPos, false);
+            playerRope.setEnd(targetPos, false);
+        }
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
+    }
+
+    private Vector2 screenToWorldCoordinates(Vector2 screenCoordinate) {
+        screenCoordinate.scl(this.scale);
+        Vector2 worldCoordinates = canvas.getMouseCoordinates(screenCoordinate.x, screenCoordinate.y);
+        worldCoordinates.scl(1 / scale.x, 1 / scale.y);
+        return worldCoordinates;
     }
 
     /**
      * Add a new bullet to the world and send it in the right direction.
      */
     private void createBullet() {
-        Vector2 crossHairLocation = InputController.getInstance().getCrossHair();
         Vector2 playerPosition = player.getPosition();
+        Vector2 crossHairLocation = screenToWorldCoordinates(InputController.getInstance().getCrossHair());
         crossHairLocation.sub(playerPosition);
         float firingAngle = (float) Math.atan(crossHairLocation.y / crossHairLocation.x);
         float offsetX = player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET;
@@ -795,10 +820,8 @@ public class GameMode implements Screen {
         } else if (offsetY < -MAX_BULLET_OFFSET_Y) {
             offsetY = -MAX_BULLET_OFFSET_Y;
         }
-
         float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
         Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
-        projectile.setName("player_rope");
         projectile.setDrawScale(scale);
         projectile.setTexture(bulletTexture);
         projectile.setBullet(true);
@@ -811,8 +834,6 @@ public class GameMode implements Screen {
         projectile.setVX(vx);
         projectile.setVY(vy);
         addQueuedObject(projectile);
-
-        SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
     }
 
     public void draw(float dt) {
@@ -828,7 +849,13 @@ public class GameMode implements Screen {
 
         canvas.begin();
         for (Obstacle obj : objects) {
-            obj.draw(canvas);
+            if (obj.getName().equals("player_rope")) {
+                if (player.getTarget() != null) {
+                    obj.draw(canvas);
+                }
+            } else {
+                obj.draw(canvas);
+            }
         }
         canvas.end();
 
@@ -838,6 +865,7 @@ public class GameMode implements Screen {
                 obj.drawDebug(canvas);
             }
             canvas.endDebug();
+
         }
     }
 
@@ -1135,7 +1163,6 @@ public class GameMode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        // TODO Auto-generated method stub
     }
 
     /**
@@ -1144,7 +1171,6 @@ public class GameMode implements Screen {
      * This is usually when it regains focus.
      */
     public void resume() {
-        // TODO Auto-generated method stub
     }
 
     /**
