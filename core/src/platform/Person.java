@@ -54,6 +54,8 @@ public class Person extends CapsuleObstacle {
     private static final float FRICTION = 0.6f;
 
     private static final float EPSILON = 0.03f;
+
+    private static final float VERTICAL_EPSILON = 0.21f;
     /**
      * Cooldown (in animation frames) for jumping
      */
@@ -469,11 +471,11 @@ public class Person extends CapsuleObstacle {
     }
 
     public boolean isRising() {
-        return getVY() > EPSILON;
+        return getVY() > VERTICAL_EPSILON;
     }
 
     public boolean isFalling() {
-        return getVY() < -EPSILON;
+        return getVY() < -VERTICAL_EPSILON;
     }
 
     /**
