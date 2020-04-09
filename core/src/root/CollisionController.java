@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 import platform.Blob;
-import platform.Item;
 import platform.Person;
 
 /**
@@ -19,7 +18,6 @@ public class CollisionController implements ContactListener {
     private Person player;
 
     private float startTime;
-    private float dt;
 
     private boolean startContact;
     private Vector2 trampolineForce;
@@ -66,11 +64,11 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd1 == player && bd2.getName().contains("item")) {
-                player.setCanCollect(true);
+                bd2.markRemoved(true);
             }
 
             if (bd2 == player && bd1.getName().contains("item")) {
-                player.setCanCollect(true);
+                bd1.markRemoved(true);
             }
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
@@ -122,7 +120,6 @@ public class CollisionController implements ContactListener {
         if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) ||
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
-            dt = System.currentTimeMillis() * 0.001f - startTime;
             startContact = false;
             player.setIsTrampolining(true);
 //            float k = ((Blob)bd2).getK();

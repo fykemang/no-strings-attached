@@ -121,7 +121,7 @@ public class Person extends CapsuleObstacle {
     private boolean canCut;
     private String sensorName;
     private int closestCoupleID;
-//    private Obstacle target;
+    //    private Obstacle target;
     private boolean canCollect;
     private int closestItemID;
     private Person target;
@@ -339,14 +339,6 @@ public class Person extends CapsuleObstacle {
 
     public int getClosestCoupleID() {
         return this.closestCoupleID;
-    }
-
-    public void setClosestItemID(int itemID) {
-        this.closestItemID = itemID;
-    }
-
-    public int getClosestItemID() {
-        return this.closestItemID;
     }
 
     public void setCanCollect(boolean b) {

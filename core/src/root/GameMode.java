@@ -430,7 +430,9 @@ public class GameMode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-        items.add(buttonTexture); items.add(needleTexture); items.add(yarnTexture);
+        items.add(buttonTexture);
+        items.add(needleTexture);
+        items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -566,13 +568,10 @@ public class GameMode implements Screen {
         dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
         dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
 
-        System.out.println(dWidth);
-        System.out.println(dHeight);
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         addObject(player);
-        System.out.println(scale);
 
         for (int i = 0; i < couples.size(); i++) {
             float[] curr = couples.get(i);
@@ -587,7 +586,6 @@ public class GameMode implements Screen {
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
-
 
     }
 
@@ -606,10 +604,23 @@ public class GameMode implements Screen {
     public void createItem(float x, float y, int id) {
         int n = rand.nextInt(items.size());
         TextureRegion randTex = items.get(n);
-        Item item = new Item(x, y, randTex, scale, id);
-        addItem(item);
-//        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
-//        createTile(points, x, y - 1f, "tile");
+        Vector2 dimensions = getScaledDimensions(randTex);
+        Item item = new Item(x, y, dimensions.x, dimensions.y, id);
+        item.setTexture(randTex);
+        item.setDrawScale(scale);
+        addObject(item);
+    }
+
+    /**
+     * Retrieve the size of a model scaled
+     * to fit the world units
+     * @param texture the texture of the model
+     * @return physical dimensions of the model in world units
+     */
+    private Vector2 getScaledDimensions(TextureRegion texture) {
+        float dWidth = texture.getRegionWidth() / scale.x;
+        float dHeight = texture.getRegionHeight() / scale.y;
+        return new Vector2(dWidth, dHeight);
     }
 
     /**
