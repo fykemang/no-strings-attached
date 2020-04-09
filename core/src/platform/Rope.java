@@ -68,6 +68,8 @@ public class Rope extends ComplexObstacle {
 
     Vector2[] contPoints;
 
+    Vector2 approxNorm;
+
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
@@ -99,6 +101,9 @@ public class Rope extends ComplexObstacle {
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
+        float vx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+
+        approxNorm = new Vector2();
         setCurrentSplineCurve();
     }
 
@@ -134,7 +139,7 @@ public class Rope extends ComplexObstacle {
             spacing = 0;
         } else {
             spacing = length - nLinks * linkSize;
-            spacing /= (nLinks - 1);
+            spacing /= (nLinks - 1);;
         }
 
         blobSize.x = linkSize;

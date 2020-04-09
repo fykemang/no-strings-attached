@@ -120,6 +120,9 @@ public class Person extends CapsuleObstacle {
     private String sensorName;
     private int closestCoupleID;
     private Person target;
+    private Vector2 trampolineDir;
+    private float trampolineForceX;
+    private float trampolineForceY;
 
     /**
      * Which direction is the character facing
@@ -131,6 +134,7 @@ public class Person extends CapsuleObstacle {
      */
     private Vector2 forceCache = new Vector2();
     private Joint swingJoint;
+    private Vector2 temp = new Vector2();
 
     /**
      * Returns left/right movement of this character.
@@ -275,6 +279,7 @@ public class Person extends CapsuleObstacle {
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
+        trampolineDir = new Vector2();
 
         // Gameplay attributes
         isGrounded = false;
@@ -291,6 +296,25 @@ public class Person extends CapsuleObstacle {
         return target != null;
     }
 
+    public void setTrampolineDir(Vector2 v){
+        v.nor();
+        System.out.println(trampolineDir);
+        trampolineDir.set(-v.x, -v.y);
+    }
+
+    public void calculateTrampolineForce(){
+        temp.set(- getLinearVelocity().x, - getLinearVelocity().y);
+        System.out.println("velocity"+temp);
+
+
+        trampolineForceY = trampolineDir.y * 2f;
+        trampolineForceX = -trampolineDir.x *2f ;
+
+        System.out.println(trampolineDir);
+        System.out.println(trampolineForceX);
+        System.out.println(trampolineForceY);
+
+    }
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
      * <p>
@@ -367,7 +391,7 @@ public class Person extends CapsuleObstacle {
         }
 
         if (isTrampolining) {
-            forceCache.set(0, body.getLinearVelocity().y / 6.7f);
+            forceCache.set(trampolineForceX, trampolineForceY);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }

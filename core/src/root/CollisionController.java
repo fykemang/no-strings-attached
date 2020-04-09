@@ -17,17 +17,12 @@ public class CollisionController implements ContactListener {
     private ObjectSet<Fixture> sensorFixtures;
     private Person player;
 
-    private float startTime;
-    private float dt;
-
-    private boolean startContact;
     private Vector2 trampolineForce;
 
 
     public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
         this.player = player;
-        this.startContact = false;
         this.trampolineForce = new Vector2();
     }
 
@@ -67,15 +62,22 @@ public class CollisionController implements ContactListener {
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
-                if (!startContact) {
-                    startTime = System.currentTimeMillis() * 0.001f;
-                    startContact = true;
-                }
+                WorldManifold worldManifold = contact.getWorldManifold();
+                Vector2 norm = worldManifold.getNormal();
+                player.setTrampolineDir(norm);
+                player.calculateTrampolineForce();
+
+
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
+                WorldManifold worldManifold = contact.getWorldManifold();
+                Vector2 norm = worldManifold.getNormal();
+                player.setTrampolineDir(norm);
+                player.calculateTrampolineForce();
+
             }
 
             // See if we have landed on the ground.
@@ -113,12 +115,7 @@ public class CollisionController implements ContactListener {
         if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) ||
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
-            dt = System.currentTimeMillis() * 0.001f - startTime;
-            startContact = false;
             player.setIsTrampolining(true);
-//            float k = ((Blob)bd2).getK();
-//                    float ax = player.;
-//                    accel.set();
 
         }
 
