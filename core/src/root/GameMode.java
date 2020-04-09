@@ -47,7 +47,6 @@ import java.util.Random;
  * place nicely with the static assets.
  */
 public class GameMode implements Screen {
-    Random rand = new Random();
     /**
      * Exit code for quitting the game
      */
@@ -178,10 +177,6 @@ public class GameMode implements Screen {
     protected TextureRegion earthTile;
     protected TextureRegion smEarthTile;
     /**
-     * The texture for the exit condition
-     */
-    protected TextureRegion goalTile;
-    /**
      * The font for giving messages to the player
      */
     protected BitmapFont displayFont;
@@ -211,6 +206,7 @@ public class GameMode implements Screen {
      * The world scale
      */
     protected Vector2 scale;
+    private Random rand;
 
     /**
      * Texture assets for character avatar
@@ -294,6 +290,7 @@ public class GameMode implements Screen {
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
         world = new World(gravity, false);
+        rand = new Random();
         this.bounds = new Rectangle(bounds);
         this.scale = new Vector2(1, 1);
         complete = false;
@@ -776,16 +773,6 @@ public class GameMode implements Screen {
             player.setSwingJoint(swingJoint);
         }
 
-
-        if (player.getCanCollect()) {
-            for (Obstacle obs : itemObjects) {
-                if (obs.getName().equals("item" + ((Item) obs).getId())) {
-                    obs.markRemoved(true);
-                    ((Item) obs).setState(true);
-                    obs.markRemoved(true);
-                }
-            }
-        }
 
         /*
          * Continuously update the rope position to match the player

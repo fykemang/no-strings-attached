@@ -17,7 +17,7 @@ public class Item extends CapsuleObstacle {
     private Fixture sensorFixture;
     private int id;
 
-    public enum ItemState {COLLECTED, NOTCOLLECTED}
+    public enum ItemState {COLLECTED, NOT_COLLECTED}
 
     private Item.ItemState state;
 
@@ -27,16 +27,12 @@ public class Item extends CapsuleObstacle {
         this.setPosition(x + this.getWidth() / 2 + 0.15f, y + this.getHeight() / 2);
         this.sensorName = "item_sensor";
         this.id = id;
-        this.state = ItemState.NOTCOLLECTED;
+        this.state = ItemState.NOT_COLLECTED;
         setName("item" + id);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setState(boolean b) {
-        if (b) {
+    public void setState(boolean isCollected) {
+        if (isCollected) {
             this.state = ItemState.COLLECTED;
         }
     }
