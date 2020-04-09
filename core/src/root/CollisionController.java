@@ -18,7 +18,6 @@ public class CollisionController implements ContactListener {
     private Person player;
 
     private float startTime;
-    private float dt;
 
     private boolean startContact;
     private Vector2 trampolineForce;
@@ -64,6 +63,15 @@ public class CollisionController implements ContactListener {
                 bd2.markRemoved(true);
             }
 
+
+//            if (bd1 == player && fix1.getName().contains("item")) {
+//                bd2.markRemoved(true);
+//            }
+//
+//            if (bd2 == player && bd1.getName().contains("item")) {
+//                bd1.markRemoved(true);
+//            }
+
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
@@ -77,6 +85,16 @@ public class CollisionController implements ContactListener {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
             }
+
+            if (bd1 == player && ("item_sensor").equals(fd2)) {
+                player.addItem(bd2.getName());
+                bd2.markRemoved(true);
+            }
+            if (bd2 == player && ("item_sensor").equals(fd1)) {
+                player.addItem(bd1.getName());
+                bd1.markRemoved(true);
+            }
+
 
             // See if we have landed on the ground.
             if ((player.getSensorName().equals(fd2) && player != bd1) ||
@@ -113,7 +131,6 @@ public class CollisionController implements ContactListener {
         if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) ||
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
-            dt = System.currentTimeMillis() * 0.001f - startTime;
             startContact = false;
             player.setIsTrampolining(true);
 //            float k = ((Blob)bd2).getK();
