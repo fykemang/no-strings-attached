@@ -12,17 +12,24 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import util.FilmStrip;
 import util.ScreenListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LevelSelector  implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 0;
     private static final String BK_FILE = "shared/select_bg.png";
     private static final String CITY_FILE = "shared/city.png";
+    private static final String SUBURB_FILE = "shared/suburbs.png";
+    private static final String FOREST_FILE = "shared/forest.png";
+    private static final String MOUNTAIN_FILE = "shared/mountains.png";
     private AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
@@ -30,14 +37,17 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private GameCanvas canvas;
     private Texture background;
     private Texture city;
-    private themes theme;
-    int city_l = 200;
-    int city_r = 600;
-    int city_d = 563;
-    int city_u = 700;
-
+    private Texture suburb;
+    private Texture forest;
+    private Texture mountain;
+    private themes theme = themes.none;
+    int city_l = 200;int city_r = 600;int city_d = 563;int city_u = 700;
+    int sub_l = 660;int sub_r = 950;int sub_d = 550;int sub_u = 750;
+    int for_l = 655;int for_r = 1200;int for_d = 350;int for_u = 550;
+    int mon_l = 56;int mon_r = 590;int mon_d = 150;int mon_u = 296;
+    private ArrayList<Vector2> buttonPos = new ArrayList<>();
     private enum themes {
-        city, sky, none
+        city, none, suburb, forest, mountain
     }
 
     public LevelSelector(AssetManager manager, GameCanvas canvas) {
@@ -46,6 +56,13 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         resize(canvas.getWidth(), canvas.getHeight());
         background =  new Texture(BK_FILE);
         city =  new Texture(CITY_FILE);
+        suburb = new Texture(SUBURB_FILE);
+        forest = new Texture(FOREST_FILE);
+        mountain = new Texture(MOUNTAIN_FILE);
+        buttonPos.add(new Vector2(280, 610));
+        buttonPos.add(new Vector2(350, 650));
+        buttonPos.add(new Vector2(440, 630));
+        buttonPos.add(new Vector2(520, 650));
         Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
@@ -96,14 +113,10 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (theme == themes.city){
+        if (theme != themes.none){
             level=1;
         }
-
-//        System.out.println("canvasx " + canvas.getWidth() + "canvasy " + (canvas.getHeight()));
-//        System.out.println("x " +screenX + "y" + (canvas.getHeight() - screenY));
-
-
+        System.out.println("x " + screenX + "y " + (canvas.getHeight() - screenY));
         return false;
     }
 
@@ -123,9 +136,22 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         if (screenX > city_l && screenX < city_r && screeny>city_d && screeny < city_u) {
             theme = themes.city;
             return true;
+        }else if (screenX > sub_l && screenX < sub_r && screeny>sub_d && screeny < sub_u){
+            theme = themes.suburb;
+        }else if (screenX > for_l && screenX < for_r && screeny>for_d && screeny < for_u){
+            theme = themes.forest;
+        }else if  (screenX > mon_l && screenX < mon_r && screeny>mon_d && screeny < mon_u){
+            theme = themes.mountain;
         }
         else{ theme = themes.none; }
-        return false;
+        for (int i = 0; i < buttonPos.size(); i++){
+            Vector2 screenP = new Vector2(screenX, screeny);
+            if (screenP.dst(buttonPos.get(i)) < 20) {
+                 level = i+1;
+            }
+        }
+
+            return true;
     }
 
     @Override
@@ -229,12 +255,48 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background);
-       if (theme == themes.city) {
-           canvas.drawBackground(city, 426, 646,Color.WHITE,1.5f);
-       }else {
-            canvas.drawBackground(city);
-           //canvas.drawBackground(city ,426, 646, Color.WHITE,1.5f);
-       }
+        switch(theme){
+            case city :
+                canvas.drawBackground(mountain);
+                canvas.drawBackground(suburb);
+                canvas.drawBackground(forest);
+                canvas.drawBackground(city, 426, 646,Color.WHITE,1.3f);
+                break;
+            case suburb:
+                canvas.drawBackground(city);
+                canvas.drawBackground(mountain);
+                canvas.drawBackground(suburb, 868, 669, Color.WHITE, 1.2f);
+                canvas.drawBackground(forest);
+                break;
+            case forest:
+                canvas.drawBackground(mountain);
+                canvas.drawBackground(city);
+                canvas.drawBackground(suburb);
+                canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
+                break;
+            case mountain:
+                canvas.drawBackground(mountain, 330, 230, Color.WHITE, 1.2f);
+                canvas.drawBackground(city);
+                canvas.drawBackground(suburb);
+                canvas.drawBackground(forest);
+                break;
+            case none:
+                canvas.drawBackground(mountain);
+                canvas.drawBackground(city);
+                canvas.drawBackground(suburb);
+                canvas.drawBackground(forest);
+                break;
+        }
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 40;
+        BitmapFont font = generator.generateFont(parameter);
+        for (int i = 0; i< buttonPos.size(); i++) {
+            Vector2 button = buttonPos.get(i);
+            canvas.drawText(i+1+"", font, button.x, button.y);
+        }
+
        canvas.end();
     }
 
