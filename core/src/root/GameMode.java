@@ -386,7 +386,7 @@ public class GameMode implements Screen {
      *
      * @param manager Reference to global asset manager.
      */
-    public void loadContent(AssetManager manager) {
+    public void loadContent(AssetManager manager, String file) {
         if (platformAssetState != AssetState.LOADING) {
             return;
         }

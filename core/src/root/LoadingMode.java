@@ -449,29 +449,29 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         canvas.end();
     }
 
-    /**
-     * Updates the progress bar according to loading progress
-     * <p>
-     * The progress bar is composed of parts: two rounded caps on the end,
-     * and a rectangle in a middle.  We adjust the size of the rectangle in
-     * the middle to represent the amount of progress.
-     *
-     * @param canvas The drawing context
-     */
-    private void drawProgress(GameCanvas canvas) {
-        canvas.draw(statusBkgLeft, Color.WHITE, centerX - width / 2, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-        canvas.draw(statusBkgRight, Color.WHITE, centerX + width / 2 - scale * PROGRESS_CAP, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-        canvas.draw(statusBkgMiddle, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, width - 2 * scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-
-        canvas.draw(statusFrgLeft, Color.WHITE, centerX - width / 2, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-        if (progress > 0) {
-            float span = progress * (width - 2 * scale * PROGRESS_CAP) / 2.0f;
-            canvas.draw(statusFrgRight, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP + span, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-            canvas.draw(statusFrgMiddle, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, span, scale * PROGRESS_HEIGHT);
-        } else {
-            canvas.draw(statusFrgRight, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
-        }
-    }
+//    /**
+//     * Updates the progress bar according to loading progress
+//     * <p>
+//     * The progress bar is composed of parts: two rounded caps on the end,
+//     * and a rectangle in a middle.  We adjust the size of the rectangle in
+//     * the middle to represent the amount of progress.
+//     *
+//     * @param canvas The drawing context
+//     */
+//    private void drawProgress(GameCanvas canvas) {
+//        canvas.draw(statusBkgLeft, Color.WHITE, centerX - width / 2, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//        canvas.draw(statusBkgRight, Color.WHITE, centerX + width / 2 - scale * PROGRESS_CAP, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//        canvas.draw(statusBkgMiddle, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, width - 2 * scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//
+//        canvas.draw(statusFrgLeft, Color.WHITE, centerX - width / 2, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//        if (progress > 0) {
+//            float span = progress * (width - 2 * scale * PROGRESS_CAP) / 2.0f;
+//            canvas.draw(statusFrgRight, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP + span, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//            canvas.draw(statusFrgMiddle, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, span, scale * PROGRESS_HEIGHT);
+//        } else {
+//            canvas.draw(statusFrgRight, Color.WHITE, centerX - width / 2 + scale * PROGRESS_CAP, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
+//        }
+//    }
 
     // ADDITIONAL SCREEN METHODS
 
@@ -490,7 +490,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                listener.exitScreen(this, 3);
+                listener.exitScreen(this, 0);
             }
         }
     }

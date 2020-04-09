@@ -963,6 +963,17 @@ public class GameCanvas {
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
+    public void drawBackground(Texture image, float x, float y, Color tint ,float scale) {
+        computeTransform(x, y, x, y, 0, scale, scale);
+        spriteBatch.setColor(tint);
+        spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
+    }
+
+    public void drawBackground(Texture image, Color tint, float ox, float oy, float x, float y, float sx, float sy ) {
+        computeTransform(ox, oy, x, y ,0, sx, sy);
+        spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
+    }
+
     public void drawAnimatedBkg(FilmStrip bkg) {
 
         computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
