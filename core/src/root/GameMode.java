@@ -174,10 +174,6 @@ public class GameMode implements Screen {
     protected TextureRegion earthTile;
     protected TextureRegion smEarthTile;
     /**
-     * The texture for the exit condition
-     */
-    protected TextureRegion goalTile;
-    /**
      * The font for giving messages to the player
      */
     protected BitmapFont displayFont;
@@ -536,9 +532,6 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        float dWidth;
-        float dHeight;
-
         Level testLevel = levels.get(0);
 
         Vector2 playerPos = testLevel.getPlayerPos();
@@ -550,8 +543,8 @@ public class GameMode implements Screen {
         }
 
         // Create main dude
-        dWidth = playerTexture.getRegionWidth() / scale.x;
-        dHeight = playerTexture.getRegionHeight() / scale.y;
+        float dWidth = playerTexture.getRegionWidth() / scale.x;
+        float dHeight = playerTexture.getRegionHeight() / scale.y;
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
         player.setTexture(playerTexture);
@@ -561,8 +554,6 @@ public class GameMode implements Screen {
             float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
-
-
     }
 
     public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
