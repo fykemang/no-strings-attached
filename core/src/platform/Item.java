@@ -1,14 +1,15 @@
 package platform;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import root.GameCanvas;
 
 public class Item extends CapsuleObstacle {
-    private TextureRegion texture;
+    // Amount to shrink item by for fixture
+    private static final float ITEM_VSHRINK = 0.01f;
+    private static final float ITEM_HSHRINK = 0.01f;
     private String sensorName;
     private PolygonShape sensorShape;
     private FixtureDef sensorDef;
@@ -19,17 +20,11 @@ public class Item extends CapsuleObstacle {
 
     private Item.ItemState state;
 
-    public Item(float x, float y, TextureRegion t, Vector2 drawScale, int id) {
-//        super(x, y, t.getRegionWidth() * 0.2f, t.getRegionHeight() * 0.2f);
-        super(x,y);
-        this.setWidth(0.2f*this.getWidth());
-        this.setHeight(0.2f*this.getHeight());
+    public Item(float x, float y, float width, float height, int id) {
+        super(x, y, width * ITEM_HSHRINK, height * ITEM_VSHRINK);
         this.setBodyType(BodyDef.BodyType.StaticBody);
         this.setPosition(x + this.getWidth() / 2 + 0.15f, y + this.getHeight() / 2);
-        this.setDrawScale(drawScale);
-        this.setTexture(t);
-        this.texture = t;
-        this.sensorName = sensorName;
+        this.sensorName = "item_sensor";
         this.id = id;
         setName("item" + id);
     }
@@ -48,7 +43,7 @@ public class Item extends CapsuleObstacle {
         if (!super.activatePhysics(world)) {
             return false;
         }
-        
+
         Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
         sensorDef = new FixtureDef();
         sensorDef.density = this.getDensity();
@@ -56,14 +51,13 @@ public class Item extends CapsuleObstacle {
         sensorShape = new PolygonShape();
         sensorShape.setAsBox(0.2f * getWidth() / 2.0f, 0.0f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
-
         sensorFixture = body.createFixture(sensorDef);
         sensorFixture.setUserData(getSensorName());
 
         return true;
     }
 
-    private Object getSensorName() {
+    private String getSensorName() {
         return sensorName;
     }
 
