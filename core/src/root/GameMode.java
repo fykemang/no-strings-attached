@@ -97,7 +97,6 @@ public class GameMode implements Screen {
     private static final String BKG_CLOUD = "platform/cloud_background.png";
 
     private static final String BKG_SKY = "platform/background_sky.png";
-    private static final String PLAYER_IDLE = "platform/player_idle.png";
     /**
      * The texture file for the player
      */
@@ -205,7 +204,6 @@ public class GameMode implements Screen {
     /**
      * Texture assets for character avatar
      */
-    private TextureRegion playerTexture;
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
 
@@ -304,8 +302,6 @@ public class GameMode implements Screen {
             return;
         }
         platformAssetState = AssetState.LOADING;
-        manager.load(PLAYER_IDLE, Texture.class);
-        assets.add(PLAYER_IDLE);
         manager.load(PLAYER_JUMP, Texture.class);
         assets.add(PLAYER_JUMP);
         manager.load(PLAYER_FALL, Texture.class);
@@ -395,8 +391,6 @@ public class GameMode implements Screen {
             levels.add(manager.get(TEST_LEVEL, Level.class));
         }
 
-
-        playerTexture = createTexture(manager, PLAYER_IDLE, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
@@ -538,21 +532,22 @@ public class GameMode implements Screen {
         List<Tile> tiles = testLevel.getTiles();
         List<float[]> couples = testLevel.getCouples();
 
-        for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
-        }
-
         // Create main dude
-        float dWidth = playerTexture.getRegionWidth() / scale.x;
-        float dHeight = playerTexture.getRegionHeight() / scale.y;
+        float dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
+        float dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
-        player.setTexture(playerTexture);
+        player.setTexture(playerIdleAnimation);
         addObject(player);
+        System.out.println(scale);
 
         for (int i = 0; i < couples.size(); i++) {
             float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
+        }
+
+        for (int i = 0; i < tiles.size(); i++) {
+            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
     }
 
@@ -576,8 +571,6 @@ public class GameMode implements Screen {
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
-        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
-        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
         int n1 = rand.nextInt(npcs.size());
         int n2 = rand.nextInt(npcs.size());
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
@@ -585,6 +578,8 @@ public class GameMode implements Screen {
         TextureRegion randTex2 = npcs.get(n2);
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
+        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
+        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
     }
 
     /**

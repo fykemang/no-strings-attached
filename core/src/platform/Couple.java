@@ -56,7 +56,6 @@ public class Couple extends ComplexObstacle {
     public Person createAvatar(float x, float y, TextureRegion t) {
         float dWidth = t.getRegionWidth() / drawScale.x;
         float dHeight = t.getRegionHeight() / drawScale.y;
-
         Person avatar = new Person(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
