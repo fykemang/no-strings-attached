@@ -47,7 +47,6 @@ import java.util.Random;
  * place nicely with the static assets.
  */
 public class GameMode implements Screen {
-    Random rand = new Random();
     /**
      * Exit code for quitting the game
      */
@@ -117,6 +116,11 @@ public class GameMode implements Screen {
     private static final String NPC_HEYO = "platform/heyo.png";
 
     private static final String NPC_WELCOME = "platform/welcome.png";
+
+    private static final String NEEDLE = "platform/needles.png";
+    private static final String BUTTON = "platform/button.png";
+    private static final String YARN = "platform/yarn.png";
+
     /**
      * The texture file for the spinning barrier
      */
@@ -173,10 +177,6 @@ public class GameMode implements Screen {
     protected TextureRegion earthTile;
     protected TextureRegion smEarthTile;
     /**
-     * The texture for the exit condition
-     */
-    protected TextureRegion goalTile;
-    /**
      * The font for giving messages to the player
      */
     protected BitmapFont displayFont;
@@ -188,6 +188,8 @@ public class GameMode implements Screen {
      * All the objects in the world.
      */
     protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+
+    protected PooledList<Obstacle> itemObjects = new PooledList<Obstacle>();
     /**
      * Queue for adding objects
      */
@@ -204,6 +206,7 @@ public class GameMode implements Screen {
      * The world scale
      */
     protected Vector2 scale;
+    private Random rand;
 
     /**
      * Texture assets for character avatar
@@ -219,7 +222,12 @@ public class GameMode implements Screen {
     private TextureRegion npcWelcomeTexture;
 
 
+    private TextureRegion buttonTexture;
+    private TextureRegion needleTexture;
+    private TextureRegion yarnTexture;
+
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
+    private ArrayList<TextureRegion> items = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
 
@@ -282,6 +290,7 @@ public class GameMode implements Screen {
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
         world = new World(gravity, false);
+        rand = new Random();
         this.bounds = new Rectangle(bounds);
         this.scale = new Vector2(1, 1);
         complete = false;
@@ -326,6 +335,12 @@ public class GameMode implements Screen {
         manager.load(NPC_WELCOME, Texture.class);
         assets.add(NPC_WELCOME);
 
+        manager.load(NEEDLE, Texture.class);
+        assets.add(NEEDLE);
+        manager.load(BUTTON, Texture.class);
+        assets.add(BUTTON);
+        manager.load(YARN, Texture.class);
+        assets.add(YARN);
 
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
@@ -409,6 +424,12 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createTexture(manager, NPC_COZY, false);
         npcNervyTexture = createTexture(manager, NPC_NERVY, false);
+        buttonTexture = createTexture(manager, BUTTON, false);
+        needleTexture = createTexture(manager, NEEDLE, false);
+        yarnTexture = createTexture(manager, YARN, false);
+        items.add(buttonTexture);
+        items.add(needleTexture);
+        items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -538,29 +559,30 @@ public class GameMode implements Screen {
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
         List<float[]> couples = testLevel.getCouples();
+        List<float[]> items = testLevel.getItems();
 
         // Create main dude
         dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
         dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
 
-        System.out.println(dWidth);
-        System.out.println(dHeight);
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         addObject(player);
-        System.out.println(scale);
 
         for (int i = 0; i < couples.size(); i++) {
             float[] curr = couples.get(i);
             createCouple(curr[0], curr[1], curr[2], curr[3], i);
         }
 
+        for (int i = 0; i < items.size(); i++) {
+            float[] curr = items.get(i);
+            createItem(curr[0], curr[1], i);
+        }
 
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
-
 
     }
 
@@ -574,6 +596,29 @@ public class GameMode implements Screen {
         tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
+    }
+
+    public void createItem(float x, float y, int id) {
+        int n = rand.nextInt(items.size());
+        TextureRegion randTex = items.get(n);
+        Vector2 dimensions = getScaledDimensions(randTex);
+        Item item = new Item(x, y, dimensions.x, dimensions.y, id);
+        item.setTexture(randTex);
+        item.setDrawScale(scale);
+        addObject(item);
+    }
+
+    /**
+     * Retrieve the size of a model scaled
+     * to fit the world units
+     *
+     * @param texture the texture of the model
+     * @return physical dimensions of the model in world units
+     */
+    private Vector2 getScaledDimensions(TextureRegion texture) {
+        float dWidth = texture.getRegionWidth() / scale.x;
+        float dHeight = texture.getRegionHeight() / scale.y;
+        return new Vector2(dWidth, dHeight);
     }
 
     /**
@@ -729,6 +774,7 @@ public class GameMode implements Screen {
             player.setSwingJoint(swingJoint);
         }
 
+
         /*
          * Continuously update the rope position to match the player
          * position
@@ -739,7 +785,6 @@ public class GameMode implements Screen {
             playerRope.setStart(playerPos, false);
             playerRope.setEnd(targetPos, false);
         }
-
 
         // If we use sound, we must remember this.
         SoundController.getInstance().update();
@@ -1012,6 +1057,13 @@ public class GameMode implements Screen {
      */
     protected void addObject(Obstacle obj) {
         assert inBounds(obj) : "Object is not in bounds";
+        objects.add(obj);
+        obj.activatePhysics(world);
+    }
+
+    protected void addItem(Obstacle obj) {
+        assert inBounds(obj) : "Object is not in bounds";
+        itemObjects.add(obj);
         objects.add(obj);
         obj.activatePhysics(world);
     }
