@@ -42,6 +42,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private Texture forest;
     private Texture mountain;
     private themes theme = themes.none;
+    private boolean ready = false;
     int city_l = 200;int city_r = 600;int city_d = 563;int city_u = 700;
     int sub_l = 660;int sub_r = 950;int sub_d = 550;int sub_u = 750;
     int for_l = 655;int for_r = 1200;int for_d = 350;int for_u = 550;
@@ -65,7 +66,8 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
-        levels.add(new LevelMetaData(false , "levels/test_level.json"));
+        levels.add(new LevelMetaData(false , "levels/test_level.json", ""));
+        levels.add(new LevelMetaData(false , "levels/level2.json", ""));
         Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
@@ -95,10 +97,6 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private ArrayList<LevelMetaData> levels;
 
 
-    public boolean isReady() {
-        return level != -1;
-    }
-
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -116,10 +114,17 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (theme != themes.none){
-            level=1;
+        for (int i = 0; i < buttonPos.size(); i++){
+            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
+            System.out.println(screenP.dst(buttonPos.get(0)));
+            if (screenP.dst(buttonPos.get(i)) < 50) {
+                level = i+1;
+            }
         }
-        System.out.println("x " + screenX + "y " + (canvas.getHeight() - screenY));
+        if (level != -1){
+            ready = true;
+        }
+        System.out.println(level);
         return false;
     }
 
@@ -147,12 +152,6 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
             theme = themes.mountain;
         }
         else{ theme = themes.none; }
-        for (int i = 0; i < buttonPos.size(); i++){
-            Vector2 screenP = new Vector2(screenX, screeny);
-            if (screenP.dst(buttonPos.get(i)) < 20) {
-                 level = i+1;
-            }
-        }
 
             return true;
     }
@@ -244,7 +243,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
             draw();
 
             // We are are ready, notify our listener
-            if (isReady() && listener != null) {
+            if (ready && listener != null) {
                 System.out.println("here");
                 listener.exitScreen(this, 3);
             }

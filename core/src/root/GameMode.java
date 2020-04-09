@@ -10,6 +10,7 @@
  */
 package root;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import obstacle.Obstacle;
 import platform.*;
 import util.FilmStrip;
@@ -405,10 +407,11 @@ public class GameMode implements Screen {
         if (platformAssetState != AssetState.LOADING) {
             return;
         }
+        Json json = new Json();
+         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
+        levels.add(level);
+//        levels.add(manager.get(file, Level.class));
 
-        if (manager.isLoaded(TEST_LEVEL)) {
-            levels.add(manager.get(TEST_LEVEL, Level.class));
-        }
 
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
