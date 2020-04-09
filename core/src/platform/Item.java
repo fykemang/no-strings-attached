@@ -31,11 +31,18 @@ public class Item extends CapsuleObstacle {
         this.texture = t;
         this.sensorName = sensorName;
         this.id = id;
+        this.state = ItemState.NOTCOLLECTED;
         setName("item" + id);
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setState(boolean b) {
+        if (b) {
+            this.state = ItemState.COLLECTED;
+        }
     }
 
     public void draw(GameCanvas canvas) {

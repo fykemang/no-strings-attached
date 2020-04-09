@@ -769,20 +769,13 @@ public class GameMode implements Screen {
         if (player.getCanCollect()) {
             for (Obstacle obs : itemObjects) {
                 if (obs.getName().equals("item" + ((Item) obs).getId())) {
-                    ((Item) obs).markRemoved(true);
+                    obs.markRemoved(true);
+                    ((Item) obs).setState(true);
                     obs.markRemoved(true);
                 }
             }
         }
-//            //need to implement closest item
-//            int itemID = player.getClosestItemID();
-//            for (Obstacle obs : objects) {
-//                if (obs.getName().equals("item" + itemID)) {
-//                    ((Item) obs).markRemoved(true);
-//                    //them remove and add to inventory
-//                }
-//            }
-//        }
+
         /*
          * Continuously update the rope position to match the player
          * position

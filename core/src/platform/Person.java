@@ -18,6 +18,8 @@ import obstacle.Obstacle;
 import root.GameCanvas;
 import util.FilmStrip;
 
+import java.util.ArrayList;
+
 /**
  * Player avatar for the platform game.
  * <p>
@@ -121,6 +123,7 @@ public class Person extends CapsuleObstacle {
     private boolean canCollect;
     private int closestItemID;
     private Person target;
+    private ArrayList<Item> collected;
 
     /**
      * Which direction is the character facing
