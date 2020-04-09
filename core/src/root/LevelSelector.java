@@ -121,7 +121,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
                 level = i+1;
             }
         }
-        if (level != -1 && level < levels.size()){
+        if (level != -1 && level < levels.size()+1){
             ready = true;
         }
         System.out.println(level);
