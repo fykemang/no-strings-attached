@@ -18,6 +18,8 @@ import obstacle.Obstacle;
 import root.GameCanvas;
 import util.FilmStrip;
 
+import java.util.ArrayList;
+
 /**
  * Player avatar for the platform game.
  * <p>
@@ -119,7 +121,11 @@ public class Person extends CapsuleObstacle {
     private boolean canCut;
     private String sensorName;
     private int closestCoupleID;
+    //    private Obstacle target;
+    private boolean canCollect;
+    private int closestItemID;
     private Person target;
+    private ArrayList<String> inventory;
 
     /**
      * Which direction is the character facing
@@ -165,6 +171,11 @@ public class Person extends CapsuleObstacle {
         }
 
         isWalking = movement != 0;
+    }
+
+    public void addItem(String s) {
+        inventory.add(s);
+        System.out.print(s);
     }
 
     /**
@@ -282,6 +293,7 @@ public class Person extends CapsuleObstacle {
         isWalking = false;
         isTrampolining = false;
         this.sensorName = sensorName;
+        this.inventory = new ArrayList<String>();
 
         jumpCooldown = 0;
         setName(name);
@@ -335,6 +347,13 @@ public class Person extends CapsuleObstacle {
         return this.closestCoupleID;
     }
 
+    public void setCanCollect(boolean b) {
+        this.canCollect = b;
+    }
+
+    public boolean getCanCollect() {
+        return this.canCollect;
+    }
 
     /**
      * Applies the force to the body of this dude

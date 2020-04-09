@@ -16,11 +16,13 @@ public class Level implements Json.Serializable {
     private List<Tile> tiles;
     private Vector2 playerPos;
     private List<float[]> couples;
+    private List<float[]> items;
 
     public Level() {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
         couples = new ArrayList<>();
+        items = new ArrayList<>();
     }
 
     @Override
@@ -52,6 +54,16 @@ public class Level implements Json.Serializable {
             coupleCoordinates[3] = coupleData.getFloat("right_y");
             couples.add(coupleCoordinates);
         }
+
+        JsonValue itemsData = jsonData.get("items");
+        for (JsonValue itemData : itemsData) {
+//            items.add([playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"))]);
+            System.out.print(itemData);
+            float[] coordinate = new float[2];
+            coordinate[0] = itemData.getFloat("x");
+            coordinate[1] = itemData.getFloat("y");
+            items.add(coordinate);
+        }
     }
 
     /**
@@ -74,4 +86,10 @@ public class Level implements Json.Serializable {
     public List<float[]> getCouples() {
         return couples;
     }
+
+    public List<float[]> getItems() {
+        return items;
+    }
+
+
 }
