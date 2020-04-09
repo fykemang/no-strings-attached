@@ -18,6 +18,8 @@ import obstacle.Obstacle;
 import root.GameCanvas;
 import util.FilmStrip;
 
+import java.util.ArrayList;
+
 /**
  * Player avatar for the platform game.
  * <p>
@@ -119,10 +121,14 @@ public class Person extends CapsuleObstacle {
     private boolean canCut;
     private String sensorName;
     private int closestCoupleID;
+    //    private Obstacle target;
+    private boolean canCollect;
+    private int closestItemID;
     private Person target;
     private Vector2 trampolineDir;
     private float trampolineForceX;
     private float trampolineForceY;
+    private ArrayList<String> inventory;
 
     /**
      * Which direction is the character facing
@@ -169,6 +175,11 @@ public class Person extends CapsuleObstacle {
         }
 
         isWalking = movement != 0;
+    }
+
+    public void addItem(String s) {
+        inventory.add(s);
+        System.out.print(s);
     }
 
     /**
@@ -287,6 +298,7 @@ public class Person extends CapsuleObstacle {
         isWalking = false;
         isTrampolining = false;
         this.sensorName = sensorName;
+        this.inventory = new ArrayList<String>();
 
         jumpCooldown = 0;
         setName(name);
@@ -297,18 +309,16 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setTrampolineDir(Vector2 v){
-        v.nor();
-        System.out.println(trampolineDir);
-        trampolineDir.set(-v.x, -v.y);
+        trampolineDir.set(v.x, v.y);
     }
 
     public void calculateTrampolineForce(){
-        temp.set(- getLinearVelocity().x, - getLinearVelocity().y);
+        temp.set(-getLinearVelocity().x, -getLinearVelocity().y);
         System.out.println("velocity"+temp);
 
 
-        trampolineForceY = trampolineDir.y * 2f;
-        trampolineForceX = -trampolineDir.x *2f ;
+        trampolineForceY = temp.dot(trampolineDir);
+        trampolineForceX = trampolineForceY / trampolineDir.y * trampolineDir.x;
 
         System.out.println(trampolineDir);
         System.out.println(trampolineForceX);
@@ -359,6 +369,13 @@ public class Person extends CapsuleObstacle {
         return this.closestCoupleID;
     }
 
+    public void setCanCollect(boolean b) {
+        this.canCollect = b;
+    }
+
+    public boolean getCanCollect() {
+        return this.canCollect;
+    }
 
     /**
      * Applies the force to the body of this dude
