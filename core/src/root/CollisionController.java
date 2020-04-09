@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 import platform.Blob;
-import platform.Item;
 import platform.Person;
 
 /**

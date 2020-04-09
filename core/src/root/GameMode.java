@@ -611,6 +611,7 @@ public class GameMode implements Screen {
     /**
      * Retrieve the size of a model scaled
      * to fit the world units
+     *
      * @param texture the texture of the model
      * @return physical dimensions of the model in world units
      */
