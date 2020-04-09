@@ -840,7 +840,9 @@ public class GameMode implements Screen {
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
+        float xpos = player.getX() * scale.x > 240? player.getX() * scale.x:240;
+        float ypos = player.getY() * scale.y > 240? player.getY() * scale.y:240;
+        canvas.moveCamera(xpos, ypos);
 
         canvas.begin();
         for (Obstacle obj : objects) {
