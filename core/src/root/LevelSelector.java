@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import platform.Level;
 import util.FilmStrip;
 import util.ScreenListener;
 
@@ -53,6 +54,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     public LevelSelector(AssetManager manager, GameCanvas canvas) {
         this.manager = manager;
         this.canvas = canvas;
+        this.levels = new ArrayList<>();
         resize(canvas.getWidth(), canvas.getHeight());
         background =  new Texture(BK_FILE);
         city =  new Texture(CITY_FILE);
@@ -63,6 +65,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
+        levels.add(new LevelMetaData(false , "levels/test_level.json"));
         Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
@@ -89,7 +92,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     private boolean active;
 
-    private ArrayList<GameMetaData> levels;
+    private ArrayList<LevelMetaData> levels;
 
 
     public boolean isReady() {
@@ -301,8 +304,8 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     }
 
 
-    public GameMetaData getMetaData(){
+    public LevelMetaData getMetaData(){
             if (level > levels.size() || level == -1 ) return null;
-            return levels.get(level);
+            return levels.get(level-1);
     }
 }
