@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
 import platform.Blob;
+import platform.Item;
 import platform.Person;
 
 /**
@@ -63,13 +64,14 @@ public class CollisionController implements ContactListener {
                 bd2.markRemoved(true);
             }
 
-            if (bd1 == player && bd2.getName().contains("item")) {
-                bd2.markRemoved(true);
-            }
 
-            if (bd2 == player && bd1.getName().contains("item")) {
-                bd1.markRemoved(true);
-            }
+//            if (bd1 == player && fix1.getName().contains("item")) {
+//                bd2.markRemoved(true);
+//            }
+//
+//            if (bd2 == player && bd1.getName().contains("item")) {
+//                bd1.markRemoved(true);
+//            }
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
@@ -84,6 +86,16 @@ public class CollisionController implements ContactListener {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
             }
+
+            if (bd1 == player && ("item_sensor").equals(fd2)) {
+                player.addItem(bd2.getName());
+                bd2.markRemoved(true);
+            }
+            if (bd2 == player && ("item_sensor").equals(fd1)) {
+                player.addItem(bd1.getName());
+                bd1.markRemoved(true);
+            }
+
 
             // See if we have landed on the ground.
             if ((player.getSensorName().equals(fd2) && player != bd1) ||

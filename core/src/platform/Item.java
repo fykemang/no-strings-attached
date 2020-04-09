@@ -10,8 +10,9 @@ public class Item extends CapsuleObstacle {
     // Amount to shrink item by for fixture
     private static final float ITEM_VSHRINK = 0.01f;
     private static final float ITEM_HSHRINK = 0.01f;
+    private static final float ITEM_SENSOR_SCALE = 0.1f;
     private String sensorName;
-    private PolygonShape sensorShape;
+    private CircleShape sensorShape;
     private FixtureDef sensorDef;
     private Fixture sensorFixture;
     private int id;
@@ -55,8 +56,9 @@ public class Item extends CapsuleObstacle {
         sensorDef = new FixtureDef();
         sensorDef.density = this.getDensity();
         sensorDef.isSensor = true;
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(0.2f * getWidth() / 2.0f, 0.0f, sensorCenter, 0.0f);
+        sensorShape = new CircleShape();
+        sensorShape.setPosition(sensorCenter);
+        sensorShape.setRadius(ITEM_SENSOR_SCALE * getTexture().getRegionWidth() / drawScale.x);
         sensorDef.shape = sensorShape;
         sensorFixture = body.createFixture(sensorDef);
         sensorFixture.setUserData(getSensorName());
@@ -70,6 +72,6 @@ public class Item extends CapsuleObstacle {
 
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
-        canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+        canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
     }
 }
