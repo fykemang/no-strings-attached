@@ -1,0 +1,47 @@
+{
+  "playerPos": {
+    "x": 8,
+    "y": 8.0
+  },
+  "tiles": [
+  ],
+
+  "couples": [
+    {
+      "left_x": 3.0,
+      "left_y": 2.0,
+      "right_x": 14.0,
+      "right_y": 2.0
+    },
+    {
+      "left_x": 14.0,
+      "left_y": 6.5,
+      "right_x": 19.0,
+      "right_y": 6.5
+    },
+    {
+      "left_x": 10.0,
+      "left_y": 11.5,
+      "right_x": 15.0,
+      "right_y": 11.5
+    },
+    {
+      "left_x": 5.0,
+      "left_y": 15.0,
+      "right_x": 10.0,
+      "right_y": 15.0
+    },
+    {
+      "left_x": 16.0,
+      "left_y": 16.0,
+      "right_x": 21.0,
+      "right_y": 16.0
+    }
+  ],
+  "items": [
+    {
+      "x": 10.0,
+      "y": 10.0
+    }
+  ]
+}

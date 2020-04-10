@@ -10,6 +10,7 @@
  */
 package root;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import obstacle.Obstacle;
 import platform.*;
 import util.FilmStrip;
@@ -401,14 +403,15 @@ public class GameMode implements Screen {
      *
      * @param manager Reference to global asset manager.
      */
-    public void loadContent(AssetManager manager) {
+    public void loadContent(AssetManager manager, String file) {
         if (platformAssetState != AssetState.LOADING) {
             return;
         }
+        Json json = new Json();
+        Level level = json.fromJson(Level.class, Gdx.files.internal(file));
+        levels.add(level);
+//        levels.add(manager.get(file, Level.class));
 
-        if (manager.isLoaded(TEST_LEVEL)) {
-            levels.add(manager.get(TEST_LEVEL, Level.class));
-        }
 
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
@@ -837,7 +840,9 @@ public class GameMode implements Screen {
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
+        float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+        canvas.moveCamera(xpos, ypos);
 
         canvas.begin();
         for (Obstacle obj : objects) {
