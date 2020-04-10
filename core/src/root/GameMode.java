@@ -408,7 +408,7 @@ public class GameMode implements Screen {
             return;
         }
         Json json = new Json();
-         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
+        Level level = json.fromJson(Level.class, Gdx.files.internal(file));
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
 
@@ -840,8 +840,8 @@ public class GameMode implements Screen {
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        float xpos = player.getX() * scale.x > 240? player.getX() * scale.x:240;
-        float ypos = player.getY() * scale.y > 240? player.getY() * scale.y:240;
+        float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
         canvas.moveCamera(xpos, ypos);
 
         canvas.begin();

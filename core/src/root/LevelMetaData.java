@@ -1,19 +1,19 @@
 package root;
 
 public class LevelMetaData {
-    public LevelMetaData(boolean iscompleted, String filePath, String background) {
-        this.iscompleted = iscompleted;
+    public LevelMetaData(boolean isCompleted, String filePath, String background) {
+        this.isComplete = isCompleted;
         this.filePath = filePath;
         this.background = background;
 
     }
 
-    public boolean isIscompleted() {
-        return iscompleted;
+    public boolean isComplete() {
+        return isComplete;
     }
 
-    public void setIscompleted(boolean iscompleted) {
-        this.iscompleted = iscompleted;
+    public void setComplete(boolean isComplete) {
+        this.isComplete = isComplete;
     }
 
     public String getFilePath() {
@@ -24,7 +24,7 @@ public class LevelMetaData {
         this.filePath = filePath;
     }
 
-    boolean iscompleted;
+    boolean isComplete;
     String filePath;
     String background;
 }

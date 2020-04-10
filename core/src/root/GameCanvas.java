@@ -963,14 +963,14 @@ public class GameCanvas {
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
-    public void drawBackground(Texture image, float x, float y, Color tint ,float scale) {
+    public void drawBackground(Texture image, float x, float y, Color tint, float scale) {
         computeTransform(x, y, x, y, 0, scale, scale);
         spriteBatch.setColor(tint);
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
-    public void drawBackground(Texture image, Color tint, float ox, float oy, float x, float y, float sx, float sy ) {
-        computeTransform(ox, oy, x, y ,0, sx, sy);
+    public void drawBackground(Texture image, Color tint, float ox, float oy, float x, float y, float sx, float sy) {
+        computeTransform(ox, oy, x, y, 0, sx, sy);
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
@@ -1316,12 +1316,4 @@ public class GameCanvas {
         Vector3 worldLocation = viewport.unproject(cacheVector3);
         return cacheVector2.set(worldLocation.x, worldLocation.y);
     }
-
-//    public void drawStage(Stage stage){
-//
-//        stage.act();
-//        spriteBatch.begin();
-//        stage.draw();
-//        spriteBatch.end();
-//    }
 }

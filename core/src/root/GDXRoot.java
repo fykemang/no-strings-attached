@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.Select;
 import platform.Level;
 import util.ScreenListener;
 
@@ -140,19 +139,17 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         if (screen == loading && exitCode == LevelSelector.INTO_SELECTOR) {
-              selector = new LevelSelector(manager, canvas);
-              selector.setScreenListener(this);
-              setScreen(selector);
-              loading.dispose();
-              loading = null;
-
-        } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME){
+            selector = new LevelSelector(manager, canvas);
+            selector.setScreenListener(this);
+            setScreen(selector);
+            loading.dispose();
+            loading = null;
+        } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME) {
             controller.loadContent(manager, selector.getMetaData().filePath);
             controller.setScreenListener(this);
             controller.setCanvas(canvas);
             controller.reset();
             setScreen(controller);
-
         } else if (exitCode == GameMode.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();

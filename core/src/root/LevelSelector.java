@@ -1,7 +1,6 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -11,20 +10,15 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import platform.Level;
-import util.FilmStrip;
 import util.ScreenListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class LevelSelector  implements Screen, InputProcessor, ControllerListener {
+public class LevelSelector implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 0;
     private static final String BK_FILE = "shared/select_bg.png";
     private static final String CITY_FILE = "shared/city.png";
@@ -47,11 +41,24 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private int city_level = 4;
     private int suburb_level = 9;
     private boolean ready = false;
-    int city_l = 200;int city_r = 600;int city_d = 563;int city_u = 700;
-    int sub_l = 660;int sub_r = 950;int sub_d = 550;int sub_u = 750;
-    int for_l = 655;int for_r = 1200;int for_d = 350;int for_u = 550;
-    int mon_l = 56;int mon_r = 590;int mon_d = 150;int mon_u = 296;
+    int city_l = 200;
+    int city_r = 600;
+    int city_d = 563;
+    int city_u = 700;
+    int sub_l = 660;
+    int sub_r = 950;
+    int sub_d = 550;
+    int sub_u = 750;
+    int for_l = 655;
+    int for_r = 1200;
+    int for_d = 350;
+    int for_u = 550;
+    int mon_l = 56;
+    int mon_r = 590;
+    int mon_d = 150;
+    int mon_u = 296;
     private ArrayList<Vector2> buttonPos = new ArrayList<>();
+
     private enum themes {
         city, none, suburb, forest, mountain
     }
@@ -61,8 +68,8 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         this.canvas = canvas;
         this.levels = new ArrayList<>();
         resize(canvas.getWidth(), canvas.getHeight());
-        background =  new Texture(BK_FILE);
-        city =  new Texture(CITY_FILE);
+        background = new Texture(BK_FILE);
+        city = new Texture(CITY_FILE);
         suburb = new Texture(SUBURB_FILE);
         forest = new Texture(FOREST_FILE);
         mountain = new Texture(MOUNTAIN_FILE);
@@ -71,8 +78,8 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
-        levels.add(new LevelMetaData(false , "levels/test_level.json", ""));
-        levels.add(new LevelMetaData(false , "levels/level2.json", ""));
+        levels.add(new LevelMetaData(false, "levels/test_level.json", ""));
+        levels.add(new LevelMetaData(false, "levels/level2.json", ""));
         Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
@@ -126,10 +133,9 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 //                level = i+1;
 //            }
 //        }
-        if (level != -1 && level < levels.size()+1){
+        if (level != -1 && level < levels.size() + 1) {
             ready = true;
         }
-        System.out.println(level);
         return false;
     }
 
@@ -145,42 +151,41 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-
-        int screeny = canvas.getHeight() - screenY;
-        int start = 0; int end = 0;
-        if (screenX > city_l && screenX < city_r && screeny>city_d && screeny < city_u) {
+        int screen = canvas.getHeight() - screenY;
+        int start = 0;
+        int end = 0;
+        if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
-            start = 0; end = city_level;
-        }else if (screenX > sub_l && screenX < sub_r && screeny>sub_d && screeny < sub_u){
+            start = 0;
+            end = city_level;
+        } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
             theme = themes.suburb;
-            start = city_level; end = suburb_level;
-        }else if (screenX > for_l && screenX < for_r && screeny>for_d && screeny < for_u){
+            start = city_level;
+            end = suburb_level;
+        } else if (screenX > for_l && screenX < for_r && screen > for_d && screen < for_u) {
             theme = themes.forest;
-            start = suburb_level; end = 14;
-        }else if  (screenX > mon_l && screenX < mon_r && screeny>mon_d && screeny < mon_u){
-            start = 15; end = 21;
+            start = suburb_level;
+            end = 14;
+        } else if (screenX > mon_l && screenX < mon_r && screen > mon_d && screen < mon_u) {
+            start = 15;
+            end = 21;
             theme = themes.mountain;
+        } else {
+            theme = themes.none;
         }
-        else{ theme = themes.none; }
-        System.out.println(screenX + "y "+ (canvas.getHeight()- screenY));
+
         boolean select = false;
-        for (int i = 0; i < levels.size(); i++){
+        for (int i = 0; i < levels.size(); i++) {
             Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
             if (screenP.dst(buttonPos.get(i)) < 50) {
                 select = true;
-                level = i+1;
+                level = i + 1;
             }
         }
-        if (!select) level = -1;
-//        for (int i = 0; i < 2; i++){
-//            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
-//            if (screenP.dst(buttonPos.get(i)) < 50) {
-//                level = i+1;
-//            }else {
-//                level = -1;
-//            }
-//           }
-        System.out.println(level);
+
+        if (!select) {
+            level = -1;
+        }
         return true;
     }
 
@@ -272,25 +277,24 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
             // We are are ready, notify our listener
             if (ready && listener != null) {
-                System.out.println("here");
                 listener.exitScreen(this, 3);
             }
         }
     }
 
-    private void update(float delta) {
+    private void update(float dt) {
 
     }
 
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background);
-        switch(theme){
-            case city :
+        switch (theme) {
+            case city:
                 canvas.drawBackground(mountain);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest);
-                canvas.drawBackground(city, 426, 646,Color.WHITE,1.3f);
+                canvas.drawBackground(city, 426, 646, Color.WHITE, 1.3f);
                 break;
             case suburb:
                 canvas.drawBackground(city);
@@ -322,22 +326,22 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);
-        for (int i = 0; i< buttonPos.size(); i++) {
+        for (int i = 0; i < buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
-            canvas.drawText(i+1+"", font, button.x, button.y);
+            canvas.drawText(i + 1 + "", font, button.x, button.y);
         }
 
-        if (level > 0 && level < levels.size()+1){
-            canvas.draw(selector, buttonPos.get(level-1).x - selector.getWidth()/2+5,
-                    buttonPos.get(level-1).y-selector.getHeight()/2-15);
+        if (level > 0 && level < levels.size() + 1) {
+            canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
+                    buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }
 
-       canvas.end();
+        canvas.end();
     }
 
 
-    public LevelMetaData getMetaData(){
-            if (level > levels.size() || level == -1 ) return null;
-            return levels.get(level-1);
+    public LevelMetaData getMetaData() {
+        if (level > levels.size() || level == -1) return null;
+        return levels.get(level - 1);
     }
 }
