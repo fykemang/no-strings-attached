@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Callback to handle if the player needs to attach to an NPC
  */
 public class RopeQueryCallback implements QueryCallback {
     private Person player;

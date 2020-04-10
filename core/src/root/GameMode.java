@@ -10,6 +10,7 @@
  */
 package root;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -26,6 +27,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import obstacle.Obstacle;
 import entities.*;
 import util.*;
@@ -87,74 +89,74 @@ public class GameMode implements Screen {
     /**
      * Background
      */
-    private static final String BKG_SUN = "entities/sun_background.png";
+    private static final String BKG_SUN = "platform/sun_background.png";
 
-    private static final String BKG_CITY = "entities/city_background.png";
+    private static final String BKG_CITY = "platform/city_background.png";
 
-    private static final String BKG_CLOUD = "entities/cloud_background.png";
+    private static final String BKG_CLOUD = "platform/cloud_background.png";
 
-    private static final String BKG_SKY = "entities/background_sky.png";
+    private static final String BKG_SKY = "platform/background_sky.png";
     /**
      * The texture file for the player
      */
-    private static final String PLAYER_IDLE_ANIMATION = "entities/player_idle_animation.png";
+    private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
 
-    private static final String PLAYER_JUMP = "entities/player_jump.png";
+    private static final String PLAYER_JUMP = "platform/player_jump.png";
 
-    private static final String PLAYER_FALL = "entities/player_fall.png";
+    private static final String PLAYER_FALL = "platform/player_fall.png";
 
-    private static final String NPC_COZY = "entities/cozy.png";
+    private static final String NPC_COZY = "platform/cozy_idle.png";
 
-    private static final String NPC_CHEESE = "entities/cheese.png";
+    private static final String NPC_CHEESE = "platform/cheese.png";
 
-    private static final String NPC_NERVY = "entities/nervy.png";
+    private static final String NPC_NERVY = "platform/nervy_idle.png";
 
-    private static final String NPC_SPIKY = "entities/spiky.png";
+    private static final String NPC_SPIKY = "platform/spiky_idle.png";
 
-    private static final String NPC_HEYO = "entities/heyo.png";
+    private static final String NPC_HEYO = "platform/heyo.png";
 
-    private static final String NPC_WELCOME = "entities/welcome.png";
+    private static final String NPC_WELCOME = "platform/welcome.png";
 
-    private static final String NEEDLE = "entities/needles.png";
-    private static final String BUTTON = "entities/button.png";
-    private static final String YARN = "entities/yarn.png";
+    private static final String NEEDLE = "platform/needles.png";
+    private static final String BUTTON = "platform/button.png";
+    private static final String YARN = "platform/yarn.png";
 
     /**
      * The texture file for the spinning barrier
      */
-    private static final String BARRIER_FILE = "entities/barrier.png";
+    private static final String BARRIER_FILE = "platform/barrier.png";
     /**
      * The texture file for the bullet
      */
-    private static final String BULLET_FILE = "entities/bullet.png";
+    private static final String BULLET_FILE = "platform/bullet.png";
     /**
      * The texture file for the bridge plank
      */
-    private static final String ROPE_FILE = "entities/ropebridge.png";
+    private static final String ROPE_FILE = "platform/ropebridge.png";
     /**
      * The sound file for a jump
      */
-    private static final String JUMP_FILE = "entities/jump.mp3";
+    private static final String JUMP_FILE = "platform/jump.mp3";
     /**
      * The sound file for a bullet fire
      */
-    private static final String PEW_FILE = "entities/pew.mp3";
+    private static final String PEW_FILE = "platform/pew.mp3";
     /**
      * The sound file for a bullet collision
      */
-    private static final String POP_FILE = "entities/plop.mp3";
+    private static final String POP_FILE = "platform/plop.mp3";
     /**
      * The folder with all levels
      */
     private static final String TEST_LEVEL = "levels/test_level.json";
-    private static final String CROSSHAIR_FILE = "entities/crosshair.png";
+    private static final String CROSSHAIR_FILE = "platform/crosshair.png";
 
     /**
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
     private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "entities/player_walk_animation.png";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
      * Retro font for displaying messages
      */
@@ -185,13 +187,12 @@ public class GameMode implements Screen {
     /**
      * All the objects in the world.
      */
-    protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+    protected PooledList<Obstacle> objects = new PooledList<>();
 
-    protected PooledList<Obstacle> itemObjects = new PooledList<Obstacle>();
     /**
      * Queue for adding objects
      */
-    protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
+    protected PooledList<Obstacle> addQueue = new PooledList<>();
     /**
      * The Box2D world
      */
@@ -399,14 +400,15 @@ public class GameMode implements Screen {
      *
      * @param manager Reference to global asset manager.
      */
-    public void loadContent(AssetManager manager) {
+    public void loadContent(AssetManager manager, String file) {
         if (platformAssetState != AssetState.LOADING) {
             return;
         }
+        Json json = new Json();
+        Level level = json.fromJson(Level.class, Gdx.files.internal(file));
+        levels.add(level);
+//        levels.add(manager.get(file, Level.class));
 
-        if (manager.isLoaded(TEST_LEVEL)) {
-            levels.add(manager.get(TEST_LEVEL, Level.class));
-        }
 
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
@@ -420,8 +422,8 @@ public class GameMode implements Screen {
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
         sunTexture = createTexture(manager, BKG_SUN, false);
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
-        npcCozyTexture = createTexture(manager, NPC_COZY, false);
-        npcNervyTexture = createTexture(manager, NPC_NERVY, false);
+        npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
+        npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
@@ -429,7 +431,7 @@ public class GameMode implements Screen {
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
@@ -838,7 +840,9 @@ public class GameMode implements Screen {
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
+        float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+        canvas.moveCamera(xpos, ypos);
 
         canvas.begin();
         for (Obstacle obj : objects) {
@@ -1058,13 +1062,6 @@ public class GameMode implements Screen {
      */
     protected void addObject(Obstacle obj) {
         assert inBounds(obj) : "Object is not in bounds";
-        objects.add(obj);
-        obj.activatePhysics(world);
-    }
-
-    protected void addItem(Obstacle obj) {
-        assert inBounds(obj) : "Object is not in bounds";
-        itemObjects.add(obj);
         objects.add(obj);
         obj.activatePhysics(world);
     }

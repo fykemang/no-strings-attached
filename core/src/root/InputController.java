@@ -242,7 +242,7 @@ public class InputController {
      * if it exists.  Otherwise, it falls back to the keyboard control.
      */
     public InputController() {
-        Pixmap pixMap = new Pixmap(Gdx.files.internal("entities/crosshair.png"));
+        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
         int xHotspot = pixMap.getWidth() / 2;
         int yHotspot = pixMap.getHeight() / 2;
         Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);

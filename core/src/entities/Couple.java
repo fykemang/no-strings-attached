@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.ComplexObstacle;
 import util.CollisionFilterConstants;
+import util.FilmStrip;
 
 /**
  * A obstacle made up of two dudes and a trampoline
@@ -60,7 +61,7 @@ public class Couple extends ComplexObstacle {
      * @return
      */
     public Person createAvatar(float x, float y, TextureRegion t) {
-        float dWidth = t.getRegionWidth() / drawScale.x;
+        float dWidth = t instanceof FilmStrip ? t.getRegionWidth() / drawScale.x / 2.2f : t.getRegionWidth() / drawScale.x;
         float dHeight = t.getRegionHeight() / drawScale.y;
         Person avatar = new Person(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
