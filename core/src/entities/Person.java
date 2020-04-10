@@ -8,7 +8,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -345,14 +345,6 @@ public class Person extends CapsuleObstacle {
 
     public int getClosestCoupleID() {
         return this.closestCoupleID;
-    }
-
-    public void setCanCollect(boolean b) {
-        this.canCollect = b;
-    }
-
-    public boolean getCanCollect() {
-        return this.canCollect;
     }
 
     /**

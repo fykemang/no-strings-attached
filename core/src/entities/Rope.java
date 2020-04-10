@@ -12,7 +12,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.CatmullRomSpline;
@@ -73,7 +73,6 @@ public class Rope extends ComplexObstacle {
     private Vector2[] POINTS = new Vector2[K];
     private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
     private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
-    private boolean shouldDraw;
     public RopeState state;
 
     public enum RopeState {
@@ -81,7 +80,6 @@ public class Rope extends ComplexObstacle {
     }
 
     public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
-        this.shouldDraw = true;
         this.state = state;
         this.lowerLayer = lower;
         this.upperLayer = upper;
@@ -114,7 +112,6 @@ public class Rope extends ComplexObstacle {
      */
     public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id) {
         super(x0, y0);
-        this.shouldDraw = true;
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
         blobSize = new Vector2(0.2f, 0.2f);
@@ -337,8 +334,6 @@ public class Rope extends ComplexObstacle {
 
         w.destroyBody(upperLayer.get(index).getBody());
         w.destroyBody(lowerLayer.get(index).getBody());
-        upperLayer.get(index).markRemoved(true);
-        lowerLayer.get(index).markRemoved(true);
 
         upperLayer.remove(index);
         lowerLayer.remove(index);
