@@ -6,8 +6,8 @@ public class Blob extends WheelObstacle {
     public static final String BLOB_NAME = "blob";
     private int id;
 
-    public Blob(float x, float y, float r, int id) {
-        super(x, y, r);
+    public Blob(float x, float y, float radius, int id) {
+        super(x, y, radius);
         setName(BLOB_NAME);
         this.id = id;
     }

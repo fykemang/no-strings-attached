@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
@@ -27,10 +28,7 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import obstacle.Obstacle;
 import entities.*;
-import util.FilmStrip;
-import util.PooledList;
-import util.ScreenListener;
-import util.SoundController;
+import util.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -562,6 +560,10 @@ public class GameMode implements Screen {
         float dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
         float dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
+        Filter playerFilter = new Filter();
+        playerFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER.getID();
+        playerFilter.maskBits = CollisionFilterConstants.MASK_PLAYER.getID();
+        player.setFilterData(playerFilter);
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         addObject(player);
@@ -706,10 +708,6 @@ public class GameMode implements Screen {
         player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
 
-//        if (player.isJumping()) {
-//            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-//        }
-
         if (player.isRising()) {
             player.setTexture(playerJumpTexture);
         } else if (player.isFalling()) {
@@ -719,7 +717,6 @@ public class GameMode implements Screen {
         } else if (player.isGrounded()) {
             player.setTexture(playerIdleAnimation);
         }
-
 
         if (player.isShooting()) {
             Vector2 playerPosition = player.getPosition();
@@ -747,24 +744,33 @@ public class GameMode implements Screen {
             }
         }
 
-        if (player.getTarget() != null && player.getSwingJoint() == null) {
+        if (player.getTarget() != null && !player.isAttached()) {
             Vector2 playerPos = player.getPosition();
             Vector2 targetPos = player.getTarget().getPosition();
-            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1);
+            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1, 0.17f);
+            playerRope.setLinearVelocityAll(player.getLinearVelocity());
+            Filter playerRopeFilter = new Filter();
+            playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
+            playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+            playerRope.setFilterDataAll(playerRopeFilter);
             playerRope.setName("player_rope");
             playerRope.setDrawScale(scale);
             addObject(playerRope);
+
             revoluteJointDef.bodyB = player.getBody();
             revoluteJointDef.bodyA = playerRope.getBody();
+            revoluteJointDef.collideConnected = false;
             world.createJoint(revoluteJointDef);
 
             revoluteJointDef.bodyB = playerRope.getLastLink();
             revoluteJointDef.bodyA = player.getTarget().getBody();
+            revoluteJointDef.collideConnected = false;
             world.createJoint(revoluteJointDef);
 
             ropeJointDef.bodyA = player.getBody();
             ropeJointDef.bodyB = player.getTarget().getBody();
-            ropeJointDef.maxLength = playerRope.getLength();
+            ropeJointDef.maxLength = playerRope.getLength() + 4f;
+            ropeJointDef.collideConnected = true;
             Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
         }

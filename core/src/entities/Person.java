@@ -126,6 +126,7 @@ public class Person extends CapsuleObstacle {
     private int closestItemID;
     private Person target;
     private ArrayList<String> inventory;
+    private boolean isAttached;
 
     /**
      * Which direction is the character facing
@@ -293,14 +294,14 @@ public class Person extends CapsuleObstacle {
         isWalking = false;
         isTrampolining = false;
         this.sensorName = sensorName;
-        this.inventory = new ArrayList<String>();
-
+        this.inventory = new ArrayList<>();
+        isAttached = false;
         jumpCooldown = 0;
         setName(name);
     }
 
     public boolean isAttached() {
-        return target != null;
+        return isAttached || this.swingJoint != null;
     }
 
     /**
@@ -332,7 +333,8 @@ public class Person extends CapsuleObstacle {
         sensorShape = new PolygonShape();
         sensorShape.setAsBox(DUDE_SSHRINK * getWidth() / 2.0f, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
-
+        sensorDef.filter.maskBits = getFilterData().maskBits;
+        sensorDef.filter.categoryBits = getFilterData().categoryBits;
         sensorFixture = body.createFixture(sensorDef);
         sensorFixture.setUserData(getSensorName());
 
@@ -499,5 +501,9 @@ public class Person extends CapsuleObstacle {
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+    }
+
+    public void setAttached(boolean isAttached) {
+        this.isAttached = isAttached;
     }
 }

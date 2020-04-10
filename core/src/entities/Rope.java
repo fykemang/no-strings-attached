@@ -51,10 +51,6 @@ public class Rope extends ComplexObstacle {
      */
     protected Vector2 dimension;
     /**
-     * The size of a single bloc
-     */
-    protected Vector2 blobSize;
-    /**
      * The length of each link
      */
     protected float linkSize;
@@ -110,12 +106,12 @@ public class Rope extends ComplexObstacle {
      * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id) {
+    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id, float blobDiameter) {
         super(x0, y0);
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
-        blobSize = new Vector2(0.2f, 0.2f);
-        linkSize = 0.2f;
+        this.linkSize = blobDiameter;
+        float blobRadius = blobDiameter / 2;
 
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
@@ -134,14 +130,13 @@ public class Rope extends ComplexObstacle {
             spacing /= (nLinks - 1);
         }
 
-        blobSize.x = linkSize;
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
             float t = i * (linkSize + spacing) + linkSize / 2.0f;
             pos.set(norm);
             pos.scl(t);
             pos.add(x0, y0);
-            Blob blob = new Blob(pos.x, pos.y, 0.1f, id);
+            Blob blob = new Blob(pos.x, pos.y, blobRadius, id);
             blob.setDensity(BASIC_DENSITY);
             bodies.add(blob);
             upperLayer.add(blob);
@@ -153,7 +148,7 @@ public class Rope extends ComplexObstacle {
             pos2.set(norm);
             pos2.scl(t);
             pos2.add(x0, y0);
-            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, 0.1f, id);
+            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, blobRadius, id);
             blob.setDensity(BASIC_DENSITY);
             bodies.add(blob);
             lowerLayer.add(blob);
