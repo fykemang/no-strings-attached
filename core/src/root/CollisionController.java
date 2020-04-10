@@ -72,7 +72,8 @@ public class CollisionController implements ContactListener {
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
                 Vector2 norm = ((Blob)bd2).getNorm();
                 player.setTrampolineDir(norm);
-                player.calculateTrampolineForce();
+                player.setOnString(true);
+//                player.calculateTrampolineForce();
 
 
             }
@@ -82,7 +83,8 @@ public class CollisionController implements ContactListener {
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
                 Vector2 norm = ((Blob)bd2).getNorm();
                 player.setTrampolineDir(norm);
-                player.calculateTrampolineForce();
+                player.setOnString(true);
+//                player.calculateTrampolineForce();
 
             }
 
@@ -132,6 +134,7 @@ public class CollisionController implements ContactListener {
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
             player.setIsTrampolining(true);
+            player.setOnString(false);
 
         }
 

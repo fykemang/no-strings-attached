@@ -47,7 +47,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The maximum character speed
      */
-    private static final float DUDE_MAXSPEED = 5.0f;
+    private static final float DUDE_MAXSPEED = 4.0f;
     /**
      * The impulse for the character jump
      */
@@ -142,6 +142,7 @@ public class Person extends CapsuleObstacle {
     private Joint swingJoint;
     private Vector2 temp = new Vector2();
 
+    private boolean onString = false;
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -179,7 +180,6 @@ public class Person extends CapsuleObstacle {
 
     public void addItem(String s) {
         inventory.add(s);
-        System.out.print(s);
     }
 
     /**
@@ -258,6 +258,9 @@ public class Person extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
+    public void setOnString(boolean b){
+        onString = b;
+    }
     public void setIsTrampolining(boolean t) {
         isTrampolining = t;
     }
@@ -309,22 +312,20 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setTrampolineDir(Vector2 v){
+        if (isTrampolining)
+            return;
         trampolineDir.set(v.x, v.y);
+        temp.set(-getLinearVelocity().x, -getLinearVelocity().y);
+
     }
 
     public void calculateTrampolineForce(){
-        if(isTrampolining)
+        float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
+        if(magnitude < 3)
             return;
-        temp.set(-getLinearVelocity().x, -getLinearVelocity().y);
-        System.out.println("velocity"+temp);
-        float magnitude = temp.dot(trampolineDir);
-        trampolineForceX = magnitude * trampolineDir.x;
-        trampolineForceY = magnitude * trampolineDir.y;
-
-        System.out.println(trampolineDir);
-        System.out.println(trampolineForceX);
-        System.out.println(trampolineForceY);
-
+        float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 3f;
+        trampolineForceX = magnitude * trampolineDir.x / adjust;
+        trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
@@ -398,17 +399,19 @@ public class Person extends CapsuleObstacle {
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
         }
+        float vertical = onString ? DUDE_JUMP / 2.5f : DUDE_JUMP;
 
         forceCache.set(getMovement(), 0);
         body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {
-            forceCache.set(0, DUDE_JUMP);
+            forceCache.set(0, vertical);
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
 
         if (isTrampolining) {
+            calculateTrampolineForce();
             forceCache.set(trampolineForceX, trampolineForceY);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
