@@ -47,7 +47,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The maximum character speed
      */
-    private static final float DUDE_MAXSPEED = 5.0f;
+    private static final float DUDE_MAXSPEED = 4.0f;
     /**
      * The impulse for the character jump
      */
@@ -125,6 +125,9 @@ public class Person extends CapsuleObstacle {
     private boolean canCollect;
     private int closestItemID;
     private Person target;
+    private Vector2 trampolineDir;
+    private float trampolineForceX;
+    private float trampolineForceY;
     private ArrayList<String> inventory;
 
     /**
@@ -137,6 +140,9 @@ public class Person extends CapsuleObstacle {
      */
     private Vector2 forceCache = new Vector2();
     private Joint swingJoint;
+    private Vector2 temp = new Vector2();
+
+    private boolean onString = false;
 
     /**
      * Returns left/right movement of this character.
@@ -175,7 +181,6 @@ public class Person extends CapsuleObstacle {
 
     public void addItem(String s) {
         inventory.add(s);
-        System.out.print(s);
     }
 
     /**
@@ -254,8 +259,12 @@ public class Person extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
-    public void setIsTrampolining(boolean t) {
-        isTrampolining = t;
+    public void setOnString(boolean onString) {
+        this.onString = onString;
+    }
+
+    public void setIsTrampolining(boolean isTrampolining) {
+        this.isTrampolining = isTrampolining;
     }
 
     /**
@@ -286,6 +295,7 @@ public class Person extends CapsuleObstacle {
         setDensity(DUDE_DENSITY);
         setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
+        trampolineDir = new Vector2();
 
         // Gameplay attributes
         isGrounded = false;
@@ -301,6 +311,23 @@ public class Person extends CapsuleObstacle {
 
     public boolean isAttached() {
         return target != null;
+    }
+
+    public void setTrampolineDir(Vector2 v) {
+        if (isTrampolining)
+            return;
+        trampolineDir.set(v.x, v.y);
+        temp.set(-getLinearVelocity().x, -getLinearVelocity().y);
+
+    }
+
+    public void calculateTrampolineForce() {
+        float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
+        if (magnitude < 3)
+            return;
+        float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 3f;
+        trampolineForceX = magnitude * trampolineDir.x / adjust;
+        trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
 
     /**
@@ -375,21 +402,26 @@ public class Person extends CapsuleObstacle {
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
         }
+        float vertical = DUDE_JUMP;
+
+        if (isTrampolining) {
+            vertical = DUDE_JUMP / 2.5f;
+            calculateTrampolineForce();
+            forceCache.set(trampolineForceX, trampolineForceY);
+            body.applyLinearImpulse(forceCache, getPosition(), true);
+            isTrampolining = false;
+        }
 
         forceCache.set(getMovement(), 0);
         body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {
-            forceCache.set(0, DUDE_JUMP);
+            forceCache.set(0, vertical);
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
 
-        if (isTrampolining) {
-            forceCache.set(0, body.getLinearVelocity().y / 6.7f);
-            body.applyLinearImpulse(forceCache, getPosition(), true);
-            isTrampolining = false;
-        }
+
 
     }
 

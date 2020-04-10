@@ -68,6 +68,8 @@ public class Rope extends ComplexObstacle {
 
     Vector2[] contPoints;
 
+    Vector2 approxNorm;
+
     private final int K = 100;
 
     private Vector2[] POINTS = new Vector2[K];
@@ -99,6 +101,11 @@ public class Rope extends ComplexObstacle {
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
+        float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+        float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
+
+        approxNorm = new Vector2(-dy, dx);
+        approxNorm.nor();
         setCurrentSplineCurve();
     }
 
@@ -172,6 +179,11 @@ public class Rope extends ComplexObstacle {
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
+        float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+        float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
+
+        approxNorm = new Vector2(-dy, dx);
+        approxNorm.nor();
         setCurrentSplineCurve();
     }
 
@@ -372,7 +384,21 @@ public class Rope extends ComplexObstacle {
     public void draw(GameCanvas canvas) {
         // Delegate to components
         setCurrentSplineCurve();
+        float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+        float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
+        approxNorm.set(-dy, dx);
+        approxNorm.nor();
+        setNorms();
         canvas.drawCatmullRom(splineCurve, K, POINTS);
+    }
+
+    private void setNorms() {
+        for (WheelObstacle b : upperLayer) {
+            ((Blob) b).setNorm(approxNorm);
+        }
+        for (WheelObstacle b : lowerLayer) {
+            ((Blob) b).setNorm(approxNorm);
+        }
     }
 
     /**

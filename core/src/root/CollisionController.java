@@ -16,17 +16,12 @@ public class CollisionController implements ContactListener {
      */
     private ObjectSet<Fixture> sensorFixtures;
     private Person player;
-
-    private float startTime;
-
-    private boolean startContact;
     private Vector2 trampolineForce;
 
 
     public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
         this.player = player;
-        this.startContact = false;
         this.trampolineForce = new Vector2();
     }
 
@@ -75,15 +70,22 @@ public class CollisionController implements ContactListener {
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
-                if (!startContact) {
-                    startTime = System.currentTimeMillis() * 0.001f;
-                    startContact = true;
-                }
+                Vector2 norm = ((Blob) bd2).getNorm();
+                player.setTrampolineDir(norm);
+                player.setOnString(true);
+//                player.calculateTrampolineForce();
+
+
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
+                Vector2 norm = ((Blob) bd2).getNorm();
+                player.setTrampolineDir(norm);
+                player.setOnString(true);
+//                player.calculateTrampolineForce();
+
             }
 
             if (bd1 == player && ("item_sensor").equals(fd2)) {
@@ -131,9 +133,7 @@ public class CollisionController implements ContactListener {
         if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) ||
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
-            startContact = false;
             player.setIsTrampolining(true);
-
         }
 
         if ((player.getSensorName().equals(fd2) && player != bd1) ||
