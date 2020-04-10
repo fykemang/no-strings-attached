@@ -141,7 +141,7 @@ public class Rope extends ComplexObstacle {
             spacing = 0;
         } else {
             spacing = length - nLinks * linkSize;
-            spacing /= (nLinks - 1);;
+            spacing /= (nLinks - 1);
         }
 
         blobSize.x = linkSize;
@@ -392,12 +392,12 @@ public class Rope extends ComplexObstacle {
         canvas.drawCatmullRom(splineCurve, K, POINTS);
     }
 
-    private void setNorms(){
-        for (WheelObstacle b : upperLayer){
-            ((Blob)b).setNorm(approxNorm);
+    private void setNorms() {
+        for (WheelObstacle b : upperLayer) {
+            ((Blob) b).setNorm(approxNorm);
         }
-        for (WheelObstacle b : lowerLayer){
-            ((Blob)b).setNorm(approxNorm);
+        for (WheelObstacle b : lowerLayer) {
+            ((Blob) b).setNorm(approxNorm);
         }
     }
 

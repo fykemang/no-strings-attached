@@ -33,13 +33,14 @@ public class Blob extends WheelObstacle {
 
     }
 
-    public void setNorm(Vector2 n){
+    public void setNorm(Vector2 n) {
         norm.set(n);
     }
 
-    public Vector2 getNorm(){
+    public Vector2 getNorm() {
         return norm;
     }
+
     public int getPlankParentID() {
         return id;
     }

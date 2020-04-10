@@ -143,6 +143,7 @@ public class Person extends CapsuleObstacle {
     private Vector2 temp = new Vector2();
 
     private boolean onString = false;
+
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -258,9 +259,10 @@ public class Person extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
-    public void setOnString(boolean b){
+    public void setOnString(boolean b) {
         onString = b;
     }
+
     public void setIsTrampolining(boolean t) {
         isTrampolining = t;
     }
@@ -311,7 +313,7 @@ public class Person extends CapsuleObstacle {
         return target != null;
     }
 
-    public void setTrampolineDir(Vector2 v){
+    public void setTrampolineDir(Vector2 v) {
         if (isTrampolining)
             return;
         trampolineDir.set(v.x, v.y);
@@ -319,14 +321,15 @@ public class Person extends CapsuleObstacle {
 
     }
 
-    public void calculateTrampolineForce(){
+    public void calculateTrampolineForce() {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
-        if(magnitude < 3)
+        if (magnitude < 3)
             return;
         float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 3f;
         trampolineForceX = magnitude * trampolineDir.x / adjust;
         trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
+
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
      * <p>
