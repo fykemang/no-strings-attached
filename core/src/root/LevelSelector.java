@@ -31,6 +31,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private static final String SUBURB_FILE = "shared/suburbs.png";
     private static final String FOREST_FILE = "shared/forest.png";
     private static final String MOUNTAIN_FILE = "shared/mountains.png";
+    private static final String SELECT_FILE = "shared/selector.png";
     private AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
@@ -41,7 +42,10 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
     private Texture suburb;
     private Texture forest;
     private Texture mountain;
+    private Texture selector;
     private themes theme = themes.none;
+    private int city_level = 4;
+    private int suburb_level = 9;
     private boolean ready = false;
     int city_l = 200;int city_r = 600;int city_d = 563;int city_u = 700;
     int sub_l = 660;int sub_r = 950;int sub_d = 550;int sub_u = 750;
@@ -62,6 +66,7 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
         suburb = new Texture(SUBURB_FILE);
         forest = new Texture(FOREST_FILE);
         mountain = new Texture(MOUNTAIN_FILE);
+        selector = new Texture(SELECT_FILE);
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
@@ -114,13 +119,13 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        for (int i = 0; i < buttonPos.size(); i++){
-            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
-            System.out.println(screenP.dst(buttonPos.get(0)));
-            if (screenP.dst(buttonPos.get(i)) < 50) {
-                level = i+1;
-            }
-        }
+//        for (int i = 0; i < buttonPos.size(); i++){
+//            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
+//            System.out.println(screenP.dst(buttonPos.get(0)));
+//            if (screenP.dst(buttonPos.get(i)) < 50) {
+//                level = i+1;
+//            }
+//        }
         if (level != -1 && level < levels.size()+1){
             ready = true;
         }
@@ -140,20 +145,43 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+
         int screeny = canvas.getHeight() - screenY;
+        int start = 0; int end = 0;
         if (screenX > city_l && screenX < city_r && screeny>city_d && screeny < city_u) {
             theme = themes.city;
-            return true;
+            start = 0; end = city_level;
         }else if (screenX > sub_l && screenX < sub_r && screeny>sub_d && screeny < sub_u){
             theme = themes.suburb;
+            start = city_level; end = suburb_level;
         }else if (screenX > for_l && screenX < for_r && screeny>for_d && screeny < for_u){
             theme = themes.forest;
+            start = suburb_level; end = 14;
         }else if  (screenX > mon_l && screenX < mon_r && screeny>mon_d && screeny < mon_u){
+            start = 15; end = 21;
             theme = themes.mountain;
         }
         else{ theme = themes.none; }
-
-            return true;
+        System.out.println(screenX + "y "+ (canvas.getHeight()- screenY));
+        boolean select = false;
+        for (int i = 0; i < levels.size(); i++){
+            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
+            if (screenP.dst(buttonPos.get(i)) < 50) {
+                select = true;
+                level = i+1;
+            }
+        }
+        if (!select) level = -1;
+//        for (int i = 0; i < 2; i++){
+//            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
+//            if (screenP.dst(buttonPos.get(i)) < 50) {
+//                level = i+1;
+//            }else {
+//                level = -1;
+//            }
+//           }
+        System.out.println(level);
+        return true;
     }
 
     @Override
@@ -292,11 +320,16 @@ public class LevelSelector  implements Screen, InputProcessor, ControllerListene
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40;
+        parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);
         for (int i = 0; i< buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
             canvas.drawText(i+1+"", font, button.x, button.y);
+        }
+
+        if (level > 0 && level < levels.size()+1){
+            canvas.draw(selector, buttonPos.get(level-1).x - selector.getWidth()/2+5,
+                    buttonPos.get(level-1).y-selector.getHeight()/2-15);
         }
 
        canvas.end();
