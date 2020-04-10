@@ -8,7 +8,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -129,6 +129,7 @@ public class Person extends CapsuleObstacle {
     private float trampolineForceX;
     private float trampolineForceY;
     private ArrayList<String> inventory;
+    private boolean isAttached;
 
     /**
      * Which direction is the character facing
@@ -303,14 +304,14 @@ public class Person extends CapsuleObstacle {
         isWalking = false;
         isTrampolining = false;
         this.sensorName = sensorName;
-        this.inventory = new ArrayList<String>();
-
+        this.inventory = new ArrayList<>();
+        isAttached = false;
         jumpCooldown = 0;
         setName(name);
     }
 
     public boolean isAttached() {
-        return target != null;
+        return isAttached || this.swingJoint != null;
     }
 
     public void setTrampolineDir(Vector2 v) {
@@ -359,7 +360,8 @@ public class Person extends CapsuleObstacle {
         sensorShape = new PolygonShape();
         sensorShape.setAsBox(DUDE_SSHRINK * getWidth() / 2.0f, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
-
+        sensorDef.filter.maskBits = getFilterData().maskBits;
+        sensorDef.filter.categoryBits = getFilterData().categoryBits;
         sensorFixture = body.createFixture(sensorDef);
         sensorFixture.setUserData(getSensorName());
 
@@ -372,14 +374,6 @@ public class Person extends CapsuleObstacle {
 
     public int getClosestCoupleID() {
         return this.closestCoupleID;
-    }
-
-    public void setCanCollect(boolean b) {
-        this.canCollect = b;
-    }
-
-    public boolean getCanCollect() {
-        return this.canCollect;
     }
 
     /**
@@ -539,5 +533,9 @@ public class Person extends CapsuleObstacle {
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+    }
+
+    public void setAttached(boolean isAttached) {
+        this.isAttached = isAttached;
     }
 }

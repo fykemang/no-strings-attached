@@ -885,6 +885,18 @@ public abstract class ComplexObstacle extends Obstacle {
         }
     }
 
+    public void setFilterDataAll(Filter filter) {
+        for (Obstacle obs : getBodies()) {
+            obs.setFilterData(filter);
+        }
+    }
+
+    public void setLinearVelocityAll(Vector2 velocity) {
+        for (Obstacle obs : getBodies()) {
+            obs.setLinearVelocity(velocity);
+        }
+    }
+
     /**
      * Resets this body to use the mass computed from the its shape and density
      * <p>

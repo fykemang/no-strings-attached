@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import obstacle.PolygonObstacle;

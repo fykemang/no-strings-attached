@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.math.Vector2;
 import obstacle.WheelObstacle;
@@ -8,8 +8,8 @@ public class Blob extends WheelObstacle {
     private int id;
     private Vector2 norm;
 
-    public Blob(float x, float y, float r, int id) {
-        super(x, y, r);
+    public Blob(float x, float y, float radius, int id) {
+        super(x, y, radius);
         setName(BLOB_NAME);
         this.id = id;
         norm = new Vector2();

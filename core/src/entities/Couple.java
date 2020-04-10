@@ -1,11 +1,13 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.ComplexObstacle;
+import util.CollisionFilterConstants;
 import util.FilmStrip;
 
 /**
@@ -38,11 +40,15 @@ public class Couple extends ComplexObstacle {
         this.trampolineTexture = trampolineTexture;
         this.l = createAvatar(x1, y1, avatar1);
         this.r = createAvatar(x2, y2, avatar2);
-        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
+        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id, 0.2f);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
         this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
         this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f), false);
+        Filter trampolineFilter = new Filter();
+        trampolineFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC_ROPE.getID();
+        trampolineFilter.maskBits = CollisionFilterConstants.MASK_NPC_ROPE.getID();
+        trampoline.setFilterDataAll(trampolineFilter);
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
@@ -62,6 +68,10 @@ public class Couple extends ComplexObstacle {
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
         avatar.setTexture(t);
+        Filter avatarFilter = new Filter();
+        avatarFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC.getID();
+        avatarFilter.maskBits = CollisionFilterConstants.MASK_NPC.getID();
+        avatar.setFilterData(avatarFilter);
         return avatar;
     }
 

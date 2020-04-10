@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
@@ -28,11 +29,8 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import obstacle.Obstacle;
-import platform.*;
-import util.FilmStrip;
-import util.PooledList;
-import util.ScreenListener;
-import util.SoundController;
+import entities.*;
+import util.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -189,13 +187,12 @@ public class GameMode implements Screen {
     /**
      * All the objects in the world.
      */
-    protected PooledList<Obstacle> objects = new PooledList<Obstacle>();
+    protected PooledList<Obstacle> objects = new PooledList<>();
 
-    protected PooledList<Obstacle> itemObjects = new PooledList<Obstacle>();
     /**
      * Queue for adding objects
      */
-    protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
+    protected PooledList<Obstacle> addQueue = new PooledList<>();
     /**
      * The Box2D world
      */
@@ -554,9 +551,6 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        float dWidth;
-        float dHeight;
-
         Level testLevel = levels.get(0);
 
         Vector2 playerPos = testLevel.getPlayerPos();
@@ -565,10 +559,13 @@ public class GameMode implements Screen {
         List<float[]> items = testLevel.getItems();
 
         // Create main dude
-        dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
-        dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
-
+        float dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
+        float dHeight = playerIdleAnimation.getRegionHeight() / scale.y;
         player = new Person(playerPos.x, playerPos.y, dWidth, dHeight, "player", "playerSensor");
+        Filter playerFilter = new Filter();
+        playerFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER.getID();
+        playerFilter.maskBits = CollisionFilterConstants.MASK_PLAYER.getID();
+        player.setFilterData(playerFilter);
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         addObject(player);
@@ -586,7 +583,6 @@ public class GameMode implements Screen {
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
         }
-
     }
 
     public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
@@ -714,10 +710,6 @@ public class GameMode implements Screen {
         player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
 
-//        if (player.isJumping()) {
-//            SoundController.getInstance().play(JUMP_FILE, JUMP_FILE, false, EFFECT_VOLUME);
-//        }
-
         if (player.isRising()) {
             player.setTexture(playerJumpTexture);
         } else if (player.isFalling()) {
@@ -727,7 +719,6 @@ public class GameMode implements Screen {
         } else if (player.isGrounded()) {
             player.setTexture(playerIdleAnimation);
         }
-
 
         if (player.isShooting()) {
             Vector2 playerPosition = player.getPosition();
@@ -755,24 +746,33 @@ public class GameMode implements Screen {
             }
         }
 
-        if (player.getTarget() != null && player.getSwingJoint() == null) {
+        if (player.getTarget() != null && !player.isAttached()) {
             Vector2 playerPos = player.getPosition();
             Vector2 targetPos = player.getTarget().getPosition();
-            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1);
+            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1, 0.17f);
+            playerRope.setLinearVelocityAll(player.getLinearVelocity());
+            Filter playerRopeFilter = new Filter();
+            playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
+            playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+            playerRope.setFilterDataAll(playerRopeFilter);
             playerRope.setName("player_rope");
             playerRope.setDrawScale(scale);
             addObject(playerRope);
+
             revoluteJointDef.bodyB = player.getBody();
             revoluteJointDef.bodyA = playerRope.getBody();
+            revoluteJointDef.collideConnected = false;
             world.createJoint(revoluteJointDef);
 
             revoluteJointDef.bodyB = playerRope.getLastLink();
             revoluteJointDef.bodyA = player.getTarget().getBody();
+            revoluteJointDef.collideConnected = false;
             world.createJoint(revoluteJointDef);
 
             ropeJointDef.bodyA = player.getBody();
             ropeJointDef.bodyB = player.getTarget().getBody();
-            ropeJointDef.maxLength = playerRope.getLength();
+            ropeJointDef.maxLength = playerRope.getLength() + 4f;
+            ropeJointDef.collideConnected = true;
             Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
         }
@@ -1062,13 +1062,6 @@ public class GameMode implements Screen {
      */
     protected void addObject(Obstacle obj) {
         assert inBounds(obj) : "Object is not in bounds";
-        objects.add(obj);
-        obj.activatePhysics(world);
-    }
-
-    protected void addItem(Obstacle obj) {
-        assert inBounds(obj) : "Object is not in bounds";
-        itemObjects.add(obj);
         objects.add(obj);
         obj.activatePhysics(world);
     }

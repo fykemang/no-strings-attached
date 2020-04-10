@@ -440,7 +440,9 @@ public class CapsuleObstacle extends SimpleObstacle {
         // Create the fixture
         fixture.shape = shape;
         core = body.createFixture(fixture);
-
+        fixture.filter.categoryBits = getFilterData().categoryBits;
+        fixture.filter.maskBits = getFilterData().maskBits;
+        fixture.filter.groupIndex = getFilterData().groupIndex;
         fixture.density = fixture.density / 2.0f;
         posCache.set(0, 0);
         switch (orient) {

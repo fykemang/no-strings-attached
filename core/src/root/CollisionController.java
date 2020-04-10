@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import obstacle.Obstacle;
-import platform.Blob;
-import platform.Person;
+import entities.Blob;
+import entities.Person;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World

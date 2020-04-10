@@ -5,13 +5,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import obstacle.Obstacle;
-import platform.Person;
+import entities.Person;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Callback to handle if the player needs to attach to an NPC
  */
 public class RopeQueryCallback implements QueryCallback {
     private Person player;
