@@ -134,8 +134,6 @@ public class CollisionController implements ContactListener {
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
             player.setCanCut(false);
             player.setIsTrampolining(true);
-            player.setOnString(false);
-
         }
 
         if ((player.getSensorName().equals(fd2) && player != bd1) ||

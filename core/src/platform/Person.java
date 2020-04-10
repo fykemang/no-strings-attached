@@ -259,12 +259,12 @@ public class Person extends CapsuleObstacle {
         return DUDE_MAXSPEED;
     }
 
-    public void setOnString(boolean b) {
-        onString = b;
+    public void setOnString(boolean onString) {
+        this.onString = onString;
     }
 
-    public void setIsTrampolining(boolean t) {
-        isTrampolining = t;
+    public void setIsTrampolining(boolean isTrampolining) {
+        this.isTrampolining = isTrampolining;
     }
 
     /**
@@ -402,7 +402,15 @@ public class Person extends CapsuleObstacle {
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
         }
-        float vertical = onString ? DUDE_JUMP / 2.5f : DUDE_JUMP;
+        float vertical = DUDE_JUMP;
+
+        if (isTrampolining) {
+            vertical = DUDE_JUMP / 2.5f;
+            calculateTrampolineForce();
+            forceCache.set(trampolineForceX, trampolineForceY);
+            body.applyLinearImpulse(forceCache, getPosition(), true);
+            isTrampolining = false;
+        }
 
         forceCache.set(getMovement(), 0);
         body.applyForce(forceCache, getPosition(), true);
@@ -413,12 +421,7 @@ public class Person extends CapsuleObstacle {
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
 
-        if (isTrampolining) {
-            calculateTrampolineForce();
-            forceCache.set(trampolineForceX, trampolineForceY);
-            body.applyLinearImpulse(forceCache, getPosition(), true);
-            isTrampolining = false;
-        }
+
 
     }
 
@@ -450,7 +453,7 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
             ((FilmStrip) texture).setNextFrame();
         }

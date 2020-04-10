@@ -10,6 +10,7 @@
  */
 package root;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import obstacle.Obstacle;
 import platform.*;
 import util.FilmStrip;
@@ -105,13 +107,13 @@ public class GameMode implements Screen {
 
     private static final String PLAYER_FALL = "platform/player_fall.png";
 
-    private static final String NPC_COZY = "platform/cozy.png";
+    private static final String NPC_COZY = "platform/cozy_idle.png";
 
     private static final String NPC_CHEESE = "platform/cheese.png";
 
-    private static final String NPC_NERVY = "platform/nervy.png";
+    private static final String NPC_NERVY = "platform/nervy_idle.png";
 
-    private static final String NPC_SPIKY = "platform/spiky.png";
+    private static final String NPC_SPIKY = "platform/spiky_idle.png";
 
     private static final String NPC_HEYO = "platform/heyo.png";
 
@@ -401,14 +403,15 @@ public class GameMode implements Screen {
      *
      * @param manager Reference to global asset manager.
      */
-    public void loadContent(AssetManager manager) {
+    public void loadContent(AssetManager manager, String file) {
         if (platformAssetState != AssetState.LOADING) {
             return;
         }
+        Json json = new Json();
+        Level level = json.fromJson(Level.class, Gdx.files.internal(file));
+        levels.add(level);
+//        levels.add(manager.get(file, Level.class));
 
-        if (manager.isLoaded(TEST_LEVEL)) {
-            levels.add(manager.get(TEST_LEVEL, Level.class));
-        }
 
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
@@ -422,8 +425,8 @@ public class GameMode implements Screen {
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
         sunTexture = createTexture(manager, BKG_SUN, false);
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
-        npcCozyTexture = createTexture(manager, NPC_COZY, false);
-        npcNervyTexture = createTexture(manager, NPC_NERVY, false);
+        npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
+        npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
@@ -431,7 +434,7 @@ public class GameMode implements Screen {
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
@@ -837,7 +840,9 @@ public class GameMode implements Screen {
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        canvas.moveCamera(player.getX() * scale.x, player.getY() * scale.y);
+        float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+        canvas.moveCamera(xpos, ypos);
 
         canvas.begin();
         for (Obstacle obj : objects) {
