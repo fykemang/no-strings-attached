@@ -313,12 +313,13 @@ public class Person extends CapsuleObstacle {
     }
 
     public void calculateTrampolineForce(){
+        if(isTrampolining)
+            return;
         temp.set(-getLinearVelocity().x, -getLinearVelocity().y);
         System.out.println("velocity"+temp);
-
-
-        trampolineForceY = temp.dot(trampolineDir);
-        trampolineForceX = trampolineForceY / trampolineDir.y * trampolineDir.x;
+        float magnitude = temp.dot(trampolineDir);
+        trampolineForceX = magnitude * trampolineDir.x;
+        trampolineForceY = magnitude * trampolineDir.y;
 
         System.out.println(trampolineDir);
         System.out.println(trampolineForceX);
