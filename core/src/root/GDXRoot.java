@@ -145,7 +145,7 @@ public class GDXRoot extends Game implements ScreenListener {
             loading.dispose();
             loading = null;
         } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME) {
-            controller.loadContent(manager, selector.getMetaData().filePath);
+            controller.loadContent(manager, selector.getMetaData().getFilePath());
             controller.setScreenListener(this);
             controller.setCanvas(canvas);
             controller.reset();
