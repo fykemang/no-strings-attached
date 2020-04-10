@@ -133,9 +133,6 @@ public class CollisionController implements ContactListener {
             player.setCanCut(false);
             startContact = false;
             player.setIsTrampolining(true);
-//            float k = ((Blob)bd2).getK();
-//                    float ax = player.;
-//                    accel.set();
 
         }
 

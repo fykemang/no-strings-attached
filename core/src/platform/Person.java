@@ -421,7 +421,7 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (isGrounded() && getVX() != 0 && texture instanceof FilmStrip && frameCount % frameRate == 0) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
             ((FilmStrip) texture).setNextFrame();
         }

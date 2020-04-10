@@ -107,13 +107,13 @@ public class GameMode implements Screen {
 
     private static final String PLAYER_FALL = "platform/player_fall.png";
 
-    private static final String NPC_COZY = "platform/cozy.png";
+    private static final String NPC_COZY = "platform/cozy_idle.png";
 
     private static final String NPC_CHEESE = "platform/cheese.png";
 
-    private static final String NPC_NERVY = "platform/nervy.png";
+    private static final String NPC_NERVY = "platform/nervy_idle.png";
 
-    private static final String NPC_SPIKY = "platform/spiky.png";
+    private static final String NPC_SPIKY = "platform/spiky_idle.png";
 
     private static final String NPC_HEYO = "platform/heyo.png";
 
@@ -425,8 +425,8 @@ public class GameMode implements Screen {
         cloudTexture = createTexture(manager, BKG_CLOUD, false);
         sunTexture = createTexture(manager, BKG_SUN, false);
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
-        npcCozyTexture = createTexture(manager, NPC_COZY, false);
-        npcNervyTexture = createTexture(manager, NPC_NERVY, false);
+        npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
+        npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
@@ -434,7 +434,7 @@ public class GameMode implements Screen {
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcSpikyTexture = createTexture(manager, NPC_SPIKY, false);
+        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
