@@ -8,9 +8,9 @@ import root.GameCanvas;
 
 public class Item extends CapsuleObstacle {
     // Amount to shrink item by for fixture
-    private static final float ITEM_VSHRINK = 0.005f;
-    private static final float ITEM_HSHRINK = 0.005f;
-    private static final float ITEM_SENSOR_SCALE = 0.08f;
+    private static final float ITEM_VSHRINK = 0.01f;
+    private static final float ITEM_HSHRINK = 0.01f;
+    private static final float ITEM_SENSOR_SCALE = 0.09f;
     private String sensorName;
     private CircleShape sensorShape;
     private FixtureDef sensorDef;
