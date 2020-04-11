@@ -20,7 +20,6 @@ public class Stone extends PolygonObstacle {
 
     @Override
     public void draw(GameCanvas canvas) {
-        System.out.println(getX());
         float xoffset = getWidth() * drawScale.x / 20;
         float yoffset = getHeight() * drawScale.y / 20;
         float firstx = getX() * drawScale.x - xoffset;
@@ -29,7 +28,6 @@ public class Stone extends PolygonObstacle {
         float lasty = getY() * drawScale.y + getHeight() * drawScale.y - texture.getRegionHeight() + yoffset;
         float cloudsp = 40f;
         if (region != null) {
-//            System.out.println("fst: " + firsty + "last " + lasty);
             if (getWidth() * drawScale.x < texture.getRegionWidth() * 1.5) {
                 canvas.draw(texture, Color.WHITE, 0, 0, firstx, firsty, getAngle(), 1, 1);
                 canvas.draw(texture, Color.WHITE, 0, 0,
