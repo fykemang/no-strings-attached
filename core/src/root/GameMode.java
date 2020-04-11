@@ -118,8 +118,9 @@ public class GameMode implements Screen {
     private static final String NPC_WELCOME = "platform/welcome.png";
 
     private static final String NEEDLE = "platform/needles.png";
-    private static final String BUTTON = "platform/button.png";
-    private static final String YARN = "platform/yarn.png";
+    private static final String YARN = "platform/skein.png";
+//    private static final String BUTTON = "platform/button.png";
+//    private static final String YARN = "platform/yarn.png";
 
     /**
      * The texture file for the spinning barrier
@@ -336,8 +337,8 @@ public class GameMode implements Screen {
 
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
-        manager.load(BUTTON, Texture.class);
-        assets.add(BUTTON);
+//        manager.load(BUTTON, Texture.class);
+//        assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
 
@@ -424,7 +425,7 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
-        buttonTexture = createTexture(manager, BUTTON, false);
+//        buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
         items.add(buttonTexture);
