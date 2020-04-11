@@ -289,6 +289,7 @@ public class GameMode implements Screen {
      */
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
+        items = new ArrayList<>();
         world = new World(gravity, false);
         rand = new Random();
         this.bounds = new Rectangle(bounds);
@@ -428,7 +429,7 @@ public class GameMode implements Screen {
 //        buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-        items.add(buttonTexture);
+//        items.add(buttonTexture);
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
@@ -616,6 +617,7 @@ public class GameMode implements Screen {
      * @return physical dimensions of the model in world units
      */
     private Vector2 getScaledDimensions(TextureRegion texture) {
+//        System.out.print(texture);
         float dWidth = texture.getRegionWidth() / scale.x;
         float dHeight = texture.getRegionHeight() / scale.y;
         return new Vector2(dWidth, dHeight);
