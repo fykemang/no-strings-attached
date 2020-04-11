@@ -41,9 +41,9 @@ public class Person extends CapsuleObstacle {
      */
     private static final float DUDE_DAMPING = 20.0f;
     /**
-     * The dude is a slippery one
+     * The dude is not a slippery one
      */
-    private static final float DUDE_FRICTION = 0.0f;
+    private static final float DUDE_FRICTION = 2.0f;
     /**
      * The maximum character speed
      */
@@ -99,6 +99,8 @@ public class Person extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
+
+    private boolean isAlive = true;
 
     private boolean isTrampolining;
     /**
@@ -508,6 +510,14 @@ public class Person extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
+    }
+
+    public  void die(){
+            isAlive = false;
+    }
+
+    public boolean isAlive(){
+        return isAlive;
     }
 
 
