@@ -155,6 +155,7 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
+    private static final String SPIKE_FILE = "shared/spikes.png";
     private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
@@ -175,6 +176,7 @@ public class GameMode implements Screen {
      * The texture for walls and platforms
      */
     protected TextureRegion earthTile;
+    protected TextureRegion spikeTile;
     protected TextureRegion smEarthTile;
     /**
      * The font for giving messages to the player
@@ -349,6 +351,8 @@ public class GameMode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
+        manager.load(SPIKE_FILE, Texture.class);
+        assets.add(SPIKE_FILE);
         manager.load(SM_CLOUD_FILE, Texture.class);
         assets.add(SM_CLOUD_FILE);
         manager.load(BKG_CLOUD, Texture.class);
@@ -446,6 +450,7 @@ public class GameMode implements Screen {
         sounds.allocate(manager, POP_FILE);
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
             earthTile = createTexture(manager, EARTH_FILE, false);
+            spikeTile = createTexture(manager, SPIKE_FILE, false);
             smEarthTile = createTexture(manager, SM_CLOUD_FILE, false);
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
@@ -555,6 +560,7 @@ public class GameMode implements Screen {
 
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
+        List<Tile> spikes = testLevel.getSpikes();
         List<float[]> couples = testLevel.getCouples();
         List<float[]> items = testLevel.getItems();
 
@@ -581,7 +587,11 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getX(), "tile" + i, 1f, earthTile);
+        }
+
+        for (int i = 0; i < spikes.size(); i++) {
+            createSpike(spikes.get(i).getCorners(),spikes.get(i).getX() , spikes.get(i).getY(), "spike" + i, 1f, spikeTile);
         }
     }
 
@@ -595,6 +605,18 @@ public class GameMode implements Screen {
         tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
+    }
+
+    public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
+        Spikes spike  = new Spikes(points, x, y, sc);
+        spike.setBodyType(BodyDef.BodyType.StaticBody);
+        spike.setDensity(BASIC_DENSITY);
+        spike.setFriction(BASIC_FRICTION);
+        spike.setRestitution(BASIC_RESTITUTION);
+        spike.setDrawScale(scale);
+        spike.setTexture(tex);
+        spike.setName(name);
+        addObject(spike);
     }
 
     public void createItem(float x, float y, int id) {

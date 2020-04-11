@@ -20,6 +20,7 @@ public class Stone extends PolygonObstacle {
 
     @Override
     public void draw(GameCanvas canvas) {
+        System.out.println(getX());
         float xoffset = getWidth() * drawScale.x / 20;
         float yoffset = getHeight() * drawScale.y / 20;
         float firstx = getX() * drawScale.x - xoffset;

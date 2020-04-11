@@ -5,7 +5,14 @@
   },
   "tiles": [
   ],
-
+  "spikes": [
+    {
+      "x": 4,
+      "y": 5,
+      "width": 8,
+      "height": 1
+    }
+  ],
   "couples": [
     {
       "left_x": 3.0,
