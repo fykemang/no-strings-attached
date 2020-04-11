@@ -23,7 +23,8 @@ public class Spikes extends PolygonObstacle {
        int num = (int) (getWidth()*drawScale.x/texture.getRegionWidth());
        num = num==0?1:num;
        for (int i = 0; i<num; i++)
-          canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x+ i*texture.getRegionWidth(), getY() * drawScale.y, getAngle(), 1, 1);
+          canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x+ i*texture.getRegionWidth(),
+                  getY() * drawScale.y - texture.getRegionHeight()/2, getAngle(), 1, 1);
     }
 }
 
