@@ -313,7 +313,7 @@ public class Person extends CapsuleObstacle {
     }
 
     public boolean isAttached() {
-        return isAttached || this.swingJoint != null;
+        return isAttached;
     }
 
     public void setTrampolineDir(Vector2 v) {
@@ -450,7 +450,9 @@ public class Person extends CapsuleObstacle {
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
-            ((FilmStrip) texture).setNextFrame();
+            if (!((FilmStrip) texture).getShouldFreeze()) {
+                ((FilmStrip) texture).setNextFrame();
+            }
         }
 
         super.update(dt);
@@ -547,4 +549,5 @@ public class Person extends CapsuleObstacle {
     public void setAttached(boolean isAttached) {
         this.isAttached = isAttached;
     }
+
 }

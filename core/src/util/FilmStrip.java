@@ -61,6 +61,12 @@ public class FilmStrip extends TextureRegion {
     private int frame;
 
     /**
+     * Whether or whether not to freeze the animation
+     * at the current frame
+     */
+    private boolean freeze;
+
+    /**
      * Creates a new filmstrip from the given texture.
      *
      * @param texture The texture image to use
@@ -134,10 +140,17 @@ public class FilmStrip extends TextureRegion {
 
     public void setNextFrame() {
         frame = frame + 1 >= size ? 0 : frame + 1;
-
         int x = (frame % cols) * rWidth;
         int y = (frame / cols) * rheight;
         setRegion(x, y, rWidth, rheight);
+    }
+
+    public void setShouldFreeze(boolean freeze) {
+        this.freeze = freeze;
+    }
+
+    public boolean getShouldFreeze() {
+        return freeze;
     }
 
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import entities.Blob;
 import entities.Person;
+import entities.Rope;
 import obstacle.Obstacle;
 
 /**
@@ -52,12 +53,12 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2.getName().equals("player_rope") && bd1 != player) {
-                if (bd1.getName().equals("npc")) {
+                Rope rope = (Rope) bd2;
+                if (bd1.getName().equals("npc") && rope.isBroken()) {
                     player.setTarget((Person) bd1);
                 }
                 bd2.markRemoved(true);
             }
-
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
