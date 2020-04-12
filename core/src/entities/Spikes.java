@@ -1,10 +1,8 @@
 package entities;
 
-        import com.badlogic.gdx.graphics.Color;
-        import com.badlogic.gdx.utils.Json;
-        import com.badlogic.gdx.utils.JsonValue;
-        import obstacle.PolygonObstacle;
-        import root.GameCanvas;
+import com.badlogic.gdx.graphics.Color;
+import obstacle.PolygonObstacle;
+import root.GameCanvas;
 
 public class Spikes extends PolygonObstacle {
 
@@ -19,12 +17,11 @@ public class Spikes extends PolygonObstacle {
 
     @Override
     public void draw(GameCanvas canvas) {
-
-       int num = (int) (getWidth()*drawScale.x/texture.getRegionWidth());
-       num = num==0?1:num;
-       for (int i = 0; i<num; i++)
-          canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x+ i*texture.getRegionWidth(),
-                  getY() * drawScale.y - texture.getRegionHeight()/2, getAngle(), 1, 1);
+        int num = (int) (getWidth() * drawScale.x / texture.getRegionWidth());
+        num = num == 0 ? 1 : num;
+        for (int i = 0; i < num; i++)
+            canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * texture.getRegionWidth(),
+                    getY() * drawScale.y - texture.getRegionHeight() / 2, getAngle(), 1, 1);
     }
 }
 

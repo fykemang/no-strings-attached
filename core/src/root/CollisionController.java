@@ -3,9 +3,9 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import obstacle.Obstacle;
 import entities.Blob;
 import entities.Person;
+import obstacle.Obstacle;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -59,14 +59,6 @@ public class CollisionController implements ContactListener {
             }
 
 
-//            if (bd1 == player && fix1.getName().contains("item")) {
-//                bd2.markRemoved(true);
-//            }
-//
-//            if (bd2 == player && bd1.getName().contains("item")) {
-//                bd1.markRemoved(true);
-//            }
-
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
@@ -97,9 +89,8 @@ public class CollisionController implements ContactListener {
                 bd1.markRemoved(true);
             }
 
-            if ((bd1 == player && bd2.getName() == "spike") || (bd2 == player && bd1.getName() == "spike")){
-                System.out.print("die");
-                player.die();
+            if ((bd1 == player && bd2.getName().equals("spike")) || (bd2 == player && bd1.getName().equals("spike"))) {
+                player.kill();
             }
 
 

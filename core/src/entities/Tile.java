@@ -18,7 +18,9 @@ public class Tile implements Json.Serializable {
         return height;
     }
 
-    public float getWidth() { return width; }
+    public float getWidth() {
+        return width;
+    }
 
     public float getX() {
         return x;
@@ -43,8 +45,8 @@ public class Tile implements Json.Serializable {
         corners[0] = 0;
         corners[1] = 0;
         corners[2] = 0;
-        corners[3] =  height;
-        corners[4] =  width;
+        corners[3] = height;
+        corners[4] = width;
         corners[5] = height;
         corners[6] = width;
         corners[7] = 0;

@@ -29,8 +29,8 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import obstacle.Obstacle;
 import entities.*;
+import obstacle.Obstacle;
 import util.*;
 
 import java.util.ArrayList;
@@ -592,7 +592,7 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < spikes.size(); i++) {
-            createSpike(spikes.get(i).getCorners(),spikes.get(i).getX() , spikes.get(i).getY(), "spike", 1f, spikeTile);
+            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), "spike", 1f, spikeTile);
         }
     }
 
@@ -609,7 +609,7 @@ public class GameMode implements Screen {
     }
 
     public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
-        Spikes spike  = new Spikes(points, x, y, sc);
+        Spikes spike = new Spikes(points, x, y, sc);
         spike.setBodyType(BodyDef.BodyType.StaticBody);
         spike.setFriction(2000f);
         spike.setRestitution(BASIC_RESTITUTION);
@@ -880,12 +880,12 @@ public class GameMode implements Screen {
         }
 
 
-        if (!player.isAlive()){
+        if (!player.isAlive()) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 20;
             BitmapFont font = generator.generateFont(parameter);
-            canvas.drawText("press 'R' to restart the level", font,100, 300);
+            canvas.drawText("press 'R' to restart the level", font, 100, 300);
         }
 
         canvas.end();
