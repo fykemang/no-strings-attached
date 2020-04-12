@@ -3,9 +3,10 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import obstacle.Obstacle;
 import entities.Blob;
 import entities.Person;
+import entities.Rope;
+import obstacle.Obstacle;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -52,20 +53,12 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2.getName().equals("player_rope") && bd1 != player) {
-                if (bd1.getName().equals("npc")) {
+                Rope rope = (Rope) bd2;
+                if (bd1.getName().equals("npc") && rope.isBroken()) {
                     player.setTarget((Person) bd1);
                 }
                 bd2.markRemoved(true);
             }
-
-
-//            if (bd1 == player && fix1.getName().contains("item")) {
-//                bd2.markRemoved(true);
-//            }
-//
-//            if (bd2 == player && bd1.getName().contains("item")) {
-//                bd1.markRemoved(true);
-//            }
 
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);

@@ -4,25 +4,24 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-import obstacle.Obstacle;
 import entities.Person;
+import obstacle.Obstacle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  * Callback to handle if the player needs to attach to an NPC
  */
 public class RopeQueryCallback implements QueryCallback {
-    private Person player;
+    private final Person player;
     /**
      * Hold all npcs which we detect
      */
-    private List<Person> npcCache;
+    private final Stack<Person> npcCache;
 
     public RopeQueryCallback(Person player) {
         this.player = player;
-        npcCache = new ArrayList<>();
+        npcCache = new Stack<>();
     }
 
     @Override
@@ -31,7 +30,10 @@ public class RopeQueryCallback implements QueryCallback {
         Obstacle obstacle = (Obstacle) body.getUserData();
 
         if (obstacle.getName().equals("npc")) {
-            npcCache.add((Person) obstacle);
+            Person p = (Person) obstacle;
+            if (!p.isAttached()) {
+                npcCache.add((Person) obstacle);
+            }
         }
 
         return true;
@@ -41,19 +43,29 @@ public class RopeQueryCallback implements QueryCallback {
      * Iterate through {@code npcCache} to find
      * the target the {@code player} should latch onto
      */
-    public void selectTarget() {
+    public boolean selectTarget() {
         Vector2 playerPosition = player.getPosition();
         Person closest = null;
-        float closestDst = Float.MAX_VALUE;
-        for (Person npc : npcCache) {
-            Vector2 npcPosition = npc.getPosition();
-            boolean isPlayerFacingNpc = (playerPosition.x - npcPosition.x > 0 && !player.isFacingRight()) || (playerPosition.x - npcPosition.x < 0 && player.isFacingRight());
+
+        if (!npcCache.empty()) {
+            closest = npcCache.pop();
+            Vector2 npcPosition = closest.getPosition();
             float dst = playerPosition.dst(npcPosition);
-            if (isPlayerFacingNpc && dst < closestDst) {
-                closest = npc;
-                closestDst = dst;
+            float closestDst = dst;
+
+            while (!npcCache.empty()) {
+                Person npc = npcCache.pop();
+                npcPosition = npc.getPosition();
+                boolean isPlayerFacingNpc = (playerPosition.x - npcPosition.x > 0 && !player.isFacingRight()) || (playerPosition.x - npcPosition.x < 0 && player.isFacingRight());
+                dst = playerPosition.dst(npcPosition);
+                if (isPlayerFacingNpc && dst < closestDst) {
+                    closest = npc;
+                    closestDst = dst;
+                }
             }
         }
+
         player.setTarget(closest);
+        return closest != null;
     }
 }

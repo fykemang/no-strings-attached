@@ -28,8 +28,8 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import obstacle.Obstacle;
 import entities.*;
+import obstacle.Obstacle;
 import util.*;
 
 import java.util.ArrayList;
@@ -97,9 +97,10 @@ public class GameMode implements Screen {
 
     private static final String BKG_SKY = "platform/background_sky.png";
     /**
-     * The texture file for the player
+     * The texture file for the idle player
      */
     private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
+    private static final String PLAYER_SWING_ANIMATION = "platform/player_swing.png";
 
     private static final String PLAYER_JUMP = "platform/player_jump.png";
 
@@ -231,7 +232,7 @@ public class GameMode implements Screen {
     private TextureRegion backgroundTexture;
 
     private FilmStrip playerIdleAnimation;
-
+    private FilmStrip playerSwingAnimation;
     private FilmStrip playerWalkingAnimation;
     /**
      * Texture asset for the bullet
@@ -320,6 +321,8 @@ public class GameMode implements Screen {
         assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
+        manager.load(PLAYER_SWING_ANIMATION, Texture.class);
+        assets.add(PLAYER_SWING_ANIMATION);
 
         manager.load(NPC_CHEESE, Texture.class);
         assets.add(NPC_CHEESE);
@@ -409,7 +412,7 @@ public class GameMode implements Screen {
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
 
-
+        playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
@@ -710,7 +713,11 @@ public class GameMode implements Screen {
         player.setShooting(InputController.getInstance().didTertiary());
         player.applyForce();
 
-        if (player.isRising()) {
+        if (player.isAttached()) {
+            playerSwingAnimation.setFrame(10);
+            playerSwingAnimation.setShouldFreeze(true);
+            player.setTexture(playerSwingAnimation);
+        } else if (player.isRising()) {
             player.setTexture(playerJumpTexture);
         } else if (player.isFalling()) {
             player.setTexture(playerFallTexture);
@@ -722,15 +729,19 @@ public class GameMode implements Screen {
 
         if (player.isShooting()) {
             Vector2 playerPosition = player.getPosition();
-            world.QueryAABB(ropeQueryCallback, playerPosition.x - 5, playerPosition.y - 5, playerPosition.x + 5, playerPosition.y + 5);
-            ropeQueryCallback.selectTarget();
+            world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.5f, playerPosition.y - 3.5f, playerPosition.x + 3.5f, playerPosition.y + 3.5f);
+            boolean didSelectTarget = ropeQueryCallback.selectTarget();
+            if (didSelectTarget) {
+                player.setAttached(true);
+            }
         }
 
-        if (player.isShooting() && player.getSwingJoint() != null) {
+        if (player.isShooting() && player.isAttached() && playerRope != null && player.getSwingJoint() != null) {
             playerRope.markRemoved(true);
             world.destroyJoint(player.getSwingJoint());
             player.setSwingJoint(null);
             player.setTarget(null);
+            player.setAttached(false);
         }
 
         // Cutting the rope
@@ -746,10 +757,10 @@ public class GameMode implements Screen {
             }
         }
 
-        if (player.getTarget() != null && !player.isAttached()) {
+        if (player.getTarget() != null && player.isShooting()) {
             Vector2 playerPos = player.getPosition();
             Vector2 targetPos = player.getTarget().getPosition();
-            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 0.2f, bridgeTexture.getRegionHeight() / scale.y, -1, 0.17f);
+            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.18f, 4f);
             playerRope.setLinearVelocityAll(player.getLinearVelocity());
             Filter playerRopeFilter = new Filter();
             playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
@@ -771,7 +782,7 @@ public class GameMode implements Screen {
 
             ropeJointDef.bodyA = player.getBody();
             ropeJointDef.bodyB = player.getTarget().getBody();
-            ropeJointDef.maxLength = playerRope.getLength() + 4f;
+            ropeJointDef.maxLength = playerRope.getLength() + 1f;
             ropeJointDef.collideConnected = true;
             Joint swingJoint = world.createJoint(ropeJointDef);
             player.setSwingJoint(swingJoint);
