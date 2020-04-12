@@ -755,7 +755,7 @@ public class GameMode implements Screen {
 
             if (player.isShooting()) {
                 Vector2 playerPosition = player.getPosition();
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.5f, playerPosition.y - 3.5f, playerPosition.x + 3.5f, playerPosition.y + 3.5f);
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 boolean didSelectTarget = ropeQueryCallback.selectTarget();
                 if (didSelectTarget) {
                     player.setAttached(true);
@@ -786,7 +786,7 @@ public class GameMode implements Screen {
             if (player.getTarget() != null && player.isShooting()) {
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.18f, 4f);
+                playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.16f, 4.5f);
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
