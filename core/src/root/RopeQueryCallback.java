@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-import obstacle.Obstacle;
 import entities.Person;
+import obstacle.Obstacle;
 
 import java.util.ArrayList;
 import java.util.List;
