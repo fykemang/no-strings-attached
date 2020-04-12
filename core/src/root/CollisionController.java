@@ -3,6 +3,8 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
+import entities.Item;
+import obstacle.Obstacle;
 import entities.Blob;
 import entities.Person;
 import entities.Rope;
@@ -81,12 +83,14 @@ public class CollisionController implements ContactListener {
 
             }
 
-            if (bd1 == player && ("item_sensor").equals(fd2)) {
+            if (bd1 == player && ("item_sensor").equals(fd2) && !((Item) bd2).getState()) {
                 player.addItem(bd2.getName());
+                ((Item) bd2).setState(true);
                 bd2.markRemoved(true);
             }
-            if (bd2 == player && ("item_sensor").equals(fd1)) {
+            if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
                 player.addItem(bd1.getName());
+                ((Item) bd1).setState(true);
                 bd1.markRemoved(true);
             }
 

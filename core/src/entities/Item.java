@@ -37,9 +37,19 @@ public class Item extends CapsuleObstacle {
         }
     }
 
+    public boolean getState() {
+        return this.state == ItemState.COLLECTED;
+    }
+
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+        if (this.state != ItemState.COLLECTED) {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+                    getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+        }
+        else {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, origin.x,
+                    origin.y, getAngle(), 0.2f, 0.2f);
+        }
     }
 
     public boolean activatePhysics(World world) {

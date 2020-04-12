@@ -14,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -121,7 +122,7 @@ public class GameMode implements Screen {
 
     private static final String NEEDLE = "platform/needles.png";
     private static final String YARN = "platform/skein.png";
-//    private static final String BUTTON = "platform/button.png";
+    private static final String BUTTON = "platform/buttons.png";
 //    private static final String YARN = "platform/yarn.png";
 
     /**
@@ -232,6 +233,7 @@ public class GameMode implements Screen {
 
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
     private ArrayList<TextureRegion> items = new ArrayList<>();
+    private ArrayList<TextureRegion> progress = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
 
@@ -344,8 +346,8 @@ public class GameMode implements Screen {
 
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
-//        manager.load(BUTTON, Texture.class);
-//        assets.add(BUTTON);
+        manager.load(BUTTON, Texture.class);
+        assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
 
@@ -434,10 +436,10 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
-//        buttonTexture = createTexture(manager, BUTTON, false);
+        buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-//        items.add(buttonTexture);
+        items.add(buttonTexture);
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
@@ -903,6 +905,19 @@ public class GameMode implements Screen {
         }
 
         canvas.end();
+
+//        for (String s : player.getInventory()) {
+//            if (s.contains("yarn")) {
+//                canvas.draw(yarnTexture, Color.WHITE, , 0, yarnTexture.getRegionWidth() * 0.01f / 2,
+//                        yarnTexture.getRegionHeight() * 0.01f / 2);
+//                canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+//                        getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+//            }
+//            else if (s.contains("needle")) {
+//                canvas.draw(needleTexture, Color.WHITE, 0, 0, getX() * drawScale.x,
+//                        getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+//            }
+//        }
 
         if (isDebug()) {
             canvas.beginDebug();
