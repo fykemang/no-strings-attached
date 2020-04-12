@@ -189,7 +189,9 @@ function Home() {
         <Button variant="secondary" onClick={addWall}>
           Wall
         </Button>
-        <Button variant="secondary">Couple</Button>
+        <Button variant="secondary">
+        Couple
+        </Button>
       </ButtonGroup>
       <img
         alt="character"

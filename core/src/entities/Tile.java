@@ -7,6 +7,8 @@ public class Tile implements Json.Serializable {
     private float[] corners;
     private float height;
     private float width;
+    private float x;
+    private float y;
 
     public float[] getCorners() {
         return corners;
@@ -20,6 +22,14 @@ public class Tile implements Json.Serializable {
         return width;
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
     @Override
     public void write(Json json) {
 
@@ -30,15 +40,15 @@ public class Tile implements Json.Serializable {
         corners = new float[8];
         width = jsonData.getFloat("width");
         height = jsonData.getFloat("height");
-        float x = jsonData.getFloat("x");
-        float y = jsonData.getFloat("x");
-        corners[0] = x;
-        corners[1] = y;
-        corners[2] = x;
-        corners[3] = y + height;
-        corners[4] = x + width;
-        corners[5] = y + height;
-        corners[6] = x + width;
-        corners[7] = y;
+        x = jsonData.getFloat("x");
+        y = jsonData.getFloat("x");
+        corners[0] = 0;
+        corners[1] = 0;
+        corners[2] = 0;
+        corners[3] = height;
+        corners[4] = width;
+        corners[5] = height;
+        corners[6] = width;
+        corners[7] = 0;
     }
 }

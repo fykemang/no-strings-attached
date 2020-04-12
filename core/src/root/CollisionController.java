@@ -90,6 +90,10 @@ public class CollisionController implements ContactListener {
                 bd1.markRemoved(true);
             }
 
+            if ((bd1 == player && bd2.getName().equals("spike")) || (bd2 == player && bd1.getName().equals("spike"))) {
+                player.kill();
+            }
+
 
             // See if we have landed on the ground.
             if ((player.getSensorName().equals(fd2) && player != bd1) ||

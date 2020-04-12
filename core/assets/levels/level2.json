@@ -1,11 +1,18 @@
 {
   "playerPos": {
-    "x": 8,
+    "x": 9,
     "y": 8.0
   },
   "tiles": [
   ],
-
+  "spikes": [
+    {
+      "x": 4,
+      "y": 5,
+      "width": 8,
+      "height": 0.2
+    }
+  ],
   "couples": [
     {
       "left_x": 3.0,

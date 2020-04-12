@@ -17,6 +17,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -119,8 +120,9 @@ public class GameMode implements Screen {
     private static final String NPC_WELCOME = "platform/welcome.png";
 
     private static final String NEEDLE = "platform/needles.png";
-    private static final String BUTTON = "platform/button.png";
-    private static final String YARN = "platform/yarn.png";
+    private static final String YARN = "platform/skein.png";
+//    private static final String BUTTON = "platform/button.png";
+//    private static final String YARN = "platform/yarn.png";
 
     /**
      * The texture file for the spinning barrier
@@ -156,6 +158,7 @@ public class GameMode implements Screen {
      * File to texture for walls and platforms
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
+    private static final String SPIKE_FILE = "shared/spikes.png";
     private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
@@ -176,6 +179,7 @@ public class GameMode implements Screen {
      * The texture for walls and platforms
      */
     protected TextureRegion earthTile;
+    protected TextureRegion spikeTile;
     protected TextureRegion smEarthTile;
     /**
      * The font for giving messages to the player
@@ -289,6 +293,7 @@ public class GameMode implements Screen {
      */
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
+        items = new ArrayList<>();
         world = new World(gravity, false);
         rand = new Random();
         this.bounds = new Rectangle(bounds);
@@ -339,8 +344,8 @@ public class GameMode implements Screen {
 
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
-        manager.load(BUTTON, Texture.class);
-        assets.add(BUTTON);
+//        manager.load(BUTTON, Texture.class);
+//        assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
 
@@ -352,6 +357,8 @@ public class GameMode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(EARTH_FILE, Texture.class);
         assets.add(EARTH_FILE);
+        manager.load(SPIKE_FILE, Texture.class);
+        assets.add(SPIKE_FILE);
         manager.load(SM_CLOUD_FILE, Texture.class);
         assets.add(SM_CLOUD_FILE);
         manager.load(BKG_CLOUD, Texture.class);
@@ -427,10 +434,10 @@ public class GameMode implements Screen {
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
-        buttonTexture = createTexture(manager, BUTTON, false);
+//        buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-        items.add(buttonTexture);
+//        items.add(buttonTexture);
         items.add(needleTexture);
         items.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
@@ -449,6 +456,7 @@ public class GameMode implements Screen {
         sounds.allocate(manager, POP_FILE);
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
             earthTile = createTexture(manager, EARTH_FILE, false);
+            spikeTile = createTexture(manager, SPIKE_FILE, false);
             smEarthTile = createTexture(manager, SM_CLOUD_FILE, false);
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
@@ -558,6 +566,7 @@ public class GameMode implements Screen {
 
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
+        List<Tile> spikes = testLevel.getSpikes();
         List<float[]> couples = testLevel.getCouples();
         List<float[]> items = testLevel.getItems();
 
@@ -584,7 +593,11 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), 0, 0, "tile" + i, 1f, earthTile);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getX(), "tile" + i, 1f, earthTile);
+        }
+
+        for (int i = 0; i < spikes.size(); i++) {
+            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), "spike", 1f, spikeTile);
         }
     }
 
@@ -598,6 +611,17 @@ public class GameMode implements Screen {
         tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
+    }
+
+    public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
+        Spikes spike = new Spikes(points, x, y, sc);
+        spike.setBodyType(BodyDef.BodyType.StaticBody);
+        spike.setFriction(2000f);
+        spike.setRestitution(BASIC_RESTITUTION);
+        spike.setDrawScale(scale);
+        spike.setTexture(tex);
+        spike.setName(name);
+        addObject(spike);
     }
 
     public void createItem(float x, float y, int id) {
@@ -618,6 +642,7 @@ public class GameMode implements Screen {
      * @return physical dimensions of the model in world units
      */
     private Vector2 getScaledDimensions(TextureRegion texture) {
+//        System.out.print(texture);
         float dWidth = texture.getRegionWidth() / scale.x;
         float dHeight = texture.getRegionHeight() / scale.y;
         return new Vector2(dWidth, dHeight);
@@ -708,96 +733,98 @@ public class GameMode implements Screen {
      */
     public void update(float dt) {
         // Process actions in object model
-        player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
-        player.setJumping(InputController.getInstance().didPrimary());
-        player.setShooting(InputController.getInstance().didTertiary());
-        player.applyForce();
+        if (player.isAlive()) {
+            player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
+            player.setJumping(InputController.getInstance().didPrimary());
+            player.setShooting(InputController.getInstance().didTertiary());
+            player.applyForce();
 
-        if (player.isAttached()) {
-            playerSwingAnimation.setFrame(10);
-            playerSwingAnimation.setShouldFreeze(true);
-            player.setTexture(playerSwingAnimation);
-        } else if (player.isRising()) {
-            player.setTexture(playerJumpTexture);
-        } else if (player.isFalling()) {
-            player.setTexture(playerFallTexture);
-        } else if (player.isWalking()) {
-            player.setTexture(playerWalkingAnimation);
-        } else if (player.isGrounded()) {
-            player.setTexture(playerIdleAnimation);
-        }
-
-        if (player.isShooting()) {
-            Vector2 playerPosition = player.getPosition();
-            world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.5f, playerPosition.y - 3.5f, playerPosition.x + 3.5f, playerPosition.y + 3.5f);
-            boolean didSelectTarget = ropeQueryCallback.selectTarget();
-            if (didSelectTarget) {
-                player.setAttached(true);
+            if (player.isAttached()) {
+                playerSwingAnimation.setFrame(10);
+                playerSwingAnimation.setShouldFreeze(true);
+                player.setTexture(playerSwingAnimation);
+            } else if (player.isRising()) {
+                player.setTexture(playerJumpTexture);
+            } else if (player.isFalling()) {
+                player.setTexture(playerFallTexture);
+            } else if (player.isWalking()) {
+                player.setTexture(playerWalkingAnimation);
+            } else if (player.isGrounded()) {
+                player.setTexture(playerIdleAnimation);
             }
-        }
 
-        if (player.isShooting() && player.isAttached() && playerRope != null && player.getSwingJoint() != null) {
-            playerRope.markRemoved(true);
-            world.destroyJoint(player.getSwingJoint());
-            player.setSwingJoint(null);
-            player.setTarget(null);
-            player.setAttached(false);
-        }
+            if (player.isShooting()) {
+                Vector2 playerPosition = player.getPosition();
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.5f, playerPosition.y - 3.5f, playerPosition.x + 3.5f, playerPosition.y + 3.5f);
+                boolean didSelectTarget = ropeQueryCallback.selectTarget();
+                if (didSelectTarget) {
+                    player.setAttached(true);
+                }
+            }
 
-        // Cutting the rope
-        if (InputController.getInstance().didSecondary() && player.canCut()) {
-            int coupleID = player.getClosestCoupleID();
-            for (Obstacle obs : objects) {
-                if (obs.getName().equals("couples" + coupleID)) {
-                    Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                    if (ropes != null) {
-                        ((Couple) obs).breakBond(ropes[0], ropes[1]);
+            if (player.isShooting() && player.isAttached() && playerRope != null && player.getSwingJoint() != null) {
+                playerRope.markRemoved(true);
+                world.destroyJoint(player.getSwingJoint());
+                player.setSwingJoint(null);
+                player.setTarget(null);
+                player.setAttached(false);
+            }
+
+            // Cutting the rope
+            if (InputController.getInstance().didSecondary() && player.canCut()) {
+                int coupleID = player.getClosestCoupleID();
+                for (Obstacle obs : objects) {
+                    if (obs.getName().equals("couples" + coupleID)) {
+                        Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                        if (ropes != null) {
+                            ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                        }
                     }
                 }
             }
-        }
 
-        if (player.getTarget() != null && player.isShooting()) {
-            Vector2 playerPos = player.getPosition();
-            Vector2 targetPos = player.getTarget().getPosition();
-            playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.18f, 4f);
-            playerRope.setLinearVelocityAll(player.getLinearVelocity());
-            Filter playerRopeFilter = new Filter();
-            playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
-            playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
-            playerRope.setFilterDataAll(playerRopeFilter);
-            playerRope.setName("player_rope");
-            playerRope.setDrawScale(scale);
-            addObject(playerRope);
+            if (player.getTarget() != null && player.isShooting()) {
+                Vector2 playerPos = player.getPosition();
+                Vector2 targetPos = player.getTarget().getPosition();
+                playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.18f, 4f);
+                playerRope.setLinearVelocityAll(player.getLinearVelocity());
+                Filter playerRopeFilter = new Filter();
+                playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
+                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+                playerRope.setFilterDataAll(playerRopeFilter);
+                playerRope.setName("player_rope");
+                playerRope.setDrawScale(scale);
+                addObject(playerRope);
 
-            revoluteJointDef.bodyB = player.getBody();
-            revoluteJointDef.bodyA = playerRope.getBody();
-            revoluteJointDef.collideConnected = false;
-            world.createJoint(revoluteJointDef);
+                revoluteJointDef.bodyB = player.getBody();
+                revoluteJointDef.bodyA = playerRope.getBody();
+                revoluteJointDef.collideConnected = false;
+                world.createJoint(revoluteJointDef);
 
-            revoluteJointDef.bodyB = playerRope.getLastLink();
-            revoluteJointDef.bodyA = player.getTarget().getBody();
-            revoluteJointDef.collideConnected = false;
-            world.createJoint(revoluteJointDef);
+                revoluteJointDef.bodyB = playerRope.getLastLink();
+                revoluteJointDef.bodyA = player.getTarget().getBody();
+                revoluteJointDef.collideConnected = false;
+                world.createJoint(revoluteJointDef);
 
-            ropeJointDef.bodyA = player.getBody();
-            ropeJointDef.bodyB = player.getTarget().getBody();
-            ropeJointDef.maxLength = playerRope.getLength() + 1f;
-            ropeJointDef.collideConnected = true;
-            Joint swingJoint = world.createJoint(ropeJointDef);
-            player.setSwingJoint(swingJoint);
-        }
+                ropeJointDef.bodyA = player.getBody();
+                ropeJointDef.bodyB = player.getTarget().getBody();
+                ropeJointDef.maxLength = playerRope.getLength() + 1f;
+                ropeJointDef.collideConnected = true;
+                Joint swingJoint = world.createJoint(ropeJointDef);
+                player.setSwingJoint(swingJoint);
+            }
 
 
-        /*
-         * Continuously update the rope position to match the player
-         * position
-         */
-        if (player.isAttached() && playerRope != null) {
-            Vector2 playerPos = player.getPosition();
-            Vector2 targetPos = player.getTarget().getPosition();
-            playerRope.setStart(playerPos, false);
-            playerRope.setEnd(targetPos, false);
+            /*
+             * Continuously update the rope position to match the player
+             * position
+             */
+            if (player.isAttached() && playerRope != null) {
+                Vector2 playerPos = player.getPosition();
+                Vector2 targetPos = player.getTarget().getPosition();
+                playerRope.setStart(playerPos, false);
+                playerRope.setEnd(targetPos, false);
+            }
         }
 
         // If we use sound, we must remember this.
@@ -858,13 +885,23 @@ public class GameMode implements Screen {
         canvas.begin();
         for (Obstacle obj : objects) {
             if (obj.getName().equals("player_rope")) {
-                if (player.getTarget() != null) {
+                if (player.getTarget() != null && player.isAlive()) {
                     obj.draw(canvas);
                 }
             } else {
                 obj.draw(canvas);
             }
         }
+
+
+        if (!player.isAlive()) {
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.size = 20;
+            BitmapFont font = generator.generateFont(parameter);
+            canvas.drawText("press 'R' to restart the level", font, 100, 300);
+        }
+
         canvas.end();
 
         if (isDebug()) {

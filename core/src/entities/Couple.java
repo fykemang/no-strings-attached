@@ -53,8 +53,8 @@ public class Couple extends ComplexObstacle {
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
-        assert(l.isAttached());
-        assert(r.isAttached());
+        assert (l.isAttached());
+        assert (r.isAttached());
         setName("couples" + id);
     }
 

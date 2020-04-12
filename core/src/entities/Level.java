@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Level implements Json.Serializable {
     private List<Tile> tiles;
+    private List<Tile> spikes;
     private Vector2 playerPos;
     private List<float[]> couples;
     private List<float[]> items;
@@ -23,6 +24,7 @@ public class Level implements Json.Serializable {
         playerPos = new Vector2();
         couples = new ArrayList<>();
         items = new ArrayList<>();
+        spikes = new ArrayList<>();
     }
 
     @Override
@@ -38,6 +40,13 @@ public class Level implements Json.Serializable {
             String tileJson = tileJsonValue.toJson(JsonWriter.OutputType.minimal);
             Tile tile = json.fromJson(Tile.class, tileJson);
             tiles.add(tile);
+        }
+
+        JsonValue spikeData = jsonData.get("spikes");
+        for (JsonValue spikeJsonValue : spikeData) {
+            String spikeJson = spikeJsonValue.toJson(JsonWriter.OutputType.minimal);
+            Tile tile = json.fromJson(Tile.class, spikeJson);
+            spikes.add(tile);
         }
 
         // Player Position
@@ -71,6 +80,10 @@ public class Level implements Json.Serializable {
      */
     public List<Tile> getTiles() {
         return tiles;
+    }
+
+    public List<Tile> getSpikes() {
+        return spikes;
     }
 
     /**
