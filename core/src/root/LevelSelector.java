@@ -344,4 +344,13 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         if (level > levels.size() || level == -1) return null;
         return levels.get(level - 1);
     }
+
+
+
+    public void reset(GameCanvas canvas ){
+        this.canvas = canvas;
+        level = -1;
+        ready = false;
+    }
+
 }
