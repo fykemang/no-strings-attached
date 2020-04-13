@@ -16,9 +16,9 @@ import util.FilmStrip;
 public class Couple extends ComplexObstacle {
     private NpcPerson l;
     private NpcPerson r;
-    private Rope trampoline;
-    private Rope trampLeft;
-    private Rope trampRight;
+    private NpcRope trampoline;
+    private NpcRope trampLeft;
+    private NpcRope trampRight;
     private TextureRegion trampolineTexture;
     private Stone leftTile;
     private Stone rightTile;
@@ -45,7 +45,7 @@ public class Couple extends ComplexObstacle {
         this.r = createAvatar(x2, y2, avatar2, false);
         l.setCouple(r);
         r.setCouple(l);
-        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f - 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f + 0.2f, y2 + 0.1f, trampolineTexture.getRegionHeight() / drawScale.y, id, 0.2f);
+        this.trampoline = new NpcRope(x1 + l.getWidth() / 1.5f - 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f + 0.2f, y2 + 0.1f, trampolineTexture.getRegionHeight() / drawScale.y, id, 0.2f);
         this.trampoline.setDrawScale(drawScale);
         Filter trampolineFilter = new Filter();
         trampolineFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC_ROPE.getID();
@@ -133,7 +133,7 @@ public class Couple extends ComplexObstacle {
         }
     }
 
-    public void breakBond(Rope leftFragment, Rope rightFragment) {
+    public void breakBond(NpcRope leftFragment, NpcRope rightFragment) {
         this.trampLeft = leftFragment;
         this.trampRight = rightFragment;
         this.bodies.add(leftFragment);
@@ -142,7 +142,7 @@ public class Couple extends ComplexObstacle {
         r.setAttached(false);
     }
 
-    public Rope getRope() {
+    public NpcRope getRope() {
         return trampoline;
     }
 

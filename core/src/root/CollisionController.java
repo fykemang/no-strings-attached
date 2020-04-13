@@ -7,8 +7,7 @@ import entities.Item;
 import obstacle.Obstacle;
 import entities.Blob;
 import entities.Person;
-import entities.Rope;
-import obstacle.Obstacle;
+import entities.NpcRope;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -55,7 +54,7 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2.getName().equals("player_rope") && bd1 != player) {
-                Rope rope = (Rope) bd2;
+                NpcRope rope = (NpcRope) bd2;
                 if (bd1.getName().equals("npc") && rope.isBroken()) {
                     player.setTarget((Person) bd1);
                 }

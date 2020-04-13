@@ -14,7 +14,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -103,7 +102,7 @@ public class GameMode implements Screen {
      * The texture file for the idle player
      */
     private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
-    private static final String PLAYER_SWING_ANIMATION = "platform/player_swing.png";
+    private static final String PLAYER_SWING_ANIMATION = "platform/player_swing_animation.png";
 
     private static final String PLAYER_JUMP = "platform/player_jump.png";
 
@@ -520,7 +519,7 @@ public class GameMode implements Screen {
 
     private RevoluteJointDef revoluteJointDef;
 
-    private Rope playerRope;
+    private PlayerRope playerRope;
 
     private RopeQueryCallback ropeQueryCallback;
 
@@ -781,8 +780,8 @@ public class GameMode implements Screen {
             player.applyForce();
 
             if (player.isAttached()) {
-                playerSwingAnimation.setFrame(10);
-                playerSwingAnimation.setShouldFreeze(true);
+//                playerSwingAnimation.setFrame(10);
+//                playerSwingAnimation.setShouldFreeze(true);
                 player.setTexture(playerSwingAnimation);
             } else if (player.isRising()) {
                 player.setTexture(playerJumpTexture);
@@ -796,7 +795,7 @@ public class GameMode implements Screen {
 
             if (player.isShooting()) {
                 Vector2 playerPosition = player.getPosition();
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 10f, playerPosition.y - 10f, playerPosition.x + 10f, playerPosition.y + 10f);
                 boolean didSelectTarget = ropeQueryCallback.selectTarget();
                 if (didSelectTarget) {
                     player.setAttached(true);
@@ -816,7 +815,7 @@ public class GameMode implements Screen {
                 int coupleID = player.getClosestCoupleID();
                 for (Obstacle obs : objects) {
                     if (obs.getName().equals("couples" + coupleID)) {
-                        Rope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                        NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                         if (ropes != null) {
                             ((Couple) obs).breakBond(ropes[0], ropes[1]);
                         }
@@ -827,7 +826,7 @@ public class GameMode implements Screen {
             if (player.getTarget() != null && player.isShooting()) {
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new Rope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.16f, 4.5f);
+                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.16f, 4.5f);
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
@@ -849,7 +848,7 @@ public class GameMode implements Screen {
 
                 ropeJointDef.bodyA = player.getBody();
                 ropeJointDef.bodyB = player.getTarget().getBody();
-                ropeJointDef.maxLength = playerRope.getLength() + 1f;
+                ropeJointDef.maxLength = playerRope.getLength();
                 ropeJointDef.collideConnected = true;
                 Joint swingJoint = world.createJoint(ropeJointDef);
                 player.setSwingJoint(swingJoint);

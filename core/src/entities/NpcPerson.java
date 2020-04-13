@@ -30,6 +30,7 @@ public class NpcPerson extends Person {
         this.rightAttachPt = new Vector2(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
         this.left = left;
         flip = false;
+        this.setName("npc");
 
     }
 
