@@ -28,7 +28,6 @@ public class RopeQueryCallback implements QueryCallback {
     public boolean reportFixture(Fixture fixture) {
         Body body = fixture.getBody();
         Obstacle obstacle = (Obstacle) body.getUserData();
-
         if (obstacle.getName().equals("npc")) {
             Person p = (Person) obstacle;
             if (!p.isAttached()) {

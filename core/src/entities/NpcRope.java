@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class Rope extends ComplexObstacle {
+public class NpcRope extends ComplexObstacle {
     /**
      * The debug name for the entire obstacle
      */
@@ -78,7 +78,7 @@ public class Rope extends ComplexObstacle {
         LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
     }
 
-    public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
+    public NpcRope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
         this.state = state;
         this.lowerLayer = lower;
         this.upperLayer = upper;
@@ -104,7 +104,7 @@ public class Rope extends ComplexObstacle {
         setCurrentSplineCurve();
     }
 
-    public Rope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter, float ropeLength) {
+    public NpcRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter, float ropeLength) {
         super(x0, y0);
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
@@ -124,7 +124,7 @@ public class Rope extends ComplexObstacle {
      * @param y1      The y position of the right anchor
      * @param lheight The bridge thickness
      */
-    public Rope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter) {
+    public NpcRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter) {
         super(x0, y0);
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
@@ -339,11 +339,11 @@ public class Rope extends ComplexObstacle {
         return a.getPosition().dst2(pos) < b.getPosition().dst2(pos);
     }
 
-    public Rope[] cut(final Vector2 pos, World w) {
+    public NpcRope[] cut(final Vector2 pos, World w) {
         if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)) {
             return null;
         }
-        Rope[] cutRopes = new Rope[2];
+        NpcRope[] cutNpcRopes = new NpcRope[2];
         WheelObstacle closest = null;
         int index = 0;
         for (int i = 0; i < upperLayer.size(); i++) {
@@ -371,18 +371,18 @@ public class Rope extends ComplexObstacle {
         ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index + 1, upperLayer.size()));
         ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index + 1, lowerLayer.size()));
 
-        Rope l = new Rope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
+        NpcRope l = new NpcRope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
-        cutRopes[0] = l;
+        cutNpcRopes[0] = l;
 
-        Rope r = new Rope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
+        NpcRope r = new NpcRope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
         r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
-        cutRopes[1] = r;
+        cutNpcRopes[1] = r;
 
         this.bodyinfo.active = false;
-        return cutRopes;
+        return cutNpcRopes;
     }
 
 
