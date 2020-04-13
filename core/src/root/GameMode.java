@@ -667,17 +667,17 @@ public class GameMode implements Screen {
         Stone leftTile;
         Stone rightTile;
         if (curr.isSliding()){
-            leftTile = createSlidingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, smEarthTile, curr.getLeft(), curr.getRight());
+            leftTile = createSlidingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile, curr.getLeft(), curr.getRight());
         }else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, smEarthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
+            leftTile = createRotatingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
         }
         else {
-            leftTile = createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, smEarthTile);
+            leftTile = createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, smEarthTile, next.getLeft(), next.getRight());
+            rightTile = createSlidingTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile, next.getLeft(), next.getRight());
         }else{
-            rightTile = createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, smEarthTile);
+            rightTile = createTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
