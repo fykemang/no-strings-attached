@@ -590,16 +590,21 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getX(), "tile" + i, 1f, earthTile);
+            System.out.println(tiles.get(i).getX() + "   " + tiles.get(i).getY());
+
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(),
+                    tiles.get(i).getWidth(), tiles.get(i).getHeight(),"tile" + i, 1f, earthTile);
         }
 
         for (int i = 0; i < spikes.size(); i++) {
+            System.out.println(spikes.get(i).getX() + "   " + spikes.get(i).getY());
+
             createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), "spike", 1f, spikeTile);
         }
     }
 
-    public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
-        Stone tile = new Stone(points, x, y, sc);
+    public void createTile(float[] points, float x, float y, float width, float height, String name, float sc, TextureRegion tex) {
+        Stone tile = new Stone(points, x, y, width, height, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
@@ -660,8 +665,8 @@ public class GameMode implements Screen {
         TextureRegion randTex2 = npcs.get(n2);
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
-        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
-        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
+//        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
+//        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
     }
 
     /**
