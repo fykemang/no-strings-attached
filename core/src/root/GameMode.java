@@ -11,6 +11,7 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
@@ -89,6 +90,11 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
+    public float UIy;
+    public float resetX;
+    public float escX;
+
+
     /**
      * Background
      */
@@ -161,7 +167,10 @@ public class GameMode implements Screen {
      */
     private static final String EARTH_FILE = "shared/earthtile.png";
     private static final String SPIKE_FILE = "shared/spikes.png";
-    private static final String SM_CLOUD_FILE = "shared/earthtile_small.png";
+    private static final String UI_GreyYarn = "platform/greyYarn.png";
+    private static final String UI_RedYarn = "platform/redYarn.png";
+    private static final String RESTART_FILE = "shared/restart.png";
+    private static final String ESC_FILE = "shared/pause.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
     /**
      * Retro font for displaying messages
@@ -182,7 +191,8 @@ public class GameMode implements Screen {
      */
     protected TextureRegion earthTile;
     protected TextureRegion spikeTile;
-    protected TextureRegion smEarthTile;
+    protected TextureRegion UI_restart;
+    protected TextureRegion UI_exit;
     /**
      * The font for giving messages to the player
      */
@@ -231,7 +241,8 @@ public class GameMode implements Screen {
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
-
+    private TextureRegion redYarnTexture;
+    private TextureRegion greyYarnTexture;
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
     private ArrayList<TextureRegion> items = new ArrayList<>();
     private ArrayList<Item> progress = new ArrayList<>();
@@ -278,6 +289,7 @@ public class GameMode implements Screen {
     /**
      * Countdown active for winning or losing
      */
+
     private int countdown;
     private TextureRegion cityTexture;
     private TextureRegion skyTexture;
@@ -335,6 +347,10 @@ public class GameMode implements Screen {
 
         manager.load(NPC_CHEESE, Texture.class);
         assets.add(NPC_CHEESE);
+        manager.load(UI_GreyYarn, Texture.class);
+        assets.add(UI_GreyYarn);
+        manager.load(UI_RedYarn, Texture.class);
+        assets.add(UI_RedYarn);
         manager.load(NPC_COZY, Texture.class);
         assets.add(NPC_COZY);
         manager.load(NPC_NERVY, Texture.class);
@@ -363,9 +379,11 @@ public class GameMode implements Screen {
         assets.add(EARTH_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
-        manager.load(SM_CLOUD_FILE, Texture.class);
-        assets.add(SM_CLOUD_FILE);
+        manager.load(RESTART_FILE, Texture.class);
+        assets.add(RESTART_FILE);
         manager.load(BKG_CLOUD, Texture.class);
+        manager.load(ESC_FILE, Texture.class);
+        assets.add(ESC_FILE);
         assets.add(BKG_CLOUD);
         manager.load(BKG_SKY, Texture.class);
         assets.add(BKG_SKY);
@@ -415,10 +433,12 @@ public class GameMode implements Screen {
      * @param manager Reference to global asset manager.
      */
     public void loadContent(AssetManager manager, String file) {
-        if (platformAssetState != AssetState.LOADING) {
-            return;
-        }
+//        if (platformAssetState != AssetState.LOADING) {
+//            return;
+//        }
         Json json = new Json();
+        levels = new ArrayList<>();
+        items = new ArrayList<>();
         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
@@ -447,6 +467,8 @@ public class GameMode implements Screen {
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
+        redYarnTexture = createTexture(manager, UI_RedYarn, false);
+        greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
         npcs.add(npcNervyTexture);
@@ -461,7 +483,8 @@ public class GameMode implements Screen {
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
             earthTile = createTexture(manager, EARTH_FILE, false);
             spikeTile = createTexture(manager, SPIKE_FILE, false);
-            smEarthTile = createTexture(manager, SM_CLOUD_FILE, false);
+            UI_restart = createTexture(manager, RESTART_FILE, false);
+            UI_exit = createTexture(manager, ESC_FILE, false);
             if (manager.isLoaded(FONT_FILE)) {
                 displayFont = manager.get(FONT_FILE, BitmapFont.class);
             } else {
@@ -514,7 +537,7 @@ public class GameMode implements Screen {
      */
     private Person player;
 
-    private List<Level> levels;
+    private List<Level> levels = new ArrayList<>();
 
     private RopeJointDef ropeJointDef;
 
@@ -534,7 +557,6 @@ public class GameMode implements Screen {
         setDebug(false);
         setComplete(false);
         setFailure(false);
-        this.levels = new ArrayList<>();
         ropeJointDef = new RopeJointDef();
         revoluteJointDef = new RevoluteJointDef();
     }
@@ -649,7 +671,7 @@ public class GameMode implements Screen {
      * @return physical dimensions of the model in world units
      */
     private Vector2 getScaledDimensions(TextureRegion texture) {
-//        System.out.print(texture);
+
         float dWidth = texture.getRegionWidth() / scale.x;
         float dHeight = texture.getRegionHeight() / scale.y;
         return new Vector2(dWidth, dHeight);
@@ -774,6 +796,11 @@ public class GameMode implements Screen {
      */
     public void update(float dt) {
         // Process actions in object model
+       if ((Gdx.input.isTouched() &&Gdx.input.getX() >= 800
+               && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
+       ||(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
+           exitToSelector();
+        }
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
@@ -913,7 +940,7 @@ public class GameMode implements Screen {
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
-        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
+                canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
         canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
         canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
@@ -942,10 +969,23 @@ public class GameMode implements Screen {
             BitmapFont font = generator.generateFont(parameter);
             canvas.drawText("press 'R' to restart the level", font, 100, 300);
         }
-
+        canvas.drawUI(UI_restart, canvas.getWidth()-UI_restart.getRegionWidth(),
+                canvas.getHeight()-UI_restart.getRegionHeight(), 1f);
+        canvas.drawUI(UI_exit, canvas.getWidth()-UI_restart.getRegionWidth()- UI_exit.getRegionWidth(),
+                canvas.getHeight()-UI_restart.getRegionHeight(), 1f);
+        float UIX = 70;
+        float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
+        for (int i =1; i<= items.size(); i++){
+                if (i <= player.getInventory().size()){
+                    canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
+                }else {
+                    canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+                }
+                UIX += greyYarnTexture.getRegionWidth();
+        }
         canvas.end();
 
-//        for (String s : player.getInventory()) {
+ //       for (String s : player.getInventory()) {
 //            if (s.contains("yarn")) {
 //                canvas.draw(yarnTexture, Color.WHITE, , 0, yarnTexture.getRegionWidth() * 0.01f / 2,
 //                        yarnTexture.getRegionHeight() * 0.01f / 2);
@@ -1288,6 +1328,13 @@ public class GameMode implements Screen {
      */
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
+    }
+
+
+    public void exitToSelector(){
+        if (listener != null){
+            listener.exitScreen(this, 0);
+        }
     }
 
     /**

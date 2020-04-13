@@ -534,6 +534,10 @@ public class Person extends CapsuleObstacle {
         return getVY() < -VERTICAL_EPSILON;
     }
 
+    public ArrayList<String> getInventory() {
+        return inventory;
+    }
+
     /**
      * Draws the outline of the physics body.
      * <p>

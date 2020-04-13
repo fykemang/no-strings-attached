@@ -88,6 +88,8 @@ public class GameCanvas {
      */
     private PolygonSpriteBatch spriteBatch;
 
+    private PolygonSpriteBatch UIBatch;
+
     /**
      * Rendering context for the debug outlines
      */
@@ -157,6 +159,7 @@ public class GameCanvas {
     public GameCanvas() {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
+        UIBatch = new PolygonSpriteBatch();
         debugRender = new ShapeRenderer();
         shapeRenderer = new ShapeRenderer();
         // Set the projection matrix (for proper scaling)
@@ -1295,6 +1298,17 @@ public class GameCanvas {
         spriteBatch.begin();
     }
 
+
+    public void drawUI(TextureRegion texture, float x, float y, float sc){
+        spriteBatch.end();
+        UIBatch.begin();
+//        UIBatch.setProjectionMatrix(camera.combined);
+        computeTransform(texture.getRegionWidth()/2, texture.getRegionHeight()/2, x, y, 0, sc, sc);
+        UIBatch.draw(texture, texture.getRegionWidth(), texture.getRegionHeight(), local);
+        UIBatch.end();
+        spriteBatch.begin();
+    }
+
     public void drawWrapped(TextureRegion image, float x, float y, float width, float height) {
         positionCache.set(x, y);
         wrapPosition(positionCache);
@@ -1311,6 +1325,32 @@ public class GameCanvas {
         camera.viewportHeight = (float) getHeight() * 3 / 5;
         camera.viewportWidth = (float) getWidth() * 3 / 5;
         camera.update();
+    }
+
+    public void resetCamara(){
+        active = DrawPass.INACTIVE;
+        spriteBatch = new PolygonSpriteBatch();
+        UIBatch = new PolygonSpriteBatch();
+        debugRender = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer();
+        // Set the projection matrix (for proper scaling)
+
+        camera = new OrthographicCamera(getWidth(), getHeight());
+        camera.setToOrtho(false);
+        viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
+
+        spriteBatch.setProjectionMatrix(camera.combined);
+        debugRender.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setAutoShapeType(true);
+
+        // Initialize the cache objects
+        holder = new TextureRegion();
+        local = new Affine2();
+        global = new Matrix4();
+        cacheVector3 = new Vector3();
+        cacheVector2 = new Vector2();
+        vertex = new Vector2();
     }
 
     public Vector2 getMouseCoordinates(float x, float y) {
