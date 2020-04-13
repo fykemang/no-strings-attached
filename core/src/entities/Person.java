@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
 import root.GameCanvas;
+import util.CollisionFilterConstants;
 import util.FilmStrip;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.6f;
+    private static final float PLAYER_DENSITY = 1.7f;
     /**
      * The factor to multiply by the input
      */
@@ -132,6 +133,7 @@ public class Person extends CapsuleObstacle {
     private float trampolineForceY;
     private ArrayList<String> inventory;
     private boolean isAttached;
+    private boolean released;
 
     /**
      * Which direction is the character facing
@@ -408,15 +410,22 @@ public class Person extends CapsuleObstacle {
             isTrampolining = false;
         }
 
-        forceCache.set(getMovement(), 0);
-        body.applyForce(forceCache, getPosition(), true);
+
+        float horizontal = released ? (isFacingRight ? 1 : -1) * 140f + getMovement()
+                : isAttached ? getMovement() * 9f : getMovement();
+
+        forceCache.set(horizontal, 0);
+        if(released)
+            body.applyLinearImpulse(forceCache, getPosition(), true);
+        else
+            body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {
             forceCache.set(0, vertical);
             body.applyLinearImpulse(forceCache, getPosition(), true);
         }
-
+        released = false;
 
     }
 
@@ -434,6 +443,9 @@ public class Person extends CapsuleObstacle {
         if (movement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
+        }
+        if(movement == 0){
+            frameRate = 7;
         }
 
         if (isJumping()) {
@@ -551,6 +563,7 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setAttached(boolean isAttached) {
+        released = this.isAttached && !isAttached;
         this.isAttached = isAttached;
     }
 
