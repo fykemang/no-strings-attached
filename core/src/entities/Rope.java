@@ -421,53 +421,13 @@ public class Rope extends ComplexObstacle {
 
     public void moveStart(Vector2 start, boolean scaled) {
         upperLayer.get(0).setPosition(start);
-//        lowerLayer.get(0).setPosition(start.x - 0.2f, start.y);
         setStart(start, scaled);
     }
 
     public void moveEnd(Vector2 end, boolean scaled) {
         upperLayer.get(upperLayer.size()-1).setPosition(end);
-//        lowerLayer.get(lowerLayer.size()-2).setPosition(end.x - 0.2f, end.y);
         setEnd(end, scaled);
     }
-
-    public void recalculateBlobPosition(){
-
-        dimension.set(upperLayer.get(upperLayer.size()-1).getX() - upperLayer.get(0).getX(),
-                upperLayer.get(upperLayer.size()-1).getY() - upperLayer.get(0).getY());
-        Vector2 norm = new Vector2(dimension);
-        float blobRadius = blobDiameter / 2;
-        norm.nor();
-        // If too small, only make one plank.
-        int nLinks = (int) (length / blobDiameter) - 4;
-        if (nLinks <= 1) {
-            nLinks = 1;
-            blobDiameter = length;
-            spacing = 0;
-        } else {
-            spacing = length - nLinks * blobDiameter;
-            spacing /= (nLinks - 1);
-        }
-
-        Vector2 pos = new Vector2();
-        for (int i = 0; i < nLinks; i++) {
-            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
-            pos.set(norm);
-            pos.scl(t);
-            pos.add(upperLayer.get(0).getPosition());
-            upperLayer.get(i).setPosition(pos);
-        }
-
-//        Vector2 pos2 = new Vector2();
-//        for (int i = 0; i < nLinks - 1; i++) {
-//            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
-//            pos2.set(norm);
-//            pos2.scl(t);
-//            pos2.add(lowerLayer.get(0).getPosition());
-//            lowerLayer.get(i).setPosition(pos);
-//        }
-    }
-
 
     public void setStart(Vector2 start, boolean scaled) {
         if (!scaled) {
