@@ -1283,7 +1283,10 @@ public class GameCanvas {
         shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl20.glLineWidth(3);
+        shapeRenderer.setColor(new Color (1, 0, 0, 0.7f));
         for (int i = 1; i < k - 1; i++) {
             shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
