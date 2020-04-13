@@ -12,6 +12,7 @@ public class Stone extends PolygonObstacle {
     Vector2 leftSlideLim;
     Vector2 rightSlideLim;
     Vector2 slideDir;
+    boolean back;
 
 
     public Stone(float[] points) {
@@ -27,9 +28,12 @@ public class Stone extends PolygonObstacle {
         this(points, x, y, sc);
         setFriction(100f);
         isSliding = true;
+        back = false;
         leftSlideLim = new Vector2(leftPos[0], leftPos[1]);
         rightSlideLim = new Vector2(rightPos[0], rightPos[1]);
         slideDir = new Vector2(leftPos[0]*drawScale.x - getX(), leftPos[1]*drawScale.y - getY());
+        slideDir.nor();
+        System.out.println(slideDir);
         setName("stone");
     }
 
@@ -37,9 +41,16 @@ public class Stone extends PolygonObstacle {
     public void update(float dt){
         super.update(dt);
         if(isSliding){
-            if(getPosition().epsilonEquals(leftSlideLim, 0.001f) ||
-                    getPosition().epsilonEquals(rightSlideLim, 0.001f)){
-                slideDir.scl(-1f);
+
+            if(getPosition().epsilonEquals(leftSlideLim, 0.01f) ||
+                    getPosition().epsilonEquals(rightSlideLim, 0.01f)){
+                if (!back){
+                    slideDir.set(rightSlideLim.x - leftSlideLim.x, rightSlideLim.y - leftSlideLim.y);
+                    slideDir.nor();
+
+                    back = true;
+                }else
+                    slideDir.scl(-1f);
             }
             setLinearVelocity(slideDir);
         }

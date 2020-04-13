@@ -16,7 +16,7 @@
       "x": 9.0,
       "y": 2.0,
       "isSliding": true,
-      "leftPos": {"x": 8.5, "y":  1.0},
+      "leftPos": {"x": 8.5, "y":  0.0},
       "rightPos": {"x":  10.5, "y":  1.0},
       "isRotating": false,
       "center": {},
