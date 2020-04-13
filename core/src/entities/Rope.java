@@ -91,7 +91,7 @@ public class Rope extends ComplexObstacle {
         for (int i = 0; i < K; i++) {
             POINTS[i] = new Vector2();
         }
-        contPoints = new Vector2[bodies.size / 2 + 3];
+        contPoints = new Vector2[upper.size() + 2];
 
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
@@ -165,7 +165,7 @@ public class Rope extends ComplexObstacle {
         }
 
         Vector2 pos2 = new Vector2();
-        for (int i = 0; i < nLinks; i++) {
+        for (int i = 0; i < nLinks - 1; i++) {
             float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
             pos2.set(norm);
             pos2.scl(t);
@@ -181,7 +181,7 @@ public class Rope extends ComplexObstacle {
             POINTS[i] = new Vector2();
         }
 
-        contPoints = new Vector2[upperLayer.size() + 4];
+        contPoints = new Vector2[upperLayer.size() + 2];
 
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
@@ -217,38 +217,8 @@ public class Rope extends ComplexObstacle {
 
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
-        for (int i = 0; i < upperLayer.size() - 1; i++) {
-            jointDef.length = 0.05f;
-            // Look at what we did above and join the planks
-            Obstacle curr = upperLayer.get(i);
-            Obstacle next = upperLayer.get(i + 1);
-            jointDef.bodyA = curr.getBody();
-            jointDef.bodyB = next.getBody();
-            Joint joint = world.createJoint(jointDef);
-            joints.add(joint);
-        }
 
-        for (int i = 0; i < lowerLayer.size() - 1; i++) {
-            jointDef.length = 0.2f;
-            Obstacle currl = lowerLayer.get(i);
-            Obstacle nextl = lowerLayer.get(i + 1);
-            jointDef.bodyA = currl.getBody();
-            jointDef.bodyB = nextl.getBody();
-            Joint jointl = world.createJoint(jointDef);
-            joints.add(jointl);
-        }
-
-        for (int i = 0; i < upperLayer.size(); i++) {
-            jointDef.length = 0.2f;
-            Obstacle top = upperLayer.get(i);
-            Obstacle bottom = lowerLayer.get(i);
-            jointDef.bodyA = top.getBody();
-            jointDef.bodyB = bottom.getBody();
-            Joint joint2 = world.createJoint(jointDef);
-            joints.add(joint2);
-        }
-
-        for (int i = 0; i < upperLayer.size() - 1; i++) {
+        for (int i = 0; i < upperLayer.size() - 2; i++) {
             jointDef.length = 0.3f;
             // Look at what we did above and join the planks
             Obstacle curr = upperLayer.get(i);
@@ -264,6 +234,44 @@ public class Rope extends ComplexObstacle {
             jointDef.bodyB = next1.getBody();
             Joint joint1 = world.createJoint(jointDef);
             joints.add(joint1);
+        }
+
+
+        Obstacle curr1 = upperLayer.get(upperLayer.size() - 1);
+        Obstacle next1 = lowerLayer.get(lowerLayer.size() - 1);
+        jointDef.bodyA = curr1.getBody();
+        jointDef.bodyB = next1.getBody();
+        Joint joint1 = world.createJoint(jointDef);
+        joints.add(joint1);
+
+        for (int i = 0; i < upperLayer.size()-1; i++) {
+            jointDef.length = 0.05f;
+            // Look at what we did above and join the planks
+            Obstacle curr = upperLayer.get(i);
+            Obstacle next = upperLayer.get(i + 1);
+            jointDef.bodyA = curr.getBody();
+            jointDef.bodyB = next.getBody();
+            Joint joint = world.createJoint(jointDef);
+            joints.add(joint);
+        }
+        for (int i = 0; i < lowerLayer.size() - 1; i++) {
+            jointDef.length = 0.15f;
+            Obstacle currl = lowerLayer.get(i);
+            Obstacle nextl = lowerLayer.get(i + 1);
+            jointDef.bodyA = currl.getBody();
+            jointDef.bodyB = nextl.getBody();
+            Joint jointl = world.createJoint(jointDef);
+            joints.add(jointl);
+        }
+
+        for (int i = 0; i < upperLayer.size() - 1; i++) {
+            jointDef.length = 0.2f;
+            Obstacle top = upperLayer.get(i);
+            Obstacle bottom = lowerLayer.get(i);
+            jointDef.bodyA = top.getBody();
+            jointDef.bodyB = bottom.getBody();
+            Joint joint2 = world.createJoint(jointDef);
+            joints.add(joint2);
         }
 
         return true;
@@ -304,22 +312,19 @@ public class Rope extends ComplexObstacle {
 
 
     private void extractContPoints() {
-        int startIndex = state == RopeState.RIGHT_BROKEN ? 1 : 2;
-        int endIndex = state == RopeState.LEFT_BROKEN ? contPoints.length - 2 : contPoints.length - 3;
+        int startIndex = 1;
+        int endIndex = contPoints.length - 1;
 
-        for (int i = startIndex; i <= endIndex; i++) {
-            int cur = state == RopeState.RIGHT_BROKEN ? i - 1 : i - 2;
-            Vector2 pos = upperLayer.get(cur).getPosition();
+        for (int i = startIndex; i < endIndex; i++) {
+//            int cur = state == RopeState.RIGHT_BROKEN ? i : i - 1;
+            Vector2 pos = upperLayer.get(i - 1).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
 
-        if (state == RopeState.LEFT_BROKEN) {
-            contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
-        }
 
-        if (state == RopeState.RIGHT_BROKEN) {
-            contPoints[0] = contPoints[1];
-        }
+        contPoints[0] = contPoints[1];
+
+        contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
     }
 
     private void setCurrentSplineCurve() {
@@ -412,6 +417,16 @@ public class Rope extends ComplexObstacle {
      */
     public Body getLastLink() {
         return upperLayer.size() > 0 ? upperLayer.get(upperLayer.size() - 1).getBody() : null;
+    }
+
+    public void moveStart(Vector2 start, boolean scaled) {
+        upperLayer.get(0).setPosition(start);
+        setStart(start, scaled);
+    }
+
+    public void moveEnd(Vector2 end, boolean scaled) {
+        upperLayer.get(upperLayer.size()-1).setPosition(end);
+        setEnd(end, scaled);
     }
 
     public void setStart(Vector2 start, boolean scaled) {

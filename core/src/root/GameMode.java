@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import entities.*;
 import obstacle.Obstacle;
+import platform.NpcData;
 import util.*;
 
 import java.util.ArrayList;
@@ -572,6 +573,7 @@ public class GameMode implements Screen {
         List<Tile> spikes = testLevel.getSpikes();
         List<float[]> couples = testLevel.getCouples();
         List<float[]> items = testLevel.getItems();
+        List<NpcData> npcData = testLevel.getNpcData();
 
         // Create main dude
         float dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
@@ -585,9 +587,10 @@ public class GameMode implements Screen {
         player.setTexture(playerIdleAnimation);
         addObject(player);
 
-        for (int i = 0; i < couples.size(); i++) {
-            float[] curr = couples.get(i);
-            createCouple(curr[0], curr[1], curr[2], curr[3], i);
+        for (int i = 0; i < npcData.size(); i+=2){
+            NpcData curr = npcData.get(i);
+            NpcData next = npcData.get(i + 1);
+            createCouple(curr, next, i);
         }
 
         for (int i = 0; i < items.size(); i++) {
@@ -604,7 +607,7 @@ public class GameMode implements Screen {
         }
     }
 
-    public void createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
+    public Stone createTile(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
         Stone tile = new Stone(points, x, y, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
@@ -614,6 +617,7 @@ public class GameMode implements Screen {
         tile.setTexture(tex);
         tile.setName(name);
         addObject(tile);
+        return tile;
     }
 
     public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
@@ -651,25 +655,59 @@ public class GameMode implements Screen {
         return new Vector2(dWidth, dHeight);
     }
 
-    /**
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
-    public void createCouple(float x1, float y1, float x2, float y2, int id) {
+
+    public void createCouple(NpcData curr, NpcData next, int id) {
+        float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
         float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
         int n1 = rand.nextInt(npcs.size());
         int n2 = rand.nextInt(npcs.size());
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
         TextureRegion randTex1 = npcs.get(n1);
         TextureRegion randTex2 = npcs.get(n2);
-        Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
+        Stone leftTile;
+        Stone rightTile;
+        if (curr.isSliding()){
+            leftTile = createSlidingTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile, curr.getLeft(), curr.getRight());
+        }else if (curr.isRotating()) {
+            leftTile = createRotatingTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
+        }
+        else {
+            leftTile = createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
+        }
+        if (next.isSliding()) {
+            rightTile = createSlidingTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile, next.getLeft(), next.getRight());
+        }else{
+            rightTile = createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
+        }
+        Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
-        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
-        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
     }
-
+    public Stone createRotatingTile(float[] points, float x, float y, String name, float sc, TextureRegion tex,
+                                   float[] rotatingCenter, float rotatingDegree) {
+        Stone tile = new Stone(points, x, y, sc, rotatingCenter, rotatingDegree);
+        tile.setBodyType(BodyDef.BodyType.KinematicBody);
+        tile.setDensity(BASIC_DENSITY);
+        tile.setFriction(BASIC_FRICTION);
+        tile.setRestitution(BASIC_RESTITUTION);
+        tile.setDrawScale(scale);
+        tile.setTexture(tex);
+        tile.setName(name);
+        addObject(tile);
+        return tile;
+    }
+    public Stone createSlidingTile(float[] points, float x, float y, String name, float sc, TextureRegion tex,
+                                  float[] leftPos, float[] rightPos) {
+        Stone tile = new Stone(points, x, y, sc, leftPos, rightPos);
+        tile.setBodyType(BodyDef.BodyType.KinematicBody);
+        tile.setDensity(BASIC_DENSITY);
+        tile.setFriction(BASIC_FRICTION);
+        tile.setRestitution(BASIC_RESTITUTION);
+        tile.setDrawScale(scale);
+        tile.setTexture(tex);
+        tile.setName(name);
+        addObject(tile);
+        return tile;
+    }
     /**
      * Returns whether to process the update loop
      * <p>

@@ -11,44 +11,104 @@
       "height": 5
     }
   ],
-  "spikes": [
+  "npc": [
     {
-      "x": 6,
-      "y": 2,
-      "width": 3,
-      "height": 0.2
+      "x": 9.0,
+      "y": 2.0,
+      "isSliding": true,
+      "leftPos": {"x": 8.5, "y":  0.0},
+      "rightPos": {"x":  10.5, "y":  1.0},
+      "isRotating": false,
+      "center": {"x": 9.0, "y":2.0},
+      "degree": 0,
+      "pairIdx": 1
+    },
+    {
+      "x": 14.0,
+      "y": 2.0,
+        "isSliding": false,
+        "leftPos": {},
+        "rightPos": {},
+        "isRotating": false,
+        "center": {},
+        "degree": 0,
+      "pairIdx": 0
+    },
+    {
+      "x": 16.0,
+      "y": 8.5,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": true,
+      "center": {"x":  19.5, "y":  7},
+      "degree": 360,
+      "pairIdx": 3
+    },
+    {
+      "x": 19.0,
+      "y": 6.5,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 2
+    },
+
+    {
+      "x": 5.0,
+      "y": 15.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 5
+    },
+    {
+      "x": 10.0,
+      "y": 15.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 4
+    },
+    {
+      "x": 16.0,
+      "y": 16.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 7
+    },
+    {
+      "x": 21.0,
+      "y": 16.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 6
     }
   ],
-  "couples": [
+
+  "spikes": [
     {
-      "left_x": 9.0,
-      "left_y": 2.0,
-      "right_x": 14.0,
-      "right_y": 2.0
-    },
-    {
-      "left_x": 15.0,
-      "left_y": 4.5,
-      "right_x": 19.0,
-      "right_y": 6.5
-    },
-    {
-      "left_x": 10.0,
-      "left_y": 11.5,
-      "right_x": 15.0,
-      "right_y": 11.5
-    },
-    {
-      "left_x": 5.0,
-      "left_y": 15.0,
-      "right_x": 10.0,
-      "right_y": 15.0
-    },
-    {
-      "left_x": 16.0,
-      "left_y": 16.0,
-      "right_x": 21.0,
-      "right_y": 16.0
+      "x": 12,
+      "y": 20,
+      "width": 3,
+      "height": 0.2
     }
   ],
   "items": [

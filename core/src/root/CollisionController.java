@@ -68,9 +68,6 @@ public class CollisionController implements ContactListener {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
-//                player.calculateTrampolineForce();
-
-
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
@@ -79,7 +76,6 @@ public class CollisionController implements ContactListener {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
-//                player.calculateTrampolineForce();
 
             }
 
