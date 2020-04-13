@@ -41,7 +41,7 @@ public class Tile implements Json.Serializable {
         width = jsonData.getFloat("width");
         height = jsonData.getFloat("height");
         x = jsonData.getFloat("x");
-        y = jsonData.getFloat("x");
+        y = jsonData.getFloat("y");
         corners[0] = 0;
         corners[1] = 0;
         corners[2] = 0;
