@@ -40,9 +40,9 @@
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
-      "isRotating": false,
-      "center": {},
-      "degree": 0,
+      "isRotating": true,
+      "center": {"x":  19.0, "y":  6.5},
+      "degree": 360,
       "pairIdx": 3
     },
     {

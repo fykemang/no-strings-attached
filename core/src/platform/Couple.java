@@ -3,6 +3,7 @@ package platform;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.ComplexObstacle;
@@ -12,8 +13,8 @@ import util.FilmStrip;
  * A obstacle made up of two dudes and a trampoline
  */
 public class Couple extends ComplexObstacle {
-    private Person l;
-    private Person r;
+    private NpcPerson l;
+    private NpcPerson r;
     private Rope trampoline;
     private Rope trampLeft;
     private Rope trampRight;
@@ -21,6 +22,10 @@ public class Couple extends ComplexObstacle {
     private Stone leftTile;
     private Stone rightTile;
 
+    final short CATEGORY_NPC = 0x0001;  // 0000000000000001 in binary
+    final short CATEGORY_TILE = 0x0002; // 0000000000000010 in binary
+    final short CATEGORY_ROPE = 0x0004; // 0000000000000100 in binary
+//    final short MASK_ROPE = CATEGORY_MONSTER | CATEGORY_SCENERY;
     public enum CoupleState {BROKEN, PAIRED}
 
     private CoupleState state;
@@ -41,17 +46,29 @@ public class Couple extends ComplexObstacle {
         this.trampolineTexture = trampolineTexture;
         this.l = createAvatar(x1, y1, avatar1);
         this.r = createAvatar(x2, y2, avatar2);
+
+        l.setCouple(r);
+        r.setCouple(l);
         this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
-//        this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
-//        this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f), false);
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
         this.leftTile = leftTile;
         this.rightTile = rightTile;
         setName("couples" + id);
+
+
+
+//        Filter RopeFilter = new Filter();
+//        RopeFilter.categoryBits = CATEGORY_ROPE;
+//        playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+//        playerRope.setFilterDataAll(playerRopeFilter);
+//        playerRope.setName("rope");
+//        playerRope.setDrawScale(scale);
+//        addObject(playerRope);
+
     }
 
     /**
@@ -59,11 +76,12 @@ public class Couple extends ComplexObstacle {
      * @param y
      * @return
      */
-    public Person createAvatar(float x, float y, TextureRegion t) {
+    public NpcPerson createAvatar(float x, float y, TextureRegion t) {
         float dWidth = t instanceof FilmStrip ? t.getRegionWidth() / drawScale.x / 2.2f : t.getRegionWidth() / drawScale.x;
         float dHeight = t.getRegionHeight() / drawScale.y;
-        Person avatar = new Person(x, y, dWidth, dHeight, "npc", "npcSensor");
+        NpcPerson avatar = new NpcPerson(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
+
         setDensity(10f);
         setLinearDamping(100f);
         avatar.setFriction(100f);
@@ -102,6 +120,17 @@ public class Couple extends ComplexObstacle {
         super.update(dt);
         l.setLinearVelocity(leftTile.getLinearVelocity());
         r.setLinearVelocity(rightTile.getLinearVelocity());
+        l.setAngularVelocity(leftTile.getAngularVelocity());
+        r.setAngularVelocity(rightTile.getAngularVelocity());
+//        trampoline.setStart(,false);
+        if(l.getX() <= r.getX()){
+            trampoline.setStart(l.getCloserAttachPoint(),false);
+            trampoline.setEnd(r.getCloserAttachPoint(), false);
+        }else{
+            System.out.println("here");
+            trampoline.moveEnd(l.getCloserAttachPoint(),false);
+            trampoline.moveStart(r.getCloserAttachPoint(), false);
+        }
     }
 
     public void breakBond(Rope l, Rope r) {

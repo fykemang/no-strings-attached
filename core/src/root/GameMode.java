@@ -640,7 +640,10 @@ public class GameMode implements Screen {
         Stone rightTile;
         if (curr.isSliding()){
             leftTile = createSlidingTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile, curr.getLeft(), curr.getRight());
-        }else {
+        }else if (curr.isRotating()) {
+            leftTile = createRotatingTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
+        }
+        else {
             leftTile = createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
         }
         if (next.isSliding()) {
@@ -651,12 +654,21 @@ public class GameMode implements Screen {
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
     }
-
+    public Stone createRotatingTile(float[] points, float x, float y, String name, float sc, TextureRegion tex,
+                                   float[] rotatingCenter, float rotatingDegree) {
+        Stone tile = new Stone(points, x, y, sc, rotatingCenter, rotatingDegree);
+        tile.setBodyType(BodyDef.BodyType.KinematicBody);
+        tile.setDensity(BASIC_DENSITY);
+        tile.setFriction(BASIC_FRICTION);
+        tile.setRestitution(BASIC_RESTITUTION);
+        tile.setDrawScale(scale);
+        tile.setTexture(tex);
+        tile.setName(name);
+        addObject(tile);
+        return tile;
+    }
     public Stone createSlidingTile(float[] points, float x, float y, String name, float sc, TextureRegion tex,
                                   float[] leftPos, float[] rightPos) {
-//        Vector2 left = new Vector2(leftPos[0], leftPos[1]);
-//        Vector2 right = new Vector2(rightPos[0], rightPos[1]);
-
         Stone tile = new Stone(points, x, y, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);

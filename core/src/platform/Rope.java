@@ -413,6 +413,19 @@ public class Rope extends ComplexObstacle {
         return upperLayer.size() > 0 ? upperLayer.get(upperLayer.size() - 1).getBody() : null;
     }
 
+    public void moveStart(Vector2 start, boolean scaled) {
+
+        upperLayer.get(0).setPosition(start);
+        setStart(start, scaled);
+    }
+
+    public void moveEnd(Vector2 end, boolean scaled) {
+
+        upperLayer.get(upperLayer.size()-1).setPosition(end);
+        setEnd(end, scaled);
+    }
+
+
     public void setStart(Vector2 start, boolean scaled) {
         if (!scaled) {
             contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
