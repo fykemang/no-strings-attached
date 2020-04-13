@@ -2,19 +2,21 @@ import React from "react";
 import { Image } from "react-konva";
 import useImage from "use-image";
 
-const URLImage = ({ image, draghandler }) => {
-  const [img] = useImage(image.src);
+const URLImage = (props) => {
+  const [image] = useImage(props.src);
   return (
     <Image
       draggable
-      image={img}
-      x={image.x}
-      y={image.y}
+      image={image}
+      x={props.x}
+      y={props.y}
+      width={props.width}
+      height={props.height}
       // I will use offset to set origin to the center of the image
-      offsetX={img ? img.width / 2 : 0}
-      offsetY={img ? img.height / 2 : 0}
+      offsetX={image ? image.width / 2 : 0}
+      offsetY={image ? image.height / 2 : 0}
       onDragEnd={e => {
-        draghandler(e.target.x, e.target.y);
+        props.onDrag(e.target.x(), e.target.y());
       }}
     />
   );
