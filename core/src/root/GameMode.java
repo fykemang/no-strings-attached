@@ -233,7 +233,7 @@ public class GameMode implements Screen {
 
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
     private ArrayList<TextureRegion> items = new ArrayList<>();
-    private ArrayList<TextureRegion> progress = new ArrayList<>();
+    private ArrayList<Item> progress = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
 
@@ -296,6 +296,7 @@ public class GameMode implements Screen {
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
         items = new ArrayList<>();
+        progress = new ArrayList<>();
         world = new World(gravity, false);
         rand = new Random();
         this.bounds = new Rectangle(bounds);
