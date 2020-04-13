@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +10,7 @@ public class Item extends CapsuleObstacle {
     // Amount to shrink item by for fixture
     private static final float ITEM_VSHRINK = 0.01f;
     private static final float ITEM_HSHRINK = 0.01f;
-    private static final float ITEM_SENSOR_SCALE = 0.1f;
+    private static final float ITEM_SENSOR_SCALE = 0.09f;
     private String sensorName;
     private CircleShape sensorShape;
     private FixtureDef sensorDef;
@@ -37,9 +37,19 @@ public class Item extends CapsuleObstacle {
         }
     }
 
+    public boolean getState() {
+        return this.state == ItemState.COLLECTED;
+    }
+
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+        if (this.state != ItemState.COLLECTED) {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+                    getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
+        }
+        else {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, origin.x,
+                    origin.y, getAngle(), 0.2f, 0.2f);
+        }
     }
 
     public boolean activatePhysics(World world) {

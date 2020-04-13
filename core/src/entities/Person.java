@@ -8,7 +8,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -31,23 +31,23 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 1.6f;
+    private static final float PLAYER_DENSITY = 1.6f;
     /**
      * The factor to multiply by the input
      */
-    private static final float DUDE_FORCE = 20.0f;
+    private static final float PLAYER_FORCE = 20.0f;
     /**
      * The amount to slow the character down
      */
-    private static final float DUDE_DAMPING = 20.0f;
+    private static final float PLAYER_DAMPING = 20.0f;
     /**
-     * The dude is a slippery one
+     * The dude is not a slippery one
      */
-    private static final float DUDE_FRICTION = 0.0f;
+    private static final float PLAYER_FRICTION = 0.02f;
     /**
      * The maximum character speed
      */
-    private static final float DUDE_MAXSPEED = 4.0f;
+    private static final float PLAYER_MAXSPEED = 4.0f;
     /**
      * The impulse for the character jump
      */
@@ -71,15 +71,15 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to shrink the body fixture (vertically) relative to the image
      */
-    private static final float DUDE_VSHRINK = 0.22f;
+    private static final float VSHRINK = 0.22f;
     /**
      * The amount to shrink the body fixture (horizontally) relative to the image
      */
-    private static final float DUDE_HSHRINK = 0.22f;
+    private static final float HSHRINK = 0.22f;
     /**
      * The amount to shrink the sensor fixture (horizontally) relative to the image
      */
-    private static final float DUDE_SSHRINK = 0.5f;
+    private static final float SSHRINK = 0.5f;
     /**
      * Cooldown (in animation frames) for shooting
      */
@@ -99,6 +99,8 @@ public class Person extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
+
+    private boolean isAlive = true;
 
     private boolean isTrampolining;
     /**
@@ -129,6 +131,7 @@ public class Person extends CapsuleObstacle {
     private float trampolineForceX;
     private float trampolineForceY;
     private ArrayList<String> inventory;
+    private boolean isAttached;
 
     /**
      * Which direction is the character facing
@@ -236,7 +239,7 @@ public class Person extends CapsuleObstacle {
      * @return how much force to apply to get the dude moving
      */
     public float getForce() {
-        return DUDE_FORCE;
+        return PLAYER_FORCE;
     }
 
     /**
@@ -245,7 +248,7 @@ public class Person extends CapsuleObstacle {
      * @return ow hard the brakes are applied to get a dude to stop moving
      */
     public float getDamping() {
-        return DUDE_DAMPING;
+        return PLAYER_DAMPING;
     }
 
     /**
@@ -256,7 +259,7 @@ public class Person extends CapsuleObstacle {
      * @return the upper limit on dude left-right movement.
      */
     public float getMaxSpeed() {
-        return DUDE_MAXSPEED;
+        return PLAYER_MAXSPEED;
     }
 
     public void setOnString(boolean onString) {
@@ -291,9 +294,9 @@ public class Person extends CapsuleObstacle {
      * @param height The object width in physics units
      */
     public Person(float x, float y, float width, float height, String name, String sensorName) {
-        super(x, y, width * DUDE_HSHRINK, height * DUDE_VSHRINK);
-        setDensity(DUDE_DENSITY);
-        setFriction(DUDE_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
+        super(x, y, width * HSHRINK, height * VSHRINK);
+        setDensity(PLAYER_DENSITY);
+        setFriction(PLAYER_FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
         trampolineDir = new Vector2();
 
@@ -303,14 +306,14 @@ public class Person extends CapsuleObstacle {
         isWalking = false;
         isTrampolining = false;
         this.sensorName = sensorName;
-        this.inventory = new ArrayList<String>();
-
+        this.inventory = new ArrayList<>();
+        isAttached = false;
         jumpCooldown = 0;
         setName(name);
     }
 
     public boolean isAttached() {
-        return target != null;
+        return isAttached;
     }
 
     public void setTrampolineDir(Vector2 v) {
@@ -325,7 +328,7 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 2.5f;
+        float adjust = 7f;
         trampolineForceX = magnitude * trampolineDir.x / adjust;
         trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
@@ -354,12 +357,13 @@ public class Person extends CapsuleObstacle {
         // collisions with the world but has no collision response.
         Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
         FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = DUDE_DENSITY;
+        sensorDef.density = PLAYER_DENSITY;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(DUDE_SSHRINK * getWidth() / 2.0f, SENSOR_HEIGHT, sensorCenter, 0.0f);
+        sensorShape.setAsBox(SSHRINK * getWidth() / 2.0f, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
-
+        sensorDef.filter.maskBits = getFilterData().maskBits;
+        sensorDef.filter.categoryBits = getFilterData().categoryBits;
         sensorFixture = body.createFixture(sensorDef);
         sensorFixture.setUserData(getSensorName());
 
@@ -372,14 +376,6 @@ public class Person extends CapsuleObstacle {
 
     public int getClosestCoupleID() {
         return this.closestCoupleID;
-    }
-
-    public void setCanCollect(boolean b) {
-        this.canCollect = b;
-    }
-
-    public boolean getCanCollect() {
-        return this.canCollect;
     }
 
     /**
@@ -422,7 +418,6 @@ public class Person extends CapsuleObstacle {
         }
 
 
-
     }
 
 
@@ -455,7 +450,9 @@ public class Person extends CapsuleObstacle {
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
-            ((FilmStrip) texture).setNextFrame();
+            if (!((FilmStrip) texture).getShouldFreeze()) {
+                ((FilmStrip) texture).setNextFrame();
+            }
         }
 
         super.update(dt);
@@ -513,7 +510,15 @@ public class Person extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-                getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * DUDE_HSHRINK, DUDE_VSHRINK);
+                getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
+    }
+
+    public void kill() {
+        isAlive = false;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 
 
@@ -540,4 +545,9 @@ public class Person extends CapsuleObstacle {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
     }
+
+    public void setAttached(boolean isAttached) {
+        this.isAttached = isAttached;
+    }
+
 }

@@ -9,7 +9,7 @@ import { NavigationBar } from './components/NavigationBar';
 class App extends Component {
   render() {
     return (
-      <>
+      <React.Fragment>
         <Router>
           <NavigationBar />
           <Layout>
@@ -18,7 +18,7 @@ class App extends Component {
             </Switch>
           </Layout>
         </Router>
-      </>
+      </React.Fragment>
     );
   }
 }

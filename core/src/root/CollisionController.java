@@ -3,9 +3,12 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
+import entities.Item;
 import obstacle.Obstacle;
-import platform.Blob;
-import platform.Person;
+import entities.Blob;
+import entities.Person;
+import entities.Rope;
+import obstacle.Obstacle;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -52,7 +55,8 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2.getName().equals("player_rope") && bd1 != player) {
-                if (bd1.getName().equals("npc")) {
+                Rope rope = (Rope) bd2;
+                if (bd1.getName().equals("npc") && rope.isBroken()) {
                     player.setTarget((Person) bd1);
                 }
                 bd2.markRemoved(true);
@@ -75,13 +79,19 @@ public class CollisionController implements ContactListener {
 
             }
 
-            if (bd1 == player && ("item_sensor").equals(fd2)) {
+            if (bd1 == player && ("item_sensor").equals(fd2) && !((Item) bd2).getState()) {
                 player.addItem(bd2.getName());
+                ((Item) bd2).setState(true);
                 bd2.markRemoved(true);
             }
-            if (bd2 == player && ("item_sensor").equals(fd1)) {
+            if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
                 player.addItem(bd1.getName());
+                ((Item) bd1).setState(true);
                 bd1.markRemoved(true);
+            }
+
+            if ((bd1 == player && bd2.getName().equals("spike")) || (bd2 == player && bd1.getName().equals("spike"))) {
+                player.kill();
             }
 
 

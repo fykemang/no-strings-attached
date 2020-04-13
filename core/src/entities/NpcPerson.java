@@ -1,12 +1,15 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.math.Vector2;
+import entities.Person;
 
-public class NpcPerson extends Person{
+public class NpcPerson extends Person {
 
     private Vector2 leftAttachPt;
     private Vector2 rightAttachPt;
     private NpcPerson couple;
+    public boolean left;
+    public boolean flip;
     /**
      * Creates a new dude avatar at the given position.
      * <p>
@@ -21,10 +24,12 @@ public class NpcPerson extends Person{
      * @param name
      * @param sensorName
      */
-    public NpcPerson(float x, float y, float width, float height, String name, String sensorName) {
+    public NpcPerson(float x, float y, float width, float height, String name, String sensorName, boolean left) {
         super(x, y, width, height, name, sensorName);
-        this.leftAttachPt = new Vector2(getX() + getWidth() / 1.5f + 0.1f, getY() + 0.1f);
-        this.rightAttachPt = new Vector2(getX() - getWidth() / 1.5f - 0.1f, getY() + 0.1f);
+        this.leftAttachPt = new Vector2(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
+        this.rightAttachPt = new Vector2(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
+        this.left = left;
+        flip = false;
 
     }
 
@@ -35,15 +40,19 @@ public class NpcPerson extends Person{
     @Override
     public void update(float dt){
         super.update(dt);
-        leftAttachPt.set(getX() + getWidth() / 1.5f + 0.1f, getY() + 0.1f);
-        rightAttachPt.set(getX() - getWidth() / 1.5f - 0.1f, getY() + 0.1f);
+        Vector2 cpPos = couple.getPosition();
+        leftAttachPt.set(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
+        rightAttachPt.set(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
+        boolean temp = leftAttachPt.dst2(cpPos) <= rightAttachPt.dst2(cpPos);
+        flip = temp != left;
+        left = temp;
     }
 
     public Vector2 getCloserAttachPoint(){
-        Vector2 cpPos = couple.getPosition();
-        if(leftAttachPt.dst2(cpPos) < rightAttachPt.dst2(cpPos)){
+        if(left){
             return leftAttachPt;
         }else {
+//            System.out.println("here");
             return rightAttachPt;
         }
 

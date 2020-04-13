@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -63,14 +63,14 @@ public class Stone extends PolygonObstacle {
             }
             setLinearVelocity(slideDir);
         }
-        if(isRotating){
-            float rotateBy = 10 * dt * (float)Math.PI/180f;
-            float rotatedX = (float) Math.cos(rotateBy) * (getX() - center.x) - (float) Math.sin(rotateBy) * (getY() - center.y) + center.x;
-            float rotatedY = (float) Math.sin(rotateBy) * (getX() - center.x) + (float)Math.cos(rotateBy) * (getY() - center.y) + center.y;
-            rotDir.set(rotatedX - getX(), rotatedY - getY());
-            rotDir.nor();
-            setLinearVelocity(rotDir);
-        }
+//        if(isRotating){
+//            float rotateBy = 10 * dt * (float)Math.PI/180f;
+//            float rotatedX = (float) Math.cos(rotateBy) * (getX() - center.x) - (float) Math.sin(rotateBy) * (getY() - center.y) + center.x;
+//            float rotatedY = (float) Math.sin(rotateBy) * (getX() - center.x) + (float)Math.cos(rotateBy) * (getY() - center.y) + center.y;
+//            rotDir.set(rotatedX - getX(), rotatedY - getY());
+//            rotDir.nor();
+//            setLinearVelocity(rotDir);
+//        }
     }
 
     @Override

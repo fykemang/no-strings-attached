@@ -12,7 +12,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.CatmullRomSpline;
@@ -51,17 +51,14 @@ public class Rope extends ComplexObstacle {
      */
     protected Vector2 dimension;
     /**
-     * The size of a single bloc
-     */
-    protected Vector2 blobSize;
-    /**
      * The length of each link
      */
-    protected float linkSize;
+    protected float blobDiameter;
     /**
      * The spacing between each link
      */
     protected float spacing;
+    private int ropeID;
     protected float length;
 
     private CatmullRomSpline<Vector2> splineCurve;
@@ -72,10 +69,9 @@ public class Rope extends ComplexObstacle {
 
     private final int K = 100;
 
-    private Vector2[] POINTS = new Vector2[K];
+    private final Vector2[] POINTS = new Vector2[K];
     private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
     private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
-    private boolean shouldDraw;
     public RopeState state;
 
     public enum RopeState {
@@ -83,7 +79,6 @@ public class Rope extends ComplexObstacle {
     }
 
     public Rope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
-        this.shouldDraw = true;
         this.state = state;
         this.lowerLayer = lower;
         this.upperLayer = upper;
@@ -109,6 +104,17 @@ public class Rope extends ComplexObstacle {
         setCurrentSplineCurve();
     }
 
+    public Rope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter, float ropeLength) {
+        super(x0, y0);
+        setName(ROPE_NAME + id);
+        state = RopeState.COMPLETE;
+        this.blobDiameter = blobDiameter;
+        this.ropeID = id;
+        dimension = new Vector2(x1 - x0, y1 - y0);
+        this.length = ropeLength;
+        initializeBlobs();
+    }
+
     /**
      * Creates a new rope bridge with the given anchors.
      *
@@ -116,42 +122,43 @@ public class Rope extends ComplexObstacle {
      * @param y0      The y position of the left anchor
      * @param x1      The x position of the right anchor
      * @param y1      The y position of the right anchor
-     * @param lwidth  The plank length
      * @param lheight The bridge thickness
      */
-    public Rope(float x0, float y0, float x1, float y1, float lwidth, float lheight, int id) {
+    public Rope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter) {
         super(x0, y0);
-        this.shouldDraw = true;
         setName(ROPE_NAME + id);
         state = RopeState.COMPLETE;
-        blobSize = new Vector2(0.2f, 0.2f);
-        linkSize = 0.2f;
+        this.blobDiameter = blobDiameter;
 
+        this.ropeID = id;
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
         this.length = dimension.len();
-        Vector2 norm = new Vector2(dimension);
-        norm.nor();
+        initializeBlobs();
+    }
 
+    private void initializeBlobs() {
+        Vector2 norm = new Vector2(dimension);
+        float blobRadius = blobDiameter / 2;
+        norm.nor();
         // If too small, only make one plank.
-        int nLinks = (int) (length / linkSize) - 4;
+        int nLinks = (int) (length / blobDiameter) - 4;
         if (nLinks <= 1) {
             nLinks = 1;
-            linkSize = length;
+            blobDiameter = length;
             spacing = 0;
         } else {
-            spacing = length - nLinks * linkSize;
+            spacing = length - nLinks * blobDiameter;
             spacing /= (nLinks - 1);
         }
 
-        blobSize.x = linkSize;
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
-            float t = i * (linkSize + spacing) + linkSize / 2.0f;
+            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
             pos.set(norm);
             pos.scl(t);
-            pos.add(x0, y0);
-            Blob blob = new Blob(pos.x, pos.y, 0.1f, id);
+            pos.add(getX(), getY());
+            Blob blob = new Blob(pos.x, pos.y, blobRadius, ropeID);
             blob.setDensity(BASIC_DENSITY);
             bodies.add(blob);
             upperLayer.add(blob);
@@ -159,11 +166,11 @@ public class Rope extends ComplexObstacle {
 
         Vector2 pos2 = new Vector2();
         for (int i = 0; i < nLinks - 1; i++) {
-            float t = i * (linkSize + spacing) + linkSize / 2.0f;
+            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
             pos2.set(norm);
             pos2.scl(t);
-            pos2.add(x0, y0);
-            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, 0.1f, id);
+            pos2.add(getX(), getY());
+            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, blobRadius, ropeID);
             blob.setDensity(BASIC_DENSITY);
             bodies.add(blob);
             lowerLayer.add(blob);
@@ -199,10 +206,10 @@ public class Rope extends ComplexObstacle {
     @Override
     protected boolean createJoints(World world) {
         assert upperLayer.size() > 0;
-        linkSize = 0.1f;
+        float blobRadius = this.blobDiameter / 2;
         if (state != RopeState.COMPLETE) return true;
-        Vector2 anchor1 = new Vector2(linkSize / 2, 0);
-        Vector2 anchor2 = new Vector2(-linkSize / 2, 0);
+        Vector2 anchor1 = new Vector2(blobRadius / 2, 0);
+        Vector2 anchor2 = new Vector2(-blobRadius / 2, 0);
 
         DistanceJointDef jointDef = new DistanceJointDef();
         jointDef.dampingRatio = 1f;
@@ -354,8 +361,6 @@ public class Rope extends ComplexObstacle {
 
         w.destroyBody(upperLayer.get(index).getBody());
         w.destroyBody(lowerLayer.get(index).getBody());
-        upperLayer.get(index).markRemoved(true);
-        lowerLayer.get(index).markRemoved(true);
 
         upperLayer.remove(index);
         lowerLayer.remove(index);
@@ -379,6 +384,7 @@ public class Rope extends ComplexObstacle {
         this.bodyinfo.active = false;
         return cutRopes;
     }
+
 
     /**
      * Draws the physics object.
@@ -414,15 +420,52 @@ public class Rope extends ComplexObstacle {
     }
 
     public void moveStart(Vector2 start, boolean scaled) {
-
         upperLayer.get(0).setPosition(start);
+//        lowerLayer.get(0).setPosition(start.x - 0.2f, start.y);
         setStart(start, scaled);
     }
 
     public void moveEnd(Vector2 end, boolean scaled) {
-
         upperLayer.get(upperLayer.size()-1).setPosition(end);
+//        lowerLayer.get(lowerLayer.size()-2).setPosition(end.x - 0.2f, end.y);
         setEnd(end, scaled);
+    }
+
+    public void recalculateBlobPosition(){
+
+        dimension.set(upperLayer.get(upperLayer.size()-1).getX() - upperLayer.get(0).getX(),
+                upperLayer.get(upperLayer.size()-1).getY() - upperLayer.get(0).getY());
+        Vector2 norm = new Vector2(dimension);
+        float blobRadius = blobDiameter / 2;
+        norm.nor();
+        // If too small, only make one plank.
+        int nLinks = (int) (length / blobDiameter) - 4;
+        if (nLinks <= 1) {
+            nLinks = 1;
+            blobDiameter = length;
+            spacing = 0;
+        } else {
+            spacing = length - nLinks * blobDiameter;
+            spacing /= (nLinks - 1);
+        }
+
+        Vector2 pos = new Vector2();
+        for (int i = 0; i < nLinks; i++) {
+            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
+            pos.set(norm);
+            pos.scl(t);
+            pos.add(upperLayer.get(0).getPosition());
+            upperLayer.get(i).setPosition(pos);
+        }
+
+//        Vector2 pos2 = new Vector2();
+//        for (int i = 0; i < nLinks - 1; i++) {
+//            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
+//            pos2.set(norm);
+//            pos2.scl(t);
+//            pos2.add(lowerLayer.get(0).getPosition());
+//            lowerLayer.get(i).setPosition(pos);
+//        }
     }
 
 
@@ -448,5 +491,9 @@ public class Rope extends ComplexObstacle {
 
     public float getLength() {
         return length;
+    }
+
+    public boolean isBroken() {
+        return this.state != RopeState.COMPLETE;
     }
 }

@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import obstacle.ComplexObstacle;
+import util.CollisionFilterConstants;
 import util.FilmStrip;
 
 /**
@@ -21,11 +22,7 @@ public class Couple extends ComplexObstacle {
     private TextureRegion trampolineTexture;
     private Stone leftTile;
     private Stone rightTile;
-
-    final short CATEGORY_NPC = 0x0001;  // 0000000000000001 in binary
-    final short CATEGORY_TILE = 0x0002; // 0000000000000010 in binary
-    final short CATEGORY_ROPE = 0x0004; // 0000000000000100 in binary
-//    final short MASK_ROPE = CATEGORY_MONSTER | CATEGORY_SCENERY;
+    private boolean isCut;
     public enum CoupleState {BROKEN, PAIRED}
 
     private CoupleState state;
@@ -44,31 +41,24 @@ public class Couple extends ComplexObstacle {
                   Stone leftTile, Stone rightTile, int id) {
         this.drawScale = drawScale;
         this.trampolineTexture = trampolineTexture;
-        this.l = createAvatar(x1, y1, avatar1);
-        this.r = createAvatar(x2, y2, avatar2);
-
+        this.l = createAvatar(x1, y1, avatar1, true);
+        this.r = createAvatar(x2, y2, avatar2, false);
         l.setCouple(r);
         r.setCouple(l);
-        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
-        this.trampoline.setTexture(trampolineTexture);
+        this.trampoline = new Rope(x1 + l.getWidth() / 1.5f - 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f + 0.2f, y2 + 0.1f, trampolineTexture.getRegionHeight() / drawScale.y, id, 0.2f);
         this.trampoline.setDrawScale(drawScale);
+        Filter trampolineFilter = new Filter();
+        trampolineFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC_ROPE.getID();
+        trampolineFilter.maskBits = CollisionFilterConstants.MASK_NPC_ROPE.getID();
+        trampoline.setFilterDataAll(trampolineFilter);
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
         this.leftTile = leftTile;
         this.rightTile = rightTile;
+        assert (l.isAttached());
+        assert (r.isAttached());
         setName("couples" + id);
-
-
-
-//        Filter RopeFilter = new Filter();
-//        RopeFilter.categoryBits = CATEGORY_ROPE;
-//        playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
-//        playerRope.setFilterDataAll(playerRopeFilter);
-//        playerRope.setName("rope");
-//        playerRope.setDrawScale(scale);
-//        addObject(playerRope);
-
     }
 
     /**
@@ -76,10 +66,11 @@ public class Couple extends ComplexObstacle {
      * @param y
      * @return
      */
-    public NpcPerson createAvatar(float x, float y, TextureRegion t) {
+    public NpcPerson createAvatar(float x, float y, TextureRegion t, boolean l) {
         float dWidth = t instanceof FilmStrip ? t.getRegionWidth() / drawScale.x / 2.2f : t.getRegionWidth() / drawScale.x;
         float dHeight = t.getRegionHeight() / drawScale.y;
-        NpcPerson avatar = new NpcPerson(x, y, dWidth, dHeight, "npc", "npcSensor");
+        NpcPerson avatar = new NpcPerson(x, y, dWidth, dHeight, "npc", "npcSensor", l);
+        avatar.setAttached(true);
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
 
         setDensity(10f);
@@ -88,6 +79,10 @@ public class Couple extends ComplexObstacle {
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
         avatar.setTexture(t);
+        Filter avatarFilter = new Filter();
+        avatarFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC.getID();
+        avatarFilter.maskBits = CollisionFilterConstants.MASK_NPC.getID();
+        avatar.setFilterData(avatarFilter);
         return avatar;
     }
 
@@ -100,7 +95,7 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = l.getBody();
         jointDef.bodyB = trampoline.getBody();
         anchor1.x = l.getWidth() / 2;
-        anchor2.x = -trampoline.linkSize / 2;
+        anchor2.x = -trampoline.blobDiameter / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
@@ -108,39 +103,49 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = trampoline.getLastLink();
         jointDef.bodyB = r.getBody();
         anchor1.x = r.getWidth() / 2;
-        anchor2.x = -trampoline.linkSize / 2;
+        anchor2.x = -trampoline.blobDiameter / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
         return true;
     }
-
     @Override
     public void update(float dt){
         super.update(dt);
         l.setLinearVelocity(leftTile.getLinearVelocity());
         r.setLinearVelocity(rightTile.getLinearVelocity());
-        l.setAngularVelocity(leftTile.getAngularVelocity());
-        r.setAngularVelocity(rightTile.getAngularVelocity());
-//        trampoline.setStart(,false);
-        if(l.getX() <= r.getX()){
-            trampoline.setStart(l.getCloserAttachPoint(),false);
-            trampoline.setEnd(r.getCloserAttachPoint(), false);
-        }else{
-            System.out.println("here");
-            trampoline.moveEnd(l.getCloserAttachPoint(),false);
-            trampoline.moveStart(r.getCloserAttachPoint(), false);
+        if(leftTile.isRotating) {
+            float rotateBy = 10 * dt * (float) Math.PI / 180f;
+            float rotatedX = (float) Math.cos(rotateBy) * (l.getX() - leftTile.center.x) - (float) Math.sin(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.x;
+            float rotatedY = (float) Math.sin(rotateBy) * (l.getX() - leftTile.center.x) + (float) Math.cos(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.y;
+            leftTile.rotDir.set(rotatedX - l.getX(), rotatedY - l.getY());
+            leftTile.rotDir.nor();
+            l.setLinearVelocity(leftTile.rotDir);
+            leftTile.setLinearVelocity(leftTile.rotDir);
+
+            if ( l.left) {
+                trampoline.moveStart(l.getCloserAttachPoint(), false);
+                trampoline.moveEnd(r.getCloserAttachPoint(), false);
+//                trampoline.recalculateBlobPosition();
+            } else{
+                trampoline.moveStart(r.getCloserAttachPoint(), false);
+                trampoline.moveEnd(l.getCloserAttachPoint(), false);
+//                trampoline.recalculateBlobPosition();
+            }
         }
     }
 
-    public void breakBond(Rope l, Rope r) {
-        this.trampLeft = l;
-        this.trampRight = r;
-        this.bodies.add(l);
-        this.bodies.add(r);
+    public void breakBond(Rope leftFragment, Rope rightFragment) {
+        this.trampLeft = leftFragment;
+        this.trampRight = rightFragment;
+        this.bodies.add(leftFragment);
+        this.bodies.add(rightFragment);
+        l.setAttached(false);
+        r.setAttached(false);
     }
 
     public Rope getRope() {
         return trampoline;
     }
+
 }

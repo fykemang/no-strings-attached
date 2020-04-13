@@ -1,9 +1,10 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+import platform.NpcData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class Level implements Json.Serializable {
     private List<Tile> tiles;
+    private List<Tile> spikes;
     private Vector2 playerPos;
 
     private List<NpcData> npcData;
@@ -26,6 +28,7 @@ public class Level implements Json.Serializable {
         couples = new ArrayList<>();
         items = new ArrayList<>();
         npcData = new ArrayList<>();
+        spikes = new ArrayList<>();
     }
 
     @Override
@@ -41,6 +44,13 @@ public class Level implements Json.Serializable {
             String tileJson = tileJsonValue.toJson(JsonWriter.OutputType.minimal);
             Tile tile = json.fromJson(Tile.class, tileJson);
             tiles.add(tile);
+        }
+
+        JsonValue spikeData = jsonData.get("spikes");
+        for (JsonValue spikeJsonValue : spikeData) {
+            String spikeJson = spikeJsonValue.toJson(JsonWriter.OutputType.minimal);
+            Tile tile = json.fromJson(Tile.class, spikeJson);
+            spikes.add(tile);
         }
 
         // Player Position
@@ -71,6 +81,10 @@ public class Level implements Json.Serializable {
      */
     public List<Tile> getTiles() {
         return tiles;
+    }
+
+    public List<Tile> getSpikes() {
+        return spikes;
     }
 
     /**
