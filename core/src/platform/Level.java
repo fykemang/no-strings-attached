@@ -15,6 +15,8 @@ import java.util.List;
 public class Level implements Json.Serializable {
     private List<Tile> tiles;
     private Vector2 playerPos;
+
+    private List<NpcData> npcData;
     private List<float[]> couples;
     private List<float[]> items;
 
@@ -23,6 +25,7 @@ public class Level implements Json.Serializable {
         playerPos = new Vector2();
         couples = new ArrayList<>();
         items = new ArrayList<>();
+        npcData = new ArrayList<>();
     }
 
     @Override
@@ -45,14 +48,11 @@ public class Level implements Json.Serializable {
         playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"));
 
         // Couple Positions
-        JsonValue couplesData = jsonData.get("couples");
-        for (JsonValue coupleData : couplesData) {
-            float[] coupleCoordinates = new float[4];
-            coupleCoordinates[0] = coupleData.getFloat("left_x");
-            coupleCoordinates[1] = coupleData.getFloat("left_y");
-            coupleCoordinates[2] = coupleData.getFloat("right_x");
-            coupleCoordinates[3] = coupleData.getFloat("right_y");
-            couples.add(coupleCoordinates);
+        JsonValue npcsData = jsonData.get("npc");
+        for (JsonValue npcData : npcsData) {
+            String npcJson = npcData.toJson(JsonWriter.OutputType.minimal);
+            NpcData npc = json.fromJson(NpcData.class, npcJson);
+            this.npcData.add(npc);
         }
 
         JsonValue itemsData = jsonData.get("items");
@@ -85,6 +85,10 @@ public class Level implements Json.Serializable {
      */
     public List<float[]> getCouples() {
         return couples;
+    }
+
+    public List<NpcData> getNpcData() {
+        return npcData;
     }
 
     public List<float[]> getItems() {

@@ -31,7 +31,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float DUDE_DENSITY = 1.5f;
+    private static final float DUDE_DENSITY = 1.6f;
     /**
      * The factor to multiply by the input
      */
@@ -325,7 +325,7 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 3f;
+        float adjust = Math.abs(trampolineDir.x) < EPSILON ? 6.7f : 2.5f;
         trampolineForceX = magnitude * trampolineDir.x / adjust;
         trampolineForceY = magnitude * trampolineDir.y / adjust;
     }

@@ -18,6 +18,8 @@ public class Couple extends ComplexObstacle {
     private Rope trampLeft;
     private Rope trampRight;
     private TextureRegion trampolineTexture;
+    private Stone leftTile;
+    private Stone rightTile;
 
     public enum CoupleState {BROKEN, PAIRED}
 
@@ -33,7 +35,8 @@ public class Couple extends ComplexObstacle {
      * @param trampolineTexture
      * @param drawScale
      */
-    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatar1, TextureRegion avatar2, TextureRegion trampolineTexture, Vector2 drawScale, int id) {
+    public Couple(float x1, float y1, float x2, float y2, TextureRegion avatar1, TextureRegion avatar2, TextureRegion trampolineTexture, Vector2 drawScale,
+                  Stone leftTile, Stone rightTile, int id) {
         this.drawScale = drawScale;
         this.trampolineTexture = trampolineTexture;
         this.l = createAvatar(x1, y1, avatar1);
@@ -41,11 +44,13 @@ public class Couple extends ComplexObstacle {
         this.trampoline = new Rope(x1 + l.getWidth() / 1.5f + 0.1f, y1 + 0.1f, x2 - r.getWidth() / 1.5f - 0.1f, y2 + 0.1f, 0.2f, trampolineTexture.getRegionHeight() / drawScale.y, id);
         this.trampoline.setTexture(trampolineTexture);
         this.trampoline.setDrawScale(drawScale);
-        this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
-        this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f), false);
+//        this.trampoline.setStart(l.getPosition().add(l.getWidth() / 1.5f, 0.1f), false);
+//        this.trampoline.setEnd(r.getPosition().add(-r.getWidth() / 1.5f, 0.1f), false);
         this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
+        this.leftTile = leftTile;
+        this.rightTile = rightTile;
         setName("couples" + id);
     }
 
@@ -59,6 +64,9 @@ public class Couple extends ComplexObstacle {
         float dHeight = t.getRegionHeight() / drawScale.y;
         Person avatar = new Person(x, y, dWidth, dHeight, "npc", "npcSensor");
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
+        setDensity(10f);
+        setLinearDamping(100f);
+        avatar.setFriction(100f);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
         avatar.setTexture(t);
@@ -87,6 +95,13 @@ public class Couple extends ComplexObstacle {
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
         return true;
+    }
+
+    @Override
+    public void update(float dt){
+        super.update(dt);
+        l.setLinearVelocity(leftTile.getLinearVelocity());
+        r.setLinearVelocity(rightTile.getLinearVelocity());
     }
 
     public void breakBond(Rope l, Rope r) {

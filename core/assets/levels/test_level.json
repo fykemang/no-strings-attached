@@ -11,37 +11,98 @@
       "height": 5
     }
   ],
-  "couples": [
+  "npc": [
     {
-      "left_x": 9.0,
-      "left_y": 2.0,
-      "right_x": 14.0,
-      "right_y": 2.0
+      "x": 9.0,
+      "y": 2.0,
+      "isSliding": true,
+      "leftPos": {"x": 8.5, "y":  1.0},
+      "rightPos": {"x":  10.5, "y":  1.0},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 1
     },
     {
-      "left_x": 15.0,
-      "left_y": 4.5,
-      "right_x": 19.0,
-      "right_y": 6.5
+      "x": 14.0,
+      "y": 2.0,
+        "isSliding": false,
+        "leftPos": {},
+        "rightPos": {},
+        "isRotating": false,
+        "center": {},
+        "degree": 0,
+      "pairIdx": 0
     },
     {
-      "left_x": 10.0,
-      "left_y": 11.5,
-      "right_x": 15.0,
-      "right_y": 11.5
+      "x": 15.0,
+      "y": 4.5,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 3
     },
     {
-      "left_x": 5.0,
-      "left_y": 15.0,
-      "right_x": 10.0,
-      "right_y": 15.0
+      "x": 19.0,
+      "y": 6.5,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 2
+    },
+
+    {
+      "x": 5.0,
+      "y": 15.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 5
     },
     {
-      "left_x": 16.0,
-      "left_y": 16.0,
-      "right_x": 21.0,
-      "right_y": 16.0
+      "x": 10.0,
+      "y": 15.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 4
+    },
+    {
+      "x": 16.0,
+      "y": 16.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 7
+    },
+    {
+      "x": 21.0,
+      "y": 16.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 6
     }
+  ],
+  "couples": [
   ],
   "items": [
     {

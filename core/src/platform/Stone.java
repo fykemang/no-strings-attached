@@ -1,12 +1,17 @@
 package platform;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import obstacle.PolygonObstacle;
 import root.GameCanvas;
 
 public class Stone extends PolygonObstacle {
 
     float scale;
+    boolean isSliding;
+    Vector2 leftSlideLim;
+    Vector2 rightSlideLim;
+    Vector2 slideDir;
 
 
     public Stone(float[] points) {
@@ -16,6 +21,28 @@ public class Stone extends PolygonObstacle {
     public Stone(float[] points, float x, float y, float scale) {
         super(points, x, y);
         this.scale = scale;
+    }
+
+    public Stone(float[] points, float x, float y, float sc, float[] leftPos, float[] rightPos) {
+        this(points, x, y, sc);
+        setFriction(100f);
+        isSliding = true;
+        leftSlideLim = new Vector2(leftPos[0], leftPos[1]);
+        rightSlideLim = new Vector2(rightPos[0], rightPos[1]);
+        slideDir = new Vector2(leftPos[0]*drawScale.x - getX(), leftPos[1]*drawScale.y - getY());
+        setName("stone");
+    }
+
+    @Override
+    public void update(float dt){
+        super.update(dt);
+        if(isSliding){
+            if(getPosition().epsilonEquals(leftSlideLim, 0.001f) ||
+                    getPosition().epsilonEquals(rightSlideLim, 0.001f)){
+                slideDir.scl(-1f);
+            }
+            setLinearVelocity(slideDir);
+        }
     }
 
     @Override
