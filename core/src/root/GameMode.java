@@ -657,7 +657,7 @@ public class GameMode implements Screen {
      * @param y2
      */
     public void createCouple(float x1, float y1, float x2, float y2, int id) {
-        float[] points = new float[]{0.15f, 0.25f, 0.15f, 1f, 0.75f, 1f, 0.75f, 0.25f};
+        float[] points = new float[]{0f, 0f, 0f, .5f, .5f, .5f, .5f, 0f};
         int n1 = rand.nextInt(npcs.size());
         int n2 = rand.nextInt(npcs.size());
         while (n2 == n1) n2 = rand.nextInt(npcs.size());
@@ -665,8 +665,8 @@ public class GameMode implements Screen {
         TextureRegion randTex2 = npcs.get(n2);
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, id);
         addObject(couple);
-//        createTile(points, x1, y1 - 1f, "tile", 1f, smEarthTile);
-//        createTile(points, x2, y2 - 1f, "tile", 1f, smEarthTile);
+        createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile);
+        createTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f ,"tile", 1f, earthTile);
     }
 
     /**

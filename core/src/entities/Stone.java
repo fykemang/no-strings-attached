@@ -36,7 +36,7 @@ public class Stone extends PolygonObstacle {
         super(points, x, y);
         this.scale = scale;
         this.height = height+0.6f;
-        this.width = width + 0.6f;
+        this.width = width+0.6f;
         this.x = getX()-0.3f;
         this.y = getY()-0.3f;
     }
@@ -58,11 +58,10 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
         Random rand = new Random();
-        if (width > 1.2 * height && width < 1.5 * height) {
+        if (height <=2&& width <= 2) {
             canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                     firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
-                    width * drawScale.x / texture.getRegionWidth() * 1.2f, height * drawScale.y / texture.getRegionHeight() * 1.2f);
-
+                    width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
         } else if (height <= 2) {
             // scale by y
             approxDist = 0.5f;
@@ -72,8 +71,6 @@ public class Stone extends PolygonObstacle {
             canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                     end, firsty + height * drawScale.y / 2, getAngle(),
                     sc, sc);
-            System.out.println("num" + num);
-            System.out.println("dist" + dist);
             for (int i = 0; i < num; i++) {
                 //  float y = ylower + rand.nextFloat()*(yupper- ylower);
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
