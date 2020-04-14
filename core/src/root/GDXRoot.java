@@ -154,7 +154,10 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == controller && exitCode == LevelSelector.INTO_SELECTOR) {
             canvas = new GameCanvas();
             selector.reset(canvas);
+            selector.setScreenListener(this);
             setScreen(selector);
+            controller.pause();
+//            controller = null;
         }else if (exitCode == GameMode.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();

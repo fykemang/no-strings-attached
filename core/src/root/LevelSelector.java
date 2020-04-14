@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -26,10 +27,12 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private static final String FOREST_FILE = "shared/forest.png";
     private static final String MOUNTAIN_FILE = "shared/mountains.png";
     private static final String SELECT_FILE = "shared/selector.png";
+    private static final String MUSIC_FILE = "platform/themoreyouknow.mp3";
     private AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
      */
+    private Music music;
     private GameCanvas canvas;
     private Texture background;
     private Texture city;
@@ -74,12 +77,17 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         forest = new Texture(FOREST_FILE);
         mountain = new Texture(MOUNTAIN_FILE);
         selector = new Texture(SELECT_FILE);
+        this.music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
         levels.add(new LevelMetaData(false, "levels/test_level.json", ""));
         levels.add(new LevelMetaData(false, "levels/level2.json", ""));
+
         Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
@@ -135,6 +143,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 //        }
         if (level != -1 && level < levels.size() + 1) {
             ready = true;
+            music.stop();
         }
         return false;
     }
@@ -221,7 +230,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
     @Override
     public void dispose() {
-
+        music.dispose();
     }
 
     @Override
@@ -351,6 +360,10 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         this.canvas = canvas;
         level = -1;
         ready = false;
+        this.music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
     }
 
 }

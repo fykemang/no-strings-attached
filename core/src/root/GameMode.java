@@ -14,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -243,7 +244,8 @@ public class GameMode implements Screen {
     private TextureRegion redYarnTexture;
     private TextureRegion greyYarnTexture;
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
-    private ArrayList<TextureRegion> items = new ArrayList<>();
+    private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    private ArrayList<float[]> items = new ArrayList<>();
     private ArrayList<Item> progress = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
@@ -294,6 +296,12 @@ public class GameMode implements Screen {
     private TextureRegion skyTexture;
     private TextureRegion cloudTexture;
     private TextureRegion sunTexture;
+
+    private String CITY_MUSIC_FILE = "platform/Shine.mp3";
+    private String SUBURB_MUSIC_FILE = "platform/takingastroll.mp3";
+    private String FOREST_MUSIC_FILE;
+    private String MOUNTAIN_MUSIC_FILE;
+    private Music music;
 
     /**
      * Creates a new game world
@@ -437,10 +445,19 @@ public class GameMode implements Screen {
 //        }
         Json json = new Json();
         levels = new ArrayList<>();
-        items = new ArrayList<>();
+        itemTexture = new ArrayList<>();
         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
+        if (level.getType().contains("city")) {
+            music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
+        }
+        else {
+            music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
+        }
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
@@ -460,9 +477,9 @@ public class GameMode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-        items.add(buttonTexture);
-        items.add(needleTexture);
-        items.add(yarnTexture);
+        itemTexture.add(buttonTexture);
+        itemTexture.add(needleTexture);
+        itemTexture.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -593,7 +610,7 @@ public class GameMode implements Screen {
         List<Tile> tiles = testLevel.getTiles();
         List<Tile> spikes = testLevel.getSpikes();
         List<float[]> couples = testLevel.getCouples();
-        List<float[]> items = testLevel.getItems();
+        items = (ArrayList<float[]>) testLevel.getItems();
         List<NpcData> npcData = testLevel.getNpcData();
 
         // Create main dude
@@ -653,8 +670,8 @@ public class GameMode implements Screen {
     }
 
     public void createItem(float x, float y, int id) {
-        int n = rand.nextInt(items.size());
-        TextureRegion randTex = items.get(n);
+        int n = rand.nextInt(itemTexture.size());
+        TextureRegion randTex = itemTexture.get(n);
         Vector2 dimensions = getScaledDimensions(randTex);
         Item item = new Item(x, y, dimensions.x, dimensions.y, id);
         item.setTexture(randTex);
@@ -798,6 +815,7 @@ public class GameMode implements Screen {
        if ((Gdx.input.isTouched() &&Gdx.input.getX() >= 800
                && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
        ||(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
+           music.dispose();
            exitToSelector();
         }
         if (player.isAlive()) {
@@ -1172,9 +1190,11 @@ public class GameMode implements Screen {
         for (Obstacle obj : objects) {
             obj.deactivatePhysics(world);
         }
+        music.dispose();
         objects.clear();
         addQueue.clear();
         world.dispose();
+        music.dispose();
         objects = null;
         addQueue = null;
         bounds = null;
@@ -1294,6 +1314,7 @@ public class GameMode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
+        music.dispose();
     }
 
     /**
@@ -1332,6 +1353,7 @@ public class GameMode implements Screen {
 
     public void exitToSelector(){
         if (listener != null){
+            music.dispose();
             listener.exitScreen(this, 0);
         }
     }

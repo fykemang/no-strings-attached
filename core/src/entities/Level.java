@@ -17,6 +17,7 @@ public class Level implements Json.Serializable {
     private List<Tile> tiles;
     private List<Tile> spikes;
     private Vector2 playerPos;
+    private String type;
 
     private List<NpcData> npcData;
     private List<float[]> couples;
@@ -31,14 +32,23 @@ public class Level implements Json.Serializable {
         spikes = new ArrayList<>();
     }
 
+    public String getType() {
+        return this.type;
+    }
+
     @Override
     public void write(Json json) {
 
     }
 
+
     @Override
     public void read(Json json, JsonValue jsonData) {
-        // Game Tiles
+        //environment information
+        JsonValue typeData = jsonData.get("type");
+        this.type = typeData.toString();
+
+        //Game Tiles
         JsonValue tilesData = jsonData.get("tiles");
         for (JsonValue tileJsonValue : tilesData) {
             String tileJson = tileJsonValue.toJson(JsonWriter.OutputType.minimal);
