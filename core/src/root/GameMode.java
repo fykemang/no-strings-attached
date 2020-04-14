@@ -472,7 +472,7 @@ public class GameMode implements Screen {
         String type = level.getType();
         if (type.contains("city")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
-            level.setTileTexture(createTexture(manager, CITY_TILE_FILE, false));
+            level.setTileTexture(createTexture(manager, MOUNTAIN_TILE_FILE, false));
         }
         else if (type.contains("suburb")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
