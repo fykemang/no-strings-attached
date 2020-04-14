@@ -14,6 +14,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -295,6 +296,12 @@ public class GameMode implements Screen {
     private TextureRegion cloudTexture;
     private TextureRegion sunTexture;
 
+    private String CITY_MUSIC_FILE = "platform/Shine.mp3";
+    private String SUBURB_MUSIC_FILE = "platform/takingastroll.mp3";
+    private String FOREST_MUSIC_FILE;
+    private String MOUNTAIN_MUSIC_FILE;
+    private Music music;
+
     /**
      * Creates a new game world
      * <p>
@@ -441,6 +448,15 @@ public class GameMode implements Screen {
         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
+        if (level.getType().contains("city")) {
+            music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
+        }
+        else {
+            music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
+        }
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
@@ -798,6 +814,7 @@ public class GameMode implements Screen {
        if ((Gdx.input.isTouched() &&Gdx.input.getX() >= 800
                && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
        ||(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
+           music.dispose();
            exitToSelector();
         }
         if (player.isAlive()) {
@@ -1172,9 +1189,11 @@ public class GameMode implements Screen {
         for (Obstacle obj : objects) {
             obj.deactivatePhysics(world);
         }
+        music.dispose();
         objects.clear();
         addQueue.clear();
         world.dispose();
+        music.dispose();
         objects = null;
         addQueue = null;
         bounds = null;
@@ -1294,6 +1313,7 @@ public class GameMode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
+        music.dispose();
     }
 
     /**
@@ -1332,6 +1352,7 @@ public class GameMode implements Screen {
 
     public void exitToSelector(){
         if (listener != null){
+            music.dispose();
             listener.exitScreen(this, 0);
         }
     }

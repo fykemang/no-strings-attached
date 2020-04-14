@@ -26,6 +26,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -61,6 +62,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String QUIT_FILE = "shared/quit.png";
     private static final String START_FILE = "shared/start.png";
     private static final String SELECT_FILE = "shared/select.png";
+    private static final String MUSIC_FILE = "platform/storybook.mp3";
 
     /**
      * Background texture for start-up
@@ -68,6 +70,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private Texture background;
 
     private FilmStrip animatedBkg;
+
+    private Music music;
 
     /**
      * Play button to display when done
@@ -325,6 +329,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         } catch (Exception e) {
             System.out.println("Error: Game Controllers could not be initialized");
         }
+
+        music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
+
         active = true;
     }
 
@@ -332,6 +342,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Called when this screen should release all resources.
      */
     public void dispose() {
+        music.dispose();
         statusBkgLeft = null;
         statusBkgRight = null;
         statusBkgMiddle = null;
