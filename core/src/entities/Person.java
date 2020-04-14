@@ -330,7 +330,7 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = 7f;
+        float adjust = 6f;
         trampolineForceX = magnitude * trampolineDir.x / adjust;
         trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
@@ -411,7 +411,7 @@ public class Person extends CapsuleObstacle {
         }
 
 
-        float horizontal = released ? (isFacingRight ? 1 : -1) * 140f + getMovement()
+        float horizontal = released ? (isFacingRight ? 1 : -1) * 120f + getMovement()
                 : isAttached ? getMovement() * 9f : getMovement();
 
         forceCache.set(horizontal, 0);
