@@ -20,7 +20,7 @@ function Couple(props) {
         dragBoundFunc={props.dragBoundFunc}
       />
       <Line
-        points={[props.leftNpc.x, props.leftNpc.y, props.rightNpc.x, props.rightNpc.y]}
+        points={[props.leftNpc.x + 20, props.leftNpc.y + 50, props.rightNpc.x + 20, props.rightNpc.y + 50]}
         stroke={"red"}
         lineJoin={"round"}
         lineCap={"round"}
