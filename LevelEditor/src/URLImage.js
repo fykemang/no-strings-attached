@@ -12,11 +12,9 @@ const URLImage = (props) => {
       y={props.y}
       width={props.width}
       height={props.height}
-      // I will use offset to set origin to the center of the image
-      offsetX={image ? image.width / 2 : 0}
-      offsetY={image ? image.height / 2 : 0}
+      dragBoundFunc={(pos) => props.dragBoundFunc(pos)}
       onDragEnd={e => {
-        props.onDrag(e.target.x(), e.target.y());
+        props.onDragEnd(e.target.x(), e.target.y());
       }}
     />
   );

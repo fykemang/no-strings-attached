@@ -1,20 +1,22 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useReducer, useCallback } from "react";
 import { Stage, Layer, Line } from "react-konva";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Container from "react-bootstrap/Container";
-import { Row } from "react-bootstrap";
+import { ButtonGroup, Button, Dropdown, DropdownButton } from "react-bootstrap";
 import Tile from "./Tile";
 import URLImage from "./URLImage";
-import player from "./assets/player.png";
+import PlayerTexture from "./assets/player.png";
+import Couple from "./Couple";
+import ItemTexture from "./assets/skein.png";
+import ExitTexture from "./assets/exit.png";
 
 const initialState = {
   tiles: [],
-  npcs: [],
+  couples: [],
   items: [],
   player: {
+    x: 500,
+    y: 500,
+  },
+  exit: {
     x: 500,
     y: 500,
   },
@@ -32,8 +34,8 @@ function reducer(state, action) {
         id: state.tiles.length,
       };
       const newTiles = state.tiles.slice();
-      newTiles.push(tile)
-      
+      newTiles.push(tile);
+
       return {
         ...state,
         tiles: newTiles,
@@ -47,10 +49,10 @@ function reducer(state, action) {
           }
           return {
             ...tile,
-            ...action.attrs
-          }
-        })
-      }
+            ...action.attrs,
+          };
+        }),
+      };
     case "move-player":
       return {
         ...state,
@@ -59,15 +61,93 @@ function reducer(state, action) {
           y: action.y,
         },
       };
-    case "add-item":
+    case "move-exit":
       return {
         ...state,
-        items: {
-          x: 10,
-          y: 10,
+        exit: {
+          x: action.x,
+          y: action.y,
         },
       };
+    case "add-item":
+      const item = {
+        x: 500,
+        y: 500,
+        id: state.items.length,
+      };
+      const newItems = state.items.slice();
+      newItems.push(item);
 
+      return {
+        ...state,
+        items: newItems,
+      };
+    case "modify-item":
+      return {
+        ...state,
+        items: state.items.map((item, index) => {
+          if (index !== action.index) {
+            return item;
+          }
+          return {
+            ...item,
+            ...action.attrs,
+          };
+        }),
+      };
+    case "add-couple":
+      const leftNpc = {
+        x: 500,
+        y: 500,
+        isSliding: action.isSliding,
+        isRotating: action.isRotating,
+        center: {},
+        width: action.blockSize * 2,
+        height: action.blockSize * 4,
+        degree: 0,
+        id: state.couples.length,
+        leftPos: {},
+        rightPos: {}
+      };
+
+      const rightNpc = {
+        ...leftNpc,
+        x: 600,
+      };
+
+      const newCouples = state.couples.slice();
+      newCouples.push({ leftNpc, rightNpc, id: state.couples.length });
+      return {
+        ...state,
+        couples: newCouples,
+      };
+    case "modify-couple":
+      let updatedCouple = null;
+      if (action.choice === "left") {
+        updatedCouple = {
+          leftNpc: { ...state.couples[action.index].leftNpc, ...action.attrs },
+        };
+      } else {
+        updatedCouple = {
+          rightNpc: {
+            ...state.couples[action.index].rightNpc,
+            ...action.attrs,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        couples: state.couples.map((couple, index) => {
+          if (index !== action.index) {
+            return couple;
+          }
+          return {
+            ...couple,
+            ...updatedCouple,
+          };
+        }),
+      };
     default:
       throw new Error();
   }
@@ -75,14 +155,11 @@ function reducer(state, action) {
 
 function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [c_pos, setPos] = useState(null);
-  const [selectedId, selectShape] = useState(null);
-  const [image, setImage] = React.useState(null);
-  const dragUrl = React.useRef();
+  const [selectedNodeID, setSelectedNode] = useState(null);
   const stageRef = React.useRef();
   const gridBlockSize = 20;
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+  const width = 1200;
+  const height = 800;
 
   const displayGrid = () => {
     const horizontalLines = [];
@@ -122,11 +199,42 @@ function Home() {
   };
 
   const downloadFile = async () => {
-    const myData = {
-      tiles: [],
+    const xScale = 37.5
+    const yScale = 44.4
+    const data = {
+      items: state.items.map((item) => {
+        return {
+          x: item.x / xScale,
+          y: item.y / yScale
+        }
+      }),
+      tiles: state.tiles.map((tile) => {
+        return {
+          x: tile.x / xScale,
+          y: tile.y / yScale,
+          height: tile.height / yScale,
+          width: tile.width / xScale
+        }
+      }),
+      couples: state.couples.reduce((acc, couple) => {
+        const leftNpc = {...couple.leftNpc, x: couple.leftNpc.x / xScale, y: couple.leftNpc.y / yScale}
+        const rightNpc = {...couple.rightNpc, x: couple.rightNpc.x / xScale, y: couple.rightNpc.y / yScale}
+        acc.push(leftNpc)
+        acc.push(rightNpc)
+        return acc
+      }, []),
+      player: {
+        x: state.player.x / xScale,
+        y: state.player.y / yScale
+      }, 
+      exit: {
+        x: state.player.x / xScale,
+        y: state.player.y / yScale
+      }
     };
+
     const fileName = "level";
-    const json = JSON.stringify(myData);
+    const json = JSON.stringify(data);
     const blob = new Blob([json], { type: "application/json" });
     const href = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -137,84 +245,156 @@ function Home() {
     document.body.removeChild(link);
   };
 
+  const dragBoundFunc = useCallback((pos) => {
+    const newY = pos.y < 0 ? 0 : pos.y > height ? height : pos.y;
+    const newX = pos.x < 0 ? 0 : pos.x > width ? width : pos.x;
+    return {
+      x: newX,
+      y: newY,
+    };
+  }, []);
+
   return (
-    <Container fluid>
-      <Row>
-        <ButtonGroup>
-          <DropdownButton title="Tiles">
-            <Dropdown.Item
-              onClick={() =>
-                dispatch({ type: "add-tile", "tile-type": "normal" })
-              }
-            >
-              Normal
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() =>
-                dispatch({ type: "add-tile", "tile-type": "spikes" })
-              }
-            >
-              Spikes
-            </Dropdown.Item>
-          </DropdownButton>
-          <Button variant="secondary">Couple</Button>
-          <Button variant="secondary">Item</Button>
-        </ButtonGroup>
-      </Row>
-      <Row>
-        <Stage
-          style={{ border: "1px solid grey" }}
-          width={width}
-          height={height}
-          onMouseDown={(e) => {
-            const clickedOnEmpty = e.target === e.target.getStage();
-            if (clickedOnEmpty) {
-              selectShape(null);
+    <div className="home-wrapper">
+      <ButtonGroup>
+        <DropdownButton title="Tiles">
+          <Dropdown.Item
+            onClick={() =>
+              dispatch({ type: "add-tile", "tile-type": "normal" })
             }
-          }}
-          ref={stageRef}
+          >
+            Normal
+          </Dropdown.Item>
+          <Dropdown.Item
+            onClick={() =>
+              dispatch({ type: "add-tile", "tile-type": "spikes" })
+            }
+          >
+            Spikes
+          </Dropdown.Item>
+        </DropdownButton>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            dispatch({
+              type: "add-couple",
+              isSliding: false,
+              isRotating: false,
+              blockSize: gridBlockSize,
+            })
+          }
         >
-          <Layer>
-            {displayGrid()}
-            {state.tiles.map((rect, i) => {
-              return (
-                <Tile
-                  key={i}
-                  blockSize={gridBlockSize}
-                  shapeProps={rect}
-                  isSelected={rect.id === selectedId}
-                  onSelect={() => {
-                    selectShape(rect.id);
-                  }}
-                  onChange={(newAttrs) =>
-                    dispatch({
-                      type: "modify-tile",
-                      index: rect.id,
-                      attrs: newAttrs,
-                    })
-                  }
-                />
-              );
-            })}
-            <URLImage
-              src={player}
-              width={gridBlockSize * 3}
-              height={gridBlockSize * 5.5}
-              x={state.player.x}
-              y={state.player.y}
-              onDrag={(x, y) => {
-                dispatch({ type: "move-player", x: x, y: y });
-              }}
-            />
-          </Layer>
-        </Stage>
-      </Row>
-      <Row>
-        <Button variant="secondary" onClick={downloadFile}>
-          Download
+          Couple
         </Button>
-      </Row>
-    </Container>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            dispatch({
+              type: "add-item",
+            })
+          }
+        >
+          Item
+        </Button>
+      </ButtonGroup>
+      <Stage
+        style={{ border: "1px solid grey" }}
+        width={width}
+        height={height}
+        onMouseDown={(e) => {
+          const clickedOnEmpty = e.target === e.target.getStage();
+          if (clickedOnEmpty) {
+            setSelectedNode(null);
+          }
+        }}
+        ref={stageRef}
+      >
+        <Layer>
+          {displayGrid()}
+          {state.tiles.map((rect, i) => {
+            return (
+              <Tile
+                key={i}
+                blockSize={gridBlockSize}
+                shapeProps={rect}
+                isSelected={rect.id === selectedNodeID}
+                onSelect={() => setSelectedNode(rect.id)}
+                onChange={(newAttrs) =>
+                  dispatch({
+                    type: "modify-tile",
+                    index: rect.id,
+                    attrs: newAttrs,
+                  })
+                }
+              />
+            );
+          })}
+          {state.items.map((item, i) => {
+            return (
+              <URLImage
+                draggable
+                src={ItemTexture}
+                key={i}
+                width={gridBlockSize * 3}
+                height={gridBlockSize * 3}
+                dragBoundFunc={dragBoundFunc}
+                x={item.x}
+                y={item.y}
+                id={item.id}
+                onDragEnd={(x, y) => {
+                  dispatch({
+                    index: item.id,
+                    type: "modify-item",
+                    attrs: { x: x, y: y },
+                  });
+                }}
+              />
+            );
+          })}
+          {state.couples.map((couple, i) => {
+            return (
+              <Couple
+                key={i}
+                blockSize={gridBlockSize}
+                onSelect={() => setSelectedNode(couple.id)}
+                leftNpc={couple.leftNpc}
+                rightNpc={couple.rightNpc}
+                dragBoundFunc={dragBoundFunc}
+                onChange={(attrs, choice) =>
+                  dispatch({
+                    type: "modify-couple",
+                    index: couple.id,
+                    attrs: attrs,
+                    choice: choice,
+                  })
+                }
+              />
+            );
+          })}
+          <URLImage
+            src={ExitTexture}
+            width={gridBlockSize * 3}
+            height={gridBlockSize * 5}
+            dragBoundFunc={dragBoundFunc}
+            x={state.exit.x}
+            y={state.exit.y}
+            onDragEnd={(x, y) => dispatch({ type: "move-exit", x: x, y: y })}
+          />
+          <URLImage
+            src={PlayerTexture}
+            width={gridBlockSize * 2}
+            height={gridBlockSize * 4}
+            dragBoundFunc={dragBoundFunc}
+            x={state.player.x}
+            y={state.player.y}
+            onDragEnd={(x, y) => dispatch({ type: "move-player", x: x, y: y })}
+          />
+        </Layer>
+      </Stage>
+      <Button variant="secondary" onClick={downloadFile}>
+        Download
+      </Button>
+    </div>
   );
 }
 export default Home;
