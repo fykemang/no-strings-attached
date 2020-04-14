@@ -9,14 +9,15 @@
       "x": 1,
       "y": 3,
       "width": 7,
-      "height": 1
+      "height": 1,
+      "type": "normal"
     },
     {
       "x": 25.5,
       "y": 3,
       "width": 7,
-      "height": 1
-
+      "height": 1,
+      "type": "normal"
     }
 
   ],
@@ -115,7 +116,7 @@
       "y": 16.5
     }
   ],
-  "gate": {
+  "exit": {
     "x": 15,
     "y": 3
   }

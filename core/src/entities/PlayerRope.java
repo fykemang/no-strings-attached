@@ -97,7 +97,7 @@ public class PlayerRope extends ComplexObstacle {
             pos.set(norm);
             pos.scl(t);
             pos.add(getX(), getY());
-            BoxObstacle plank = new BoxObstacle(pos.x, pos.y,lwidth * 2.5f, lwidth);
+            BoxObstacle plank = new BoxObstacle(pos.x, pos.y, lwidth * 2.5f, lwidth);
             plank.setDensity(BASIC_DENSITY);
             plank.setName(PLANK_NAME);
             bodies.add(plank);
@@ -134,7 +134,7 @@ public class PlayerRope extends ComplexObstacle {
 
         RevoluteJointDef jointDef = new RevoluteJointDef();
 
-        for (int i = 0; i < layer.size()-1; i++) {
+        for (int i = 0; i < layer.size() - 1; i++) {
             Obstacle curr = layer.get(i);
             Obstacle next = layer.get(i + 1);
             jointDef.bodyA = curr.getBody();

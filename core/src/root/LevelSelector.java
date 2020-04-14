@@ -355,8 +355,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     }
 
 
-
-    public void reset(GameCanvas canvas ){
+    public void reset(GameCanvas canvas) {
         this.canvas = canvas;
         level = -1;
         ready = false;

@@ -9,32 +9,30 @@
       "x": 1,
       "y": 3,
       "width": 7,
-      "height": 1
+      "height": 1,
+      "type": "normal"
     },
     {
       "x": 25.5,
       "y": 3,
       "width": 7,
-      "height": 1
-
-    }
-
-  ],
-  "spikes": [
-
+      "height": 1,
+      "type": "normal"
+    },
     {
       "x": 13,
       "y": 17.5,
       "width": 10,
-      "height": 1
+      "height": 1,
+      "type": "spikes"
     },
     {
       "x": 25,
       "y": 8,
       "width": 1,
-      "height": 9.5
+      "height": 9.5,
+      "type": "spikes"
     }
-
   ],
   "npc": [
     {
@@ -45,8 +43,7 @@
       "rightPos": {"x":  10.5, "y":  1.0},
       "isRotating": false,
       "center": {"x": 9.0, "y":2.0},
-      "degree": 0,
-      "pairIdx": 1
+      "degree": 0
     },
     {
       "x": 14.0,
@@ -56,8 +53,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 0
+      "degree": 0
     },
     {
       "x": 15.0,
@@ -67,8 +63,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {"x":  19.5, "y":  7},
-      "degree": 360,
-      "pairIdx": 3
+      "degree": 360
     },
     {
       "x": 20.0,
@@ -78,8 +73,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 2
+      "degree": 0
     },
 
     {
@@ -90,8 +84,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 5
+      "degree": 0
     },
     {
       "x": 20.0,
@@ -101,8 +94,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 4
+      "degree": 0
     }
   ],
   "items": [
@@ -115,7 +107,7 @@
       "y": 16.5
     }
   ],
-  "gate": {
+  "exit": {
     "x": 15,
     "y": 3
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Rect, Transformer } from "react-konva";
-
+import spikes from "./assets/spikes.png";
+import useImage from "use-image";
 // var width = window.innerWidth;
 // var height = window.innerHeight;
 // var shadowOffset = 20;
@@ -25,11 +26,10 @@ import { Rect, Transformer } from "react-konva";
 //   })
 // }
 
-const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
+const Tile = ({ shapeProps, isSelected, onSelect, onChange, blockSize}) => {
   const shapeRef = React.useRef();
   const trRef = React.useRef();
-  const blockSize = 50;
-
+  const [spikeImage] = useImage(spikes)
   React.useEffect(() => {
     if (isSelected) {
       // we need to attach transformer manually
@@ -44,6 +44,8 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
         onClick={onSelect}
         ref={shapeRef}
         {...shapeProps}
+        fill={shapeProps.type === "normal" ? "grey" : null}
+        fillPatternImage={shapeProps.type === "spikes" ? spikeImage : null}
         draggable
         onDragEnd={e => {
           onChange({
@@ -70,7 +72,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
             y: Math.round(e.target.y() / blockSize) * blockSize,
             // set minimal value
             width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY)
+            height: node.height() * scaleY
           });
         }}
       />
@@ -90,4 +92,4 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
   );
 };
 
-export default Rectangle;
+export default Tile;

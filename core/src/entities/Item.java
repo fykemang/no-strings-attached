@@ -45,8 +45,7 @@ public class Item extends CapsuleObstacle {
         if (this.state != ItemState.COLLECTED) {
             canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
                     getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
-        }
-        else {
+        } else {
             canvas.draw(texture, Color.WHITE, origin.x, origin.y, origin.x,
                     origin.y, getAngle(), 0.2f, 0.2f);
         }
