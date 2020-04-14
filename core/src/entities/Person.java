@@ -43,7 +43,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The dude is not a slippery one
      */
-    private static final float PLAYER_FRICTION = 0.02f;
+    private static final float PLAYER_FRICTION = 0.01f;
     /**
      * The maximum character speed
      */
