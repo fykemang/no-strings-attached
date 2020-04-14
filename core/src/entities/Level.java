@@ -1,5 +1,6 @@
 package entities;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -16,18 +17,27 @@ import java.util.List;
 public class Level implements Json.Serializable {
     private List<Tile> tiles;
     private List<Tile> spikes;
-    private Vector2 gatePos;
+    private Vector2 exitPos;
     private Vector2 playerPos;
     private String type;
+    private TextureRegion tileTexture;
 
     private List<NpcData> npcData;
     private List<float[]> couples;
     private List<float[]> items;
 
+    public void setTileTexture(TextureRegion tileTexture) {
+        this.tileTexture = tileTexture;
+    }
+
+    public TextureRegion getTileTexture() {
+        return tileTexture;
+    }
+
     public Level() {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
-        gatePos = new Vector2();
+        exitPos = new Vector2();
         couples = new ArrayList<>();
         items = new ArrayList<>();
         npcData = new ArrayList<>();
@@ -43,7 +53,6 @@ public class Level implements Json.Serializable {
 
     }
 
-
     @Override
     public void read(Json json, JsonValue jsonData) {
         //environment information
@@ -55,23 +64,20 @@ public class Level implements Json.Serializable {
         for (JsonValue tileJsonValue : tilesData) {
             String tileJson = tileJsonValue.toJson(JsonWriter.OutputType.minimal);
             Tile tile = json.fromJson(Tile.class, tileJson);
-            tiles.add(tile);
-        }
-
-        JsonValue spikeData = jsonData.get("spikes");
-        for (JsonValue spikeJsonValue : spikeData) {
-            String spikeJson = spikeJsonValue.toJson(JsonWriter.OutputType.minimal);
-            Tile tile = json.fromJson(Tile.class, spikeJson);
-            spikes.add(tile);
+            if (tile.getType().equals("spikes")) {
+                spikes.add(tile);
+            } else if (tile.getType().equals("normal")) {
+                tiles.add(tile);
+            }
         }
 
         // Player Position
-        JsonValue playerPosData = jsonData.get("playerPos");
+        JsonValue playerPosData = jsonData.get("player");
         playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"));
 
-        //Gate Position
-        JsonValue gatePosData = jsonData.get("gate");
-        gatePos.set(gatePosData.getFloat("x"), gatePosData.getFloat("y"));
+        //Exit Position
+        JsonValue exitPosData = jsonData.get("exit");
+        exitPos.set(exitPosData.getFloat("x"), exitPosData.getFloat("y"));
 
         // Couple Positions
         JsonValue npcsData = jsonData.get("npc");
@@ -84,7 +90,6 @@ public class Level implements Json.Serializable {
         JsonValue itemsData = jsonData.get("items");
         for (JsonValue itemData : itemsData) {
 //            items.add([playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"))]);
-            System.out.print(itemData);
             float[] coordinate = new float[2];
             coordinate[0] = itemData.getFloat("x");
             coordinate[1] = itemData.getFloat("y");
@@ -110,8 +115,8 @@ public class Level implements Json.Serializable {
         return playerPos;
     }
 
-    public Vector2 getGatePos() {
-        return gatePos;
+    public Vector2 getExitPos() {
+        return exitPos;
     }
 
     /**
@@ -128,7 +133,6 @@ public class Level implements Json.Serializable {
     public List<float[]> getItems() {
         return items;
     }
-
 
 
 }

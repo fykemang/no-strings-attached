@@ -244,7 +244,7 @@ public class NpcRope extends ComplexObstacle {
         Joint joint1 = world.createJoint(jointDef);
         joints.add(joint1);
 
-        for (int i = 0; i < upperLayer.size()-1; i++) {
+        for (int i = 0; i < upperLayer.size() - 1; i++) {
             jointDef.length = 0.05f;
             // Look at what we did above and join the planks
             Obstacle curr = upperLayer.get(i);
@@ -425,7 +425,7 @@ public class NpcRope extends ComplexObstacle {
     }
 
     public void moveEnd(Vector2 end, boolean scaled) {
-        upperLayer.get(upperLayer.size()-1).setPosition(end);
+        upperLayer.get(upperLayer.size() - 1).setPosition(end);
         setEnd(end, scaled);
     }
 

@@ -1,6 +1,6 @@
 {
   "type" : "city",
-  "playerPos": {
+  "player": {
     "x": 6,
     "y": 7.0
   },
@@ -9,35 +9,45 @@
       "x": 1,
       "y": 6,
       "width": 7,
-      "height": 1
+      "height": 1,
+      "type": "normal"
     },
 
     {
       "x": 15,
       "y": 9,
       "width": 5,
-      "height": 1
+      "height": 1,
+
+      "type": "normal"
     },
 
     {
       "x": 18,
       "y": 5,
       "width": 6,
-      "height": 1
+      "height": 1,
+      "type": "normal"
     },
-
 
     {
       "x": 19.5,
       "y": 1.5,
       "width": 4,
-      "height": 1
+      "height": 1,
+
+      "type": "normal"
     }
 
 
   ],
-  "spikes": [
-
+  "spikes": [{
+      "x": 25,
+      "y": 8,
+      "width": 1,
+      "height": 9.5,
+      "type": "spikes",
+    }
   ],
   "npc": [
     {
@@ -49,7 +59,6 @@
       "isRotating": true,
       "center": {"x": 13.5, "y":6},
       "degree": 0,
-      "pairIdx": 1
     },
     {
       "x": 13.0,
@@ -59,8 +68,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 0
+      "degree": 0
     },
     {
       "x": 22.0,
@@ -71,7 +79,6 @@
       "isRotating": false,
       "center": {},
       "degree": 0,
-      "pairIdx": 5
     },
     {
       "x": 26.0,
@@ -81,8 +88,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 4
+      "degree": 0
     },
 
     {
@@ -93,8 +99,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 5
+      "degree": 0
     },
     {
       "x": 26.0,
@@ -104,8 +109,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 4
+      "degree": 0
     }
   ],
   "items": [
@@ -118,8 +122,8 @@
       "y": 7
     }
   ],
-  "gate": {
-    "x": 22,
-    "y": 2.5
+  "exit": {
+    "x": 24,
+    "y": 1
   }
 }

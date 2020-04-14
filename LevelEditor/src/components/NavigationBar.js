@@ -25,9 +25,7 @@ export const NavigationBar = () => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Item>
-            <Nav.Link>
               <Link to="/">Home</Link>
-            </Nav.Link>
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>

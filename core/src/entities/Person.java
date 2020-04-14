@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
 import root.GameCanvas;
-import util.CollisionFilterConstants;
 import util.FilmStrip;
 
 import java.util.ArrayList;
@@ -87,6 +86,10 @@ public class Person extends CapsuleObstacle {
     private static final int SHOOT_COOLDOWN = 40;
 
     private int frameCount = 0;
+
+    private boolean won;
+
+    private boolean collectedAll;
 
     /**
      * The current horizontal movement of the character
@@ -415,7 +418,7 @@ public class Person extends CapsuleObstacle {
                 : isAttached ? getMovement() * 9f : getMovement();
 
         forceCache.set(horizontal, 0);
-        if(released)
+        if (released)
             body.applyLinearImpulse(forceCache, getPosition(), true);
         else
             body.applyForce(forceCache, getPosition(), true);
@@ -444,7 +447,7 @@ public class Person extends CapsuleObstacle {
             int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
         }
-        if(movement == 0){
+        if (movement == 0) {
             frameRate = 7;
         }
         if (isJumping()) {
@@ -547,6 +550,19 @@ public class Person extends CapsuleObstacle {
 
     public ArrayList<String> getInventory() {
         return inventory;
+    }
+
+    public void atGate() {
+        if (collectedAll)
+            won = true;
+    }
+
+    public void setCollectedAll(boolean all) {
+        collectedAll = all;
+    }
+
+    public boolean won() {
+        return won;
     }
 
     /**

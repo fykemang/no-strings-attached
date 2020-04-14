@@ -1,6 +1,6 @@
 {
   "type" :  "city",
-  "playerPos": {
+  "player": {
     "x": 8,
     "y": 11.0
   },
@@ -9,14 +9,23 @@
       "x": 4,
       "y": 9,
       "width": 6,
-      "height": 1
+      "height": 1,
+      "type": "normal"
     },
 
     {
       "x": 20,
       "y": 5,
       "width": 8,
-      "height": 1
+      "height": 1,
+      "type": "normal"
+    },
+    {
+      "x": 10,
+      "y": 4,
+      "width": 9,
+      "height": 0.2,
+      "type": "spikes"
     }
   ],
   "npc": [
@@ -28,8 +37,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 3
+      "degree": 0
     },
     {
       "x": 17.0,
@@ -39,8 +47,7 @@
       "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 2
+      "degree": 0
     },
 
     {
@@ -51,8 +58,7 @@
       "rightPos": {"x": 33.5, "y":  4.5},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 5
+      "degree": 0
     },
     {
       "x": 35,
@@ -62,17 +68,7 @@
       "rightPos": {"x": 37, "y":  5},
       "isRotating": false,
       "center": {},
-      "degree": 0,
-      "pairIdx": 4
-    }
-  ],
-
-  "spikes": [
-    {
-      "x": 10,
-      "y": 4,
-      "width": 9,
-      "height": 0.2
+      "degree": 0
     }
   ],
   "items": [
@@ -84,7 +80,7 @@
       "y": 13.0
     }
   ],
-  "gate": {
+  "exit": {
     "x": 35,
     "y": 2
   }

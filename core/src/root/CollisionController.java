@@ -3,11 +3,11 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import entities.Item;
-import obstacle.Obstacle;
 import entities.Blob;
-import entities.Person;
+import entities.Item;
 import entities.NpcRope;
+import entities.Person;
+import obstacle.Obstacle;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -67,6 +67,16 @@ public class CollisionController implements ContactListener {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
+            }
+
+            if ("gatesensor".equals(fd1) && bd2.getName().equals(player.getName())) {
+                player.atGate();
+            }
+
+
+            if ("gatesensor".equals(fd2) && bd1.getName().equals(player.getName())) {
+                player.atGate();
+
             }
 
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {

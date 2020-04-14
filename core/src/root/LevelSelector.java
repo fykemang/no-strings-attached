@@ -88,6 +88,9 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         levels.add(new LevelMetaData(false, "levels/test_level.json", ""));
         levels.add(new LevelMetaData(false, "levels/level2.json", ""));
         levels.add(new LevelMetaData(false, "levels/level3.json", ""));
+//=======
+//        levels.add(new LevelMetaData(false, "levels/level_editor_level.json", ""));
+//>>>>>>> 5564ad51ce26a414a0a57ebb553485afc0b2e419
 
         Gdx.input.setInputProcessor(this);
         try {
@@ -356,8 +359,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     }
 
 
-
-    public void reset(GameCanvas canvas ){
+    public void reset(GameCanvas canvas) {
         this.canvas = canvas;
         level = -1;
         ready = false;
