@@ -11,7 +11,6 @@ public class NpcData implements Json.Serializable {
     private boolean isRotating;
     private float[] rotatingCenter;
     private float rotatingDegree;
-    private int pairIdx;
 
     public boolean isSliding() {
         return isSliding;
@@ -41,10 +40,6 @@ public class NpcData implements Json.Serializable {
         return left;
     }
 
-    public int getPairIdx() {
-        return pairIdx;
-    }
-
     @Override
     public void write(Json json) {
         // unimplemented
@@ -70,6 +65,5 @@ public class NpcData implements Json.Serializable {
             rotatingCenter[1] = jsonData.get("center").getFloat("y");
             rotatingDegree = jsonData.getFloat("degree");
         }
-        pairIdx = jsonData.getInt("pairIdx");
     }
 }

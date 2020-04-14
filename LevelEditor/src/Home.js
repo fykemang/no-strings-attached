@@ -202,6 +202,7 @@ function Home() {
     const xScale = 37.5
     const yScale = 44.4
     const data = {
+      type: "city",
       items: state.items.map((item) => {
         return {
           ...item,

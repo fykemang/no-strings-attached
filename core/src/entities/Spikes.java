@@ -8,7 +8,6 @@ public class Spikes extends PolygonObstacle {
 
     float scale;
 
-
     public Spikes(float[] points, float x, float y, float scale) {
         super(points, x, y);
         this.scale = scale;
