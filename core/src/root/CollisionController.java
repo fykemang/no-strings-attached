@@ -3,11 +3,11 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import entities.Item;
-import obstacle.Obstacle;
 import entities.Blob;
-import entities.Person;
+import entities.Item;
 import entities.NpcRope;
+import entities.Person;
+import obstacle.Obstacle;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
