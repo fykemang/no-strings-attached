@@ -88,6 +88,10 @@ public class Person extends CapsuleObstacle {
 
     private int frameCount = 0;
 
+    private boolean won;
+
+    private boolean collectedAll;
+
     /**
      * The current horizontal movement of the character
      */
@@ -547,6 +551,19 @@ public class Person extends CapsuleObstacle {
 
     public ArrayList<String> getInventory() {
         return inventory;
+    }
+
+    public void atGate(){
+        if (collectedAll)
+            won = true;
+    }
+
+    public void setCollectedAll(boolean all){
+        collectedAll = all;
+    }
+
+    public boolean won(){
+        return won;
     }
 
     /**
