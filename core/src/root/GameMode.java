@@ -823,10 +823,7 @@ public class GameMode implements Screen {
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
             player.applyForce();
-
             if (player.isAttached()) {
-//                playerSwingAnimation.setFrame(10);
-//                playerSwingAnimation.setShouldFreeze(true);
                 player.setTexture(playerSwingAnimation);
             } else if (player.isRising()) {
                 player.setTexture(playerJumpTexture);
@@ -903,7 +900,6 @@ public class GameMode implements Screen {
                 Joint swingJoint = world.createJoint(ropeJointDef);
                 player.setSwingJoint(swingJoint);
             }
-
 
             /*
              * Continuously update the rope position to match the player
@@ -1343,6 +1339,7 @@ public class GameMode implements Screen {
 
 
     public void exitToSelector(){
+        System.out.println("you are here");
         if (listener != null){
             music.dispose();
             listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
