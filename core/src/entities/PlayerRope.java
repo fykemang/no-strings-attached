@@ -30,10 +30,6 @@ public class PlayerRope extends ComplexObstacle {
      */
     protected Vector2 dimension;
     /**
-     * The length of each link
-     */
-    protected float blobDiameter;
-    /**
      * The spacing between each link
      */
     protected float spacing;
@@ -52,7 +48,7 @@ public class PlayerRope extends ComplexObstacle {
     private final Vector2[] POINTS = new Vector2[K];
     private ArrayList<BoxObstacle> layer = new ArrayList<>();
 
-    public PlayerRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter, float ropeLength) {
+    public PlayerRope(float x0, float y0, float x1, float y1, int id, float ropeLength) {
         super(x0, y0);
         setName(ROPE_NAME + id);
         this.lwidth = 0.2f;
@@ -71,10 +67,9 @@ public class PlayerRope extends ComplexObstacle {
      * @param y1      The y position of the right anchor
      * @param lheight The bridge thickness
      */
-    public PlayerRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter) {
+    public PlayerRope(float x0, float y0, float x1, float y1, int id) {
         super(x0, y0);
         setName(ROPE_NAME + id);
-//        this.blobDiameter = 5f;
         this.ropeID = id;
         // Compute the bridge length
         dimension = new Vector2(x1 - x0, y1 - y0);
@@ -92,7 +87,7 @@ public class PlayerRope extends ComplexObstacle {
             lwidth = length;
             spacing = 0;
         } else {
-            spacing = length - nLinks * blobDiameter;
+            spacing = length - nLinks * lwidth;
             spacing /= (nLinks - 1);
         }
 
