@@ -1,7 +1,6 @@
 package entities;
 
 import com.badlogic.gdx.math.Vector2;
-import entities.Person;
 
 public class NpcPerson extends Person {
 
@@ -10,6 +9,7 @@ public class NpcPerson extends Person {
     private NpcPerson couple;
     public boolean left;
     public boolean flip;
+
     /**
      * Creates a new dude avatar at the given position.
      * <p>
@@ -34,12 +34,12 @@ public class NpcPerson extends Person {
 
     }
 
-    public void setCouple(NpcPerson couple){
+    public void setCouple(NpcPerson couple) {
         this.couple = couple;
     }
 
     @Override
-    public void update(float dt){
+    public void update(float dt) {
         super.update(dt);
         Vector2 cpPos = couple.getPosition();
         leftAttachPt.set(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
@@ -49,10 +49,10 @@ public class NpcPerson extends Person {
         left = temp;
     }
 
-    public Vector2 getCloserAttachPoint(){
-        if(left){
+    public Vector2 getCloserAttachPoint() {
+        if (left) {
             return leftAttachPt;
-        }else {
+        } else {
 //            System.out.println("here");
             return rightAttachPt;
         }

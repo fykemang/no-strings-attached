@@ -455,14 +455,11 @@ public class GameMode implements Screen {
 //        levels.add(manager.get(file, Level.class));
         if (level.getType().contains("city")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
-        }
-        else if (level.getType().contains("suburb")) {
+        } else if (level.getType().contains("suburb")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
-        }
-        else if (level.getType().contains("forest")) {
+        } else if (level.getType().contains("forest")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
-        }
-        else {
+        } else {
             music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
         }
 //        music.play();
@@ -639,7 +636,9 @@ public class GameMode implements Screen {
                  0f};
         createGate(points, testLevel.getGatePos().x, testLevel.getGatePos().y, citydoor);
         addObject(player);
-        for (int i = 0; i < npcData.size(); i+=2){
+
+
+        for (int i = 0; i < npcData.size(); i += 2) {
             NpcData curr = npcData.get(i);
             NpcData next = npcData.get(i + 1);
             createCouple(curr, next, i);
@@ -651,7 +650,7 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(),  tiles.get(i).getHeight(), "tile" + i, 1f, earthTile);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), "tile" + i, 1f, earthTile);
         }
 
         for (int i = 0; i < spikes.size(); i++) {
@@ -732,25 +731,25 @@ public class GameMode implements Screen {
         TextureRegion randTex2 = npcs.get(n2);
         Stone leftTile;
         Stone rightTile;
-        if (curr.isSliding()){
-            leftTile = createSlidingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile, curr.getLeft(), curr.getRight());
-        }else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
-        }
-        else {
-            leftTile = createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile);
+        if (curr.isSliding()) {
+            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile, curr.getLeft(), curr.getRight());
+        } else if (curr.isRotating()) {
+            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile, curr.getRotatingCenter(), curr.getRotatingDegree());
+        } else {
+            leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile, next.getLeft(), next.getRight());
-        }else{
-            rightTile = createTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, earthTile);
+            rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile, next.getLeft(), next.getRight());
+        } else {
+            rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, "tile", 1f, earthTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
     }
+
     public Stone createRotatingTile(float[] points, float x, float y, float width, float height, String name, float sc, TextureRegion tex,
-                                   float[] rotatingCenter, float rotatingDegree) {
-        Stone tile = new Stone(points, x, y, width, height,sc, rotatingCenter, rotatingDegree);
+                                    float[] rotatingCenter, float rotatingDegree) {
+        Stone tile = new Stone(points, x, y, width, height, sc, rotatingCenter, rotatingDegree);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
@@ -761,8 +760,9 @@ public class GameMode implements Screen {
         addObject(tile);
         return tile;
     }
+
     public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String name, float sc, TextureRegion tex,
-                                  float[] leftPos, float[] rightPos) {
+                                   float[] leftPos, float[] rightPos) {
         Stone tile = new Stone(points, x, y, width, height, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
@@ -774,6 +774,7 @@ public class GameMode implements Screen {
         addObject(tile);
         return tile;
     }
+
     /**
      * Returns whether to process the update loop
      * <p>
@@ -840,11 +841,11 @@ public class GameMode implements Screen {
      */
     public void update(float dt) {
         // Process actions in object model
-       if ((Gdx.input.isTouched() &&Gdx.input.getX() >= 800
-               && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
-       ||(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
-           music.dispose();
-           exitToSelector();
+        if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
+                && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
+                || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
+            music.dispose();
+            exitToSelector();
         }
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.isAlive()) {
@@ -895,10 +896,10 @@ public class GameMode implements Screen {
             }
 
             if (player.getTarget() != null && player.isShooting()) {
-                Vector2 anchor = new Vector2(player.getWidth()/2f - 0.2f, player.getWidth() / 2f + 0.1f);
+                Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, -1,  4.5f);
+                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, -1, 4.5f);
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
@@ -914,7 +915,7 @@ public class GameMode implements Screen {
                 revoluteJointDef.collideConnected = false;
                 world.createJoint(revoluteJointDef);
 
-                anchor.set(0,0);
+                anchor.set(0, 0);
                 revoluteJointDef.bodyB = playerRope.getLastLink();
                 revoluteJointDef.bodyA = player.getTarget().getBody();
                 revoluteJointDef.localAnchorA.set(anchor);
@@ -987,7 +988,7 @@ public class GameMode implements Screen {
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
-                canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
+        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
         canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
         canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
         canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
@@ -1022,19 +1023,19 @@ public class GameMode implements Screen {
             BitmapFont font = generator.generateFont(parameter);
             canvas.drawText("press 'R' to restart the level", font, player.getX()*3+200, player.getY()*44+ 100);
         }
-        canvas.drawUI(UI_restart, canvas.getWidth()-UI_restart.getRegionWidth(),
-                canvas.getHeight()-UI_restart.getRegionHeight(), 1f);
-        canvas.drawUI(UI_exit, canvas.getWidth()-UI_restart.getRegionWidth()- UI_exit.getRegionWidth(),
-                canvas.getHeight()-UI_restart.getRegionHeight(), 1f);
+        canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
+                canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
+        canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
+                canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
-        for (int i =1; i<= items.size(); i++){
-                if (i <= player.getInventory().size()){
-                    canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
-                }else {
-                    canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
-                }
-                UIX += greyYarnTexture.getRegionWidth();
+        for (int i = 1; i <= items.size(); i++) {
+            if (i <= player.getInventory().size()) {
+                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
+            } else {
+                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+            }
+            UIX += greyYarnTexture.getRegionWidth();
         }
         canvas.end();
 
@@ -1372,8 +1373,8 @@ public class GameMode implements Screen {
         this.listener = listener;
     }
 
-    public void exitToSelector(){
-        if (listener != null){
+    public void exitToSelector() {
+        if (listener != null) {
             music.dispose();
             listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
         }

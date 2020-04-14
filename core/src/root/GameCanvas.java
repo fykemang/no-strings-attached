@@ -1289,7 +1289,7 @@ public class GameCanvas {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl20.glLineWidth(3);
-        shapeRenderer.setColor(new Color (1, 0, 0, 0.7f));
+        shapeRenderer.setColor(new Color(1, 0, 0, 0.7f));
         for (int i = 1; i < k - 1; i++) {
             shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
@@ -1299,11 +1299,11 @@ public class GameCanvas {
     }
 
 
-    public void drawUI(TextureRegion texture, float x, float y, float sc){
+    public void drawUI(TextureRegion texture, float x, float y, float sc) {
         spriteBatch.end();
         UIBatch.begin();
 //        UIBatch.setProjectionMatrix(camera.combined);
-        computeTransform(texture.getRegionWidth()/2, texture.getRegionHeight()/2, x, y, 0, sc, sc);
+        computeTransform(texture.getRegionWidth() / 2, texture.getRegionHeight() / 2, x, y, 0, sc, sc);
         UIBatch.draw(texture, texture.getRegionWidth(), texture.getRegionHeight(), local);
         UIBatch.end();
         spriteBatch.begin();
@@ -1327,7 +1327,7 @@ public class GameCanvas {
         camera.update();
     }
 
-    public void resetCamara(){
+    public void resetCamara() {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
         UIBatch = new PolygonSpriteBatch();

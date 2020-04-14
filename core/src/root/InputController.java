@@ -27,7 +27,7 @@ import util.XBox360Controller;
  * detected the X-Box controller on start-up.  This class allows us to hot-swap in
  * a controller via the new XBox360Controller class.
  */
-public class InputController{
+public class InputController {
     // Sensitivity for moving crosshair with gameplay
     private static final float GP_ACCELERATE = 1.0f;
     private static final float GP_MAX_SPEED = 10.0f;

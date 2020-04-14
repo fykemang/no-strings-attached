@@ -23,6 +23,7 @@ public class Couple extends ComplexObstacle {
     private Stone leftTile;
     private Stone rightTile;
     private boolean isCut;
+
     public enum CoupleState {BROKEN, PAIRED}
 
     private CoupleState state;
@@ -109,12 +110,13 @@ public class Couple extends ComplexObstacle {
         joints.add(world.createJoint(jointDef));
         return true;
     }
+
     @Override
-    public void update(float dt){
+    public void update(float dt) {
         super.update(dt);
         l.setLinearVelocity(leftTile.getLinearVelocity());
         r.setLinearVelocity(rightTile.getLinearVelocity());
-        if(leftTile.isRotating) {
+        if (leftTile.isRotating) {
             float rotateBy = 10 * dt * (float) Math.PI / 180f;
             float rotatedX = (float) Math.cos(rotateBy) * (l.getX() - leftTile.center.x) - (float) Math.sin(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.x;
             float rotatedY = (float) Math.sin(rotateBy) * (l.getX() - leftTile.center.x) + (float) Math.cos(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.y;
@@ -123,10 +125,10 @@ public class Couple extends ComplexObstacle {
             l.setLinearVelocity(leftTile.rotDir);
             leftTile.setLinearVelocity(leftTile.rotDir);
 
-            if ( l.left) {
+            if (l.left) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
                 trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else{
+            } else {
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
