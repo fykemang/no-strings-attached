@@ -204,12 +204,14 @@ function Home() {
     const data = {
       items: state.items.map((item) => {
         return {
+          ...item,
           x: item.x / xScale,
           y: item.y / yScale
         }
       }),
       tiles: state.tiles.map((tile) => {
         return {
+          ...tile,
           x: tile.x / xScale,
           y: tile.y / yScale,
           height: tile.height / yScale,
