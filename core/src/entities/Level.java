@@ -16,6 +16,7 @@ import java.util.List;
 public class Level implements Json.Serializable {
     private List<Tile> tiles;
     private List<Tile> spikes;
+    private Vector2 gatePos;
     private Vector2 playerPos;
     private String type;
 
@@ -26,6 +27,7 @@ public class Level implements Json.Serializable {
     public Level() {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
+        gatePos = new Vector2();
         couples = new ArrayList<>();
         items = new ArrayList<>();
         npcData = new ArrayList<>();
@@ -67,6 +69,10 @@ public class Level implements Json.Serializable {
         JsonValue playerPosData = jsonData.get("playerPos");
         playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"));
 
+        //Gate Position
+        JsonValue gatePosData = jsonData.get("gate");
+        gatePos.set(gatePosData.getFloat("x"), gatePosData.getFloat("y"));
+
         // Couple Positions
         JsonValue npcsData = jsonData.get("npc");
         for (JsonValue npcData : npcsData) {
@@ -104,6 +110,10 @@ public class Level implements Json.Serializable {
         return playerPos;
     }
 
+    public Vector2 getGatePos() {
+        return gatePos;
+    }
+
     /**
      * @return the list of couple coordinates
      */
@@ -118,6 +128,7 @@ public class Level implements Json.Serializable {
     public List<float[]> getItems() {
         return items;
     }
+
 
 
 }
