@@ -20,7 +20,7 @@ import util.ScreenListener;
 import java.util.ArrayList;
 
 public class LevelSelector implements Screen, InputProcessor, ControllerListener {
-    public static final int INTO_SELECTOR = 0;
+    public static final int INTO_SELECTOR = 4;
     private static final String BK_FILE = "shared/select_bg.png";
     private static final String CITY_FILE = "shared/city.png";
     private static final String SUBURB_FILE = "shared/suburbs.png";
@@ -286,7 +286,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
             // We are are ready, notify our listener
             if (ready && listener != null) {
-                listener.exitScreen(this, 3);
+                listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
             }
         }
     }
