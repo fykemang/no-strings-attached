@@ -330,7 +330,7 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = 6f;
+        float adjust = 5.9f;
         trampolineForceX = magnitude * trampolineDir.x / adjust;
         trampolineForceY = magnitude * trampolineDir.y / adjust;
     }
@@ -357,12 +357,12 @@ public class Person extends CapsuleObstacle {
         // To determine whether or not the dude is on the ground,
         // we create a thin sensor under his feet, which reports
         // collisions with the world but has no collision response.
-        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
+        Vector2 sensorCenter = new Vector2(0, 0);
         FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = PLAYER_DENSITY;
+        sensorDef.density = PLAYER_DENSITY / 6f;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(SSHRINK * getWidth() / 2.0f, SENSOR_HEIGHT, sensorCenter, 0.0f);
+        sensorShape.setAsBox(SSHRINK * getWidth() * 1.5f, SSHRINK * getHeight() * 1.5f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
         sensorDef.filter.maskBits = getFilterData().maskBits;
         sensorDef.filter.categoryBits = getFilterData().categoryBits;
@@ -411,7 +411,7 @@ public class Person extends CapsuleObstacle {
         }
 
 
-        float horizontal = released ? (isFacingRight ? 1 : -1) * 120f + getMovement()
+        float horizontal = released ? getVX() * 50f + getMovement()
                 : isAttached ? getMovement() * 9f : getMovement();
 
         forceCache.set(horizontal, 0);
