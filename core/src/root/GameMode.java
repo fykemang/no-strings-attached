@@ -452,12 +452,18 @@ public class GameMode implements Screen {
         if (level.getType().contains("city")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
         }
-        else {
+        else if (level.getType().contains("suburb")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
         }
-//        music.play();
-//        music.setVolume(0.5f);
-//        music.setLooping(true);
+        else if (level.getType().contains("forest")) {
+            music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
+        }
+        else {
+            music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
+        }
+        music.play();
+        music.setVolume(0.5f);
+        music.setLooping(true);
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
@@ -1342,8 +1348,8 @@ public class GameMode implements Screen {
     }
 
 
-    public void exitToSelector(){
-        if (listener != null){
+    public void exitToSelector() {
+        if (listener != null) {
             music.dispose();
             listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
         }
