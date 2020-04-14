@@ -869,9 +869,10 @@ public class GameMode implements Screen {
             }
 
             if (player.getTarget() != null && player.isShooting()) {
+                Vector2 anchor = new Vector2(player.getWidth()/2f - 0.2f, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, bridgeTexture.getRegionHeight() / scale.y, -1, 0.16f, 4.5f);
+                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, -1,  4.5f);
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
@@ -883,11 +884,15 @@ public class GameMode implements Screen {
 
                 revoluteJointDef.bodyB = player.getBody();
                 revoluteJointDef.bodyA = playerRope.getBody();
+                revoluteJointDef.localAnchorB.set(anchor);
                 revoluteJointDef.collideConnected = false;
                 world.createJoint(revoluteJointDef);
 
+                anchor.set(0,0);
                 revoluteJointDef.bodyB = playerRope.getLastLink();
                 revoluteJointDef.bodyA = player.getTarget().getBody();
+                revoluteJointDef.localAnchorA.set(anchor);
+                revoluteJointDef.localAnchorB.set(anchor);
                 revoluteJointDef.collideConnected = false;
                 world.createJoint(revoluteJointDef);
 

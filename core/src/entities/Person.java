@@ -447,7 +447,6 @@ public class Person extends CapsuleObstacle {
         if(movement == 0){
             frameRate = 7;
         }
-
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
