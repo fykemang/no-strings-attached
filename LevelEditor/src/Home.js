@@ -219,7 +219,7 @@ function Home() {
           width: tile.width / xScale
         }
       }),
-      couples: state.couples.reduce((acc, couple) => {
+      npc: state.couples.reduce((acc, couple) => {
         const leftNpc = {...couple.leftNpc, x: couple.leftNpc.x / xScale, y: couple.leftNpc.y / yScale}
         const rightNpc = {...couple.rightNpc, x: couple.rightNpc.x / xScale, y: couple.rightNpc.y / yScale}
         acc.push(leftNpc)
@@ -231,8 +231,8 @@ function Home() {
         y: state.player.y / yScale
       }, 
       exit: {
-        x: state.player.x / xScale,
-        y: state.player.y / yScale
+        x: state.exit.x / xScale,
+        y: state.exit.y / yScale
       }
     };
 

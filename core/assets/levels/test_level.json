@@ -1,6 +1,6 @@
 {
   "type" :  "city",
-  "playerPos": {
+  "player": {
     "x": 8,
     "y": 11.0
   },

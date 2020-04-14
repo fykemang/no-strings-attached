@@ -62,7 +62,7 @@ public class Level implements Json.Serializable {
         }
 
         // Player Position
-        JsonValue playerPosData = jsonData.get("playerPos");
+        JsonValue playerPosData = jsonData.get("player");
         playerPos.set(playerPosData.getFloat("x"), playerPosData.getFloat("y"));
 
         //Exit Position
