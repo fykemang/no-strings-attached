@@ -69,6 +69,16 @@ public class CollisionController implements ContactListener {
                 player.setOnString(true);
             }
 
+            if ("gatesensor".equals(fd1) && bd2.getName().equals(player.getName())) {
+                player.atGate();
+            }
+
+
+            if ("gatesensor".equals(fd2) && bd1.getName().equals(player.getName())) {
+                player.atGate();
+
+            }
+
             if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd1).getPlankParentID());

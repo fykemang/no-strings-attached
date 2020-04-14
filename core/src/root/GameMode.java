@@ -127,6 +127,8 @@ public class GameMode implements Screen {
 
     private static final String NPC_WELCOME = "platform/welcome.png";
 
+    private static final String CITYGATE = "platform/citydoor.png";
+
     private static final String NEEDLE = "platform/needles.png";
     private static final String YARN = "platform/skein.png";
     private static final String BUTTON = "platform/buttons.png";
@@ -193,6 +195,7 @@ public class GameMode implements Screen {
     protected TextureRegion spikeTile;
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
+    protected TextureRegion citydoor;
     /**
      * The font for giving messages to the player
      */
@@ -368,7 +371,8 @@ public class GameMode implements Screen {
         assets.add(NPC_HEYO);
         manager.load(NPC_WELCOME, Texture.class);
         assets.add(NPC_WELCOME);
-
+        manager.load(CITYGATE, Texture.class);
+        assets.add(CITYGATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
         manager.load(BUTTON, Texture.class);
@@ -458,9 +462,9 @@ public class GameMode implements Screen {
         } else {
             music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
         }
-        music.play();
-        music.setVolume(0.5f);
-        music.setLooping(true);
+//        music.play();
+//        music.setVolume(0.5f);
+//        music.setLooping(true);
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
@@ -488,6 +492,7 @@ public class GameMode implements Screen {
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         redYarnTexture = createTexture(manager, UI_RedYarn, false);
         greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
+        citydoor = createTexture(manager, CITYGATE, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
         npcs.add(npcNervyTexture);
@@ -626,7 +631,12 @@ public class GameMode implements Screen {
         player.setFilterData(playerFilter);
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
+        float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
+                citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
+                0f};
+        createGate(points, testLevel.getExitPos().x, testLevel.getExitPos().y, citydoor);
         addObject(player);
+
 
         for (int i = 0; i < npcData.size(); i += 2) {
             NpcData curr = npcData.get(i);
@@ -646,6 +656,8 @@ public class GameMode implements Screen {
         for (int i = 0; i < spikes.size(); i++) {
             createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), "spike", 1f, spikeTile);
         }
+
+
     }
 
     public Stone createTile(float[] points, float x, float y, float width, float height, String name, float sc, TextureRegion tex) {
@@ -659,6 +671,18 @@ public class GameMode implements Screen {
         tile.setName(name);
         addObject(tile);
         return tile;
+    }
+
+
+    public void createGate(float[] points, float x, float y, TextureRegion texture) {
+        Gate gate = new Gate(texture, points, x, y);
+        gate.setBodyType(BodyDef.BodyType.StaticBody);
+        gate.setFriction(0f);
+        gate.setRestitution(BASIC_RESTITUTION);
+        gate.setDrawScale(scale);
+        gate.setName("gate");
+        addObject(gate);
+
     }
 
     public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
@@ -823,6 +847,7 @@ public class GameMode implements Screen {
             music.dispose();
             exitToSelector();
         }
+        player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
@@ -983,14 +1008,20 @@ public class GameMode implements Screen {
                 obj.draw(canvas);
             }
         }
-
+        if (player.won()) {
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.size = 20;
+            BitmapFont font = generator.generateFont(parameter);
+            canvas.drawText("you won", font, player.getX() * 37 + 200, player.getY() * 44 + 100);
+        }
 
         if (!player.isAlive()) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 20;
             BitmapFont font = generator.generateFont(parameter);
-            canvas.drawText("press 'R' to restart the level", font, 100, 300);
+            canvas.drawText("press 'R' to restart the level", font, player.getX() * 3 + 200, player.getY() * 44 + 100);
         }
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
@@ -1348,6 +1379,14 @@ public class GameMode implements Screen {
             listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
         }
     }
+
+    public void exitToNext() {
+        if (listener != null) {
+            music.dispose();
+            listener.exitScreen(this, 2);
+        }
+    }
+
 
     /**
      * Tracks the asset state.  Otherwise subclasses will try to load assets
