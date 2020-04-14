@@ -87,7 +87,10 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         buttonPos.add(new Vector2(520, 650));
         levels.add(new LevelMetaData(false, "levels/test_level.json", ""));
         levels.add(new LevelMetaData(false, "levels/level2.json", ""));
-        levels.add(new LevelMetaData(false, "levels/level_editor_level.json", ""));
+        levels.add(new LevelMetaData(false, "levels/level3.json", ""));
+//=======
+//        levels.add(new LevelMetaData(false, "levels/level_editor_level.json", ""));
+//>>>>>>> 5564ad51ce26a414a0a57ebb553485afc0b2e419
 
         Gdx.input.setInputProcessor(this);
         try {
