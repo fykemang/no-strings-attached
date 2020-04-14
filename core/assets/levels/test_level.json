@@ -28,7 +28,7 @@
       "width": 9,
       "height": 0.2,
       "type": "spikes",
-      "direction": "down"
+      "direction": "up"
     }
   ],
   "npc": [
@@ -85,6 +85,6 @@
   ],
   "exit": {
     "x": 35,
-    "y": 2
+    "y": 0
   }
 }
