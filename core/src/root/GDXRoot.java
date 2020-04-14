@@ -138,6 +138,7 @@ public class GDXRoot extends Game implements ScreenListener {
      * @param exitCode The state of the screen upon exit
      */
     public void exitScreen(Screen screen, int exitCode) {
+        System.out.println(exitCode);
         if (screen == loading && exitCode == LevelSelector.INTO_SELECTOR) {
             selector = new LevelSelector(manager, canvas);
             selector.setScreenListener(this);
@@ -158,7 +159,7 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(selector);
             controller.pause();
 //            controller = null;
-        }else if (exitCode == GameMode.EXIT_QUIT) {
+        } else if (exitCode == GameMode.EXIT_QUIT) {
             // We quit the main application
             Gdx.app.exit();
         }

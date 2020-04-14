@@ -342,7 +342,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Called when this screen should release all resources.
      */
     public void dispose() {
-        music.dispose();
         statusBkgLeft = null;
         statusBkgRight = null;
         statusBkgMiddle = null;
@@ -353,6 +352,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         background.dispose();
         statusBar.dispose();
+        music.dispose();
         background = null;
         statusBar = null;
         select = null;
@@ -500,8 +500,11 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             draw();
 
             // We are are ready, notify our listener
-            if (isReady() && listener != null) {
+            if (listener != null && pressState == MouseState.QUIT) {
                 listener.exitScreen(this, 0);
+            }
+            else if (listener != null && pressState == MouseState.START){
+                listener.exitScreen(this, 4);
             }
         }
     }

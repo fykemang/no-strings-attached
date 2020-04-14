@@ -1190,11 +1190,9 @@ public class GameMode implements Screen {
         for (Obstacle obj : objects) {
             obj.deactivatePhysics(world);
         }
-        music.dispose();
         objects.clear();
         addQueue.clear();
         world.dispose();
-        music.dispose();
         objects = null;
         addQueue = null;
         bounds = null;
@@ -1354,7 +1352,7 @@ public class GameMode implements Screen {
     public void exitToSelector(){
         if (listener != null){
             music.dispose();
-            listener.exitScreen(this, 0);
+            listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
         }
     }
 
