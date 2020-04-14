@@ -1,5 +1,6 @@
 package entities;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -19,10 +20,19 @@ public class Level implements Json.Serializable {
     private Vector2 exitPos;
     private Vector2 playerPos;
     private String type;
+    private TextureRegion tileTexture;
 
     private List<NpcData> npcData;
     private List<float[]> couples;
     private List<float[]> items;
+
+    public void setTileTexture(TextureRegion tileTexture) {
+        this.tileTexture = tileTexture;
+    }
+
+    public TextureRegion getTileTexture() {
+        return tileTexture;
+    }
 
     public Level() {
         tiles = new ArrayList<>();
