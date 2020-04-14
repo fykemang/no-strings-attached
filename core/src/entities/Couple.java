@@ -115,11 +115,12 @@ public class Couple extends ComplexObstacle {
         l.setLinearVelocity(leftTile.getLinearVelocity());
         r.setLinearVelocity(rightTile.getLinearVelocity());
         if(leftTile.isRotating) {
-            float rotateBy = 10 * dt * (float) Math.PI / 180f;
+            float rotateBy = 10f * dt * (float) Math.PI / 180f;
             float rotatedX = (float) Math.cos(rotateBy) * (l.getX() - leftTile.center.x) - (float) Math.sin(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.x;
             float rotatedY = (float) Math.sin(rotateBy) * (l.getX() - leftTile.center.x) + (float) Math.cos(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.y;
             leftTile.rotDir.set(rotatedX - l.getX(), rotatedY - l.getY());
             leftTile.rotDir.nor();
+            leftTile.rotDir.scl(0.4f);
             l.setLinearVelocity(leftTile.rotDir);
             leftTile.setLinearVelocity(leftTile.rotDir);
 
