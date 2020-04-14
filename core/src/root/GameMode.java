@@ -455,9 +455,9 @@ public class GameMode implements Screen {
         else {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
         }
-        music.play();
-        music.setVolume(0.5f);
-        music.setLooping(true);
+//        music.play();
+//        music.setVolume(0.5f);
+//        music.setLooping(true);
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
@@ -1002,18 +1002,6 @@ public class GameMode implements Screen {
         }
         canvas.end();
 
- //       for (String s : player.getInventory()) {
-//            if (s.contains("yarn")) {
-//                canvas.draw(yarnTexture, Color.WHITE, , 0, yarnTexture.getRegionWidth() * 0.01f / 2,
-//                        yarnTexture.getRegionHeight() * 0.01f / 2);
-//                canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
-//                        getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
-//            }
-//            else if (s.contains("needle")) {
-//                canvas.draw(needleTexture, Color.WHITE, 0, 0, getX() * drawScale.x,
-//                        getY() * drawScale.y, getAngle(), 0.2f, 0.2f);
-//            }
-//        }
 
         if (isDebug()) {
             canvas.beginDebug();
