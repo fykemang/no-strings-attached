@@ -2,7 +2,7 @@
   "type" : "city",
   "player": {
     "x": 6,
-    "y": 4.0
+    "y": 4.0,
   },
   "tiles": [
     {
@@ -10,30 +10,55 @@
       "y": 3,
       "width": 7,
       "height": 1,
-      "type": "normal"
+      "type": "normal",
+      "direction": "up"
     },
     {
       "x": 25.5,
       "y": 3,
       "width": 7,
       "height": 1,
-      "type": "normal"
-    }
-
-  ],
-  "spikes": [
-
+      "type": "normal",
+      "direction": "up"
+    },
+    {
+      "x": 23,
+      "y": 7.5,
+      "width": 0.2,
+      "height": 11,
+      "type": "spikes",
+      "direction": "left"
+    },
     {
       "x": 13,
       "y": 17.5,
       "width": 10,
-      "height": 1
+      "height": 1,
+      "type": "spikes",
+      "direction": "down"
+    }
+  ],
+  "spikes": [
+    {
+      "x": 13,
+      "y": 17.5,
+      "width": 10,
+      "height": 1,
+      "direction": "up"
     },
     {
       "x": 25,
       "y": 8,
       "width": 1,
-      "height": 9.5
+      "height": 9.5,
+      "direction": "up"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "width": 0.2,
+      "height": 5,
+      "direction": "left"
     }
 
   ],

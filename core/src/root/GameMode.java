@@ -169,6 +169,7 @@ public class GameMode implements Screen {
      */
 
     private static final String SPIKE_FILE = "shared/spikes.png";
+    private static final String SPIKE_VERT = "shared/spikes_vert.png";
     private static final String UI_GreyYarn = "platform/greyYarn.png";
     private static final String UI_RedYarn = "platform/redYarn.png";
     private static final String RESTART_FILE = "shared/restart.png";
@@ -193,6 +194,7 @@ public class GameMode implements Screen {
      */
 //    protected TextureRegion earthTile;
     protected TextureRegion spikeTile;
+    protected TextureRegion spikeVertTile;
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
     protected TextureRegion citydoor;
@@ -403,6 +405,8 @@ public class GameMode implements Screen {
         assets.add(MOUNTAIN_TILE_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
+        manager.load(SPIKE_VERT, Texture.class);
+        assets.add(SPIKE_VERT);
         manager.load(RESTART_FILE, Texture.class);
         assets.add(RESTART_FILE);
         manager.load(BKG_CLOUD, Texture.class);
@@ -482,9 +486,9 @@ public class GameMode implements Screen {
             music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, MOUNTAIN_TILE_FILE, false));
         }
-        music.play();
-        music.setVolume(0.5f);
-        music.setLooping(true);
+//        music.play();
+//        music.setVolume(0.5f);
+//        music.setLooping(true);
 //        levels.add(manager.get(file, Level.class));
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
@@ -528,6 +532,7 @@ public class GameMode implements Screen {
         if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
             tileTexture = level.getTileTexture();
             spikeTile = createTexture(manager, SPIKE_FILE, false);
+            spikeVertTile = createTexture(manager, SPIKE_VERT, false);
             UI_restart = createTexture(manager, RESTART_FILE, false);
             UI_exit = createTexture(manager, ESC_FILE, false);
             if (manager.isLoaded(FONT_FILE)) {
@@ -676,9 +681,9 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < spikes.size(); i++) {
-            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), "spike", 1f, spikeTile);
+            TextureRegion spiketex =  (spikes.get(i).getDirection().equals("up")|| spikes.get(i).getDirection().equals("down"))? spikeTile: spikeVertTile;
+            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), spikes.get(i).getDirection(),"spike", 1f, spiketex);
         }
-
 
     }
 
@@ -707,8 +712,8 @@ public class GameMode implements Screen {
 
     }
 
-    public void createSpike(float[] points, float x, float y, String name, float sc, TextureRegion tex) {
-        Spikes spike = new Spikes(points, x, y, sc);
+    public void createSpike(float[] points, float x, float y, String direction, String name, float sc, TextureRegion tex) {
+        Spikes spike = new Spikes(points, x, y, direction,sc);
         spike.setBodyType(BodyDef.BodyType.StaticBody);
         spike.setFriction(2000f);
         spike.setRestitution(BASIC_RESTITUTION);
