@@ -243,7 +243,8 @@ public class GameMode implements Screen {
     private TextureRegion redYarnTexture;
     private TextureRegion greyYarnTexture;
     private ArrayList<TextureRegion> npcs = new ArrayList<>();
-    private ArrayList<TextureRegion> items = new ArrayList<>();
+    private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    private ArrayList<float[]> items = new ArrayList<>();
     private ArrayList<Item> progress = new ArrayList<>();
 
     private TextureRegion backgroundTexture;
@@ -437,7 +438,7 @@ public class GameMode implements Screen {
 //        }
         Json json = new Json();
         levels = new ArrayList<>();
-        items = new ArrayList<>();
+        itemTexture = new ArrayList<>();
         Level level = json.fromJson(Level.class, Gdx.files.internal(file));
         levels.add(level);
 //        levels.add(manager.get(file, Level.class));
@@ -460,9 +461,9 @@ public class GameMode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
-        items.add(buttonTexture);
-        items.add(needleTexture);
-        items.add(yarnTexture);
+        itemTexture.add(buttonTexture);
+        itemTexture.add(needleTexture);
+        itemTexture.add(yarnTexture);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -593,7 +594,7 @@ public class GameMode implements Screen {
         List<Tile> tiles = testLevel.getTiles();
         List<Tile> spikes = testLevel.getSpikes();
         List<float[]> couples = testLevel.getCouples();
-        List<float[]> items = testLevel.getItems();
+        items = (ArrayList<float[]>) testLevel.getItems();
         List<NpcData> npcData = testLevel.getNpcData();
 
         // Create main dude
@@ -653,8 +654,8 @@ public class GameMode implements Screen {
     }
 
     public void createItem(float x, float y, int id) {
-        int n = rand.nextInt(items.size());
-        TextureRegion randTex = items.get(n);
+        int n = rand.nextInt(itemTexture.size());
+        TextureRegion randTex = itemTexture.get(n);
         Vector2 dimensions = getScaledDimensions(randTex);
         Item item = new Item(x, y, dimensions.x, dimensions.y, id);
         item.setTexture(randTex);
