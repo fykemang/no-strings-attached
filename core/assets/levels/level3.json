@@ -1,0 +1,122 @@
+{
+  "type" : "city",
+  "playerPos": {
+    "x": 6,
+    "y": 4.0
+  },
+  "tiles": [
+    {
+      "x": 1,
+      "y": 3,
+      "width": 7,
+      "height": 1
+    },
+    {
+      "x": 25.5,
+      "y": 3,
+      "width": 7,
+      "height": 1
+
+    }
+
+  ],
+  "spikes": [
+
+    {
+      "x": 13,
+      "y": 17.5,
+      "width": 10,
+      "height": 1
+    },
+    {
+      "x": 25,
+      "y": 8,
+      "width": 1,
+      "height": 9.5
+    }
+
+  ],
+  "npc": [
+    {
+      "x": 9.0,
+      "y": 2.0,
+      "isSliding": false,
+      "leftPos": {"x": 8.5, "y":  0.0},
+      "rightPos": {"x":  10.5, "y":  1.0},
+      "isRotating": false,
+      "center": {"x": 9.0, "y":2.0},
+      "degree": 0,
+      "pairIdx": 1
+    },
+    {
+      "x": 14.0,
+      "y": 2.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 0
+    },
+    {
+      "x": 15.0,
+      "y": 7,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {"x":  19.5, "y":  7},
+      "degree": 360,
+      "pairIdx": 3
+    },
+    {
+      "x": 20.0,
+      "y": 7,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 2
+    },
+
+    {
+      "x": 15.0,
+      "y": 14.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 5
+    },
+    {
+      "x": 20.0,
+      "y": 14.0,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0,
+      "pairIdx": 4
+    }
+  ],
+  "items": [
+    {
+      "x": 12.0,
+      "y": 8.0
+    },
+    {
+      "x": 17.5,
+      "y": 16.5
+    }
+  ],
+  "gate": {
+    "x": 15,
+    "y": 3
+  }
+}

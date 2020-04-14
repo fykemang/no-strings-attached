@@ -840,7 +840,7 @@ public class GameMode implements Screen {
 
             if (player.isShooting()) {
                 Vector2 playerPosition = player.getPosition();
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 10f, playerPosition.y - 10f, playerPosition.x + 10f, playerPosition.y + 10f);
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 boolean didSelectTarget = ropeQueryCallback.selectTarget();
                 if (didSelectTarget) {
                     player.setAttached(true);
