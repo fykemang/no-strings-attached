@@ -25,6 +25,7 @@ import obstacle.ComplexObstacle;
 import obstacle.Obstacle;
 import obstacle.SimpleObstacle;
 import obstacle.WheelObstacle;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import root.GameCanvas;
 
 import java.util.ArrayList;
@@ -359,17 +360,17 @@ public class NpcRope extends ComplexObstacle {
             }
         }
 
+        int lowIdx = index >= lowerLayer.size() ? lowerLayer.size() - 1 : index;
         w.destroyBody(upperLayer.get(index).getBody());
-        w.destroyBody(lowerLayer.get(index).getBody());
+        w.destroyBody(lowerLayer.get(lowIdx).getBody());
 
         upperLayer.remove(index);
-        lowerLayer.remove(index);
+        lowerLayer.remove(lowIdx);
 
         ArrayList<WheelObstacle> leftUpper = new ArrayList<>(upperLayer.subList(0, index));
-        ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, index));
-
-        ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index + 1, upperLayer.size()));
-        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(index + 1, lowerLayer.size()));
+        ArrayList<WheelObstacle> leftLower = new ArrayList<>(lowerLayer.subList(0, lowIdx));
+        ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index, upperLayer.size()));
+        ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(lowIdx, lowerLayer.size()));
 
         NpcRope l = new NpcRope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setStart(contPoints[0], true);
