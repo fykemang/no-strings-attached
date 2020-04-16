@@ -98,13 +98,13 @@ public class GameMode implements Screen {
     /**
      * Background
      */
-    private static final String BKG_SUN = "platform/sun_background.png";
-
-    private static final String BKG_CITY = "platform/city_background.png";
-
-    private static final String BKG_CLOUD = "platform/cloud_background.png";
-
-    private static final String BKG_SKY = "platform/background_sky.png";
+//    private static final String BKG_SUN = "platform/sun_background.png";
+//
+//    private static final String BKG_CITY = "platform/city_background.png";
+//
+//    private static final String BKG_CLOUD = "platform/cloud_background.png";
+//
+//    private static final String BKG_SKY = "platform/background_sky.png";
     /**
      * The texture file for the idle player
      */
@@ -313,6 +313,9 @@ public class GameMode implements Screen {
     private static final String MOUNTAIN_TILE_FILE = "shared/earthtile.png";
     private TextureRegion tileTexture;
 
+    private String[] CITY_BKG_FILES = new String[]{"platform/citylayer1.png", "platform/citylayer2.png", "platform/citylayer3.png", "platform/citylayer4.png", "platform/citylayer5.png", "platform/citylayer6.png", "platform/citylayer7.png", "platform/citylayer8.png", "platform/citylayer9.png"};
+    private ArrayList<TextureRegion> backgroundTextures;
+
     /**
      * Creates a new game world
      * <p>
@@ -327,6 +330,7 @@ public class GameMode implements Screen {
         assets = new Array<>();
         items = new ArrayList<>();
         progress = new ArrayList<>();
+        backgroundTextures = new ArrayList<>();
         world = new World(gravity, false);
         rand = new Random();
         this.bounds = new Rectangle(bounds);
@@ -405,16 +409,20 @@ public class GameMode implements Screen {
         assets.add(SPIKE_FILE);
         manager.load(RESTART_FILE, Texture.class);
         assets.add(RESTART_FILE);
-        manager.load(BKG_CLOUD, Texture.class);
+//        manager.load(BKG_CLOUD, Texture.class);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
-        assets.add(BKG_CLOUD);
-        manager.load(BKG_SKY, Texture.class);
-        assets.add(BKG_SKY);
-        manager.load(BKG_SUN, Texture.class);
-        assets.add(BKG_SUN);
-        manager.load(BKG_CITY, Texture.class);
-        assets.add(BKG_CITY);
+        for (String s : CITY_BKG_FILES) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+//        assets.add(BKG_CLOUD);
+//        manager.load(BKG_SKY, Texture.class);
+//        assets.add(BKG_SKY);
+//        manager.load(BKG_SUN, Texture.class);
+//        assets.add(BKG_SUN);
+//        manager.load(BKG_CITY, Texture.class);
+//        assets.add(BKG_CITY);
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
         assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
@@ -469,6 +477,10 @@ public class GameMode implements Screen {
         if (type.contains("city")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, CITY_TILE_FILE, false));
+            for (String s : CITY_BKG_FILES) {
+                backgroundTextures.add(createTexture(manager, s, false));
+            }
+            level.setBackgroundTexture(this.backgroundTextures);
         }
         else if (type.contains("suburb")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
@@ -495,10 +507,10 @@ public class GameMode implements Screen {
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
-        cityTexture = createTexture(manager, BKG_CITY, false);
-        skyTexture = createTexture(manager, BKG_SKY, false);
-        cloudTexture = createTexture(manager, BKG_CLOUD, false);
-        sunTexture = createTexture(manager, BKG_SUN, false);
+//        cityTexture = createTexture(manager, BKG_CITY, false);
+//        skyTexture = createTexture(manager, BKG_SKY, false);
+//        cloudTexture = createTexture(manager, BKG_CLOUD, false);
+//        sunTexture = createTexture(manager, BKG_SUN, false);
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
@@ -635,6 +647,7 @@ public class GameMode implements Screen {
     private void populateLevel() {
         Level testLevel = levels.get(0);
         tileTexture = testLevel.getTileTexture();
+        backgroundTextures = testLevel.getBackgroundTexture();
 
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
@@ -1011,10 +1024,15 @@ public class GameMode implements Screen {
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
-        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
-        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
-        canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
-        canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
+        float negative = 0f;
+        for (TextureRegion t : backgroundTextures) {
+            canvas.drawWrapped(t, negative * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+            negative -= 0.1f;
+        }
+//        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
+//        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
+//        canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
+//        canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
         float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
