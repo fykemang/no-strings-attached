@@ -234,24 +234,21 @@ public class GameMode implements Screen {
      */
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
-
     private TextureRegion npcCozyTexture;
     private TextureRegion npcCheeseTexture;
     private TextureRegion npcNervyTexture;
     private TextureRegion npcHeyoTexture;
     private TextureRegion npcSpikyTexture;
     private TextureRegion npcWelcomeTexture;
-
-
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
     private TextureRegion redYarnTexture;
     private TextureRegion greyYarnTexture;
-    private ArrayList<TextureRegion> npcs = new ArrayList<>();
+    private final ArrayList<TextureRegion> npcs = new ArrayList<>();
     private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
-    private ArrayList<float[]> items = new ArrayList<>();
-    private ArrayList<Item> progress = new ArrayList<>();
+    private ArrayList<float[]> items;
+    private ArrayList<Item> progress;
 
     private TextureRegion backgroundTexture;
 
@@ -308,7 +305,7 @@ public class GameMode implements Screen {
     private String MOUNTAIN_MUSIC_FILE;
     private Music music;
 
-//    private static final String EARTH_FILE = "shared/earthtile.png";
+    //    private static final String EARTH_FILE = "shared/earthtile.png";
     private static final String CITY_TILE_FILE = "platform/city-tile.png";
     private static final String SUBURB_TILE_FILE = "platform/suburb-tiles.png";
     private static final String FOREST_TILE_FILE = "platform/mossyrocks.png";
@@ -363,7 +360,6 @@ public class GameMode implements Screen {
         assets.add(BARRIER_FILE);
         manager.load(PLAYER_SWING_ANIMATION, Texture.class);
         assets.add(PLAYER_SWING_ANIMATION);
-
         manager.load(NPC_CHEESE, Texture.class);
         assets.add(NPC_CHEESE);
         manager.load(UI_GreyYarn, Texture.class);
@@ -388,7 +384,6 @@ public class GameMode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
-
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
         manager.load(ROPE_FILE, Texture.class);
@@ -473,16 +468,13 @@ public class GameMode implements Screen {
         if (type.contains("city")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, MOUNTAIN_TILE_FILE, false));
-        }
-        else if (type.contains("suburb")) {
+        } else if (type.contains("suburb")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, SUBURB_TILE_FILE, false));
-        }
-        else if (type.contains("forest")) {
+        } else if (type.contains("forest")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, FOREST_TILE_FILE, false));
-        }
-        else {
+        } else {
             music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
             level.setTileTexture(createTexture(manager, MOUNTAIN_TILE_FILE, false));
         }
@@ -677,12 +669,12 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(),  tiles.get(i).getHeight(), "tile" + i, 1f, tileTexture);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), "tile" + i, 1f, tileTexture);
         }
 
         for (int i = 0; i < spikes.size(); i++) {
-            TextureRegion spiketex =  (spikes.get(i).getDirection().equals("up")|| spikes.get(i).getDirection().equals("down"))? spikeTile: spikeVertTile;
-            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), spikes.get(i).getDirection(),"spike", 1f, spiketex);
+            TextureRegion spiketex = (spikes.get(i).getDirection().equals("up") || spikes.get(i).getDirection().equals("down")) ? spikeTile : spikeVertTile;
+            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), spikes.get(i).getDirection(), "spike", 1f, spiketex);
         }
 
     }
@@ -713,7 +705,7 @@ public class GameMode implements Screen {
     }
 
     public void createSpike(float[] points, float x, float y, String direction, String name, float sc, TextureRegion tex) {
-        Spikes spike = new Spikes(points, x, y, direction,sc);
+        Spikes spike = new Spikes(points, x, y, direction, sc);
         spike.setBodyType(BodyDef.BodyType.StaticBody);
         spike.setFriction(2000f);
         spike.setRestitution(BASIC_RESTITUTION);
@@ -758,18 +750,17 @@ public class GameMode implements Screen {
         TextureRegion randTex2 = npcs.get(n2);
         Stone leftTile;
         Stone rightTile;
-        if (curr.isSliding()){
-            leftTile = createSlidingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture, curr.getLeft(), curr.getRight());
-        }else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, tileTexture, curr.getRotatingCenter(), curr.getRotatingDegree());
-        }
-        else {
-            leftTile = createTile(points, x1+.3f, y1 - 0.5f, 0.5f, 0.5f,  "tile", 1f, tileTexture);
+        if (curr.isSliding()) {
+            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture, curr.getLeft(), curr.getRight());
+        } else if (curr.isRotating()) {
+            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture, curr.getRotatingCenter(), curr.getRotatingDegree());
+        } else {
+            leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, tileTexture, next.getLeft(), next.getRight());
-        }else{
-            rightTile = createTile(points, x2+.3f, y2 - 0.5f, 0.5f, 0.5f,  "tile", 1f, tileTexture);
+            rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture, next.getLeft(), next.getRight());
+        } else {
+            rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, "tile", 1f, tileTexture);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);

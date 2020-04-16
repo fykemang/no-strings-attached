@@ -21,42 +21,42 @@ public class Spikes extends PolygonObstacle {
         int num;
         float dist;
         float sc;
-        switch (direction){
+        switch (direction) {
             case "up":
                 num = (int) (getWidth() * drawScale.x / texture.getRegionWidth());
-                dist = getWidth() * drawScale.x/num;
-                sc = dist/texture.getRegionWidth();
+                dist = getWidth() * drawScale.x / num;
+                sc = dist / texture.getRegionWidth();
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            getY() * drawScale.y , getAngle(), sc, 1);
+                            getY() * drawScale.y, getAngle(), sc, 1);
                 break;
             case "down":
                 num = (int) (getWidth() * drawScale.x / texture.getRegionWidth());
                 num = num == 0 ? 1 : num;
-                dist = getWidth() * drawScale.x/num;
-                sc = dist/texture.getRegionWidth();
+                dist = getWidth() * drawScale.x / num;
+                sc = dist / texture.getRegionWidth();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            getY() * drawScale.y , getAngle(), -sc, -1);
+                            getY() * drawScale.y, getAngle(), -sc, -1);
                 break;
             case "right":
-                num = (int) (getHeight()* drawScale.y / texture.getRegionHeight());
+                num = (int) (getHeight() * drawScale.y / texture.getRegionHeight());
                 num = num == 0 ? 1 : num;
-                dist = getHeight() * drawScale.y/num;
-                sc = dist/texture.getRegionHeight();
+                dist = getHeight() * drawScale.y / num;
+                sc = dist / texture.getRegionHeight();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x,
-                            getY() * drawScale.y+  i * dist, getAngle(), 1, sc);
+                            getY() * drawScale.y + i * dist, getAngle(), 1, sc);
                 break;
             case "left":
-                num = (int) (getHeight()* drawScale.y / texture.getRegionHeight());
+                num = (int) (getHeight() * drawScale.y / texture.getRegionHeight());
                 num = num == 0 ? 1 : num;
-                dist = getHeight() * drawScale.y/num;
-                sc = dist/texture.getRegionHeight();
+                dist = getHeight() * drawScale.y / num;
+                sc = dist / texture.getRegionHeight();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x,
-                            getY() * drawScale.y +  i * dist , getAngle(), -1, -sc);
+                            getY() * drawScale.y + i * dist, getAngle(), -1, -sc);
                 break;
         }
 
