@@ -1,5 +1,5 @@
 import React from "react";
-import { Rect, Transformer } from "react-konva";
+import {Rect, Transformer} from "react-konva";
 import spikes from "./assets/spikes.png";
 import useImage from "use-image";
 // var width = window.innerWidth;
@@ -26,70 +26,85 @@ import useImage from "use-image";
 //   })
 // }
 
-const Tile = ({ shapeProps, isSelected, onSelect, onChange, blockSize}) => {
-  const shapeRef = React.useRef();
-  const trRef = React.useRef();
-  const [spikeImage] = useImage(spikes)
-  React.useEffect(() => {
-    if (isSelected) {
-      // we need to attach transformer manually
-      trRef.current.setNode(shapeRef.current);
-      trRef.current.getLayer().batchDraw();
-    }
-  }, [isSelected]);
+const Tile = ({shapeProps, isSelected, onSelect, onChange, blockSize}) => {
+    const shapeRef = React.useRef();
+    const trRef = React.useRef();
+    const [spikeImage] = useImage(spikes)
+    React.useEffect(() => {
+        if (isSelected) {
+            // we need to attach transformer manually
+            trRef.current.setNode(shapeRef.current);
+            trRef.current.getLayer().batchDraw();
+        }
+    }, [isSelected]);
 
-  return (
-    <>
-      <Rect
-        onClick={onSelect}
-        ref={shapeRef}
-        {...shapeProps}
-        fill={shapeProps.type === "normal" ? "grey" : null}
-        fillPatternImage={shapeProps.type === "spikes" ? spikeImage : null}
-        draggable
-        onDragEnd={e => {
-          onChange({
+    return (
+        < >
+        < Rect
+    onClick = {onSelect}
+    ref = {shapeRef}
+    {...
+        shapeProps
+    }
+    fill = {shapeProps.type === "normal" ? "grey" : null}
+    fillPatternImage = {shapeProps.type === "spikes" ? spikeImage : null}
+    draggable
+    onDragEnd = {e
+=>
+    {
+        onChange({
             ...shapeProps,
             x: Math.round(e.target.x() / blockSize) * blockSize,
             y: Math.round(e.target.y() / blockSize) * blockSize
-          });
-        }}
-        onTransformEnd={e => {
-          // transformer is changing scale of the node
-          // and NOT its width or height
-          // but in the store we have only width and height
-          // to match the data better we will reset scale on transform end
-          const node = shapeRef.current;
-          const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
+        });
+    }
+}
+    onTransformEnd = {e
+=>
+    {
+        // transformer is changing scale of the node
+        // and NOT its width or height
+        // but in the store we have only width and height
+        // to match the data better we will reset scale on transform end
+        const node = shapeRef.current;
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
 
-          // we will reset it back
-          node.scaleX(1);
-          node.scaleY(1);
-          onChange({
+        // we will reset it back
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({
             ...shapeProps,
             x: Math.round(e.target.x() / blockSize) * blockSize,
             y: Math.round(e.target.y() / blockSize) * blockSize,
             // set minimal value
             width: Math.max(5, node.width() * scaleX),
             height: node.height() * scaleY
-          });
-        }}
-      />
-      {isSelected && (
-        <Transformer
-          ref={trRef}
-          boundBoxFunc={(oldBox, newBox) => {
+        });
+    }
+}
+    />
+    {
+        isSelected && (
+        < Transformer
+        ref = {trRef}
+        boundBoxFunc = {(oldBox, newBox)
+    =>
+        {
             // limit resize
             if (newBox.width < 5 || newBox.height < 5) {
-              return oldBox;
+                return oldBox;
             }
             return newBox;
-          }}
+        }
+    }
         />
-      )}
-    </>
-  );
+    )
+    }
+<
+    />
+)
+    ;
 };
 
 export default Tile;

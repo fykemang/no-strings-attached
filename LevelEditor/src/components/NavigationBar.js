@@ -1,6 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Nav, Navbar } from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {Nav, Navbar} from "react-bootstrap";
 import styled from "styled-components";
 
 const Styles = styled.div`
@@ -18,17 +17,25 @@ const Styles = styled.div`
 `;
 
 export const NavigationBar = () => (
-  <Styles>
-    <Navbar expand="lg">
-      <Navbar.Brand href="/">Level Editor</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
-          <Nav.Item>
-              <Link to="/">Home</Link>
-          </Nav.Item>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-  </Styles>
-);
+    < Styles >
+    < Navbar
+expand = "lg" >
+    < Navbar.Brand
+href = "/" > Level
+Editor < /Navbar.Brand>
+< Navbar.Toggle
+aria - controls = "basic-navbar-nav" / >
+    < Navbar.Collapse
+id = "basic-navbar-nav" >
+    < Nav
+className = "ml-auto" >
+    < Nav.Item >
+    < Link
+to = "/" > Home < /Link>
+    < /Nav.Item>
+    < /Nav>
+    < /Navbar.Collapse>
+    < /Navbar>
+    < /Styles>
+)
+;

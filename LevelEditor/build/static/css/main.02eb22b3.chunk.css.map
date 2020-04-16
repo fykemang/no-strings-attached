@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "sources": [
+    "index.css"
+  ],
+  "names": [],
+  "mappings": "AAAA,KACI,QAAS,CACT,mJAEU,CACV,kCAAmC,CACnC,iCACJ,CAEA,KACI,yEAEJ,CAEA,cACI,gBAAiB,CACjB,YAAa,CACb,SACJ,CAEA,gBACI,YAAa,CACb,YACJ,CAEA,KACI,WACJ",
+  "file": "main.02eb22b3.chunk.css",
+  "sourcesContent": [
+    "body {\n    margin: 0;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',\n    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',\n    sans-serif;\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',\n    monospace;\n}\n\n.home-wrapper {\n    margin: 20px auto;\n    width: 1200px;\n    padding: 0;\n}\n\n.canvas-wrapper {\n    height: 800px;\n    width: 1200px;\n}\n\n.row {\n    margin: auto;\n}"
+  ]
+}
