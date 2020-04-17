@@ -1,6 +1,6 @@
 {
   "type" :  "city",
-  "playerPos": {
+  "player": {
     "x": 8,
     "y": 11.0
   },
@@ -10,7 +10,8 @@
       "y": 9,
       "width": 6,
       "height": 1,
-      "type": "normal"
+      "type": "normal",
+      "direction": "up"
     },
 
     {
@@ -18,14 +19,16 @@
       "y": 5,
       "width": 8,
       "height": 1,
-      "type": "normal"
+      "type": "normal",
+      "direction": "up"
     },
     {
       "x": 10,
       "y": 4,
       "width": 9,
       "height": 0.2,
-      "type": "spikes"
+      "type": "spikes",
+      "direction": "up"
     }
   ],
   "npc": [
@@ -82,6 +85,6 @@
   ],
   "exit": {
     "x": 35,
-    "y": 2
+    "y": 0
   }
 }

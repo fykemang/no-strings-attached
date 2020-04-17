@@ -1,32 +1,47 @@
 {
   "type" : "city",
-  "playerPos": {
+  "player": {
     "x": 6,
-    "y": 4.0
+    "y": 7.0
   },
   "tiles": [
     {
       "x": 1,
-      "y": 3,
+      "y": 6,
       "width": 7,
       "height": 1,
-      "type": "normal"
+      "type": "normal",
+      "direction": "up"
     },
+
     {
-      "x": 25.5,
-      "y": 3,
-      "width": 7,
+      "x": 15,
+      "y": 9,
+      "width": 5,
       "height": 1,
+      "direction": "up",
       "type": "normal"
     },
+
     {
-      "x": 13,
-      "y": 17.5,
+      "x": 18,
+      "y": 5,
       "width": 10,
       "height": 1,
-      "type": "spikes"
+      "direction": "up",
+      "type": "normal"
     },
+
     {
+      "x": 19,
+      "y": 1.5,
+      "width": 4.5,
+      "height": 1,
+      "direction": "up",
+      "type": "normal"
+    }
+  ],
+  "spikes": [{
       "x": 25,
       "y": 8,
       "width": 1,
@@ -36,18 +51,18 @@
   ],
   "npc": [
     {
-      "x": 9.0,
-      "y": 2.0,
+      "x": 10.5,
+      "y": 7.5,
       "isSliding": false,
       "leftPos": {"x": 8.5, "y":  0.0},
       "rightPos": {"x":  10.5, "y":  1.0},
-      "isRotating": false,
-      "center": {"x": 9.0, "y":2.0},
+      "isRotating": true,
+      "center": {"x": 13.5, "y":6},
       "degree": 0
     },
     {
-      "x": 14.0,
-      "y": 2.0,
+      "x": 13.0,
+      "y": 5.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -56,18 +71,18 @@
       "degree": 0
     },
     {
-      "x": 15.0,
-      "y": 7,
+      "x": 22.0,
+      "y": 8.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
       "isRotating": false,
-      "center": {"x":  19.5, "y":  7},
-      "degree": 360
+      "center": {},
+      "degree": 0
     },
     {
-      "x": 20.0,
-      "y": 7,
+      "x": 26.0,
+      "y": 8.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -77,8 +92,8 @@
     },
 
     {
-      "x": 15.0,
-      "y": 14.0,
+      "x": 22.0,
+      "y": 16.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -87,8 +102,8 @@
       "degree": 0
     },
     {
-      "x": 20.0,
-      "y": 14.0,
+      "x": 26.0,
+      "y": 16.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -99,16 +114,16 @@
   ],
   "items": [
     {
-      "x": 12.0,
-      "y": 8.0
+      "x": 30.0,
+      "y": 15.5
     },
     {
-      "x": 17.5,
-      "y": 16.5
+      "x": 20,
+      "y": 7
     }
   ],
   "exit": {
-    "x": 15,
-    "y": 3
+    "x": 24,
+    "y": 1
   }
 }

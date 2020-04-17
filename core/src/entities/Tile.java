@@ -9,6 +9,7 @@ public class Tile implements Json.Serializable {
     private float width;
     private float x;
     private float y;
+    private String direction;
     private String type;
 
     public float[] getCorners() {
@@ -25,6 +26,10 @@ public class Tile implements Json.Serializable {
 
     public float getX() {
         return x;
+    }
+
+    public String getDirection() {
+        return direction;
     }
 
     public float getY() {
@@ -48,6 +53,7 @@ public class Tile implements Json.Serializable {
         x = jsonData.getFloat("x");
         y = jsonData.getFloat("y");
         type = jsonData.getString("type");
+        direction = jsonData.getString("direction");
         corners[0] = 0;
         corners[1] = 0;
         corners[2] = 0;
