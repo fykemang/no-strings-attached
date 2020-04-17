@@ -29,13 +29,13 @@ public class Gate extends PolygonObstacle {
         if (!super.activatePhysics(world)) {
             return false;
         }
-        Vector2 sensorCenter = new Vector2(getWidth() / 2, 2.4f);
+        Vector2 sensorCenter = new Vector2(getWidth() / 2, 1.4f);
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = 0f;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
         System.out.println(getWidth());
-        sensorShape.setAsBox(getWidth() / 4, 0.6f, sensorCenter, 0.0f);
+        sensorShape.setAsBox(getWidth() / 8, 0.2f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
         sensorDef.filter.maskBits = getFilterData().maskBits;
         sensorDef.filter.categoryBits = getFilterData().categoryBits;
