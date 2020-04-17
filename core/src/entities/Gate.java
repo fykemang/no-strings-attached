@@ -34,7 +34,6 @@ public class Gate extends PolygonObstacle {
         sensorDef.density = 0f;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        System.out.println(getWidth());
         sensorShape.setAsBox(getWidth() / 4, 0.6f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
         sensorDef.filter.maskBits = getFilterData().maskBits;
