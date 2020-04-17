@@ -14,7 +14,7 @@ public enum CollisionFilterConstants {
     MASK_NPC_ROPE(CATEGORY_PLAYER.getID());
 
 
-    private short id;
+    private final short id;
 
     public short getID() {
         return this.id;
