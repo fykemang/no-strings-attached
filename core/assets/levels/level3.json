@@ -1,5 +1,5 @@
 {
-  "type" : "city",
+  "type": "city",
   "player": {
     "x": 6,
     "y": 7.0
@@ -13,7 +13,6 @@
       "type": "normal",
       "direction": "up"
     },
-
     {
       "x": 15,
       "y": 9,
@@ -22,7 +21,6 @@
       "direction": "up",
       "type": "normal"
     },
-
     {
       "x": 18,
       "y": 5,
@@ -31,7 +29,6 @@
       "direction": "up",
       "type": "normal"
     },
-
     {
       "x": 19,
       "y": 1.5,
@@ -41,7 +38,8 @@
       "type": "normal"
     }
   ],
-  "spikes": [{
+  "spikes": [
+    {
       "x": 25,
       "y": 8,
       "width": 1,
@@ -54,10 +52,19 @@
       "x": 10.5,
       "y": 7.5,
       "isSliding": false,
-      "leftPos": {"x": 8.5, "y":  0.0},
-      "rightPos": {"x":  10.5, "y":  1.0},
+      "leftPos": {
+        "x": 8.5,
+        "y": 0.0
+      },
+      "rightPos": {
+        "x": 10.5,
+        "y": 1.0
+      },
       "isRotating": true,
-      "center": {"x": 13.5, "y":6},
+      "center": {
+        "x": 13.5,
+        "y": 6
+      },
       "degree": 0
     },
     {
@@ -90,7 +97,6 @@
       "center": {},
       "degree": 0
     },
-
     {
       "x": 22.0,
       "y": 16.0,

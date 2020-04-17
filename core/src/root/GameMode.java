@@ -315,9 +315,9 @@ public class GameMode implements Screen {
     private String[] CITY_BKG_FILES_A = new String[]{"platform/citylayer1.png", "platform/citylayer2.png"};
     private String[] CITY_BKG_FILES_B = new String[]{"platform/citylayer4.png", "platform/citylayer5.png", "platform/citylayer6.png", "platform/citylayer7.png", "platform/citylayer8.png", "platform/citylayer9.png"};
     private String[] CITY_BKG_FILES_C = new String[]{"platform/citylayer3.png"};
-    private ArrayList<TextureRegion> stillBackgroundTextures;
-    private ArrayList<TextureRegion> slightmoveBackgroundTextures;
-    private ArrayList<TextureRegion> movingBackgroundTextures;
+    private List<TextureRegion> stillBackgroundTextures;
+    private List<TextureRegion> slightmoveBackgroundTextures;
+    private List<TextureRegion> movingBackgroundTextures;
 
     /**
      * Creates a new game world
@@ -904,12 +904,14 @@ public class GameMode implements Screen {
             music.dispose();
             exitToSelector();
         }
+
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
             player.applyForce();
+
             if (player.isAttached()) {
                 player.setTexture(playerSwingAnimation);
             } else if (player.isRising()) {
@@ -922,21 +924,19 @@ public class GameMode implements Screen {
                 player.setTexture(playerIdleAnimation);
             }
 
-            if (player.isShooting()) {
+            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
                 Vector2 playerPosition = player.getPosition();
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
-                boolean didSelectTarget = ropeQueryCallback.selectTarget();
-                if (didSelectTarget) {
-                    player.setAttached(true);
-                }
+                ropeQueryCallback.selectTarget();
             }
 
-            if (player.isShooting() && player.isAttached() && playerRope != null && player.getSwingJoint() != null) {
+            if (player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
-                world.destroyJoint(player.getSwingJoint());
-                player.setSwingJoint(null);
                 player.setTarget(null);
+                playerRope = null;
+                world.destroyJoint(player.getSwingJoint());
                 player.setAttached(false);
+                player.setSwingJoint(null);
             }
 
             // Cutting the rope
@@ -956,7 +956,7 @@ public class GameMode implements Screen {
                 Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, -1, 4.5f);
+                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 4.5f);
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
@@ -986,6 +986,7 @@ public class GameMode implements Screen {
                 ropeJointDef.collideConnected = true;
                 Joint swingJoint = world.createJoint(ropeJointDef);
                 player.setSwingJoint(swingJoint);
+                player.setAttached(true);
             }
 
             /*
