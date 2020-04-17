@@ -25,7 +25,6 @@ import obstacle.ComplexObstacle;
 import obstacle.Obstacle;
 import obstacle.SimpleObstacle;
 import obstacle.WheelObstacle;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import root.GameCanvas;
 
 import java.util.ArrayList;
