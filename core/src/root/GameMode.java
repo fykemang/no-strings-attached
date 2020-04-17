@@ -1364,6 +1364,9 @@ public class GameMode implements Screen {
                 obj.update(dt);
             }
         }
+        if (player.won() || !player.isAlive()){
+            listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+        }
     }
 
     /**
