@@ -175,8 +175,8 @@ public class Stone extends PolygonObstacle {
             }
         }else {
             if (height <= 2 && width <= 2) {
-                firstx = x * drawScale.x;
-                firsty = y * drawScale.y;
+             float firstx = getX() * drawScale.x;
+              float  firsty = getY() * drawScale.y;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
