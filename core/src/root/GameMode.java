@@ -19,7 +19,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -707,7 +706,7 @@ public class GameMode implements Screen {
         }
 
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(),"tile" + i, 1f, tileTexture);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(), "tile" + i, 1f, tileTexture);
         }
 
         for (int i = 0; i < spikes.size(); i++) {
@@ -789,9 +788,9 @@ public class GameMode implements Screen {
         Stone leftTile;
         Stone rightTile;
         if (curr.isSliding()) {
-            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(),"tile", 1f, tileTexture, curr.getLeft(), curr.getRight());
+            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture, curr.getLeft(), curr.getRight());
         } else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(),"tile", 1f, tileTexture, curr.getRotatingCenter(), curr.getRotatingDegree());
+            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture, curr.getRotatingCenter(), curr.getRotatingDegree());
         } else {
             leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture);
         }
@@ -818,7 +817,7 @@ public class GameMode implements Screen {
         return tile;
     }
 
-    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type,  String name, float sc, TextureRegion tex,
+    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion tex,
                                    float[] leftPos, float[] rightPos) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
@@ -1077,11 +1076,11 @@ public class GameMode implements Screen {
             }
         }
         if (player.won()) {
-            canvas.drawUIText("you won", canvas.getWidth()/2, canvas.getHeight()/2);
+            canvas.drawUIText("you won", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
 
         if (!player.isAlive()) {
-            canvas.drawUIText("press r to restart", canvas.getWidth()/2, canvas.getHeight()/2);
+            canvas.drawUIText("press r to restart", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);

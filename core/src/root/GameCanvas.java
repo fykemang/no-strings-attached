@@ -1318,7 +1318,7 @@ public class GameCanvas {
         parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);
         GlyphLayout layout = new GlyphLayout(font, text);
-        font.draw(UIBatch, layout, x-layout.width/2, y);
+        font.draw(UIBatch, layout, x - layout.width / 2, y);
         UIBatch.end();
         spriteBatch.begin();
     }

@@ -32,9 +32,11 @@ public class Level implements Json.Serializable {
     public List<TextureRegion> getStillBackgroundTexture() {
         return still;
     }
+
     public List<TextureRegion> getSlightBackgroundTexture() {
         return slight;
     }
+
     public List<TextureRegion> getMovingBackgroundTexture() {
         return moving;
     }
