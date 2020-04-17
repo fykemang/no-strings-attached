@@ -1076,19 +1076,11 @@ public class GameMode implements Screen {
             }
         }
         if (player.won()) {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.size = 20;
-            BitmapFont font = generator.generateFont(parameter);
-            canvas.drawText("you won", font, player.getX() * 37 + 200, player.getY() * 44 + 100);
+            canvas.drawUIText("you won", canvas.getWidth()/2, canvas.getHeight()/2);
         }
 
         if (!player.isAlive()) {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/RetroGame.ttf"));
-            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            parameter.size = 20;
-            BitmapFont font = generator.generateFont(parameter);
-            canvas.drawText("press 'R' to restart the level", font, player.getX() * 3 + 200, player.getY() * 44 + 100);
+            canvas.drawUIText("press r to restart", canvas.getWidth()/2, canvas.getHeight()/2);
         }
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
