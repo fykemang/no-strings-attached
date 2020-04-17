@@ -5,8 +5,8 @@ import obstacle.WheelObstacle;
 
 public class Blob extends WheelObstacle {
     public static final String BLOB_NAME = "blob";
-    private int id;
-    private Vector2 norm;
+    private final int id;
+    private final Vector2 norm;
 
     public Blob(float x, float y, float radius, int id) {
         super(x, y, radius);

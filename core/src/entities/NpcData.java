@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class NpcData implements Json.Serializable {
-    private float[] pos = new float[2];
+    private final float[] pos = new float[2];
     private boolean isSliding;
     private float[] left;
     private float[] right;
