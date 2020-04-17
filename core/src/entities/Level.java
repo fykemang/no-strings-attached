@@ -15,17 +15,16 @@ import java.util.List;
  * a single level
  */
 public class Level implements Json.Serializable {
-    private List<Tile> tiles;
-    private List<Tile> spikes;
-    private Vector2 exitPos;
-    private Vector2 playerPos;
+    private final List<Tile> tiles;
+    private final List<Tile> spikes;
+    private final Vector2 exitPos;
+    private final Vector2 playerPos;
     private String type;
     private TextureRegion tileTexture;
     private ArrayList<TextureRegion> backgroundTexture;
-
-    private List<NpcData> npcData;
-    private List<float[]> couples;
-    private List<float[]> items;
+    private final List<NpcData> npcData;
+    private final List<float[]> couples;
+    private final List<float[]> items;
 
     public ArrayList<TextureRegion> getBackgroundTexture() {
         return backgroundTexture;

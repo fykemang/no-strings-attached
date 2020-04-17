@@ -879,12 +879,14 @@ public class GameMode implements Screen {
             music.dispose();
             exitToSelector();
         }
+
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
             player.applyForce();
+
             if (player.isAttached()) {
                 player.setTexture(playerSwingAnimation);
             } else if (player.isRising()) {
@@ -897,7 +899,7 @@ public class GameMode implements Screen {
                 player.setTexture(playerIdleAnimation);
             }
 
-            if (player.isShooting()) {
+            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
                 Vector2 playerPosition = player.getPosition();
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 boolean didSelectTarget = ropeQueryCallback.selectTarget();
@@ -906,11 +908,10 @@ public class GameMode implements Screen {
                 }
             }
 
-            if (player.isShooting() && player.isAttached() && playerRope != null && player.getSwingJoint() != null) {
+            if (player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
-                world.destroyJoint(player.getSwingJoint());
-                player.setSwingJoint(null);
                 player.setTarget(null);
+                playerRope = null;
                 player.setAttached(false);
             }
 
@@ -954,13 +955,6 @@ public class GameMode implements Screen {
                 revoluteJointDef.localAnchorB.set(anchor);
                 revoluteJointDef.collideConnected = false;
                 world.createJoint(revoluteJointDef);
-
-                ropeJointDef.bodyA = player.getBody();
-                ropeJointDef.bodyB = player.getTarget().getBody();
-                ropeJointDef.maxLength = playerRope.getLength();
-                ropeJointDef.collideConnected = true;
-                Joint swingJoint = world.createJoint(ropeJointDef);
-                player.setSwingJoint(swingJoint);
             }
 
             /*

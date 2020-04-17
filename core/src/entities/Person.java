@@ -414,10 +414,11 @@ public class Person extends CapsuleObstacle {
         }
 
 
-        float horizontal = released ? getVX() * 50f + getMovement()
-                : isAttached ? getMovement() * 9f : getMovement();
+        float horizontal = released ? getVX() * 20f + getMovement()
+                : isAttached ? getMovement() * 8f : getMovement();
 
         forceCache.set(horizontal, 0);
+
         if (released)
             body.applyLinearImpulse(forceCache, getPosition(), true);
         else

@@ -1,5 +1,5 @@
 {
-  "type" : "city",
+  "type": "city",
   "player": {
     "x": 6,
     "y": 4.0
@@ -60,17 +60,25 @@
       "height": 5,
       "direction": "left"
     }
-
   ],
   "npc": [
     {
       "x": 9.0,
       "y": 2.0,
       "isSliding": false,
-      "leftPos": {"x": 8.5, "y":  0.0},
-      "rightPos": {"x":  10.5, "y":  1.0},
+      "leftPos": {
+        "x": 8.5,
+        "y": 0.0
+      },
+      "rightPos": {
+        "x": 10.5,
+        "y": 1.0
+      },
       "isRotating": false,
-      "center": {"x": 9.0, "y":2.0},
+      "center": {
+        "x": 9.0,
+        "y": 2.0
+      },
       "degree": 0,
       "pairIdx": 1
     },
@@ -92,7 +100,10 @@
       "leftPos": {},
       "rightPos": {},
       "isRotating": false,
-      "center": {"x":  19.5, "y":  7},
+      "center": {
+        "x": 19.5,
+        "y": 7
+      },
       "degree": 360,
       "pairIdx": 3
     },
@@ -107,7 +118,6 @@
       "degree": 0,
       "pairIdx": 2
     },
-
     {
       "x": 15.0,
       "y": 14.0,
