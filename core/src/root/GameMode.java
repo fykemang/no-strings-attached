@@ -1053,7 +1053,7 @@ public class GameMode implements Screen {
             canvas.drawWrapped(t, -.1f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
         }
         for (TextureRegion t : movingBackgroundTextures) {
-            canvas.drawWrapped(t, -0.5f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+            canvas.drawWrapped(t, -.3f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
         }
 //        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
 //        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
