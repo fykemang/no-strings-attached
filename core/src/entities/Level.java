@@ -21,17 +21,29 @@ public class Level implements Json.Serializable {
     private final Vector2 playerPos;
     private String type;
     private TextureRegion tileTexture;
-    private ArrayList<TextureRegion> backgroundTexture;
-    private final List<NpcData> npcData;
-    private final List<float[]> couples;
-    private final List<float[]> items;
+    private List<TextureRegion> still;
+    private List<TextureRegion> slight;
+    private List<TextureRegion> moving;
 
-    public ArrayList<TextureRegion> getBackgroundTexture() {
-        return backgroundTexture;
+    private List<NpcData> npcData;
+    private List<float[]> couples;
+    private List<float[]> items;
+
+    public List<TextureRegion> getStillBackgroundTexture() {
+        return still;
+    }
+    public List<TextureRegion> getSlightBackgroundTexture() {
+        return slight;
+    }
+    public List<TextureRegion> getMovingBackgroundTexture() {
+        return moving;
     }
 
-    public void setBackgroundTexture(ArrayList<TextureRegion> backgroundTexture) {
-        this.backgroundTexture = backgroundTexture;
+
+    public void setBackgroundTexture(List<TextureRegion> still, List<TextureRegion> slight, List<TextureRegion> moving) {
+        this.still = still;
+        this.slight = slight;
+        this.moving = moving;
     }
 
     public void setTileTexture(TextureRegion tileTexture) {
