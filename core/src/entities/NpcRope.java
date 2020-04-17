@@ -15,13 +15,11 @@
 package entities;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import obstacle.ComplexObstacle;
 import obstacle.Obstacle;
 import obstacle.SimpleObstacle;
 import obstacle.WheelObstacle;
@@ -35,7 +33,7 @@ import java.util.ArrayList;
  * Note that this class returns to static loading.  That is because there are
  * no other subclasses that we might loop through.
  */
-public class NpcRope extends ComplexObstacle {
+public class NpcRope extends Rope {
     /**
      * The debug name for the entire obstacle
      */
@@ -43,35 +41,12 @@ public class NpcRope extends ComplexObstacle {
     /**
      * The density of each plank in the bridge
      */
-    private static final float BASIC_DENSITY = 1.0f;
+    private static final float NPC_ROPE_DENSITY = 1.0f;
 
-    // Dimension information
-    /**
-     * The size of the entire bridge
-     */
-    protected Vector2 dimension;
-    /**
-     * The length of each link
-     */
-    protected float blobDiameter;
-    /**
-     * The spacing between each link
-     */
-    protected float spacing;
-    private int ropeID;
-    protected float length;
+    private Vector2 approxNorm;
 
-    private CatmullRomSpline<Vector2> splineCurve;
-
-    Vector2[] contPoints;
-
-    Vector2 approxNorm;
-
-    private final int K = 100;
-
-    private final Vector2[] POINTS = new Vector2[K];
-    private ArrayList<WheelObstacle> upperLayer = new ArrayList<>();
-    private ArrayList<WheelObstacle> lowerLayer = new ArrayList<>();
+    private ArrayList<WheelObstacle> upperLayer;
+    private ArrayList<WheelObstacle> lowerLayer;
     public RopeState state;
 
     public enum RopeState {
@@ -79,6 +54,7 @@ public class NpcRope extends ComplexObstacle {
     }
 
     public NpcRope(ArrayList<WheelObstacle> upper, ArrayList<WheelObstacle> lower, RopeState state) {
+        super();
         this.state = state;
         this.lowerLayer = lower;
         this.upperLayer = upper;
@@ -88,8 +64,8 @@ public class NpcRope extends ComplexObstacle {
         for (WheelObstacle o : lower) {
             bodies.add(o);
         }
-        for (int i = 0; i < K; i++) {
-            POINTS[i] = new Vector2();
+        for (int i = 0; i < MAX_DRAW_POINTS; i++) {
+            points[i] = new Vector2();
         }
         contPoints = new Vector2[upper.size() + 2];
 
@@ -105,14 +81,8 @@ public class NpcRope extends ComplexObstacle {
     }
 
     public NpcRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter, float ropeLength) {
-        super(x0, y0);
-        setName(ROPE_NAME + id);
+        super(x0, y0, x1, y1, ROPE_NAME + id, NPC_ROPE_DENSITY, ropeLength, blobDiameter, id);
         state = RopeState.COMPLETE;
-        this.blobDiameter = blobDiameter;
-        this.ropeID = id;
-        dimension = new Vector2(x1 - x0, y1 - y0);
-        this.length = ropeLength;
-        initializeBlobs();
     }
 
     /**
@@ -124,61 +94,55 @@ public class NpcRope extends ComplexObstacle {
      * @param y1      The y position of the right anchor
      * @param lheight The bridge thickness
      */
-    public NpcRope(float x0, float y0, float x1, float y1, float lheight, int id, float blobDiameter) {
-        super(x0, y0);
-        setName(ROPE_NAME + id);
+    public NpcRope(float x0, float y0, float x1, float y1, float lheight, int id, float lWidth) {
+        super(x0, y0, x1, y1, ROPE_NAME + id, NPC_ROPE_DENSITY, new Vector2(x1 - x0, y1 - y0).len(), lWidth, id);
         state = RopeState.COMPLETE;
-        this.blobDiameter = blobDiameter;
-
-        this.ropeID = id;
-        // Compute the bridge length
-        dimension = new Vector2(x1 - x0, y1 - y0);
-        this.length = dimension.len();
-        initializeBlobs();
     }
 
-    private void initializeBlobs() {
+    void initializeSegments() {
+        upperLayer = new ArrayList<>();
+        lowerLayer = new ArrayList<>();
         Vector2 norm = new Vector2(dimension);
-        float blobRadius = blobDiameter / 2;
+        float blobRadius = lWidth / 2;
         norm.nor();
         // If too small, only make one plank.
-        int nLinks = (int) (length / blobDiameter) - 4;
+        int nLinks = (int) (length / lWidth) - 4;
         if (nLinks <= 1) {
             nLinks = 1;
-            blobDiameter = length;
+            lWidth = length;
             spacing = 0;
         } else {
-            spacing = length - nLinks * blobDiameter;
+            spacing = length - nLinks * lWidth;
             spacing /= (nLinks - 1);
         }
 
         Vector2 pos = new Vector2();
         for (int i = 0; i < nLinks; i++) {
-            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
+            float t = i * (lWidth + spacing) + lWidth / 2.0f;
             pos.set(norm);
             pos.scl(t);
             pos.add(getX(), getY());
-            Blob blob = new Blob(pos.x, pos.y, blobRadius, ropeID);
-            blob.setDensity(BASIC_DENSITY);
+            Blob blob = new Blob(pos.x, pos.y, blobRadius, id);
+            blob.setDensity(density);
             bodies.add(blob);
             upperLayer.add(blob);
         }
 
         Vector2 pos2 = new Vector2();
         for (int i = 0; i < nLinks - 1; i++) {
-            float t = i * (blobDiameter + spacing) + blobDiameter / 2.0f;
+            float t = i * (lWidth + spacing) + lWidth / 2.0f;
             pos2.set(norm);
             pos2.scl(t);
             pos2.add(getX(), getY());
-            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, blobRadius, ropeID);
-            blob.setDensity(BASIC_DENSITY);
+            Blob blob = new Blob(pos2.x, pos2.y - 0.2f, blobRadius, id);
+            blob.setDensity(density);
             bodies.add(blob);
             lowerLayer.add(blob);
         }
 
 
-        for (int i = 0; i < K; i++) {
-            POINTS[i] = new Vector2();
+        for (int i = 0; i < MAX_DRAW_POINTS; i++) {
+            points[i] = new Vector2();
         }
 
         contPoints = new Vector2[upperLayer.size() + 2];
@@ -205,8 +169,7 @@ public class NpcRope extends ComplexObstacle {
      */
     @Override
     protected boolean createJoints(World world) {
-        assert upperLayer.size() > 0;
-        float blobRadius = this.blobDiameter / 2;
+        float blobRadius = lWidth / 2;
         if (state != RopeState.COMPLETE) return true;
         Vector2 anchor1 = new Vector2(blobRadius / 2, 0);
         Vector2 anchor2 = new Vector2(-blobRadius / 2, 0);
@@ -311,7 +274,7 @@ public class NpcRope extends ComplexObstacle {
     }
 
 
-    private void extractContPoints() {
+    void extractContPoints() {
         int startIndex = 1;
         int endIndex = contPoints.length - 1;
 
@@ -327,17 +290,6 @@ public class NpcRope extends ComplexObstacle {
         contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
     }
 
-    private void setCurrentSplineCurve() {
-        extractContPoints();
-        if (splineCurve == null)
-            splineCurve = new CatmullRomSpline<>(contPoints, false);
-        else
-            splineCurve.set(contPoints, false);
-    }
-
-    private boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos) {
-        return a.getPosition().dst2(pos) < b.getPosition().dst2(pos);
-    }
 
     public NpcRope[] cut(final Vector2 pos, World w) {
         if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)) {
@@ -400,7 +352,7 @@ public class NpcRope extends ComplexObstacle {
         approxNorm.set(-dy, dx);
         approxNorm.nor();
         setNorms();
-        canvas.drawCatmullRom(splineCurve, K, POINTS);
+        canvas.drawCatmullRom(splineCurve, MAX_DRAW_POINTS, points);
     }
 
     private void setNorms() {
@@ -427,30 +379,6 @@ public class NpcRope extends ComplexObstacle {
     public void moveEnd(Vector2 end, boolean scaled) {
         upperLayer.get(upperLayer.size() - 1).setPosition(end);
         setEnd(end, scaled);
-    }
-
-    public void setStart(Vector2 start, boolean scaled) {
-        if (!scaled) {
-            contPoints[0].set(start.x * drawScale.x, start.y * drawScale.y);
-            contPoints[1].set(start.x * drawScale.x, start.y * drawScale.y);
-        } else {
-            contPoints[0].set(start.x, start.y);
-            contPoints[1].set(start.x, start.y);
-        }
-    }
-
-    public void setEnd(Vector2 end, boolean scaled) {
-        if (!scaled) {
-            contPoints[contPoints.length - 1].set(end.x * drawScale.x, end.y * drawScale.y);
-            contPoints[contPoints.length - 2].set(end.x * drawScale.x, end.y * drawScale.y);
-        } else {
-            contPoints[contPoints.length - 1].set(end.x, end.y);
-            contPoints[contPoints.length - 2].set(end.x, end.y);
-        }
-    }
-
-    public float getLength() {
-        return length;
     }
 
     public boolean isBroken() {

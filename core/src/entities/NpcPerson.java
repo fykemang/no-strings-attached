@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class NpcPerson extends Person {
 
-    private Vector2 leftAttachPt;
-    private Vector2 rightAttachPt;
+    private final Vector2 leftAttachPt;
+    private final Vector2 rightAttachPt;
     private NpcPerson couple;
     public boolean left;
     public boolean flip;
@@ -53,7 +53,6 @@ public class NpcPerson extends Person {
         if (left) {
             return leftAttachPt;
         } else {
-//            System.out.println("here");
             return rightAttachPt;
         }
 

@@ -3,7 +3,7 @@ package entities;
 import obstacle.WheelObstacle;
 
 public class Projectile extends WheelObstacle {
-    private int maxAge;
+    private final int maxAge;
     private int age;
 
     public Projectile(float x, float y, float radius, int maxAge) {

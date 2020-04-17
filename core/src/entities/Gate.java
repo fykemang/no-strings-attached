@@ -11,7 +11,7 @@ import obstacle.PolygonObstacle;
 import root.GameCanvas;
 
 public class Gate extends PolygonObstacle {
-    private TextureRegion texture;
+    private final TextureRegion texture;
     private float x;
     private float y;
     private PolygonShape sensorShape;
