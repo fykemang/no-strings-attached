@@ -190,10 +190,14 @@ public class XBox360Controller implements ControllerListener {
      */
     public XBox360Controller(int device) {
         deviceid = device;
-        if (Controllers.getControllers().size > deviceid) {
-            initialize(Controllers.getControllers().get(deviceid));
+        try {
+            if (Controllers.getControllers().size > deviceid) {
+                initialize(Controllers.getControllers().get(deviceid));
+            }
+            Controllers.addListener(this);
+        } catch (Exception ignored) {
+
         }
-        Controllers.addListener(this);
     }
 
     /**

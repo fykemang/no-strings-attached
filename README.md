@@ -5,7 +5,9 @@ CS3152 Project
 
 Movement - WASD
 
-Shoot Bullet - Left Click
+Swing from NPCs - Left Click
+
+Release rope from NPC - Left Click
 
 Cut - Space Bar
 

@@ -1,4 +1,4 @@
-package platform;
+package entities;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;

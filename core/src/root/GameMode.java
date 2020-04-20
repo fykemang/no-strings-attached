@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import entities.*;
 import obstacle.Obstacle;
-import platform.NpcData;
 import util.*;
 
 import java.util.ArrayList;
@@ -131,7 +130,6 @@ public class GameMode implements Screen {
     private static final String NEEDLE = "platform/needles.png";
     private static final String YARN = "platform/skein.png";
     private static final String BUTTON = "platform/buttons.png";
-//    private static final String YARN = "platform/yarn.png";
 
     /**
      * The texture file for the spinning barrier
