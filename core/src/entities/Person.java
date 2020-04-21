@@ -125,16 +125,16 @@ public class Person extends CapsuleObstacle {
     private int shootCooldown;
     private PolygonShape sensorShape;
     private boolean canCut;
-    private String sensorName;
+    private final String sensorName;
     private int closestCoupleID;
     //    private Obstacle target;
     private boolean canCollect;
     private int closestItemID;
     private Person target;
-    private Vector2 trampolineDir;
+    private final Vector2 trampolineDir;
     private float trampolineForceX;
     private float trampolineForceY;
-    private ArrayList<String> inventory;
+    private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
 
@@ -146,9 +146,9 @@ public class Person extends CapsuleObstacle {
     /**
      * Cache for internal force calculations
      */
-    private Vector2 forceCache = new Vector2();
+    private final Vector2 forceCache = new Vector2();
     private Joint swingJoint;
-    private Vector2 temp = new Vector2();
+    private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
 
@@ -392,9 +392,10 @@ public class Person extends CapsuleObstacle {
         if (!isActive()) {
             return;
         }
+        float horizontalMovement = getMovement();
 
         // Don't want to be moving. Damp out player motion
-        if (getMovement() == 0f) {
+        if (horizontalMovement == 0f && !isAttached) {
             forceCache.set(-getDamping() * getVX(), 0);
             body.applyForce(forceCache, getPosition(), true);
         }
@@ -414,14 +415,15 @@ public class Person extends CapsuleObstacle {
         }
 
 
-        float horizontal = released ? getVX() * 50f + getMovement()
-                : isAttached ? getMovement() * 9f : getMovement();
+        if (isAttached) {
+            horizontalMovement = horizontalMovement * 8f;
+        } else if (released) {
+            horizontalMovement = getVX() * 15f + getMovement();
+        }
 
-        forceCache.set(horizontal, 0);
-        if (released)
-            body.applyLinearImpulse(forceCache, getPosition(), true);
-        else
-            body.applyForce(forceCache, getPosition(), true);
+        forceCache.set(horizontalMovement, 0);
+
+        body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
         if (isJumping()) {

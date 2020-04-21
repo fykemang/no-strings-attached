@@ -15,32 +15,32 @@ import java.util.List;
  * a single level
  */
 public class Level implements Json.Serializable {
-    private List<Tile> tiles;
-    private List<Tile> spikes;
-    private Vector2 exitPos;
-    private Vector2 playerPos;
+    private final List<Tile> tiles;
+    private final List<Tile> spikes;
+    private final Vector2 exitPos;
+    private final Vector2 playerPos;
     private String type;
     private TextureRegion tileTexture;
-    private ArrayList<TextureRegion> still;
-    private ArrayList<TextureRegion> slight;
-    private ArrayList<TextureRegion> moving;
+    private List<TextureRegion> still;
+    private List<TextureRegion> slight;
+    private List<TextureRegion> moving;
 
     private List<NpcData> npcData;
     private List<float[]> couples;
     private List<float[]> items;
 
-    public ArrayList<TextureRegion> getStillBackgroundTexture() {
+    public List<TextureRegion> getStillBackgroundTexture() {
         return still;
     }
-    public ArrayList<TextureRegion> getSlightBackgroundTexture() {
+    public List<TextureRegion> getSlightBackgroundTexture() {
         return slight;
     }
-    public ArrayList<TextureRegion> getMovingBackgroundTexture() {
+    public List<TextureRegion> getMovingBackgroundTexture() {
         return moving;
     }
 
 
-    public void setBackgroundTexture(ArrayList<TextureRegion> still, ArrayList<TextureRegion> slight, ArrayList<TextureRegion> moving) {
+    public void setBackgroundTexture(List<TextureRegion> still, List<TextureRegion> slight, List<TextureRegion> moving) {
         this.still = still;
         this.slight = slight;
         this.moving = moving;

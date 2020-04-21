@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -1305,6 +1306,19 @@ public class GameCanvas {
 //        UIBatch.setProjectionMatrix(camera.combined);
         computeTransform(texture.getRegionWidth() / 2, texture.getRegionHeight() / 2, x, y, 0, sc, sc);
         UIBatch.draw(texture, texture.getRegionWidth(), texture.getRegionHeight(), local);
+        UIBatch.end();
+        spriteBatch.begin();
+    }
+
+    public void drawUIText(String text, int x, int y) {
+        spriteBatch.end();
+        UIBatch.begin();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        BitmapFont font = generator.generateFont(parameter);
+        GlyphLayout layout = new GlyphLayout(font, text);
+        font.draw(UIBatch, layout, x-layout.width/2, y);
         UIBatch.end();
         spriteBatch.begin();
     }

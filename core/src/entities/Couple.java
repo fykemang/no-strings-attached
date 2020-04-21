@@ -14,14 +14,14 @@ import util.FilmStrip;
  * A obstacle made up of two dudes and a trampoline
  */
 public class Couple extends ComplexObstacle {
-    private NpcPerson l;
-    private NpcPerson r;
-    private NpcRope trampoline;
+    private final NpcPerson l;
+    private final NpcPerson r;
+    private final NpcRope trampoline;
     private NpcRope trampLeft;
     private NpcRope trampRight;
-    private TextureRegion trampolineTexture;
-    private Stone leftTile;
-    private Stone rightTile;
+    private final TextureRegion trampolineTexture;
+    private final Stone leftTile;
+    private final Stone rightTile;
     private boolean isCut;
 
     public enum CoupleState {BROKEN, PAIRED}
@@ -96,7 +96,7 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = l.getBody();
         jointDef.bodyB = trampoline.getBody();
         anchor1.x = l.getWidth() / 2;
-        anchor2.x = -trampoline.blobDiameter / 2;
+        anchor2.x = -trampoline.lWidth / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
@@ -104,7 +104,7 @@ public class Couple extends ComplexObstacle {
         jointDef.bodyA = trampoline.getLastLink();
         jointDef.bodyB = r.getBody();
         anchor1.x = r.getWidth() / 2;
-        anchor2.x = -trampoline.blobDiameter / 2;
+        anchor2.x = -trampoline.lWidth / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
         joints.add(world.createJoint(jointDef));
