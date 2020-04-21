@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Gameplay specific controller for the platformer game.
+ * Gameplay specific controller for the game.
  * <p>
  * You will notice that asset loading is not done with static methods this time.
  * Instance asset loading makes it easier to process our game modes in a loop, which
@@ -88,78 +88,60 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
-    public float UIy;
-    public float resetX;
-    public float escX;
 
-
-    /**
-     * Background
-     */
-//    private static final String BKG_SUN = "platform/sun_background.png";
-//
-//    private static final String BKG_CITY = "platform/city_background.png";
-//
-//    private static final String BKG_CLOUD = "platform/cloud_background.png";
-//
-//    private static final String BKG_SKY = "platform/background_sky.png";
     /**
      * The texture file for the idle player
      */
-    private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
-    private static final String PLAYER_SWING_ANIMATION = "platform/player_swing_animation.png";
+    private static final String PLAYER_IDLE_ANIMATION = "player/player_idle_animation.png";
+    private static final String PLAYER_SWING_ANIMATION = "player/player_swing_animation.png";
 
-    private static final String PLAYER_JUMP = "platform/player_jump.png";
+    private static final String PLAYER_JUMP = "player/player_jump.png";
 
-    private static final String PLAYER_FALL = "platform/player_fall.png";
+    private static final String PLAYER_FALL = "player/player_fall.png";
 
-    private static final String NPC_COZY = "platform/cozy_idle.png";
+    private static final String NPC_COZY = "entities/cozy_idle.png";
 
-    private static final String NPC_CHEESE = "platform/cheese.png";
+    private static final String NPC_CHEESE = "entities/cheese.png";
 
-    private static final String NPC_NERVY = "platform/nervy_idle.png";
+    private static final String NPC_NERVY = "entities/nervy_idle.png";
 
-    private static final String NPC_SPIKY = "platform/spiky_idle.png";
+    private static final String NPC_SPIKY = "entities/spiky_idle.png";
 
-    private static final String NPC_HEYO = "platform/heyo.png";
+    private static final String NPC_HEYO = "entities/heyo_npc.png";
 
-    private static final String NPC_WELCOME = "platform/welcome.png";
+    private static final String NPC_WELCOME = "entities/welcome_npc.png";
 
-    private static final String CITYGATE = "platform/citydoor.png";
+    private static final String CITYGATE = "entities/citydoor.png";
 
-    private static final String NEEDLE = "platform/needles.png";
-    private static final String YARN = "platform/skein.png";
-    private static final String BUTTON = "platform/buttons.png";
+    private static final String NEEDLE = "entities/needles.png";
+    private static final String YARN = "entities/skein.png";
+    private static final String BUTTON = "entities/buttons.png";
 
     /**
      * The texture file for the spinning barrier
      */
-    private static final String BARRIER_FILE = "platform/barrier.png";
+    private static final String BARRIER_FILE = "entities/barrier.png";
     /**
      * The texture file for the bullet
      */
-    private static final String BULLET_FILE = "platform/bullet.png";
-    /**
-     * The texture file for the bridge plank
-     */
-    private static final String ROPE_FILE = "platform/ropebridge.png";
+    private static final String BULLET_FILE = "entities/bullet.png";
     /**
      * The sound file for a jump
      */
-    private static final String JUMP_FILE = "platform/jump.mp3";
+    private static final String JUMP_FILE = "sounds/jump.mp3";
     /**
      * The sound file for a bullet fire
      */
-    private static final String PEW_FILE = "platform/pew.mp3";
+    private static final String PEW_FILE = "sounds/pew.mp3";
     /**
      * The sound file for a bullet collision
      */
-    private static final String POP_FILE = "platform/plop.mp3";
+    private static final String POP_FILE = "sounds/plop.mp3";
     /**
      * The folder with all levels
      */
     private static final String TEST_LEVEL = "levels/test_level.json";
-    private static final String CROSSHAIR_FILE = "platform/crosshair.png";
+    private static final String CROSSHAIR_FILE = "entities/crosshair.png";
 
     /**
      * File to texture for walls and platforms
@@ -167,11 +149,11 @@ public class GameMode implements Screen {
 
     private static final String SPIKE_FILE = "shared/spikes.png";
     private static final String SPIKE_VERT = "shared/spikes_vert.png";
-    private static final String UI_GreyYarn = "platform/greyYarn.png";
-    private static final String UI_RedYarn = "platform/redYarn.png";
+    private static final String UI_GreyYarn = "entities/greyYarn.png";
+    private static final String UI_RedYarn = "entities/redYarn.png";
     private static final String RESTART_FILE = "shared/restart.png";
     private static final String ESC_FILE = "shared/pause.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
     /**
      * Retro font for displaying messages
      */
@@ -296,22 +278,21 @@ public class GameMode implements Screen {
     private TextureRegion cloudTexture;
     private TextureRegion sunTexture;
 
-    private String CITY_MUSIC_FILE = "platform/Shine.mp3";
-    private String SUBURB_MUSIC_FILE = "platform/takingastroll.mp3";
+    private String CITY_MUSIC_FILE = "music/shine.mp3";
+    private String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
     private String FOREST_MUSIC_FILE;
     private String MOUNTAIN_MUSIC_FILE;
     private Music music;
 
-    //    private static final String EARTH_FILE = "shared/earthtile.png";
-    private static final String CITY_TILE_FILE = "platform/city-tile.png";
-    private static final String SUBURB_TILE_FILE = "platform/suburb-tiles.png";
-    private static final String FOREST_TILE_FILE = "platform/mossyrocks.png";
+    private static final String CITY_TILE_FILE = "entities/city-tile.png";
+    private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
+    private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
     private static final String MOUNTAIN_TILE_FILE = "shared/earthtile.png";
     private TextureRegion tileTexture;
 
-    private String[] CITY_BKG_FILES_A = new String[]{"platform/citylayer1.png", "platform/citylayer2.png"};
-    private String[] CITY_BKG_FILES_B = new String[]{"platform/citylayer4.png", "platform/citylayer5.png", "platform/citylayer6.png", "platform/citylayer7.png", "platform/citylayer8.png", "platform/citylayer9.png"};
-    private String[] CITY_BKG_FILES_C = new String[]{"platform/citylayer3.png"};
+    private String[] CITY_BKG_FILES_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
+    private String[] CITY_BKG_FILES_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
+    private String[] CITY_BKG_FILES_C = new String[]{"background/citylayer3.png"};
     private List<TextureRegion> stillBackgroundTextures;
     private List<TextureRegion> slightmoveBackgroundTextures;
     private List<TextureRegion> movingBackgroundTextures;
@@ -393,8 +374,6 @@ public class GameMode implements Screen {
         assets.add(YARN);
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
-        manager.load(ROPE_FILE, Texture.class);
-        assets.add(ROPE_FILE);
         manager.load(CROSSHAIR_FILE, Texture.class);
         assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
@@ -516,7 +495,6 @@ public class GameMode implements Screen {
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
-        bridgeTexture = createTexture(manager, ROPE_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);

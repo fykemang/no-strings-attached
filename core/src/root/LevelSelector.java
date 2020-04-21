@@ -27,7 +27,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private static final String FOREST_FILE = "shared/forest.png";
     private static final String MOUNTAIN_FILE = "shared/mountains.png";
     private static final String SELECT_FILE = "shared/selector.png";
-    private static final String MUSIC_FILE = "platform/themoreyouknow.mp3";
+    private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
     private AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
