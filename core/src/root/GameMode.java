@@ -154,6 +154,7 @@ public class GameMode implements Screen {
     private static final String RESTART_FILE = "shared/restart.png";
     private static final String ESC_FILE = "shared/pause.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
+    private static final String ROPE_SEGMENT = "shared/rope_segment.png";
     /**
      * Retro font for displaying messages
      */
@@ -390,9 +391,10 @@ public class GameMode implements Screen {
         assets.add(SPIKE_VERT);
         manager.load(RESTART_FILE, Texture.class);
         assets.add(RESTART_FILE);
-//        manager.load(BKG_CLOUD, Texture.class);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
+        manager.load(ROPE_SEGMENT, Texture.class);
+        assets.add(ROPE_SEGMENT);
         for (String s : CITY_BKG_FILES_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -517,6 +519,7 @@ public class GameMode implements Screen {
         redYarnTexture = createTexture(manager, UI_RedYarn, false);
         greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         citydoor = createTexture(manager, CITYGATE, false);
+        bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
         npcs.add(npcNervyTexture);
@@ -685,9 +688,9 @@ public class GameMode implements Screen {
             createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(), "tile" + i, 1f, tileTexture);
         }
 
-        for (int i = 0; i < spikes.size(); i++) {
-            TextureRegion spiketex = (spikes.get(i).getDirection().equals("up") || spikes.get(i).getDirection().equals("down")) ? spikeTile : spikeVertTile;
-            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), spikes.get(i).getDirection(), "spike", 1f, spiketex);
+        for (Tile spike : spikes) {
+            TextureRegion spiketex = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
+            createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spiketex);
         }
 
     }

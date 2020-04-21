@@ -242,12 +242,12 @@ public class InputController {
      * if it exists.  Otherwise, it falls back to the keyboard control.
      */
     public InputController() {
-        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
-        int xHotspot = pixMap.getWidth() / 2;
-        int yHotspot = pixMap.getHeight() / 2;
-        Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);
-        Gdx.graphics.setCursor(cursor);
-        pixMap.dispose();
+//        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
+//        int xHotspot = pixMap.getWidth() / 2;
+//        int yHotspot = pixMap.getHeight() / 2;
+//        Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);
+//        Gdx.graphics.setCursor(cursor);
+//        pixMap.dispose();
         // If we have a game-pad for id, then use it.
         xbox = new XBox360Controller(0);
         crosshair = new Vector2();
