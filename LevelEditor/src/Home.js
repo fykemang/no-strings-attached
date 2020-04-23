@@ -7,6 +7,7 @@ import PlayerTexture from "./assets/player.png";
 import Couple from "./Couple";
 import ItemTexture from "./assets/skein.png";
 import ExitTexture from "./assets/exit.png";
+import useEventListener from "./util/UseEventListener";
 
 const initialState = {
   tiles: [],
@@ -24,6 +25,13 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case "delete-object":
+      return {
+        ...state,
+        [action["delete-type"]]: state[action["delete-type"]].filter(
+          (obj) => obj.id !== action.index
+        ),
+      };
     case "add-tile":
       const tile = {
         x: 10,
@@ -107,7 +115,7 @@ function reducer(state, action) {
         degree: 0,
         id: state.couples.length,
         leftPos: {},
-        rightPos: {}
+        rightPos: {},
       };
 
       const rightNpc = {
@@ -156,7 +164,17 @@ function reducer(state, action) {
 function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [selectedNodeID, setSelectedNode] = useState(null);
+  const [selectedNodeType, setSelectedNodeType] = useState("");
   const stageRef = React.useRef();
+  useEventListener("keydown", (e) => {
+    if (e.keyCode === 8) {
+      dispatch({
+        type: "delete-object",
+        index: selectedNodeID,
+        "delete-type": selectedNodeType,
+      });
+    }
+  });
   const gridBlockSize = 20;
   const width = 1200;
   const height = 800;
@@ -199,16 +217,16 @@ function Home() {
   };
 
   const downloadFile = async () => {
-    const xScale = 37.5
-    const yScale = 44.4
+    const xScale = 37.5;
+    const yScale = 44.4;
     const data = {
       type: "city",
       items: state.items.map((item) => {
         return {
           ...item,
           x: item.x / xScale,
-          y: item.y / yScale
-        }
+          y: item.y / yScale,
+        };
       }),
       tiles: state.tiles.map((tile) => {
         return {
@@ -216,24 +234,32 @@ function Home() {
           x: tile.x / xScale,
           y: tile.y / yScale,
           height: tile.height / yScale,
-          width: tile.width / xScale
-        }
+          width: tile.width / xScale,
+        };
       }),
       npc: state.couples.reduce((acc, couple) => {
-        const leftNpc = {...couple.leftNpc, x: couple.leftNpc.x / xScale, y: couple.leftNpc.y / yScale}
-        const rightNpc = {...couple.rightNpc, x: couple.rightNpc.x / xScale, y: couple.rightNpc.y / yScale}
-        acc.push(leftNpc)
-        acc.push(rightNpc)
-        return acc
+        const leftNpc = {
+          ...couple.leftNpc,
+          x: couple.leftNpc.x / xScale,
+          y: couple.leftNpc.y / yScale,
+        };
+        const rightNpc = {
+          ...couple.rightNpc,
+          x: couple.rightNpc.x / xScale,
+          y: couple.rightNpc.y / yScale,
+        };
+        acc.push(leftNpc);
+        acc.push(rightNpc);
+        return acc;
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: state.player.y / yScale
-      }, 
+        y: state.player.y / yScale,
+      },
       exit: {
         x: state.exit.x / xScale,
-        y: state.exit.y / yScale
-      }
+        y: state.exit.y / yScale,
+      },
     };
 
     const fileName = "level";
@@ -301,6 +327,7 @@ function Home() {
         </Button>
       </ButtonGroup>
       <Stage
+        draggable
         style={{ border: "1px solid grey" }}
         width={width}
         height={height}
@@ -309,6 +336,10 @@ function Home() {
           if (clickedOnEmpty) {
             setSelectedNode(null);
           }
+        }}
+        onDragEnd={(x, y) => {
+          console.log(x);
+          console.log(x + " " + y);
         }}
         ref={stageRef}
       >
@@ -321,7 +352,10 @@ function Home() {
                 blockSize={gridBlockSize}
                 shapeProps={rect}
                 isSelected={rect.id === selectedNodeID}
-                onSelect={() => setSelectedNode(rect.id)}
+                onSelect={() => {
+                  setSelectedNode(rect.id);
+                  setSelectedNodeType("tiles");
+                }}
                 onChange={(newAttrs) =>
                   dispatch({
                     type: "modify-tile",
@@ -341,6 +375,11 @@ function Home() {
                 width={gridBlockSize * 3}
                 height={gridBlockSize * 3}
                 dragBoundFunc={dragBoundFunc}
+                onClick={() => {
+                  setSelectedNode(item.id);
+                  setSelectedNodeType("items");
+                }}
+                isSelected={item.id === selectedNodeID}
                 x={item.x}
                 y={item.y}
                 id={item.id}
@@ -357,9 +396,13 @@ function Home() {
           {state.couples.map((couple, i) => {
             return (
               <Couple
+                isSelected={couple.id === selectedNodeID}
                 key={i}
                 blockSize={gridBlockSize}
-                onSelect={() => setSelectedNode(couple.id)}
+                onSelect={() => {
+                  setSelectedNode(couple.id);
+                  setSelectedNodeType("couples");
+                }}
                 leftNpc={couple.leftNpc}
                 rightNpc={couple.rightNpc}
                 dragBoundFunc={dragBoundFunc}
