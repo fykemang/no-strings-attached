@@ -116,6 +116,13 @@ public class GameMode implements Screen {
     private static final String YARN = "platform/skein.png";
     private static final String BUTTON = "platform/buttons.png";
     /**
+     * Texture files for baskets (progress bar)
+     */
+    private static final String BASKET_EMPTY = "platform/basket_0.png";
+    private static final String BASKET_ONE = "platform/basket_1.png";
+    private static final String BASKET_TWO = "platform/basket_3.png";
+    private static final String BASKET_THREE = "platform/basket_2.png";
+    /**
      * The texture file for the spinning barrier
      */
     private static final String BARRIER_FILE = "platform/barrier.png";
@@ -233,6 +240,10 @@ public class GameMode implements Screen {
     private TextureRegion yarnTexture;
     private TextureRegion redYarnTexture;
     private TextureRegion greyYarnTexture;
+    private TextureRegion basketEmptyTexture;
+    private TextureRegion basketOneTexture;
+    private TextureRegion basketTwoTexture;
+    private TextureRegion basketThreeTexture;
     /**
      * List of all unique NPC textures
      */
@@ -397,6 +408,14 @@ public class GameMode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
+        manager.load(BASKET_EMPTY, Texture.class);
+        assets.add(BASKET_EMPTY);
+        manager.load(BASKET_ONE, Texture.class);
+        assets.add(BASKET_ONE);
+        manager.load(BASKET_TWO, Texture.class);
+        assets.add(BASKET_TWO);
+        manager.load(BASKET_THREE, Texture.class);
+        assets.add(BASKET_THREE);
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
         manager.load(ROPE_FILE, Texture.class);
@@ -535,6 +554,10 @@ public class GameMode implements Screen {
         itemTexture.add(buttonTexture);
         itemTexture.add(needleTexture);
         itemTexture.add(yarnTexture);
+        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
+        basketOneTexture = createTexture(manager, BASKET_ONE, false);
+        basketTwoTexture = createTexture(manager, BASKET_TWO, false);
+        basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -932,7 +955,6 @@ public class GameMode implements Screen {
 
             // Attaches to swing
             if ( player.isShooting() && !player.isAttached() && player.getTarget() == null) {
-//                player.setCanShoot(false);
                 Vector2 playerPosition = player.getPosition();
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 ropeQueryCallback.selectTarget();
@@ -1086,16 +1108,29 @@ public class GameMode implements Screen {
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        float UIX = 70;
-        float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
-        for (int i = 1; i <= items.size(); i++) {
-            if (i <= player.getInventory().size()) {
-                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
-            } else {
-                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
-            }
-            UIX += greyYarnTexture.getRegionWidth();
+        float UIX = 120;
+        float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
+        int itemCount = player.getInventory().size();
+        if (itemCount == 0) {
+            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
         }
+        else if (itemCount == 1) {
+            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
+        }
+        else if (itemCount == 2) {
+            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
+        }
+        else {
+            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
+        }
+//        for (int i = 1; i <= items.size(); i++) {
+//            if (i <= player.getInventory().size()) {
+//                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
+//            } else {
+//                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+//            }
+//            UIX += greyYarnTexture.getRegionWidth();
+//        }
         canvas.end();
 
 

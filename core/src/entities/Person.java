@@ -123,7 +123,6 @@ public class Person extends CapsuleObstacle {
      * How long until we can shoot again
      */
     private int shootCooldown;
-    private boolean canShoot;
     private PolygonShape sensorShape;
     private boolean canCut;
     private final String sensorName;
@@ -458,9 +457,6 @@ public class Person extends CapsuleObstacle {
 
         if (! isShooting) {
             shootCooldown = Math.max(0, shootCooldown - 1);
-//            canShoot = false;
-//        } else {
-//            shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
@@ -486,14 +482,6 @@ public class Person extends CapsuleObstacle {
 
     public boolean canCut() {
         return canCut;
-    }
-
-    public boolean isCanShoot() {
-        return isShooting() && shootCooldown <= 0;
-    }
-
-    public void setCanShoot(boolean canShoot) {
-        this.canShoot = canShoot;
     }
 
     /**
