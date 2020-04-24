@@ -31,7 +31,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.7f;
+    private static final float PLAYER_DENSITY = 1.3f;
     /**
      * The factor to multiply by the input
      */
@@ -131,12 +131,13 @@ public class Person extends CapsuleObstacle {
     private boolean canCollect;
     private int closestItemID;
     private Person target;
-    private final Vector2 trampolineDir;
-    private float trampolineForceX;
-    private float trampolineForceY;
+    private Vector2 trampolineDir;
+    private Vector2 trampolineForce;
+    private float MAX_TRAMPOLINE = 0.8f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
+
 
     /**
      * Which direction is the character facing
@@ -312,6 +313,7 @@ public class Person extends CapsuleObstacle {
         isTrampolining = false;
         this.sensorName = sensorName;
         this.inventory = new ArrayList<>();
+        trampolineForce = new Vector2();
         isAttached = false;
         jumpCooldown = 0;
         setName(name);
@@ -334,8 +336,11 @@ public class Person extends CapsuleObstacle {
         if (magnitude < 3)
             return;
         float adjust = 5.9f;
-        trampolineForceX = magnitude * trampolineDir.x / adjust;
-        trampolineForceY = magnitude * trampolineDir.y / adjust;
+        this.trampolineForce.set(magnitude * trampolineDir.x / adjust,magnitude * trampolineDir.y / adjust);
+        float len = trampolineForce.len();
+        if(len>MAX_TRAMPOLINE){
+            trampolineForce.scl(MAX_TRAMPOLINE/len);
+        }
     }
 
     /**
@@ -409,7 +414,7 @@ public class Person extends CapsuleObstacle {
         if (isTrampolining) {
             vertical = DUDE_JUMP / 2.5f;
             calculateTrampolineForce();
-            forceCache.set(trampolineForceX, trampolineForceY);
+            forceCache.set(trampolineForce.x, trampolineForce.y);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }
