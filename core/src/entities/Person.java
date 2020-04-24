@@ -43,7 +43,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The dude is not a slippery one
      */
-    private static final float PLAYER_FRICTION = 0.01f;
+    private static final float PLAYER_FRICTION = 0.05f;
     /**
      * The maximum character speed
      */
@@ -123,13 +123,11 @@ public class Person extends CapsuleObstacle {
      * How long until we can shoot again
      */
     private int shootCooldown;
+    private boolean canShoot;
     private PolygonShape sensorShape;
     private boolean canCut;
     private final String sensorName;
     private int closestCoupleID;
-    //    private Obstacle target;
-    private boolean canCollect;
-    private int closestItemID;
     private Person target;
     private final Vector2 trampolineDir;
     private float trampolineForceX;
@@ -458,10 +456,11 @@ public class Person extends CapsuleObstacle {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
 
-        if (isShooting()) {
-            shootCooldown = SHOOT_COOLDOWN;
-        } else {
+        if (! isShooting) {
             shootCooldown = Math.max(0, shootCooldown - 1);
+//            canShoot = false;
+//        } else {
+//            shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
@@ -472,6 +471,10 @@ public class Person extends CapsuleObstacle {
         }
 
         super.update(dt);
+    }
+
+    public void resetShootCooldown() {
+        shootCooldown = SHOOT_COOLDOWN;
     }
 
     /**
@@ -485,13 +488,21 @@ public class Person extends CapsuleObstacle {
         return canCut;
     }
 
+    public boolean isCanShoot() {
+        return isShooting() && shootCooldown <= 0;
+    }
+
+    public void setCanShoot(boolean canShoot) {
+        this.canShoot = canShoot;
+    }
+
     /**
      * Returns true if the dude is actively firing.
      *
      * @return true if the dude is actively firing.
      */
     public boolean isShooting() {
-        return isShooting && shootCooldown <= 0;
+        return isShooting;
     }
 
     /**

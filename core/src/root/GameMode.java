@@ -930,20 +930,23 @@ public class GameMode implements Screen {
                 player.setTexture(playerIdleAnimation);
             }
 
-            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+            // Attaches to swing
+            if ( player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+//                player.setCanShoot(false);
                 Vector2 playerPosition = player.getPosition();
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 ropeQueryCallback.selectTarget();
             }
 
             // Detaches from swinging
-            if (player.isShooting() && player.isAttached() && playerRope != null) {
+            else if (!player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
                 player.setTarget(null);
                 playerRope = null;
                 world.destroyJoint(player.getSwingJoint());
                 player.setAttached(false);
                 player.setSwingJoint(null);
+                player.resetShootCooldown();
             }
 
             // Cutting the rope
@@ -964,7 +967,7 @@ public class GameMode implements Screen {
             }
 
             // Swinging
-            if (player.getTarget() != null && player.isShooting()) {
+            if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
                 Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();

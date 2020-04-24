@@ -189,7 +189,7 @@ public class InputController {
      * This is a sustained button. It will returns true as long as the player
      * holds it down.
      *
-     * @return true if the secondary action button was pressed.
+     * @return true if the tertiary action button was pressed.
      */
     public boolean didTertiary() {
         return tertiaryPressed;
