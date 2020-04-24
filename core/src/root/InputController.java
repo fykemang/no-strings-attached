@@ -57,6 +57,11 @@ public class InputController {
     private boolean resetPressed;
     private boolean resetPrevious;
     /**
+     * Whether the shift button was pressed.
+     */
+    private boolean shiftPressed;
+    private boolean shiftPrevious;
+    /**
      * Whether the button to advanced worlds was pressed.
      */
     private boolean nextPressed;
@@ -274,6 +279,7 @@ public class InputController {
         exitPrevious = exitPressed;
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
+        shiftPrevious = shiftPressed;
 
         // Check to see if a GamePad is connected
         if (xbox.isConnected()) {
@@ -335,7 +341,7 @@ public class InputController {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
         debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.M));
-        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
+        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.UP));
         secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Input.Keys.SPACE));
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
@@ -343,23 +349,26 @@ public class InputController {
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             horizontal += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             horizontal -= 1.0f;
         }
 
         vertical = (secondary ? vertical : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             vertical += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             vertical -= 1.0f;
         }
 
+        shiftPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+        tertiaryPressed = shiftPressed;
+
         // Mouse results
-        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+//        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         crosshair.set(Gdx.input.getX(), Gdx.input.getY());
         crosshair.scl(1 / scale.x, -1 / scale.y);
         crosshair.y += bounds.height;
