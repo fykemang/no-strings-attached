@@ -51,7 +51,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float DUDE_JUMP = 10f;
+    private static final float PLAYER_JUMP = 10f;
 
     private static final float FRICTION = 0.6f;
 
@@ -103,8 +103,12 @@ public class Person extends CapsuleObstacle {
      * Whether we are actively jumping
      */
     private boolean isJumping;
+    /**
+     * Whether we are actively cutting
+     */
+    private boolean isCutting;
 
-    private boolean isAlive = true;
+    private boolean isAlive;
 
     private boolean isTrampolining;
     /**
@@ -128,7 +132,6 @@ public class Person extends CapsuleObstacle {
     private final String sensorName;
     private int closestCoupleID;
     //    private Obstacle target;
-    private boolean canCollect;
     private int closestItemID;
     private Person target;
     private final Vector2 trampolineDir;
@@ -219,6 +222,19 @@ public class Person extends CapsuleObstacle {
     }
 
     /**
+     * Returns true if the player is attempting to cut
+     *
+     * @return true if the player is cutting
+     */
+    public boolean isCutting() {
+        return isCutting;
+    }
+
+    public void setCutting(boolean isCutting) {
+        this.isCutting = isCutting;
+    }
+
+    /**
      * Returns true if this character is facing right
      *
      * @return true if this character is facing right
@@ -305,6 +321,8 @@ public class Person extends CapsuleObstacle {
         setFixedRotation(true);
         trampolineDir = new Vector2();
 
+        isAlive = true;
+        isCutting = false;
         // Gameplay attributes
         isGrounded = false;
         isJumping = false;
@@ -375,14 +393,6 @@ public class Person extends CapsuleObstacle {
         return true;
     }
 
-    public void setClosestCoupleID(int coupleID) {
-        this.closestCoupleID = coupleID;
-    }
-
-    public int getClosestCoupleID() {
-        return this.closestCoupleID;
-    }
-
     /**
      * Applies the force to the body of this dude
      * <p>
@@ -393,6 +403,12 @@ public class Person extends CapsuleObstacle {
             return;
         }
         float horizontalMovement = getMovement();
+        Vector2 linearVelocity = body.getLinearVelocity();
+        if (linearVelocity.x > 0 && horizontalMovement < 0) {
+            body.setLinearVelocity(0.1f, linearVelocity.y);
+        } else if (linearVelocity.x < 0 && horizontalMovement > 0) {
+            body.setLinearVelocity(-0.1f, linearVelocity.y);
+        }
 
         // Don't want to be moving. Damp out player motion
         if (horizontalMovement == 0f && !isAttached) {
@@ -404,10 +420,10 @@ public class Person extends CapsuleObstacle {
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX()) * getMaxSpeed());
         }
-        float vertical = DUDE_JUMP;
+        float vertical = PLAYER_JUMP;
 
         if (isTrampolining) {
-            vertical = DUDE_JUMP / 2.5f;
+            vertical = PLAYER_JUMP / 2.5f;
             calculateTrampolineForce();
             forceCache.set(trampolineForceX, trampolineForceY);
             body.applyLinearImpulse(forceCache, getPosition(), true);
@@ -422,7 +438,6 @@ public class Person extends CapsuleObstacle {
         }
 
         forceCache.set(horizontalMovement, 0);
-
         body.applyForce(forceCache, getPosition(), true);
 
         // Jump!
@@ -449,10 +464,13 @@ public class Person extends CapsuleObstacle {
             int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
         }
+
         if (movement == 0) {
             frameRate = 7;
         }
+
         if (isJumping()) {
+            frameCount = 0;
             jumpCooldown = JUMP_COOLDOWN;
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);

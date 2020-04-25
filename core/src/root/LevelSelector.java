@@ -21,12 +21,12 @@ import java.util.ArrayList;
 
 public class LevelSelector implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 4;
-    private static final String BK_FILE = "shared/select_bg.png";
-    private static final String CITY_FILE = "shared/city.png";
-    private static final String SUBURB_FILE = "shared/suburbs.png";
-    private static final String FOREST_FILE = "shared/forest.png";
-    private static final String MOUNTAIN_FILE = "shared/mountains.png";
-    private static final String SELECT_FILE = "shared/selector.png";
+    private static final String BK_FILE = "ui/select_bg.png";
+    private static final String CITY_FILE = "ui/city.png";
+    private static final String SUBURB_FILE = "ui/suburbs.png";
+    private static final String FOREST_FILE = "ui/forest.png";
+    private static final String MOUNTAIN_FILE = "ui/mountains.png";
+    private static final String SELECT_FILE = "ui/selector.png";
     private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
     private AssetManager manager;
     /**
@@ -335,7 +335,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 break;
         }
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);

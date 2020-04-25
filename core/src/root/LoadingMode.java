@@ -15,10 +15,6 @@ package root;/*
  * This player mode provides a basic loading screen.  While you could adapt it for
  * between level loading, it is currently designed for loading all assets at the
  * start of the game.
- *
- * Author: Walker M. White
- * Based on original PhysicsDemo Lab by Don Holden, 2007
- * LibGDX version, 2/6/2015
  */
 
 import com.badlogic.gdx.Gdx;
@@ -54,13 +50,13 @@ import util.ScreenListener;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
-    private static final String BACKGROUND_FILE = "shared/background.png";
-    private static final String CHAR_ANIMATION_FILE = "shared/background_sc.png";
-    private static final String PROGRESS_FILE = "shared/progressbar.png";
-    private static final String SETTINGS_FILE = "shared/settings.png";
-    private static final String QUIT_FILE = "shared/quit.png";
-    private static final String START_FILE = "shared/start.png";
-    private static final String SELECT_FILE = "shared/select.png";
+    private static final String BACKGROUND_FILE = "ui/background.png";
+    private static final String CHAR_ANIMATION_FILE = "ui/background_sc.png";
+    private static final String PROGRESS_FILE = "ui/progressbar.png";
+    private static final String SETTINGS_FILE = "ui/settings.png";
+    private static final String QUIT_FILE = "ui/quit.png";
+    private static final String START_FILE = "ui/start.png";
+    private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
 
     /**

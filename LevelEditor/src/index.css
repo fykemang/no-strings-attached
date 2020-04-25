@@ -18,9 +18,10 @@ code {
     padding: 0;
 }
 
-.canvas-wrapper {
-    height: 800px;
-    width: 1200px;
+.canvas-container {
+    overflow: auto;
+    border: 1px solid grey;
+    height: 680px;
 }
 
 .row {

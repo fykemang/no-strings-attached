@@ -41,7 +41,7 @@ public class Blob extends WheelObstacle {
         return norm;
     }
 
-    public int getPlankParentID() {
+    public int getParentRopeID() {
         return id;
     }
 }

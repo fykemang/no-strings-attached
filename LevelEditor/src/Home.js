@@ -165,6 +165,8 @@ function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [selectedNodeID, setSelectedNode] = useState(null);
   const [selectedNodeType, setSelectedNodeType] = useState("");
+  const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
+  const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
   const stageRef = React.useRef();
   useEventListener("keydown", (e) => {
     if (e.keyCode === 8) {
@@ -176,12 +178,10 @@ function Home() {
     }
   });
   const gridBlockSize = 20;
-  const width = 1200;
-  const height = 800;
 
   const displayGrid = () => {
     const horizontalLines = [];
-    for (let i = 0; i < width / gridBlockSize; i++) {
+    for (let i = 0; i < canvasWidth / gridBlockSize; i++) {
       horizontalLines.push(
         <Line
           key={`horizontal-line-${i}`}
@@ -189,7 +189,7 @@ function Home() {
             Math.round(i * gridBlockSize) + 0.5,
             0,
             Math.round(i * gridBlockSize) + 0.5,
-            height,
+            canvasWidth,
           ]}
           stroke={"#ddd"}
           strokeWidth={1}
@@ -198,14 +198,14 @@ function Home() {
     }
 
     const verticalLines = [];
-    for (let i = 0; i < height / gridBlockSize; i++) {
+    for (let i = 0; i < canvasHeight / gridBlockSize; i++) {
       verticalLines.push(
         <Line
           key={`vertical-line-${i}`}
           points={[
             0,
             Math.round(i * gridBlockSize),
-            width,
+            canvasWidth,
             Math.round(i * gridBlockSize),
           ]}
           stroke={"#ddd"}
@@ -275,13 +275,13 @@ function Home() {
   };
 
   const dragBoundFunc = useCallback((pos) => {
-    const newY = pos.y < 0 ? 0 : pos.y > height ? height : pos.y;
-    const newX = pos.x < 0 ? 0 : pos.x > width ? width : pos.x;
+    const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
+    const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
     return {
       x: newX,
       y: newY,
     };
-  }, []);
+  }, [canvasHeight, canvasWidth]);
 
   return (
     <div className="home-wrapper">
@@ -326,117 +326,120 @@ function Home() {
           Item
         </Button>
       </ButtonGroup>
-      <Stage
-        draggable
-        style={{ border: "1px solid grey" }}
-        width={width}
-        height={height}
-        onMouseDown={(e) => {
-          const clickedOnEmpty = e.target === e.target.getStage();
-          if (clickedOnEmpty) {
-            setSelectedNode(null);
-          }
-        }}
-        onDragEnd={(x, y) => {
-          console.log(x);
-          console.log(x + " " + y);
-        }}
-        ref={stageRef}
-      >
-        <Layer>
-          {displayGrid()}
-          {state.tiles.map((rect, i) => {
-            return (
-              <Tile
-                key={i}
-                blockSize={gridBlockSize}
-                shapeProps={rect}
-                isSelected={rect.id === selectedNodeID}
-                onSelect={() => {
-                  setSelectedNode(rect.id);
-                  setSelectedNodeType("tiles");
-                }}
-                onChange={(newAttrs) =>
-                  dispatch({
-                    type: "modify-tile",
-                    index: rect.id,
-                    attrs: newAttrs,
-                  })
-                }
-              />
-            );
-          })}
-          {state.items.map((item, i) => {
-            return (
-              <URLImage
-                draggable
-                src={ItemTexture}
-                key={i}
-                width={gridBlockSize * 3}
-                height={gridBlockSize * 3}
-                dragBoundFunc={dragBoundFunc}
-                onClick={() => {
-                  setSelectedNode(item.id);
-                  setSelectedNodeType("items");
-                }}
-                isSelected={item.id === selectedNodeID}
-                x={item.x}
-                y={item.y}
-                id={item.id}
-                onDragEnd={(x, y) => {
-                  dispatch({
-                    index: item.id,
-                    type: "modify-item",
-                    attrs: { x: x, y: y },
-                  });
-                }}
-              />
-            );
-          })}
-          {state.couples.map((couple, i) => {
-            return (
-              <Couple
-                isSelected={couple.id === selectedNodeID}
-                key={i}
-                blockSize={gridBlockSize}
-                onSelect={() => {
-                  setSelectedNode(couple.id);
-                  setSelectedNodeType("couples");
-                }}
-                leftNpc={couple.leftNpc}
-                rightNpc={couple.rightNpc}
-                dragBoundFunc={dragBoundFunc}
-                onChange={(attrs, choice) =>
-                  dispatch({
-                    type: "modify-couple",
-                    index: couple.id,
-                    attrs: attrs,
-                    choice: choice,
-                  })
-                }
-              />
-            );
-          })}
-          <URLImage
-            src={ExitTexture}
-            width={gridBlockSize * 3}
-            height={gridBlockSize * 5}
-            dragBoundFunc={dragBoundFunc}
-            x={state.exit.x}
-            y={state.exit.y}
-            onDragEnd={(x, y) => dispatch({ type: "move-exit", x: x, y: y })}
-          />
-          <URLImage
-            src={PlayerTexture}
-            width={gridBlockSize * 2}
-            height={gridBlockSize * 4}
-            dragBoundFunc={dragBoundFunc}
-            x={state.player.x}
-            y={state.player.y}
-            onDragEnd={(x, y) => dispatch({ type: "move-player", x: x, y: y })}
-          />
-        </Layer>
-      </Stage>
+      <div className="canvas-container">
+        <Stage
+          draggable
+          width={canvasWidth}
+          height={canvasHeight}
+          onMouseDown={(e) => {
+            const clickedOnEmpty = e.target === e.target.getStage();
+            if (clickedOnEmpty) {
+              setSelectedNode(null);
+            }
+          }}
+          onDragEnd={(x, y) => {
+            console.log(x);
+            console.log(x + " " + y);
+          }}
+          ref={stageRef}
+        >
+          <Layer>
+            {displayGrid()}
+            {state.tiles.map((rect, i) => {
+              return (
+                <Tile
+                  key={i}
+                  blockSize={gridBlockSize}
+                  shapeProps={rect}
+                  isSelected={rect.id === selectedNodeID}
+                  onSelect={() => {
+                    setSelectedNode(rect.id);
+                    setSelectedNodeType("tiles");
+                  }}
+                  onChange={(newAttrs) =>
+                    dispatch({
+                      type: "modify-tile",
+                      index: rect.id,
+                      attrs: newAttrs,
+                    })
+                  }
+                />
+              );
+            })}
+            {state.items.map((item, i) => {
+              return (
+                <URLImage
+                  draggable
+                  src={ItemTexture}
+                  key={i}
+                  width={gridBlockSize * 3}
+                  height={gridBlockSize * 3}
+                  dragBoundFunc={dragBoundFunc}
+                  onClick={() => {
+                    setSelectedNode(item.id);
+                    setSelectedNodeType("items");
+                  }}
+                  isSelected={item.id === selectedNodeID}
+                  x={item.x}
+                  y={item.y}
+                  id={item.id}
+                  onDragEnd={(x, y) => {
+                    dispatch({
+                      index: item.id,
+                      type: "modify-item",
+                      attrs: { x: x, y: y },
+                    });
+                  }}
+                />
+              );
+            })}
+            {state.couples.map((couple, i) => {
+              return (
+                <Couple
+                  isSelected={couple.id === selectedNodeID}
+                  key={i}
+                  blockSize={gridBlockSize}
+                  onSelect={() => {
+                    setSelectedNode(couple.id);
+                    setSelectedNodeType("couples");
+                  }}
+                  leftNpc={couple.leftNpc}
+                  rightNpc={couple.rightNpc}
+                  dragBoundFunc={dragBoundFunc}
+                  onChange={(attrs, choice) =>
+                    dispatch({
+                      type: "modify-couple",
+                      index: couple.id,
+                      attrs: attrs,
+                      choice: choice,
+                    })
+                  }
+                />
+              );
+            })}
+            <URLImage
+              src={ExitTexture}
+              width={gridBlockSize * 3}
+              height={gridBlockSize * 5}
+              dragBoundFunc={dragBoundFunc}
+              x={state.exit.x}
+              y={state.exit.y}
+              onDragEnd={(x, y) => dispatch({ type: "move-exit", x: x, y: y })}
+            />
+            <URLImage
+              src={PlayerTexture}
+              width={gridBlockSize * 2}
+              height={gridBlockSize * 4}
+              dragBoundFunc={dragBoundFunc}
+              x={state.player.x}
+              y={state.player.y}
+              onDragEnd={(x, y) =>
+                dispatch({ type: "move-player", x: x, y: y })
+              }
+            />
+          </Layer>
+        </Stage>
+      </div>
       <Button variant="secondary" onClick={downloadFile}>
         Download
       </Button>

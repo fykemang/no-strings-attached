@@ -1313,7 +1313,7 @@ public class GameCanvas {
     public void drawUIText(String text, int x, int y) {
         spriteBatch.end();
         UIBatch.begin();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("shared/blackjack.otf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         BitmapFont font = generator.generateFont(parameter);
