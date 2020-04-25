@@ -470,7 +470,6 @@ public class Person extends CapsuleObstacle {
         }
 
         if (isJumping()) {
-            frameCount = 0;
             jumpCooldown = JUMP_COOLDOWN;
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
