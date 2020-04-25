@@ -921,19 +921,19 @@ public class GameMode implements Screen {
             }
 
             if (player.isCutting()) {
-               world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
-               int id = cuttingCallback.getClosestBlobID();
-               if (id != -1) {
-                   for (Obstacle obs : objects) {
-                       if (obs.getName().equals("couples" + id)) {
-                           NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                           if (ropes != null) {
-                               ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                           }
-                       }
-                   }
-                   cuttingCallback.reset();
-               }
+                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
+                int id = cuttingCallback.getClosestBlobID();
+                if (id != -1) {
+                    for (Obstacle obs : objects) {
+                        if (obs.getName().equals("couples" + id)) {
+                            NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                            if (ropes != null) {
+                                ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                            }
+                        }
+                    }
+                    cuttingCallback.reset();
+                }
             }
 
             if (player.isShooting() && player.isAttached() && playerRope != null) {

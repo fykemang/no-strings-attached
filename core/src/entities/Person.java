@@ -354,10 +354,10 @@ public class Person extends CapsuleObstacle {
         if (magnitude < 3)
             return;
         float adjust = 5.9f;
-        this.trampolineForce.set(magnitude * trampolineDir.x / adjust,magnitude * trampolineDir.y / adjust);
+        this.trampolineForce.set(magnitude * trampolineDir.x / adjust, magnitude * trampolineDir.y / adjust);
         float len = trampolineForce.len();
-        if(len>MAX_TRAMPOLINE){
-            trampolineForce.scl(MAX_TRAMPOLINE/len);
+        if (len > MAX_TRAMPOLINE) {
+            trampolineForce.scl(MAX_TRAMPOLINE / len);
         }
     }
 
