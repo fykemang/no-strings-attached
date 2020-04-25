@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Gameplay specific controller for the platformer game.
+ * Gameplay specific controller for the game.
  * <p>
  * You will notice that asset loading is not done with static methods this time.
  * Instance asset loading makes it easier to process our game modes in a loop, which
@@ -88,94 +88,78 @@ public class GameMode implements Screen {
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
 
-    public float UIy;
-    public float resetX;
-    public float escX;
-
 
     /**
-     * Background
+     * Player Animation Files
      */
-//    private static final String BKG_SUN = "platform/sun_background.png";
-//
-//    private static final String BKG_CITY = "platform/city_background.png";
-//
-//    private static final String BKG_CLOUD = "platform/cloud_background.png";
-//
-//    private static final String BKG_SKY = "platform/background_sky.png";
-    /**
-     * The texture file for the idle player
-     */
-    private static final String PLAYER_IDLE_ANIMATION = "platform/player_idle_animation.png";
-    private static final String PLAYER_SWING_ANIMATION = "platform/player_swing_animation.png";
+    private static final String PLAYER_IDLE_ANIMATION = "player/player_idle_animation.png";
+    private static final String PLAYER_SWING_ANIMATION = "player/player_swing_animation.png";
+    private static final String PLAYER_JUMP_ANIMATION = "player/player_jump_animation.png";
+    private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
 
-    private static final String PLAYER_JUMP = "platform/player_jump.png";
+    private static final String PLAYER_JUMP = "player/player_jump.png";
 
-    private static final String PLAYER_FALL = "platform/player_fall.png";
+    private static final String PLAYER_FALL = "player/player_fall.png";
 
-    private static final String NPC_COZY = "platform/cozy_idle.png";
+    private static final String NPC_COZY = "entities/cozy_idle.png";
 
-    private static final String NPC_CHEESE = "platform/cheese.png";
+    private static final String NPC_CHEESE = "entities/cheese.png";
 
-    private static final String NPC_NERVY = "platform/nervy_idle.png";
+    private static final String NPC_NERVY = "entities/nervy_idle.png";
 
-    private static final String NPC_SPIKY = "platform/spiky_idle.png";
+    private static final String NPC_SPIKY = "entities/spiky_idle.png";
 
-    private static final String NPC_HEYO = "platform/heyo.png";
+    private static final String NPC_HEYO = "entities/heyo_npc.png";
 
-    private static final String NPC_WELCOME = "platform/welcome.png";
+    private static final String NPC_WELCOME = "entities/welcome_npc.png";
 
-    private static final String CITYGATE = "platform/citydoor.png";
+    private static final String CITYGATE = "entities/citydoor.png";
 
-    private static final String NEEDLE = "platform/needles.png";
-    private static final String YARN = "platform/skein.png";
-    private static final String BUTTON = "platform/buttons.png";
+    private static final String NEEDLE = "entities/needles.png";
+    private static final String YARN = "entities/skein.png";
+    private static final String BUTTON = "entities/buttons.png";
 
     /**
      * The texture file for the spinning barrier
      */
-    private static final String BARRIER_FILE = "platform/barrier.png";
+    private static final String BARRIER_FILE = "entities/barrier.png";
     /**
      * The texture file for the bullet
      */
-    private static final String BULLET_FILE = "platform/bullet.png";
-    /**
-     * The texture file for the bridge plank
-     */
-    private static final String ROPE_FILE = "platform/ropebridge.png";
+    private static final String BULLET_FILE = "entities/bullet.png";
     /**
      * The sound file for a jump
      */
-    private static final String JUMP_FILE = "platform/jump.mp3";
+    private static final String JUMP_FILE = "sounds/jump.mp3";
     /**
      * The sound file for a bullet fire
      */
-    private static final String PEW_FILE = "platform/pew.mp3";
+    private static final String PEW_FILE = "sounds/pew.mp3";
     /**
      * The sound file for a bullet collision
      */
-    private static final String POP_FILE = "platform/plop.mp3";
+    private static final String POP_FILE = "sounds/plop.mp3";
     /**
      * The folder with all levels
      */
     private static final String TEST_LEVEL = "levels/test_level.json";
-    private static final String CROSSHAIR_FILE = "platform/crosshair.png";
+    private static final String CROSSHAIR_FILE = "entities/crosshair.png";
 
     /**
      * File to texture for walls and platforms
      */
 
-    private static final String SPIKE_FILE = "shared/spikes.png";
-    private static final String SPIKE_VERT = "shared/spikes_vert.png";
-    private static final String UI_GreyYarn = "platform/greyYarn.png";
-    private static final String UI_RedYarn = "platform/redYarn.png";
-    private static final String RESTART_FILE = "shared/restart.png";
-    private static final String ESC_FILE = "shared/pause.png";
-    private static final String PLAYER_WALKING_ANIMATION_FILE = "platform/player_walk_animation.png";
+    private static final String SPIKE_FILE = "entities/spikes.png";
+    private static final String SPIKE_VERT = "entities/spikes_vert.png";
+    private static final String UI_GreyYarn = "entities/grey_yarn.png";
+    private static final String UI_RedYarn = "entities/red_yarn.png";
+    private static final String RESTART_FILE = "ui/restart.png";
+    private static final String ESC_FILE = "ui/pause.png";
+    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     /**
      * Retro font for displaying messages
      */
-    private static String FONT_FILE = "shared/RetroGame.ttf";
+    private static String FONT_FILE = "ui/RetroGame.ttf";
 
     private static int FONT_SIZE = 64;
     /**
@@ -252,6 +236,7 @@ public class GameMode implements Screen {
     private FilmStrip playerIdleAnimation;
     private FilmStrip playerSwingAnimation;
     private FilmStrip playerWalkingAnimation;
+    private FilmStrip playerJumpingAnimation;
     /**
      * Texture asset for the bullet
      */
@@ -296,22 +281,21 @@ public class GameMode implements Screen {
     private TextureRegion cloudTexture;
     private TextureRegion sunTexture;
 
-    private String CITY_MUSIC_FILE = "platform/Shine.mp3";
-    private String SUBURB_MUSIC_FILE = "platform/takingastroll.mp3";
+    private String CITY_MUSIC_FILE = "music/shine.mp3";
+    private String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
     private String FOREST_MUSIC_FILE;
     private String MOUNTAIN_MUSIC_FILE;
     private Music music;
 
-    //    private static final String EARTH_FILE = "shared/earthtile.png";
-    private static final String CITY_TILE_FILE = "platform/city-tile.png";
-    private static final String SUBURB_TILE_FILE = "platform/suburb-tiles.png";
-    private static final String FOREST_TILE_FILE = "platform/mossyrocks.png";
-    private static final String MOUNTAIN_TILE_FILE = "shared/earthtile.png";
+    private static final String CITY_TILE_FILE = "entities/city-tile.png";
+    private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
+    private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
+    private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
     private TextureRegion tileTexture;
 
-    private String[] CITY_BKG_FILES_A = new String[]{"platform/citylayer1.png", "platform/citylayer2.png"};
-    private String[] CITY_BKG_FILES_B = new String[]{"platform/citylayer4.png", "platform/citylayer5.png", "platform/citylayer6.png", "platform/citylayer7.png", "platform/citylayer8.png", "platform/citylayer9.png"};
-    private String[] CITY_BKG_FILES_C = new String[]{"platform/citylayer3.png"};
+    private String[] CITY_BKG_FILES_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
+    private String[] CITY_BKG_FILES_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
+    private String[] CITY_BKG_FILES_C = new String[]{"background/citylayer3.png"};
     private List<TextureRegion> stillBackgroundTextures;
     private List<TextureRegion> slightmoveBackgroundTextures;
     private List<TextureRegion> movingBackgroundTextures;
@@ -393,8 +377,6 @@ public class GameMode implements Screen {
         assets.add(YARN);
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
-        manager.load(ROPE_FILE, Texture.class);
-        assets.add(ROPE_FILE);
         manager.load(CROSSHAIR_FILE, Texture.class);
         assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
@@ -411,9 +393,10 @@ public class GameMode implements Screen {
         assets.add(SPIKE_VERT);
         manager.load(RESTART_FILE, Texture.class);
         assets.add(RESTART_FILE);
-//        manager.load(BKG_CLOUD, Texture.class);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
+        manager.load(ROPE_SEGMENT, Texture.class);
+        assets.add(ROPE_SEGMENT);
         for (String s : CITY_BKG_FILES_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -437,6 +420,8 @@ public class GameMode implements Screen {
         assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
         assets.add(PLAYER_WALKING_ANIMATION_FILE);
+        manager.load(PLAYER_JUMP_ANIMATION, Texture.class);
+        assets.add(PLAYER_JUMP_ANIMATION);
 
         // Load Sound Assets
         manager.load(JUMP_FILE, Sound.class);
@@ -516,10 +501,10 @@ public class GameMode implements Screen {
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
-        bridgeTexture = createTexture(manager, ROPE_FILE, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
+        playerJumpingAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
 //        cityTexture = createTexture(manager, BKG_CITY, false);
 //        skyTexture = createTexture(manager, BKG_SKY, false);
 //        cloudTexture = createTexture(manager, BKG_CLOUD, false);
@@ -539,6 +524,8 @@ public class GameMode implements Screen {
         redYarnTexture = createTexture(manager, UI_RedYarn, false);
         greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         citydoor = createTexture(manager, CITYGATE, false);
+        bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
+
         npcs.add(npcCheeseTexture);
         npcs.add(npcCozyTexture);
         npcs.add(npcNervyTexture);
@@ -618,6 +605,8 @@ public class GameMode implements Screen {
 
     private RopeQueryCallback ropeQueryCallback;
 
+    private CuttingCallback cuttingCallback;
+
     private Level currentlevel;
 
     /**
@@ -632,6 +621,8 @@ public class GameMode implements Screen {
         setFailure(false);
         ropeJointDef = new RopeJointDef();
         revoluteJointDef = new RevoluteJointDef();
+        ropeQueryCallback = new RopeQueryCallback();
+        cuttingCallback = new CuttingCallback();
     }
 
     /**
@@ -641,20 +632,20 @@ public class GameMode implements Screen {
      */
     public void reset() {
         Vector2 gravity = new Vector2(world.getGravity());
-
         for (Obstacle obj : objects) {
             obj.deactivatePhysics(world);
         }
         objects.clear();
         addQueue.clear();
         world.dispose();
-
         world = new World(gravity, false);
         setComplete(false);
         setFailure(false);
         populateLevel();
         world.setContactListener(new CollisionController(player));
-        ropeQueryCallback = new RopeQueryCallback(player);
+        ropeQueryCallback.setPlayer(player);
+        ropeQueryCallback.reset();
+        cuttingCallback.setPlayer(player);
     }
 
     /**
@@ -707,9 +698,9 @@ public class GameMode implements Screen {
             createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(), "tile" + i, 1f, tileTexture);
         }
 
-        for (int i = 0; i < spikes.size(); i++) {
-            TextureRegion spiketex = (spikes.get(i).getDirection().equals("up") || spikes.get(i).getDirection().equals("down")) ? spikeTile : spikeVertTile;
-            createSpike(spikes.get(i).getCorners(), spikes.get(i).getX(), spikes.get(i).getY(), spikes.get(i).getDirection(), "spike", 1f, spiketex);
+        for (Tile spike : spikes) {
+            TextureRegion spiketex = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
+            createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spiketex);
         }
 
     }
@@ -902,17 +893,20 @@ public class GameMode implements Screen {
             exitToSelector();
         }
 
+        Vector2 playerPosition = player.getPosition();
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
+            player.setCutting(InputController.getInstance().didSecondary());
             player.applyForce();
 
-            if (player.isAttached()) {
+
+            if (!player.isGrounded() && !player.isAttached()) {
+                player.setTexture(playerJumpingAnimation);
+            } else if (player.isAttached()) {
                 player.setTexture(playerSwingAnimation);
-            } else if (player.isRising()) {
-                player.setTexture(playerJumpTexture);
             } else if (player.isFalling()) {
                 player.setTexture(playerFallTexture);
             } else if (player.isWalking()) {
@@ -922,31 +916,34 @@ public class GameMode implements Screen {
             }
 
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
-                Vector2 playerPosition = player.getPosition();
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
-                ropeQueryCallback.selectTarget();
+                player.setTarget(ropeQueryCallback.getClosestNpc());
+            }
+
+            if (player.isCutting()) {
+               world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
+               int id = cuttingCallback.getClosestBlobID();
+               if (id != -1) {
+                   for (Obstacle obs : objects) {
+                       if (obs.getName().equals("couples" + id)) {
+                           NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                           if (ropes != null) {
+                               ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                           }
+                       }
+                   }
+                   cuttingCallback.reset();
+               }
             }
 
             if (player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
                 player.setTarget(null);
+                ropeQueryCallback.reset();
                 playerRope = null;
                 world.destroyJoint(player.getSwingJoint());
                 player.setAttached(false);
                 player.setSwingJoint(null);
-            }
-
-            // Cutting the rope
-            if (InputController.getInstance().didSecondary() && player.canCut()) {
-                int coupleID = player.getClosestCoupleID();
-                for (Obstacle obs : objects) {
-                    if (obs.getName().equals("couples" + coupleID)) {
-                        NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                        if (ropes != null) {
-                            ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                        }
-                    }
-                }
             }
 
             if (player.getTarget() != null && player.isShooting()) {

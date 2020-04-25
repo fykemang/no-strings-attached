@@ -7,6 +7,7 @@ import PlayerTexture from "./assets/player.png";
 import Couple from "./Couple";
 import ItemTexture from "./assets/skein.png";
 import ExitTexture from "./assets/exit.png";
+import useEventListener from "./util/UseEventListener";
 
 const initialState = {
   tiles: [],
@@ -24,6 +25,13 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case "delete-object":
+      return {
+        ...state,
+        [action["delete-type"]]: state[action["delete-type"]].filter(
+          (obj) => obj.id !== action.index
+        ),
+      };
     case "add-tile":
       const tile = {
         x: 10,
@@ -107,7 +115,7 @@ function reducer(state, action) {
         degree: 0,
         id: state.couples.length,
         leftPos: {},
-        rightPos: {}
+        rightPos: {},
       };
 
       const rightNpc = {
@@ -156,14 +164,24 @@ function reducer(state, action) {
 function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [selectedNodeID, setSelectedNode] = useState(null);
+  const [selectedNodeType, setSelectedNodeType] = useState("");
+  const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
+  const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
   const stageRef = React.useRef();
+  useEventListener("keydown", (e) => {
+    if (e.keyCode === 8) {
+      dispatch({
+        type: "delete-object",
+        index: selectedNodeID,
+        "delete-type": selectedNodeType,
+      });
+    }
+  });
   const gridBlockSize = 20;
-  const width = 1200;
-  const height = 800;
 
   const displayGrid = () => {
     const horizontalLines = [];
-    for (let i = 0; i < width / gridBlockSize; i++) {
+    for (let i = 0; i < canvasWidth / gridBlockSize; i++) {
       horizontalLines.push(
         <Line
           key={`horizontal-line-${i}`}
@@ -171,7 +189,7 @@ function Home() {
             Math.round(i * gridBlockSize) + 0.5,
             0,
             Math.round(i * gridBlockSize) + 0.5,
-            height,
+            canvasWidth,
           ]}
           stroke={"#ddd"}
           strokeWidth={1}
@@ -180,14 +198,14 @@ function Home() {
     }
 
     const verticalLines = [];
-    for (let i = 0; i < height / gridBlockSize; i++) {
+    for (let i = 0; i < canvasHeight / gridBlockSize; i++) {
       verticalLines.push(
         <Line
           key={`vertical-line-${i}`}
           points={[
             0,
             Math.round(i * gridBlockSize),
-            width,
+            canvasWidth,
             Math.round(i * gridBlockSize),
           ]}
           stroke={"#ddd"}
@@ -199,16 +217,16 @@ function Home() {
   };
 
   const downloadFile = async () => {
-    const xScale = 37.5
-    const yScale = 44.4
+    const xScale = 37.5;
+    const yScale = 44.4;
     const data = {
       type: "city",
       items: state.items.map((item) => {
         return {
           ...item,
           x: item.x / xScale,
-          y: item.y / yScale
-        }
+          y: item.y / yScale,
+        };
       }),
       tiles: state.tiles.map((tile) => {
         return {
@@ -216,24 +234,32 @@ function Home() {
           x: tile.x / xScale,
           y: tile.y / yScale,
           height: tile.height / yScale,
-          width: tile.width / xScale
-        }
+          width: tile.width / xScale,
+        };
       }),
       npc: state.couples.reduce((acc, couple) => {
-        const leftNpc = {...couple.leftNpc, x: couple.leftNpc.x / xScale, y: couple.leftNpc.y / yScale}
-        const rightNpc = {...couple.rightNpc, x: couple.rightNpc.x / xScale, y: couple.rightNpc.y / yScale}
-        acc.push(leftNpc)
-        acc.push(rightNpc)
-        return acc
+        const leftNpc = {
+          ...couple.leftNpc,
+          x: couple.leftNpc.x / xScale,
+          y: couple.leftNpc.y / yScale,
+        };
+        const rightNpc = {
+          ...couple.rightNpc,
+          x: couple.rightNpc.x / xScale,
+          y: couple.rightNpc.y / yScale,
+        };
+        acc.push(leftNpc);
+        acc.push(rightNpc);
+        return acc;
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: state.player.y / yScale
-      }, 
+        y: state.player.y / yScale,
+      },
       exit: {
         x: state.exit.x / xScale,
-        y: state.exit.y / yScale
-      }
+        y: state.exit.y / yScale,
+      },
     };
 
     const fileName = "level";
@@ -249,13 +275,13 @@ function Home() {
   };
 
   const dragBoundFunc = useCallback((pos) => {
-    const newY = pos.y < 0 ? 0 : pos.y > height ? height : pos.y;
-    const newX = pos.x < 0 ? 0 : pos.x > width ? width : pos.x;
+    const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
+    const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
     return {
       x: newX,
       y: newY,
     };
-  }, []);
+  }, [canvasHeight, canvasWidth]);
 
   return (
     <div className="home-wrapper">
@@ -300,100 +326,120 @@ function Home() {
           Item
         </Button>
       </ButtonGroup>
-      <Stage
-        style={{ border: "1px solid grey" }}
-        width={width}
-        height={height}
-        onMouseDown={(e) => {
-          const clickedOnEmpty = e.target === e.target.getStage();
-          if (clickedOnEmpty) {
-            setSelectedNode(null);
-          }
-        }}
-        ref={stageRef}
-      >
-        <Layer>
-          {displayGrid()}
-          {state.tiles.map((rect, i) => {
-            return (
-              <Tile
-                key={i}
-                blockSize={gridBlockSize}
-                shapeProps={rect}
-                isSelected={rect.id === selectedNodeID}
-                onSelect={() => setSelectedNode(rect.id)}
-                onChange={(newAttrs) =>
-                  dispatch({
-                    type: "modify-tile",
-                    index: rect.id,
-                    attrs: newAttrs,
-                  })
-                }
-              />
-            );
-          })}
-          {state.items.map((item, i) => {
-            return (
-              <URLImage
-                draggable
-                src={ItemTexture}
-                key={i}
-                width={gridBlockSize * 3}
-                height={gridBlockSize * 3}
-                dragBoundFunc={dragBoundFunc}
-                x={item.x}
-                y={item.y}
-                id={item.id}
-                onDragEnd={(x, y) => {
-                  dispatch({
-                    index: item.id,
-                    type: "modify-item",
-                    attrs: { x: x, y: y },
-                  });
-                }}
-              />
-            );
-          })}
-          {state.couples.map((couple, i) => {
-            return (
-              <Couple
-                key={i}
-                blockSize={gridBlockSize}
-                onSelect={() => setSelectedNode(couple.id)}
-                leftNpc={couple.leftNpc}
-                rightNpc={couple.rightNpc}
-                dragBoundFunc={dragBoundFunc}
-                onChange={(attrs, choice) =>
-                  dispatch({
-                    type: "modify-couple",
-                    index: couple.id,
-                    attrs: attrs,
-                    choice: choice,
-                  })
-                }
-              />
-            );
-          })}
-          <URLImage
-            src={ExitTexture}
-            width={gridBlockSize * 3}
-            height={gridBlockSize * 5}
-            dragBoundFunc={dragBoundFunc}
-            x={state.exit.x}
-            y={state.exit.y}
-            onDragEnd={(x, y) => dispatch({ type: "move-exit", x: x, y: y })}
-          />
-          <URLImage
-            src={PlayerTexture}
-            width={gridBlockSize * 2}
-            height={gridBlockSize * 4}
-            dragBoundFunc={dragBoundFunc}
-            x={state.player.x}
-            y={state.player.y}
-            onDragEnd={(x, y) => dispatch({ type: "move-player", x: x, y: y })}
-          />
-        </Layer>
-      </Stage>
+      <div className="canvas-container">
+        <Stage
+          draggable
+          width={canvasWidth}
+          height={canvasHeight}
+          onMouseDown={(e) => {
+            const clickedOnEmpty = e.target === e.target.getStage();
+            if (clickedOnEmpty) {
+              setSelectedNode(null);
+            }
+          }}
+          onDragEnd={(x, y) => {
+            console.log(x);
+            console.log(x + " " + y);
+          }}
+          ref={stageRef}
+        >
+          <Layer>
+            {displayGrid()}
+            {state.tiles.map((rect, i) => {
+              return (
+                <Tile
+                  key={i}
+                  blockSize={gridBlockSize}
+                  shapeProps={rect}
+                  isSelected={rect.id === selectedNodeID}
+                  onSelect={() => {
+                    setSelectedNode(rect.id);
+                    setSelectedNodeType("tiles");
+                  }}
+                  onChange={(newAttrs) =>
+                    dispatch({
+                      type: "modify-tile",
+                      index: rect.id,
+                      attrs: newAttrs,
+                    })
+                  }
+                />
+              );
+            })}
+            {state.items.map((item, i) => {
+              return (
+                <URLImage
+                  draggable
+                  src={ItemTexture}
+                  key={i}
+                  width={gridBlockSize * 3}
+                  height={gridBlockSize * 3}
+                  dragBoundFunc={dragBoundFunc}
+                  onClick={() => {
+                    setSelectedNode(item.id);
+                    setSelectedNodeType("items");
+                  }}
+                  isSelected={item.id === selectedNodeID}
+                  x={item.x}
+                  y={item.y}
+                  id={item.id}
+                  onDragEnd={(x, y) => {
+                    dispatch({
+                      index: item.id,
+                      type: "modify-item",
+                      attrs: { x: x, y: y },
+                    });
+                  }}
+                />
+              );
+            })}
+            {state.couples.map((couple, i) => {
+              return (
+                <Couple
+                  isSelected={couple.id === selectedNodeID}
+                  key={i}
+                  blockSize={gridBlockSize}
+                  onSelect={() => {
+                    setSelectedNode(couple.id);
+                    setSelectedNodeType("couples");
+                  }}
+                  leftNpc={couple.leftNpc}
+                  rightNpc={couple.rightNpc}
+                  dragBoundFunc={dragBoundFunc}
+                  onChange={(attrs, choice) =>
+                    dispatch({
+                      type: "modify-couple",
+                      index: couple.id,
+                      attrs: attrs,
+                      choice: choice,
+                    })
+                  }
+                />
+              );
+            })}
+            <URLImage
+              src={ExitTexture}
+              width={gridBlockSize * 3}
+              height={gridBlockSize * 5}
+              dragBoundFunc={dragBoundFunc}
+              x={state.exit.x}
+              y={state.exit.y}
+              onDragEnd={(x, y) => dispatch({ type: "move-exit", x: x, y: y })}
+            />
+            <URLImage
+              src={PlayerTexture}
+              width={gridBlockSize * 2}
+              height={gridBlockSize * 4}
+              dragBoundFunc={dragBoundFunc}
+              x={state.player.x}
+              y={state.player.y}
+              onDragEnd={(x, y) =>
+                dispatch({ type: "move-player", x: x, y: y })
+              }
+            />
+          </Layer>
+        </Stage>
+      </div>
       <Button variant="secondary" onClick={downloadFile}>
         Download
       </Button>
