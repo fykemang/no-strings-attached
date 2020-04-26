@@ -133,7 +133,7 @@ public class Person extends CapsuleObstacle {
     private Person target;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private final float MAX_TRAMPOLINE = 0.8f;
+    private final float MAX_TRAMPOLINE = 0.4f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;

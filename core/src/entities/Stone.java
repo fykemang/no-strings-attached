@@ -78,7 +78,7 @@ public class Stone extends PolygonObstacle {
 
     public Stone(float[] points, float x, float y, float width, float height, String type, float sc, float[] leftPos, float[] rightPos) {
         this(points, x, y, width, height, type, sc);
-        setFriction(100f);
+        setFriction(10f);
         isSliding = true;
         back = false;
         leftSlideLim = new Vector2(leftPos[0], leftPos[1]);
@@ -90,7 +90,7 @@ public class Stone extends PolygonObstacle {
 
     public Stone(float[] points, float x, float y, float width, float height, String type, float sc, float[] rotatingCenter, float rotatingDegree) {
         this(points, x, y, width, height, type, sc);
-        setFriction(100f);
+        setFriction(10f);
         this.rotatingRadians = rotatingDegree * (float) Math.PI / 180f;
         this.center = new Vector2(rotatingCenter[0], rotatingCenter[1]);
         isRotating = true;
