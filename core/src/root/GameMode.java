@@ -34,10 +34,7 @@ import entities.*;
 import obstacle.Obstacle;
 import util.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Gameplay specific controller for the game.
@@ -229,7 +226,6 @@ public class GameMode implements Screen {
     /**
      * Texture assets for character avatar
      */
-    private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     /**
      * Texture assets for NPCs
@@ -261,7 +257,9 @@ public class GameMode implements Screen {
     /**
      * List of all unique NPC textures
      */
-    private final ArrayList<TextureRegion> npcs = new ArrayList<>();
+    private final String[] npcTypes = new String[]{"cheese", "cozy", "heyo", "nervy", "spiky", "welcome"};
+    private final Map<String, TextureRegion>  npcs;
+    private final Map<String, TextureRegion>  npcShock;
     /**
      * List of all unique item textures
      */
@@ -395,6 +393,8 @@ public class GameMode implements Screen {
         debug = false;
         active = false;
         countdown = -1;
+        this.npcs = new HashMap<String, TextureRegion>();
+        this.npcShock = new HashMap<String, TextureRegion>();
     }
 
     /**
@@ -613,6 +613,18 @@ public class GameMode implements Screen {
         npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21);
         npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13);
+        npcs.put("cheese", npcCheeseTexture);
+        npcs.put("cozy", npcCozyTexture);
+        npcs.put("nervy", npcNervyTexture);
+        npcs.put("heyo", npcHeyoTexture);
+        npcs.put("spiky", npcSpikyTexture);
+        npcs.put("welcome", npcWelcomeTexture);
+        npcShock.put("cheese", npcCheeseShockTexture);
+        npcShock.put("cozy", npcCozyShockTexture);
+        npcShock.put("nervy", npcNervyShockTexture);
+        npcShock.put("heyo", npcHeyoShockTexture);
+        npcShock.put("spiky", npcSpikyShockTexture);
+        npcShock.put("welcome", npcWelcomeShockTexture);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
@@ -627,19 +639,6 @@ public class GameMode implements Screen {
         greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         citydoor = createTexture(manager, CITYGATE, false);
         bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
-
-        npcs.add(npcCheeseTexture);
-        npcs.add(npcCozyTexture);
-        npcs.add(npcNervyTexture);
-        npcs.add(npcHeyoTexture);
-        npcs.add(npcSpikyTexture);
-        npcs.add(npcWelcomeTexture);
-//        npcs.add(npcCheeseShockTexture);
-//        npcs.add(npcCozyShockTexture);
-//        npcs.add(npcNervyShockTexture);
-//        npcs.add(npcHeyoShockTexture);
-//        npcs.add(npcSpikyShockTexture);
-//        npcs.add(npcWelcomeShockTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -770,7 +769,6 @@ public class GameMode implements Screen {
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
         List<Tile> spikes = testLevel.getSpikes();
-        List<float[]> couples = testLevel.getCouples();
         items = (ArrayList<float[]>) testLevel.getItems();
         List<NpcData> npcData = testLevel.getNpcData();
 
@@ -881,11 +879,16 @@ public class GameMode implements Screen {
     public void createCouple(NpcData curr, NpcData next, int id) {
         float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
         float[] points = new float[]{0f, 0f, 0f, .5f, .5f, .5f, .5f, 0f};
-        int n1 = rand.nextInt(npcs.size());
-        int n2 = rand.nextInt(npcs.size());
-        while (n2 == n1) n2 = rand.nextInt(npcs.size());
-        TextureRegion randTex1 = npcs.get(n1);
-        TextureRegion randTex2 = npcs.get(n2);
+        int n1 = rand.nextInt(npcTypes.length);
+        int n2 = rand.nextInt(npcTypes.length);
+        while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
+        String randType1 = npcTypes[n1];
+        String randType2 = npcTypes[n2];
+        System.out.print(randType1 + randType2);
+        TextureRegion randTex1 = npcs.get(randType1);
+        System.out.print(randTex1);
+        System.out.print(npcs);
+        TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
         if (curr.isSliding()) {
@@ -900,7 +903,7 @@ public class GameMode implements Screen {
         } else {
             rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture);
         }
-        Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
+        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
@@ -1027,6 +1030,18 @@ public class GameMode implements Screen {
                 player.setTexture(playerWalkingAnimation);
             } else if (player.isGrounded()) {
                 player.setTexture(playerIdleAnimation);
+            }
+
+            NpcPerson onNpc = player.getOnNpc();
+            if (onNpc != null) {
+                String type = onNpc.getType();
+                if (player.isOnNpc()) {
+                    TextureRegion shockTex = npcShock.get(type);
+                    onNpc.setTexture(shockTex);
+                } else {
+                    TextureRegion normalTex = npcs.get(type);
+                    onNpc.setTexture(normalTex);
+                }
             }
 
 
