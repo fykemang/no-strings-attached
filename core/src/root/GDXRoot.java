@@ -145,14 +145,14 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(selector);
             loading.dispose();
             loading = null;
-        // If level is selected from level selector screen
+            // If level is selected from level selector screen
         } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME) {
             controller.loadContent(manager, selector.getMetaData().getFilePath());
             controller.setScreenListener(this);
             controller.setCanvas(canvas);
             controller.reset();
             setScreen(controller);
-        // If level select is selected from in game
+            // If level select is selected from in game
         } else if (screen == controller && exitCode == LevelSelector.INTO_SELECTOR) {
             canvas = new GameCanvas();
             selector.reset(canvas);

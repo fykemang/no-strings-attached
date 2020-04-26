@@ -65,9 +65,12 @@ public class CollisionController implements ContactListener {
 
             }
 
-            if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
-                player.setCanCut(true);
-                player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
+//            if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
+//                player.setCanCut(true);
+//                player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
+//            }
+
+            if (bd1 == player && bd2.getName().equals(Blob.BLOB_NAME)) {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
@@ -80,16 +83,12 @@ public class CollisionController implements ContactListener {
 
             if ("gatesensor".equals(fd2) && bd1.getName().equals(player.getName())) {
                 player.atGate();
-
             }
 
-            if (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME)) {
-                player.setCanCut(true);
-                player.setClosestCoupleID(((Blob) bd1).getPlankParentID());
+            if (bd2 == player && bd1.getName().equals(Blob.BLOB_NAME)) {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
-
             }
 
             if (bd1 == player && ("item_sensor").equals(fd2) && !((Item) bd2).getState()) {
@@ -143,7 +142,6 @@ public class CollisionController implements ContactListener {
 
         if ((player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) ||
                 (player.getSensorName().equals(fd2) && bd1.getName().equals(Blob.BLOB_NAME))) {
-            player.setCanCut(false);
             player.setIsTrampolining(true);
         }
 

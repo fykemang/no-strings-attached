@@ -1,12 +1,11 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Group, Line } from "react-konva";
 import npcImageSrc from "./assets/npc.png";
 import URLImage from "./URLImage";
 
 function Couple(props) {
-
   return (
-    <Group draggable>
+    <Group draggable onClick={props.onSelect}>
       <URLImage
         {...props.leftNpc}
         src={npcImageSrc}
