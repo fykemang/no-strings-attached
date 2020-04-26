@@ -94,6 +94,8 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         loadAsset(MUSIC_FILE, Music.class, manager);
     }
 
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public void loadContent(AssetManager manager) {
         if (selectorAssetState != AssetState.LOADING) {
             return;
@@ -106,8 +108,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         selector = manager.get(SELECT_FILE, Texture.class);
         levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
@@ -183,7 +183,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
             ready = true;
-            levelSelectorMusic.stop();
+            levelSelectorMusic.dispose();
         }
         return false;
     }
@@ -198,11 +198,15 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         return false;
     }
 
+    int screen;
+    int start;
+    int end;
+    boolean select;
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        int screen = canvas.getHeight() - screenY;
-        int start = 0;
-        int end = 0;
+        screen = canvas.getHeight() - screenY;
+        start = 0;
+        end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;
@@ -223,7 +227,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
             theme = themes.none;
         }
 
-        boolean select = false;
+        select = false;
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
             if (screenP.dst(buttonPos.get(i)) < 50) {
@@ -352,6 +356,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 canvas.drawBackground(forest);
                 break;
             case forest:
+                canvas.drawBackground(city);
                 canvas.drawBackground(mountain);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);

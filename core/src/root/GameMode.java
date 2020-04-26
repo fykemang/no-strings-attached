@@ -600,11 +600,6 @@ public class GameMode implements Screen {
 
         itemTexture = new ArrayList<>();
 
-//        music.play();
-//        music.setVolume(0.5f);
-//        music.setLooping(true);
-//        levels.add(manager.get(file, Level.class));
-
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21);
@@ -756,6 +751,7 @@ public class GameMode implements Screen {
         }
         objects.clear();
         addQueue.clear();
+        music.dispose();
         world.dispose();
         world = new World(gravity, false);
         setComplete(false);
@@ -772,6 +768,8 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
+        music.play();
+        music.setLooping(true);
         currentlevel = level;
         stillBackgroundTextures = level.getStillBackgroundTexture();
         slightmoveBackgroundTextures = level.getSlightBackgroundTexture();
