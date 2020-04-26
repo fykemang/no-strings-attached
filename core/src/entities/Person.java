@@ -43,7 +43,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The dude is not a slippery one
      */
-    private static final float PLAYER_FRICTION = 0.01f;
+    private static final float PLAYER_FRICTION = 0.05f;
     /**
      * The maximum character speed
      */
@@ -130,13 +130,10 @@ public class Person extends CapsuleObstacle {
     private PolygonShape sensorShape;
     private boolean canCut;
     private final String sensorName;
-    private int closestCoupleID;
-    //    private Obstacle target;
-    private int closestItemID;
     private Person target;
-    private Vector2 trampolineDir;
-    private Vector2 trampolineForce;
-    private float MAX_TRAMPOLINE = 0.8f;
+    private final Vector2 trampolineDir;
+    private final Vector2 trampolineForce;
+    private final float MAX_TRAMPOLINE = 0.8f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
@@ -481,9 +478,7 @@ public class Person extends CapsuleObstacle {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
 
-        if (isShooting()) {
-            shootCooldown = SHOOT_COOLDOWN;
-        } else {
+        if (!isShooting) {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
@@ -495,6 +490,10 @@ public class Person extends CapsuleObstacle {
         }
 
         super.update(dt);
+    }
+
+    public void resetShootCooldown() {
+        shootCooldown = SHOOT_COOLDOWN;
     }
 
     /**
@@ -514,7 +513,7 @@ public class Person extends CapsuleObstacle {
      * @return true if the dude is actively firing.
      */
     public boolean isShooting() {
-        return isShooting && shootCooldown <= 0;
+        return isShooting;
     }
 
     /**

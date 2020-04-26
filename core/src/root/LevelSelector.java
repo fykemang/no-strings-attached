@@ -85,12 +85,9 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
-        levels.add(new LevelMetaData(false, "levels/test_level.json", ""));
+        levels.add(new LevelMetaData(false, "levels/level1.json", ""));
         levels.add(new LevelMetaData(false, "levels/level2.json", ""));
         levels.add(new LevelMetaData(false, "levels/level3.json", ""));
-//=======
-//        levels.add(new LevelMetaData(false, "levels/level_editor_level.json", ""));
-//>>>>>>> 5564ad51ce26a414a0a57ebb553485afc0b2e419
 
         Gdx.input.setInputProcessor(this);
         try {
@@ -317,7 +314,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 break;
             case forest:
                 canvas.drawBackground(mountain);
-                canvas.drawBackground(city);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
                 break;

@@ -90,35 +90,42 @@ public class GameMode implements Screen {
 
 
     /**
-     * Player Animation Files
+     * Player animations
      */
     private static final String PLAYER_IDLE_ANIMATION = "player/player_idle_animation.png";
-    private static final String PLAYER_SWING_ANIMATION = "player/player_swing_animation.png";
     private static final String PLAYER_JUMP_ANIMATION = "player/player_jump_animation.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
-
+    private static final String PLAYER_SWING_ANIMATION = "player/player_swing_animation.png";
     private static final String PLAYER_JUMP = "player/player_jump.png";
-
     private static final String PLAYER_FALL = "player/player_fall.png";
 
+    /**
+     * NPC animations
+     */
     private static final String NPC_COZY = "entities/cozy_idle.png";
-
-    private static final String NPC_CHEESE = "entities/cheese.png";
-
+    private static final String NPC_CHEESE = "entities/cheese_npc.png";
     private static final String NPC_NERVY = "entities/nervy_idle.png";
-
     private static final String NPC_SPIKY = "entities/spiky_idle.png";
-
     private static final String NPC_HEYO = "entities/heyo_npc.png";
-
     private static final String NPC_WELCOME = "entities/welcome_npc.png";
 
+    /**
+     * Texture file for the exit door
+     */
     private static final String CITYGATE = "entities/citydoor.png";
-
+    /**
+     * Texture files for items
+     */
     private static final String NEEDLE = "entities/needles.png";
     private static final String YARN = "entities/skein.png";
     private static final String BUTTON = "entities/buttons.png";
-
+    /**
+     * Texture files for baskets (progress bar)
+     */
+    private static final String BASKET_EMPTY = "ui/basket_0.png";
+    private static final String BASKET_ONE = "ui/basket_1.png";
+    private static final String BASKET_TWO = "ui/basket_3.png";
+    private static final String BASKET_THREE = "ui/basket_2.png";
     /**
      * The texture file for the spinning barrier
      */
@@ -142,25 +149,28 @@ public class GameMode implements Screen {
     /**
      * The folder with all levels
      */
-    private static final String TEST_LEVEL = "levels/test_level.json";
-    private static final String CROSSHAIR_FILE = "entities/crosshair.png";
-
+    private static final String TEST_LEVEL = "levels/level1.json";
+    private static final String CROSSHAIR_FILE = "ui/crosshair.png";
     /**
      * File to texture for walls and platforms
      */
-
     private static final String SPIKE_FILE = "entities/spikes.png";
     private static final String SPIKE_VERT = "entities/spikes_vert.png";
-    private static final String UI_GreyYarn = "entities/grey_yarn.png";
-    private static final String UI_RedYarn = "entities/red_yarn.png";
+    private static final String UI_GreyYarn = "ui/ui_uncollected_item.png";
+    private static final String UI_RedYarn = "ui/ui_collected_item.png";
+    /**
+     * File to texture for restarting button
+     */
     private static final String RESTART_FILE = "ui/restart.png";
+    /**
+     * File to texture for escape button
+     */
     private static final String ESC_FILE = "ui/pause.png";
-    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     /**
      * Retro font for displaying messages
      */
     private static String FONT_FILE = "ui/RetroGame.ttf";
-
+    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static int FONT_SIZE = 64;
     /**
      * Track asset loading from all instances and subclasses
@@ -171,9 +181,8 @@ public class GameMode implements Screen {
      */
     protected Array<String> assets;
     /**
-     * The texture for walls and platforms
+     * The textures for walls and platforms
      */
-//    protected TextureRegion earthTile;
     protected TextureRegion spikeTile;
     protected TextureRegion spikeVertTile;
     protected TextureRegion UI_restart;
@@ -215,24 +224,42 @@ public class GameMode implements Screen {
      */
     private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
+    /**
+     * Texture assets for NPCs
+     */
     private TextureRegion npcCozyTexture;
     private TextureRegion npcCheeseTexture;
     private TextureRegion npcNervyTexture;
     private TextureRegion npcHeyoTexture;
     private TextureRegion npcSpikyTexture;
     private TextureRegion npcWelcomeTexture;
+    /**
+     * Texture assets for items
+     */
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
     private TextureRegion redYarnTexture;
     private TextureRegion greyYarnTexture;
+    private TextureRegion basketEmptyTexture;
+    private TextureRegion basketOneTexture;
+    private TextureRegion basketTwoTexture;
+    private TextureRegion basketThreeTexture;
+    /**
+     * List of all unique NPC textures
+     */
     private final ArrayList<TextureRegion> npcs = new ArrayList<>();
+    /**
+     * List of all unique item textures
+     */
     private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    /**
+     * List of item objects
+     */
     private ArrayList<float[]> items;
-    private ArrayList<Item> progress;
-
-    private TextureRegion backgroundTexture;
-
+    /**
+     * FilmStrip objects to show player animations
+     */
     private FilmStrip playerIdleAnimation;
     private FilmStrip playerSwingAnimation;
     private FilmStrip playerWalkingAnimation;
@@ -246,7 +273,6 @@ public class GameMode implements Screen {
      */
     private TextureRegion bridgeTexture;
     private TextureRegion crosshairTexture;
-
     /**
      * Track asset loading from all instances and subclasses
      */
@@ -274,28 +300,42 @@ public class GameMode implements Screen {
     /**
      * Countdown active for winning or losing
      */
-
     private int countdown;
-    private TextureRegion cityTexture;
-    private TextureRegion skyTexture;
-    private TextureRegion cloudTexture;
-    private TextureRegion sunTexture;
 
-    private String CITY_MUSIC_FILE = "music/shine.mp3";
-    private String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
+    /**
+     * Files for music assets
+     */
+    private final String CITY_MUSIC_FILE = "music/shine.mp3";
+    private final String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
     private String FOREST_MUSIC_FILE;
     private String MOUNTAIN_MUSIC_FILE;
-    private Music music;
 
+    /**
+     * Music object played in the game
+     */
+    private Music music;
+    /**
+     * Files for region tiles
+     */
     private static final String CITY_TILE_FILE = "entities/city-tile.png";
     private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
     private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
-    private TextureRegion tileTexture;
 
+    /**
+     * Tile texture used in the game
+     */
+    private TextureRegion tileTexture;
+    /**
+     * Files for city background
+     */
     private String[] CITY_BKG_FILES_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
     private String[] CITY_BKG_FILES_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
     private String[] CITY_BKG_FILES_C = new String[]{"background/citylayer3.png"};
+
+    /**
+     * TextureRegions used in the game
+     */
     private List<TextureRegion> stillBackgroundTextures;
     private List<TextureRegion> slightmoveBackgroundTextures;
     private List<TextureRegion> movingBackgroundTextures;
@@ -313,7 +353,6 @@ public class GameMode implements Screen {
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
         items = new ArrayList<>();
-        progress = new ArrayList<>();
         stillBackgroundTextures = new ArrayList<>();
         slightmoveBackgroundTextures = new ArrayList<>();
         movingBackgroundTextures = new ArrayList<>();
@@ -375,6 +414,14 @@ public class GameMode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
+        manager.load(BASKET_EMPTY, Texture.class);
+        assets.add(BASKET_EMPTY);
+        manager.load(BASKET_ONE, Texture.class);
+        assets.add(BASKET_ONE);
+        manager.load(BASKET_TWO, Texture.class);
+        assets.add(BASKET_TWO);
+        manager.load(BASKET_THREE, Texture.class);
+        assets.add(BASKET_THREE);
         manager.load(BULLET_FILE, Texture.class);
         assets.add(BULLET_FILE);
         manager.load(CROSSHAIR_FILE, Texture.class);
@@ -409,13 +456,8 @@ public class GameMode implements Screen {
             assets.add(s);
             manager.load(s, Texture.class);
         }
-//        assets.add(BKG_CLOUD);
-//        manager.load(BKG_SKY, Texture.class);
-//        assets.add(BKG_SKY);
-//        manager.load(BKG_SUN, Texture.class);
-//        assets.add(BKG_SUN);
-//        manager.load(BKG_CITY, Texture.class);
-//        assets.add(BKG_CITY);
+
+        // Load Player Animations
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
         assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
@@ -431,7 +473,13 @@ public class GameMode implements Screen {
         manager.load(POP_FILE, Sound.class);
         assets.add(POP_FILE);
 
+        // Load Music
+        manager.load(CITY_MUSIC_FILE, Music.class);
+        assets.add(CITY_MUSIC_FILE);
+        manager.load(SUBURB_MUSIC_FILE, Music.class);
+        assets.add(SUBURB_MUSIC_FILE);
 
+        // Load test level
         manager.load(TEST_LEVEL, Level.class);
         assets.add(TEST_LEVEL);
 
@@ -470,7 +518,7 @@ public class GameMode implements Screen {
         levels.add(level);
         String type = level.getType();
         if (type.contains("city")) {
-            music = Gdx.audio.newMusic(Gdx.files.internal(CITY_MUSIC_FILE));
+            music = manager.get(CITY_MUSIC_FILE);
             level.setTileTexture(createTexture(manager, CITY_TILE_FILE, false));
             for (String s : CITY_BKG_FILES_A) {
                 stillBackgroundTextures.add(createTexture(manager, s, false));
@@ -483,7 +531,7 @@ public class GameMode implements Screen {
             }
             level.setBackgroundTexture(stillBackgroundTextures, slightmoveBackgroundTextures, movingBackgroundTextures);
         } else if (type.contains("suburb")) {
-            music = Gdx.audio.newMusic(Gdx.files.internal(SUBURB_MUSIC_FILE));
+            music = manager.get(SUBURB_MUSIC_FILE);
             level.setTileTexture(createTexture(manager, SUBURB_TILE_FILE, false));
         } else if (type.contains("forest")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
@@ -505,10 +553,6 @@ public class GameMode implements Screen {
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
         playerJumpingAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
-//        cityTexture = createTexture(manager, BKG_CITY, false);
-//        skyTexture = createTexture(manager, BKG_SKY, false);
-//        cloudTexture = createTexture(manager, BKG_CLOUD, false);
-//        sunTexture = createTexture(manager, BKG_SUN, false);
         npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
@@ -518,6 +562,10 @@ public class GameMode implements Screen {
         itemTexture.add(buttonTexture);
         itemTexture.add(needleTexture);
         itemTexture.add(yarnTexture);
+        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
+        basketOneTexture = createTexture(manager, BASKET_ONE, false);
+        basketTwoTexture = createTexture(manager, BASKET_TWO, false);
+        basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
         npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
@@ -589,9 +637,8 @@ public class GameMode implements Screen {
      */
     private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
-    // Physics objects for the game
     /**
-     * Reference to the player avatar
+     * References to physics objects for the game
      */
     private Person player;
 
@@ -646,6 +693,7 @@ public class GameMode implements Screen {
         ropeQueryCallback.setPlayer(player);
         ropeQueryCallback.reset();
         cuttingCallback.setPlayer(player);
+        cuttingCallback.reset();
     }
 
     /**
@@ -679,28 +727,32 @@ public class GameMode implements Screen {
         float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
                 citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
                 0f};
-        createGate(points, testLevel.getExitPos().x, testLevel.getExitPos().y, citydoor);
         addObject(player);
 
+        // Create exit door
+        createGate(points, testLevel.getExitPos().x, testLevel.getExitPos().y, citydoor);
 
+        // Create NPCs
         for (int i = 0; i < npcData.size(); i += 2) {
             NpcData curr = npcData.get(i);
             NpcData next = npcData.get(i + 1);
             createCouple(curr, next, i);
         }
 
+        // Create items
         for (int i = 0; i < items.size(); i++) {
             float[] curr = items.get(i);
             createItem(curr[0], curr[1], i);
         }
 
+        // Create platforms
         for (int i = 0; i < tiles.size(); i++) {
             createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(), "tile" + i, 1f, tileTexture);
         }
 
         for (Tile spike : spikes) {
-            TextureRegion spiketex = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
-            createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spiketex);
+            TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
+            createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
         }
 
     }
@@ -894,7 +946,9 @@ public class GameMode implements Screen {
         }
 
         Vector2 playerPosition = player.getPosition();
+        // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
+
         if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
@@ -915,6 +969,7 @@ public class GameMode implements Screen {
                 player.setTexture(playerIdleAnimation);
             }
 
+
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
                 player.setTarget(ropeQueryCallback.getClosestNpc());
@@ -929,6 +984,9 @@ public class GameMode implements Screen {
                             NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                                for (NpcRope r : ropes) {
+                                    r.markRemoved(true);
+                                }
                             }
                         }
                     }
@@ -936,7 +994,8 @@ public class GameMode implements Screen {
                 }
             }
 
-            if (player.isShooting() && player.isAttached() && playerRope != null) {
+            // Detaches from swinging
+            else if (!player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
                 player.setTarget(null);
                 ropeQueryCallback.reset();
@@ -944,9 +1003,11 @@ public class GameMode implements Screen {
                 world.destroyJoint(player.getSwingJoint());
                 player.setAttached(false);
                 player.setSwingJoint(null);
+                player.resetShootCooldown();
             }
 
-            if (player.getTarget() != null && player.isShooting()) {
+            // Swinging
+            if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
                 Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
@@ -1006,37 +1067,6 @@ public class GameMode implements Screen {
         return worldCoordinates;
     }
 
-    /**
-     * Add a new bullet to the world and send it in the right direction.
-     */
-    private void createBullet() {
-        Vector2 playerPosition = player.getPosition();
-        Vector2 crossHairLocation = screenToWorldCoordinates(InputController.getInstance().getCrossHair());
-        crossHairLocation.sub(playerPosition);
-        float firingAngle = (float) Math.atan(crossHairLocation.y / crossHairLocation.x);
-        float offsetX = player.isFacingRight() ? BULLET_OFFSET : -BULLET_OFFSET;
-        float offsetY = (float) (Math.tan(firingAngle) * offsetX);
-        if (offsetY > MAX_BULLET_OFFSET_Y) {
-            offsetY = MAX_BULLET_OFFSET_Y;
-        } else if (offsetY < -MAX_BULLET_OFFSET_Y) {
-            offsetY = -MAX_BULLET_OFFSET_Y;
-        }
-        float radius = bulletTexture.getRegionWidth() / (2.0f * scale.x);
-        Projectile projectile = new Projectile(player.getX() + offsetX, player.getY() + offsetY, radius, 60);
-        projectile.setDrawScale(scale);
-        projectile.setTexture(bulletTexture);
-        projectile.setBullet(true);
-        projectile.setGravityScale(0);
-
-        // Compute position and velocity
-        float speed = player.isFacingRight() ? BULLET_SPEED : -BULLET_SPEED;
-        float vx = (float) (speed * Math.cos(firingAngle));
-        float vy = (float) (speed * Math.sin(firingAngle));
-        projectile.setVX(vx);
-        projectile.setVY(vy);
-        addQueuedObject(projectile);
-    }
-
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
@@ -1070,27 +1100,52 @@ public class GameMode implements Screen {
                 obj.draw(canvas);
             }
         }
+
+        // Checks player win condition
         if (player.won()) {
             canvas.drawUIText("you won", canvas.getWidth() / 2, canvas.getHeight() / 2);
+//            final Timer t = new java.util.Timer();
+//            t.schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        exitToNext();
+//                        t.cancel();
+//                    }
+//                    },
+//                    5000
+//            );
         }
 
+        // Checks if player died
         if (!player.isAlive()) {
             canvas.drawUIText("press r to restart", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
+
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        float UIX = 70;
-        float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
-        for (int i = 1; i <= items.size(); i++) {
-            if (i <= player.getInventory().size()) {
-                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
-            } else {
-                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
-            }
-            UIX += greyYarnTexture.getRegionWidth();
+        float UIX = 120;
+        float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
+        int itemCount = player.getInventory().size();
+        if (itemCount == 0) {
+            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
+        } else if (itemCount == 1) {
+            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
+        } else if (itemCount == 2) {
+            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
+        } else {
+            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
         }
+//        for (int i = 1; i <= items.size(); i++) {
+//            if (i <= player.getInventory().size()) {
+//                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
+//            } else {
+//                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+//            }
+//            UIX += greyYarnTexture.getRegionWidth();
+//        }
         canvas.end();
 
 
@@ -1437,7 +1492,7 @@ public class GameMode implements Screen {
     public void exitToNext() {
         if (listener != null) {
             music.dispose();
-            listener.exitScreen(this, 2);
+            listener.exitScreen(this, EXIT_NEXT);
         }
     }
 
