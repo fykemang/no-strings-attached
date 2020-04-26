@@ -61,6 +61,10 @@ public class CollisionController implements ContactListener {
                 bd2.markRemoved(true);
             }
 
+            if (bd1 == player && bd2.getName().contains("npc")) {
+
+            }
+
             if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
                 player.setCanCut(true);
                 player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
