@@ -62,8 +62,7 @@ public class CollisionController implements ContactListener {
                 NpcPerson n = (NpcPerson) bd2;
                 player.setOnNpc(n);
                 player.setIsOnNpc(true);
-            }
-            else {
+            } else {
                 player.setIsOnNpc(false);
             }
 

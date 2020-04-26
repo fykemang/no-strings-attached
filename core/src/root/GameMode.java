@@ -29,7 +29,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import entities.*;
 import obstacle.Obstacle;
 import util.*;
@@ -265,8 +264,8 @@ public class GameMode implements Screen {
      * List of all unique NPC textures
      */
     private final String[] npcTypes = new String[]{"cheese", "cozy", "heyo", "nervy", "spiky", "welcome"};
-    private final Map<String, TextureRegion>  npcs;
-    private final Map<String, TextureRegion>  npcShock;
+    private final Map<String, TextureRegion> npcs;
+    private final Map<String, TextureRegion> npcShock;
     /**
      * List of all unique item textures
      */
@@ -311,7 +310,7 @@ public class GameMode implements Screen {
     /**
      * Track asset loading from all instances and subclasses
      */
-    private AssetState platformAssetState = AssetState.EMPTY;
+    private AssetState gameAssetState = AssetState.EMPTY;
     /**
      * Listener that will update the player mode when we are done
      */
@@ -374,6 +373,7 @@ public class GameMode implements Screen {
     private List<TextureRegion> stillBackgroundTextures;
     private List<TextureRegion> slightmoveBackgroundTextures;
     private List<TextureRegion> movingBackgroundTextures;
+    private Level level;
 
     /**
      * Creates a new game world
@@ -388,6 +388,7 @@ public class GameMode implements Screen {
     protected GameMode(Rectangle bounds, Vector2 gravity) {
         assets = new Array<>();
         items = new ArrayList<>();
+        level = null;
         stillBackgroundTextures = new ArrayList<>();
         slightmoveBackgroundTextures = new ArrayList<>();
         movingBackgroundTextures = new ArrayList<>();
@@ -415,10 +416,12 @@ public class GameMode implements Screen {
      * @param manager Reference to global asset manager.
      */
     public void preLoadContent(AssetManager manager) {
-        if (platformAssetState != AssetState.EMPTY) {
+        if (gameAssetState != AssetState.EMPTY) {
             return;
         }
-        platformAssetState = AssetState.LOADING;
+        gameAssetState = AssetState.LOADING;
+        manager.load(PLAYER_FALL, Texture.class);
+        assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
         manager.load(UI_GreyYarn, Texture.class);
@@ -541,10 +544,6 @@ public class GameMode implements Screen {
         manager.load(SUBURB_MUSIC_FILE, Music.class);
         assets.add(SUBURB_MUSIC_FILE);
 
-        // Load test level
-        manager.load(TEST_LEVEL, Level.class);
-        assets.add(TEST_LEVEL);
-
         if (worldAssetState != AssetState.EMPTY) {
             return;
         }
@@ -569,19 +568,10 @@ public class GameMode implements Screen {
      *
      * @param manager Reference to global asset manager.
      */
-    public void loadContent(AssetManager manager, String file) {
-//        if (platformAssetState != AssetState.LOADING) {
-//            return;
-//        }
-        Json json = new Json();
-        levels = new ArrayList<>();
-        itemTexture = new ArrayList<>();
-        Level level = json.fromJson(Level.class, Gdx.files.internal(file));
-        levels.add(level);
+    public void loadContent(AssetManager manager) {
         String type = level.getType();
         if (type.contains("city")) {
             music = manager.get(CITY_MUSIC_FILE);
-            level.setTileTexture(createTexture(manager, CITY_TILE_FILE, false));
             for (String s : CITY_BKG_FILES_A) {
                 stillBackgroundTextures.add(createTexture(manager, s, false));
             }
@@ -591,17 +581,25 @@ public class GameMode implements Screen {
             for (String s : CITY_BKG_FILES_C) {
                 movingBackgroundTextures.add(createTexture(manager, s, false));
             }
+            tileTexture = createTexture(manager, CITY_TILE_FILE, false);
             level.setBackgroundTexture(stillBackgroundTextures, slightmoveBackgroundTextures, movingBackgroundTextures);
         } else if (type.contains("suburb")) {
             music = manager.get(SUBURB_MUSIC_FILE);
-            level.setTileTexture(createTexture(manager, SUBURB_TILE_FILE, false));
+            tileTexture = createTexture(manager, SUBURB_TILE_FILE, false);
         } else if (type.contains("forest")) {
             music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
-            level.setTileTexture(createTexture(manager, FOREST_TILE_FILE, false));
+            tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
         } else {
             music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
-            level.setTileTexture(createTexture(manager, MOUNTAIN_TILE_FILE, false));
+            tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
         }
+
+        if (gameAssetState != AssetState.LOADING) {
+            return;
+        }
+
+        itemTexture = new ArrayList<>();
+
 //        music.play();
 //        music.setVolume(0.5f);
 //        music.setLooping(true);
@@ -665,21 +663,17 @@ public class GameMode implements Screen {
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, PEW_FILE);
         sounds.allocate(manager, POP_FILE);
-        if (worldAssetState == AssetState.LOADING) {// Allocate the tiles
-            tileTexture = level.getTileTexture();
-            spikeTile = createTexture(manager, SPIKE_FILE, false);
-            spikeVertTile = createTexture(manager, SPIKE_VERT, false);
-            UI_restart = createTexture(manager, RESTART_FILE, false);
-            UI_exit = createTexture(manager, ESC_FILE, false);
-            if (manager.isLoaded(FONT_FILE)) {
-                displayFont = manager.get(FONT_FILE, BitmapFont.class);
-            } else {
-                displayFont = null;
-            }
-            worldAssetState = AssetState.COMPLETE;
+        spikeTile = createTexture(manager, SPIKE_FILE, false);
+        spikeVertTile = createTexture(manager, SPIKE_VERT, false);
+        UI_restart = createTexture(manager, RESTART_FILE, false);
+        UI_exit = createTexture(manager, ESC_FILE, false);
+        if (manager.isLoaded(FONT_FILE)) {
+            displayFont = manager.get(FONT_FILE, BitmapFont.class);
+        } else {
+            displayFont = null;
         }
 
-        platformAssetState = AssetState.COMPLETE;
+        gameAssetState = AssetState.COMPLETE;
     }
 
     // Physics constants for initialization
@@ -721,8 +715,6 @@ public class GameMode implements Screen {
      * References to physics objects for the game
      */
     private Person player;
-
-    private List<Level> levels = new ArrayList<>();
 
     private RopeJointDef ropeJointDef;
 
@@ -780,18 +772,17 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        Level testLevel = levels.get(0);
-        currentlevel = testLevel;
-        tileTexture = testLevel.getTileTexture();
-        stillBackgroundTextures = testLevel.getStillBackgroundTexture();
-        slightmoveBackgroundTextures = testLevel.getSlightBackgroundTexture();
-        movingBackgroundTextures = testLevel.getMovingBackgroundTexture();
+        currentlevel = level;
+        stillBackgroundTextures = level.getStillBackgroundTexture();
+        slightmoveBackgroundTextures = level.getSlightBackgroundTexture();
+        movingBackgroundTextures = level.getMovingBackgroundTexture();
 
-        Vector2 playerPos = testLevel.getPlayerPos();
-        List<Tile> tiles = testLevel.getTiles();
-        List<Tile> spikes = testLevel.getSpikes();
-        items = (ArrayList<float[]>) testLevel.getItems();
-        List<NpcData> npcData = testLevel.getNpcData();
+        Vector2 playerPos = level.getPlayerPos();
+        List<Tile> tiles = level.getTiles();
+        List<Tile> spikes = level.getSpikes();
+        items = (ArrayList<float[]>) level.getItems();
+        List<NpcData> npcData = level.getNpcData();
+
 
         // Create main dude
         float dWidth = playerIdleAnimation.getRegionWidth() / 2.2f / scale.x;
@@ -809,7 +800,7 @@ public class GameMode implements Screen {
         addObject(player);
 
         // Create exit door
-        createGate(points, testLevel.getExitPos().x, testLevel.getExitPos().y, citydoor);
+        createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
 
         // Create NPCs
         for (int i = 0; i < npcData.size(); i += 2) {
@@ -826,7 +817,7 @@ public class GameMode implements Screen {
 
         // Create platforms
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), testLevel.getType(), "tile" + i, 1f, tileTexture);
+            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), level.getType(), "tile" + i, 1f);
         }
 
         for (Tile spike : spikes) {
@@ -836,14 +827,14 @@ public class GameMode implements Screen {
 
     }
 
-    public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion tex) {
+    public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc) {
         Stone tile = new Stone(points, x, y, width, height, type, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tex);
+        tile.setTexture(tileTexture);
         tile.setName(name);
         addObject(tile);
         return tile;
@@ -905,30 +896,27 @@ public class GameMode implements Screen {
         while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
         String randType1 = npcTypes[n1];
         String randType2 = npcTypes[n2];
-        System.out.print(randType1 + randType2);
         TextureRegion randTex1 = npcs.get(randType1);
-        System.out.print(randTex1);
-        System.out.print(npcs);
         TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
         if (curr.isSliding()) {
-            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture, curr.getLeft(), curr.getRight());
+            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight());
         } else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture, curr.getRotatingCenter(), curr.getRotatingDegree());
+            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree());
         } else {
-            leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture);
+            leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture, next.getLeft(), next.getRight());
+            rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight());
         } else {
-            rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture);
+            rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
-    public Stone createRotatingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion tex,
+    public Stone createRotatingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc,
                                     float[] rotatingCenter, float rotatingDegree) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, rotatingCenter, rotatingDegree);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
@@ -936,13 +924,13 @@ public class GameMode implements Screen {
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tex);
+        tile.setTexture(tileTexture);
         tile.setName(name);
         addObject(tile);
         return tile;
     }
 
-    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion tex,
+    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc,
                                    float[] leftPos, float[] rightPos) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
@@ -950,7 +938,7 @@ public class GameMode implements Screen {
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tex);
+        tile.setTexture(tileTexture);
         tile.setName(name);
         addObject(tile);
         return tile;
@@ -1081,7 +1069,6 @@ public class GameMode implements Screen {
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                 for (NpcRope r : ropes) {
-                                    r.deactivatePhysics(world);
                                     r.markRemoved(true);
                                 }
                             }
@@ -1091,8 +1078,7 @@ public class GameMode implements Screen {
                 }
             }
 
-            // Detaches from swinging
-            else if (!player.isShooting() && player.isAttached() && playerRope != null) {
+            if (!player.isShooting() && player.isAttached() && playerRope != null) {
                 playerRope.markRemoved(true);
                 player.setTarget(null);
                 ropeQueryCallback.reset();
@@ -1167,7 +1153,6 @@ public class GameMode implements Screen {
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
-        float negative = 0f;
         for (TextureRegion t : stillBackgroundTextures) {
             canvas.drawWrapped(t, 0f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
         }
@@ -1591,6 +1576,10 @@ public class GameMode implements Screen {
             music.dispose();
             listener.exitScreen(this, EXIT_NEXT);
         }
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
     }
 
 
