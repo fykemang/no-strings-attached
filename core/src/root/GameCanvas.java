@@ -416,6 +416,8 @@ public class GameCanvas {
         // Clear the screen
         Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f);  // Homage to the XNA years
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.viewportHeight = getHeight();
+        camera.viewportWidth = getWidth();
     }
 
     /**
@@ -1203,6 +1205,7 @@ public class GameCanvas {
             y1 = vertex.y;
             debugRender.line(x0, y0, x1, y1);
         }
+
         // Close the loop
         shape.getVertex(shape.getVertexCount() - 1, vertex);
         local.applyTo(vertex);
@@ -1357,7 +1360,6 @@ public class GameCanvas {
         debugRender.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
-
         // Initialize the cache objects
         holder = new TextureRegion();
         local = new Affine2();

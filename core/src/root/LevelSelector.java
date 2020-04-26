@@ -15,24 +15,27 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import entities.Level;
+import entities.LevelMetadata;
 import util.ScreenListener;
 
 import java.util.ArrayList;
 
 public class LevelSelector implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 4;
-    private static final String BK_FILE = "ui/select_bg.png";
+    private static final String BACKGROUND_FILE = "ui/select_bg.png";
     private static final String CITY_FILE = "ui/city.png";
     private static final String SUBURB_FILE = "ui/suburbs.png";
     private static final String FOREST_FILE = "ui/forest.png";
     private static final String MOUNTAIN_FILE = "ui/mountains.png";
     private static final String SELECT_FILE = "ui/selector.png";
     private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
-    private AssetManager manager;
+    private static final String LEVEL_METADATA = "levels/levels.json";
     /**
      * Reference to game.GameCanvas created by the root
      */
-    private Music music;
+    private Music levelSelectorMusic;
     private GameCanvas canvas;
     private Texture background;
     private Texture city;
@@ -61,35 +64,69 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     int mon_d = 150;
     int mon_u = 296;
     private ArrayList<Vector2> buttonPos = new ArrayList<>();
+    private AssetState selectorAssetState = AssetState.EMPTY;
+    private Array<String> assets;
+    private LevelMetadata levelMetadata;
 
     private enum themes {
         city, none, suburb, forest, mountain
     }
 
-    public LevelSelector(AssetManager manager, GameCanvas canvas) {
-        this.manager = manager;
+    public void loadAsset(String filepath, Class type, AssetManager manager) {
+        manager.load(filepath, type);
+        assets.add(filepath);
+    }
+
+    public void preloadContent(AssetManager manager) {
+        if (selectorAssetState != AssetState.EMPTY) {
+            return;
+        }
+        selectorAssetState = AssetState.LOADING;
+        loadAsset(LEVEL_METADATA, LevelMetadata.class, manager);
+        loadAsset(BACKGROUND_FILE, Texture.class, manager);
+        loadAsset(SUBURB_FILE, Texture.class, manager);
+        loadAsset(FOREST_FILE, Texture.class, manager);
+        loadAsset(MOUNTAIN_FILE, Texture.class, manager);
+        loadAsset(SELECT_FILE, Texture.class, manager);
+        loadAsset(CITY_FILE, Texture.class, manager);
+        loadAsset(MUSIC_FILE, Music.class, manager);
+    }
+
+    public void loadContent(AssetManager manager) {
+        if (selectorAssetState != AssetState.LOADING) {
+            return;
+        }
+        background = manager.get(BACKGROUND_FILE, Texture.class);
+        city = manager.get(CITY_FILE, Texture.class);
+        suburb = manager.get(SUBURB_FILE, Texture.class);
+        forest = manager.get(FOREST_FILE, Texture.class);
+        mountain = manager.get(MOUNTAIN_FILE, Texture.class);
+        selector = manager.get(SELECT_FILE, Texture.class);
+        levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
+        levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
+        selectorAssetState = AssetState.COMPLETE;
+    }
+
+    public void unloadContent(AssetManager manager) {
+        for (String asset : assets) {
+            if (manager.isLoaded(asset)) {
+                manager.unload(asset);
+            }
+        }
+    }
+
+    public void setCanvas(GameCanvas canvas) {
         this.canvas = canvas;
-        this.levels = new ArrayList<>();
-        resize(canvas.getWidth(), canvas.getHeight());
-        background = new Texture(BK_FILE);
-        city = new Texture(CITY_FILE);
-        suburb = new Texture(SUBURB_FILE);
-        forest = new Texture(FOREST_FILE);
-        mountain = new Texture(MOUNTAIN_FILE);
-        selector = new Texture(SELECT_FILE);
-        this.music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
-        music.play();
-        music.setVolume(0.5f);
-        music.setLooping(true);
+    }
+
+
+    public LevelSelector() {
+        this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
-        levels.add(new LevelMetaData(false, "levels/level1.json", ""));
-        levels.add(new LevelMetaData(false, "levels/level2.json", ""));
-        levels.add(new LevelMetaData(false, "levels/level3.json", ""));
 
-        Gdx.input.setInputProcessor(this);
         try {
             // Let ANY connected controller start the game.
             for (Controller controller : Controllers.getControllers()) {
@@ -112,11 +149,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
     private int level = -1;
 
-
     private boolean active;
-
-    private ArrayList<LevelMetaData> levels;
-
 
     @Override
     public boolean keyDown(int keycode) {
@@ -142,9 +175,9 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 //                level = i+1;
 //            }
 //        }
-        if (level != -1 && level < levels.size() + 1) {
+        if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
             ready = true;
-            music.stop();
+            levelSelectorMusic.stop();
         }
         return false;
     }
@@ -185,7 +218,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         }
 
         boolean select = false;
-        for (int i = 0; i < levels.size(); i++) {
+        for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
             if (screenP.dst(buttonPos.get(i)) < 50) {
                 select = true;
@@ -231,7 +264,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
     @Override
     public void dispose() {
-        music.dispose();
+        levelSelectorMusic.dispose();
     }
 
     @Override
@@ -340,7 +373,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
             canvas.drawText(i + 1 + "", font, button.x, button.y);
         }
 
-        if (level > 0 && level < levels.size() + 1) {
+        if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
             canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }
@@ -349,20 +382,16 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     }
 
 
-    public LevelMetaData getMetaData() {
-        if (level > levels.size() || level == -1) return null;
-        return levels.get(level - 1);
+    public Level getCurrentLevel() {
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level);
     }
 
-
-    public void reset(GameCanvas canvas) {
-        this.canvas = canvas;
+    public void reset() {
         level = -1;
         ready = false;
-        this.music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
-        music.play();
-        music.setVolume(0.5f);
-        music.setLooping(true);
+        levelSelectorMusic.play();
+        levelSelectorMusic.setVolume(0.5f);
+        levelSelectorMusic.setLooping(true);
     }
-
 }
