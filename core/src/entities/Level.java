@@ -24,9 +24,9 @@ public class Level implements Json.Serializable {
     private List<TextureRegion> slight;
     private List<TextureRegion> moving;
 
-    private List<NpcData> npcData;
-    private List<float[]> couples;
-    private List<float[]> items;
+    private final List<NpcData> npcData;
+    private final List<float[]> couples;
+    private final List<float[]> items;
 
     public List<TextureRegion> getStillBackgroundTexture() {
         return still;

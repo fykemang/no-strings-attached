@@ -12,6 +12,7 @@ const URLImage = (props) => {
       y={props.y}
       width={props.width}
       height={props.height}
+      onClick={props.onClick}
       dragBoundFunc={(pos) => props.dragBoundFunc(pos)}
       onDragEnd={e => {
         props.onDragEnd(e.target.x(), e.target.y());
