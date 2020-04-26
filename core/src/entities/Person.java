@@ -31,7 +31,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.7f;
+    private static final float PLAYER_DENSITY = 1.3f;
     /**
      * The factor to multiply by the input
      */
@@ -43,7 +43,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The dude is not a slippery one
      */
-    private static final float PLAYER_FRICTION = 0.01f;
+    private static final float PLAYER_FRICTION = 0.05f;
     /**
      * The maximum character speed
      */
@@ -130,16 +130,14 @@ public class Person extends CapsuleObstacle {
     private PolygonShape sensorShape;
     private boolean canCut;
     private final String sensorName;
-    private int closestCoupleID;
-    //    private Obstacle target;
-    private int closestItemID;
     private Person target;
     private final Vector2 trampolineDir;
-    private float trampolineForceX;
-    private float trampolineForceY;
+    private final Vector2 trampolineForce;
+    private final float MAX_TRAMPOLINE = 0.8f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
+
 
     /**
      * Which direction is the character facing
@@ -330,6 +328,7 @@ public class Person extends CapsuleObstacle {
         isTrampolining = false;
         this.sensorName = sensorName;
         this.inventory = new ArrayList<>();
+        trampolineForce = new Vector2();
         isAttached = false;
         jumpCooldown = 0;
         setName(name);
@@ -352,8 +351,11 @@ public class Person extends CapsuleObstacle {
         if (magnitude < 3)
             return;
         float adjust = 5.9f;
-        trampolineForceX = magnitude * trampolineDir.x / adjust;
-        trampolineForceY = magnitude * trampolineDir.y / adjust;
+        this.trampolineForce.set(magnitude * trampolineDir.x / adjust, magnitude * trampolineDir.y / adjust);
+        float len = trampolineForce.len();
+        if (len > MAX_TRAMPOLINE) {
+            trampolineForce.scl(MAX_TRAMPOLINE / len);
+        }
     }
 
     /**
@@ -425,7 +427,7 @@ public class Person extends CapsuleObstacle {
         if (isTrampolining) {
             vertical = PLAYER_JUMP / 2.5f;
             calculateTrampolineForce();
-            forceCache.set(trampolineForceX, trampolineForceY);
+            forceCache.set(trampolineForce.x, trampolineForce.y);
             body.applyLinearImpulse(forceCache, getPosition(), true);
             isTrampolining = false;
         }
@@ -475,9 +477,7 @@ public class Person extends CapsuleObstacle {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
 
-        if (isShooting()) {
-            shootCooldown = SHOOT_COOLDOWN;
-        } else {
+        if (!isShooting) {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
@@ -489,6 +489,10 @@ public class Person extends CapsuleObstacle {
         }
 
         super.update(dt);
+    }
+
+    public void resetShootCooldown() {
+        shootCooldown = SHOOT_COOLDOWN;
     }
 
     /**
@@ -508,7 +512,7 @@ public class Person extends CapsuleObstacle {
      * @return true if the dude is actively firing.
      */
     public boolean isShooting() {
-        return isShooting && shootCooldown <= 0;
+        return isShooting;
     }
 
     /**
