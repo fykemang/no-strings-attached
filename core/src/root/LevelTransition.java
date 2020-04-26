@@ -12,16 +12,28 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
 import java.util.ArrayList;
 
+
 public class LevelTransition implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_TRANSITION = 5;
-    private static final String BK_FILE = "shared/background.png";
+    private static final String BK_FILE = "platform/background.png";
+    private static final String BUTTON = "shared/earthtile.png";
 //    private static final String CITY_FILE = "shared/city.png";
 //    private static final String SUBURB_FILE = "shared/suburbs.png";
 //    private static final String FOREST_FILE = "shared/forest.png";
@@ -30,18 +42,36 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 //    private static final String MUSIC_FILE = "platform/themoreyouknow.mp3";
 
     Texture background;
+    TextureRegion buttonTex;
     private AssetManager manager;
     private GameCanvas canvas;
+    private Stage stage;
 
     public LevelTransition(AssetManager manager, GameCanvas canvas) {
         this.manager = manager;
         this.canvas = canvas;
         this.levels = new ArrayList<>();
+        this.stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
         background = new Texture(BK_FILE);
+        buttonTex = new TextureRegion(manager.get(BUTTON, Texture.class));
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonTex);
         resize(canvas.getWidth(), canvas.getHeight());
+        ImageButton button = new ImageButton(myTexRegionDrawable);
+        //** Button text and style **//
+        button.setHeight(Gdx.graphics.getHeight()/3); //** Button Height **//
+        button.setWidth(Gdx.graphics.getWidth()/4); //** Button Width **//
+        button.setPosition(Gdx.graphics.getWidth()/2-button.getWidth()/2, Gdx.graphics.getHeight());
+        button.addListener(new InputListener() {
+                               public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                                   Gdx.app.log("my app", "Pressed"); //** Usually used to start Game, etc. **//
+                                   return true;
 
+                               }
+                           });
 
         Gdx.input.setInputProcessor(this);
+        stage.addActor(button);
         try {
             // Let ANY connected controller start the game.
             for (Controller controller : Controllers.getControllers()) {
@@ -202,7 +232,11 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     }
 
     private void draw() {
-
+          stage.draw();
+           canvas.begin();
+            canvas.drawBackground(background);
+            canvas.actStage(stage);
+            canvas.end();
     }
 
 
@@ -210,7 +244,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
 
     public void reset(GameCanvas canvas) {
-
+        this.canvas = canvas;
     }
 
 }

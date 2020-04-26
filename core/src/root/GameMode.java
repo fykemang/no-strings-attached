@@ -862,6 +862,9 @@ public class GameMode implements Screen {
             } else if (input.didRetreat()) {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
+            }else if (!player.isAlive()){
+                    listener.exitScreen(this,LevelTransition.INTO_TRANSITION);
+
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {

@@ -57,6 +57,8 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     private GameMode controller;
 
+    private LevelTransition transition;
+
     /**
      * Creates a new game from the configuration settings.
      * <p>
@@ -145,7 +147,7 @@ public class GDXRoot extends Game implements ScreenListener {
             loading.dispose();
             loading = null;
         } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME) {
-            controller.loadContent(manager, selector.getMetaData().getFilePath());
+            controller.loadContent(manager, selector.getMetaData().getFilePath() );
             controller.setScreenListener(this);
             controller.setCanvas(canvas);
             controller.reset();
@@ -155,6 +157,13 @@ public class GDXRoot extends Game implements ScreenListener {
             selector.reset(canvas);
             selector.setScreenListener(this);
             setScreen(selector);
+            controller.pause();
+            //5
+        }else if (screen == controller && exitCode == LevelTransition.INTO_TRANSITION){
+            canvas = new GameCanvas();
+            LevelTransition transition = new LevelTransition(manager, canvas);
+            transition.setScreenListener(this);
+            setScreen(transition);
             controller.pause();
         } else if (exitCode == GameMode.EXIT_QUIT) {
             Gdx.app.exit();
