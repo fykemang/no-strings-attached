@@ -32,6 +32,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private static final String SELECT_FILE = "ui/selector.png";
     private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
     private static final String LEVEL_METADATA = "levels/levels.json";
+    private static final String SELECTOR_FONT = "ui/blackjack.otf";
     /**
      * Reference to game.GameCanvas created by the root
      */
@@ -43,6 +44,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private Texture forest;
     private Texture mountain;
     private Texture selector;
+    private BitmapFont selectorFont;
     private themes theme = themes.none;
     private int city_level = 4;
     private int suburb_level = 9;
@@ -104,6 +106,10 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         selector = manager.get(SELECT_FILE, Texture.class);
         levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
     }
 
@@ -364,13 +370,10 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 break;
         }
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
-        BitmapFont font = generator.generateFont(parameter);
+
         for (int i = 0; i < buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
-            canvas.drawText(i + 1 + "", font, button.x, button.y);
+            canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
         }
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
