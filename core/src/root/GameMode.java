@@ -121,8 +121,13 @@ public class GameMode implements Screen {
      * Texture files for items
      */
     private static final String NEEDLE = "entities/needles.png";
-    private static final String YARN = "entities/skein.png";
+    private static final String YARN = "entities/yarn.png";
     private static final String BUTTON = "entities/buttons.png";
+    private static final String FABRIC_1 = "entities/fabric1.png";
+    private static final String FABRIC_2 = "entities/fabric2.png";
+    private static final String SPOOL = "entities/spool.png";
+    private static final String STUFFING = "entities/stuffing.png";
+
     /**
      * Texture files for baskets (progress bar)
      */
@@ -248,8 +253,10 @@ public class GameMode implements Screen {
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
-    private TextureRegion redYarnTexture;
-    private TextureRegion greyYarnTexture;
+    private TextureRegion fabric1Texture;
+    private TextureRegion fabric2Texture;
+    private TextureRegion spoolTexture;
+    private TextureRegion stuffingTexture;
     private TextureRegion basketEmptyTexture;
     private TextureRegion basketOneTexture;
     private TextureRegion basketTwoTexture;
@@ -426,6 +433,14 @@ public class GameMode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
+        manager.load(FABRIC_1, Texture.class);
+        assets.add(FABRIC_1);
+        manager.load(FABRIC_2, Texture.class);
+        assets.add(FABRIC_2);
+        manager.load(SPOOL, Texture.class);
+        assets.add(SPOOL);
+        manager.load(STUFFING, Texture.class);
+        assets.add(STUFFING);
         manager.load(BASKET_EMPTY, Texture.class);
         assets.add(BASKET_EMPTY);
         manager.load(BASKET_ONE, Texture.class);
@@ -628,15 +643,21 @@ public class GameMode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
+        fabric1Texture = createTexture(manager, FABRIC_1, false);
+        fabric2Texture = createTexture(manager, FABRIC_2, false);
+        spoolTexture = createTexture(manager, SPOOL, false);
+        stuffingTexture = createTexture(manager, STUFFING, false);
         itemTexture.add(buttonTexture);
         itemTexture.add(needleTexture);
         itemTexture.add(yarnTexture);
+        itemTexture.add(fabric1Texture);
+        itemTexture.add(fabric2Texture);
+        itemTexture.add(spoolTexture);
+        itemTexture.add(stuffingTexture);
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
         basketOneTexture = createTexture(manager, BASKET_ONE, false);
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
-        redYarnTexture = createTexture(manager, UI_RedYarn, false);
-        greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         citydoor = createTexture(manager, CITYGATE, false);
         bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
 
