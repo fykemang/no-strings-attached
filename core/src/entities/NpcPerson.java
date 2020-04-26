@@ -6,6 +6,7 @@ public class NpcPerson extends Person {
 
     private final Vector2 leftAttachPt;
     private final Vector2 rightAttachPt;
+    private String type;
     private NpcPerson couple;
     public boolean left;
     public boolean flip;
@@ -29,9 +30,18 @@ public class NpcPerson extends Person {
         this.leftAttachPt = new Vector2(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
         this.rightAttachPt = new Vector2(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
         this.left = left;
+        this.type = "";
         flip = false;
         this.setName("npc");
 
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     public void setCouple(NpcPerson couple) {

@@ -3,10 +3,7 @@ package root;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
-import entities.Blob;
-import entities.Item;
-import entities.NpcRope;
-import entities.Person;
+import entities.*;
 import obstacle.Obstacle;
 
 /**
@@ -60,6 +57,20 @@ public class CollisionController implements ContactListener {
                 }
                 bd2.markRemoved(true);
             }
+
+            if (bd1 == player && bd2.getName().contains("npc")) {
+                NpcPerson n = (NpcPerson) bd2;
+                player.setOnNpc(n);
+                player.setIsOnNpc(true);
+            }
+            else {
+                player.setIsOnNpc(false);
+            }
+
+//            if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
+//                player.setCanCut(true);
+//                player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
+//            }
 
             if (bd1 == player && bd2.getName().equals(Blob.BLOB_NAME)) {
                 Vector2 norm = ((Blob) bd2).getNorm();

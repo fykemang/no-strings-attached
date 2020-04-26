@@ -34,10 +34,7 @@ import entities.*;
 import obstacle.Obstacle;
 import util.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Gameplay specific controller for the game.
@@ -93,21 +90,28 @@ public class GameMode implements Screen {
      * Player animations
      */
     private static final String PLAYER_IDLE_ANIMATION = "player/player_idle_animation.png";
-    private static final String PLAYER_JUMP_ANIMATION = "player/player_jump_animation.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
     private static final String PLAYER_SWING_ANIMATION = "player/player_swing_animation.png";
-    private static final String PLAYER_JUMP = "player/player_jump.png";
+    private static final String PLAYER_JUMP_ANIMATION = "player/player_jump_animation.png";
     private static final String PLAYER_FALL = "player/player_fall.png";
+    private static final String PLAYER_ENTER = "player/player_enter.png";
+    private static final String PLAYER_EXIT = "player/player_exit.png";
 
     /**
      * NPC animations
      */
     private static final String NPC_COZY = "entities/cozy_idle.png";
-    private static final String NPC_CHEESE = "entities/cheese_npc.png";
+    private static final String NPC_CHEESE = "entities/cheese_idle.png";
     private static final String NPC_NERVY = "entities/nervy_idle.png";
     private static final String NPC_SPIKY = "entities/spiky_idle.png";
-    private static final String NPC_HEYO = "entities/heyo_npc.png";
-    private static final String NPC_WELCOME = "entities/welcome_npc.png";
+    private static final String NPC_HEYO = "entities/heyo_idle.png";
+    private static final String NPC_WELCOME = "entities/welcome_idle.png";
+    private static final String NPC_COZY_SHOCK = "entities/cozy_shock.png";
+    private static final String NPC_CHEESE_SHOCK = "entities/cheese_shock.png";
+    private static final String NPC_NERVY_SHOCK = "entities/nervy_shock.png";
+    private static final String NPC_SPIKY_SHOCK = "entities/spiky_shock.png";
+    private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
+    private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
 
     /**
      * Texture file for the exit door
@@ -222,7 +226,6 @@ public class GameMode implements Screen {
     /**
      * Texture assets for character avatar
      */
-    private TextureRegion playerJumpTexture;
     private TextureRegion playerFallTexture;
     /**
      * Texture assets for NPCs
@@ -233,6 +236,12 @@ public class GameMode implements Screen {
     private TextureRegion npcHeyoTexture;
     private TextureRegion npcSpikyTexture;
     private TextureRegion npcWelcomeTexture;
+    private TextureRegion npcCozyShockTexture;
+    private TextureRegion npcCheeseShockTexture;
+    private TextureRegion npcNervyShockTexture;
+    private TextureRegion npcHeyoShockTexture;
+    private TextureRegion npcSpikyShockTexture;
+    private TextureRegion npcWelcomeShockTexture;
     /**
      * Texture assets for items
      */
@@ -248,7 +257,9 @@ public class GameMode implements Screen {
     /**
      * List of all unique NPC textures
      */
-    private final ArrayList<TextureRegion> npcs = new ArrayList<>();
+    private final String[] npcTypes = new String[]{"cheese", "cozy", "heyo", "nervy", "spiky", "welcome"};
+    private final Map<String, TextureRegion>  npcs;
+    private final Map<String, TextureRegion>  npcShock;
     /**
      * List of all unique item textures
      */
@@ -263,7 +274,24 @@ public class GameMode implements Screen {
     private FilmStrip playerIdleAnimation;
     private FilmStrip playerSwingAnimation;
     private FilmStrip playerWalkingAnimation;
-    private FilmStrip playerJumpingAnimation;
+    private FilmStrip playerEnterAnimation;
+    private FilmStrip playerExitAnimation;
+    private FilmStrip playerJumpAnimation;
+    /**
+     * FilmStrip objects to show NPC animations
+     */
+    private FilmStrip npcCozyIdleAnimation;
+    private FilmStrip npcCozyShockAnimation;
+    private FilmStrip npcCheeseIdleAnimation;
+    private FilmStrip npcCheeseShockAnimation;
+    private FilmStrip npcHeyoIdleAnimation;
+    private FilmStrip npcHeyoShockAnimation;
+    private FilmStrip npcNervyIdleAnimation;
+    private FilmStrip npcNervyShockAnimation;
+    private FilmStrip npcSpikyIdleAnimation;
+    private FilmStrip npcSpikyShockAnimation;
+    private FilmStrip npcWelcomeIdleAnimation;
+    private FilmStrip npcWelcomeShockAnimation;
     /**
      * Texture asset for the bullet
      */
@@ -365,6 +393,8 @@ public class GameMode implements Screen {
         debug = false;
         active = false;
         countdown = -1;
+        this.npcs = new HashMap<String, TextureRegion>();
+        this.npcShock = new HashMap<String, TextureRegion>();
     }
 
     /**
@@ -382,30 +412,12 @@ public class GameMode implements Screen {
             return;
         }
         platformAssetState = AssetState.LOADING;
-        manager.load(PLAYER_JUMP, Texture.class);
-        assets.add(PLAYER_JUMP);
-        manager.load(PLAYER_FALL, Texture.class);
-        assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
         assets.add(BARRIER_FILE);
-        manager.load(PLAYER_SWING_ANIMATION, Texture.class);
-        assets.add(PLAYER_SWING_ANIMATION);
-        manager.load(NPC_CHEESE, Texture.class);
-        assets.add(NPC_CHEESE);
         manager.load(UI_GreyYarn, Texture.class);
         assets.add(UI_GreyYarn);
         manager.load(UI_RedYarn, Texture.class);
         assets.add(UI_RedYarn);
-        manager.load(NPC_COZY, Texture.class);
-        assets.add(NPC_COZY);
-        manager.load(NPC_NERVY, Texture.class);
-        assets.add(NPC_NERVY);
-        manager.load(NPC_SPIKY, Texture.class);
-        assets.add(NPC_SPIKY);
-        manager.load(NPC_HEYO, Texture.class);
-        assets.add(NPC_HEYO);
-        manager.load(NPC_WELCOME, Texture.class);
-        assets.add(NPC_WELCOME);
         manager.load(CITYGATE, Texture.class);
         assets.add(CITYGATE);
         manager.load(NEEDLE, Texture.class);
@@ -462,8 +474,43 @@ public class GameMode implements Screen {
         assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
         assets.add(PLAYER_WALKING_ANIMATION_FILE);
+        manager.load(PLAYER_ENTER, Texture.class);
+        assets.add(PLAYER_ENTER);
+        manager.load(PLAYER_EXIT, Texture.class);
+        assets.add(PLAYER_EXIT);
         manager.load(PLAYER_JUMP_ANIMATION, Texture.class);
         assets.add(PLAYER_JUMP_ANIMATION);
+        manager.load(PLAYER_FALL, Texture.class);
+        assets.add(PLAYER_FALL);
+        manager.load(PLAYER_SWING_ANIMATION, Texture.class);
+        assets.add(PLAYER_SWING_ANIMATION);
+
+        // Load NPC Animations
+        manager.load(NPC_CHEESE, Texture.class);
+        assets.add(NPC_CHEESE);
+        manager.load(NPC_CHEESE_SHOCK, Texture.class);
+        assets.add(NPC_CHEESE_SHOCK);
+        manager.load(NPC_COZY, Texture.class);
+        assets.add(NPC_COZY);
+        manager.load(NPC_COZY_SHOCK, Texture.class);
+        assets.add(NPC_COZY_SHOCK);
+        manager.load(NPC_NERVY, Texture.class);
+        assets.add(NPC_NERVY);
+        manager.load(NPC_NERVY_SHOCK, Texture.class);
+        assets.add(NPC_NERVY_SHOCK);
+        manager.load(NPC_SPIKY, Texture.class);
+        assets.add(NPC_SPIKY);
+        manager.load(NPC_SPIKY_SHOCK, Texture.class);
+        assets.add(NPC_SPIKY_SHOCK);
+        manager.load(NPC_HEYO, Texture.class);
+        assets.add(NPC_HEYO);
+        manager.load(NPC_HEYO_SHOCK, Texture.class);
+        assets.add(NPC_HEYO_SHOCK);
+        manager.load(NPC_WELCOME, Texture.class);
+        assets.add(NPC_WELCOME);
+        manager.load(NPC_WELCOME_SHOCK, Texture.class);
+        assets.add(NPC_WELCOME_SHOCK);
+
 
         // Load Sound Assets
         manager.load(JUMP_FILE, Sound.class);
@@ -547,15 +594,37 @@ public class GameMode implements Screen {
 
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
-        playerJumpTexture = createTexture(manager, PLAYER_JUMP, false);
+        playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21);
+        playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15);
+        playerJumpAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
-        playerJumpingAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
-        npcCheeseTexture = createTexture(manager, NPC_CHEESE, false);
+        npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33);
+        npcHeyoTexture = createFilmStrip(manager, NPC_HEYO, 1, 4, 4);
+        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
+        npcWelcomeTexture = createFilmStrip(manager, NPC_WELCOME, 1, 7, 7);
+        npcHeyoShockTexture = createFilmStrip(manager, NPC_HEYO_SHOCK, 1, 9, 9);
+        npcCheeseShockTexture = createFilmStrip(manager, NPC_CHEESE_SHOCK, 1, 9, 9);
+        npcCozyShockTexture = createFilmStrip(manager, NPC_COZY_SHOCK, 1, 12, 12);
+        npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21);
+        npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17);
+        npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13);
+        npcs.put("cheese", npcCheeseTexture);
+        npcs.put("cozy", npcCozyTexture);
+        npcs.put("nervy", npcNervyTexture);
+        npcs.put("heyo", npcHeyoTexture);
+        npcs.put("spiky", npcSpikyTexture);
+        npcs.put("welcome", npcWelcomeTexture);
+        npcShock.put("cheese", npcCheeseShockTexture);
+        npcShock.put("cozy", npcCozyShockTexture);
+        npcShock.put("nervy", npcNervyShockTexture);
+        npcShock.put("heyo", npcHeyoShockTexture);
+        npcShock.put("spiky", npcSpikyShockTexture);
+        npcShock.put("welcome", npcWelcomeShockTexture);
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
@@ -566,20 +635,10 @@ public class GameMode implements Screen {
         basketOneTexture = createTexture(manager, BASKET_ONE, false);
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
-        npcHeyoTexture = createTexture(manager, NPC_HEYO, false);
-        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16);
-        npcWelcomeTexture = createTexture(manager, NPC_WELCOME, false);
         redYarnTexture = createTexture(manager, UI_RedYarn, false);
         greyYarnTexture = createTexture(manager, UI_GreyYarn, false);
         citydoor = createTexture(manager, CITYGATE, false);
         bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
-
-        npcs.add(npcCheeseTexture);
-        npcs.add(npcCozyTexture);
-        npcs.add(npcNervyTexture);
-        npcs.add(npcHeyoTexture);
-        npcs.add(npcSpikyTexture);
-        npcs.add(npcWelcomeTexture);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -710,7 +769,6 @@ public class GameMode implements Screen {
         Vector2 playerPos = testLevel.getPlayerPos();
         List<Tile> tiles = testLevel.getTiles();
         List<Tile> spikes = testLevel.getSpikes();
-        List<float[]> couples = testLevel.getCouples();
         items = (ArrayList<float[]>) testLevel.getItems();
         List<NpcData> npcData = testLevel.getNpcData();
 
@@ -821,11 +879,16 @@ public class GameMode implements Screen {
     public void createCouple(NpcData curr, NpcData next, int id) {
         float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
         float[] points = new float[]{0f, 0f, 0f, .5f, .5f, .5f, .5f, 0f};
-        int n1 = rand.nextInt(npcs.size());
-        int n2 = rand.nextInt(npcs.size());
-        while (n2 == n1) n2 = rand.nextInt(npcs.size());
-        TextureRegion randTex1 = npcs.get(n1);
-        TextureRegion randTex2 = npcs.get(n2);
+        int n1 = rand.nextInt(npcTypes.length);
+        int n2 = rand.nextInt(npcTypes.length);
+        while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
+        String randType1 = npcTypes[n1];
+        String randType2 = npcTypes[n2];
+        System.out.print(randType1 + randType2);
+        TextureRegion randTex1 = npcs.get(randType1);
+        System.out.print(randTex1);
+        System.out.print(npcs);
+        TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
         if (curr.isSliding()) {
@@ -840,7 +903,7 @@ public class GameMode implements Screen {
         } else {
             rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, tileTexture);
         }
-        Couple couple = new Couple(x1, y1, x2, y2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
+        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
@@ -958,7 +1021,7 @@ public class GameMode implements Screen {
 
 
             if (!player.isGrounded() && !player.isAttached()) {
-                player.setTexture(playerJumpingAnimation);
+                player.setTexture(playerJumpAnimation);
             } else if (player.isAttached()) {
                 player.setTexture(playerSwingAnimation);
             } else if (player.isFalling()) {
@@ -967,6 +1030,18 @@ public class GameMode implements Screen {
                 player.setTexture(playerWalkingAnimation);
             } else if (player.isGrounded()) {
                 player.setTexture(playerIdleAnimation);
+            }
+
+            NpcPerson onNpc = player.getOnNpc();
+            if (onNpc != null) {
+                String type = onNpc.getType();
+                if (player.isOnNpc()) {
+                    TextureRegion shockTex = npcShock.get(type);
+                    onNpc.setTexture(shockTex);
+                } else {
+                    TextureRegion normalTex = npcs.get(type);
+                    onNpc.setTexture(normalTex);
+                }
             }
 
 
@@ -985,6 +1060,7 @@ public class GameMode implements Screen {
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                 for (NpcRope r : ropes) {
+                                    r.deactivatePhysics(world);
                                     r.markRemoved(true);
                                 }
                             }
