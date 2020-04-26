@@ -317,7 +317,7 @@ public class GameMode implements Screen {
     /**
      * Files for region tiles
      */
-    private static final String CITY_TILE_FILE = "entities/city-tile.png";
+    private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
     private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";

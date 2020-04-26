@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
@@ -32,46 +33,69 @@ import java.util.ArrayList;
 
 public class LevelTransition implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_TRANSITION = 5;
-    private static final String BK_FILE = "platform/background.png";
-    private static final String BUTTON = "shared/earthtile.png";
-//    private static final String CITY_FILE = "shared/city.png";
-//    private static final String SUBURB_FILE = "shared/suburbs.png";
-//    private static final String FOREST_FILE = "shared/forest.png";
-//    private static final String MOUNTAIN_FILE = "shared/mountains.png";
-//    private static final String SELECT_FILE = "shared/selector.png";
-//    private static final String MUSIC_FILE = "platform/themoreyouknow.mp3";
+    private static final String BK_FILE = "ui/sky.png";
+    private static final String BUTTON = "ui/next.png";
+    private static final String FAIL = "ui/yarnie-fail.png";
+    private static final String WIN = "ui/yarnie-win.png";
+    private static final String REPLAY = "ui/replay.png";
+    private static final String MEAN_MENU = "ui/main-menu.png";
+
 
     Texture background;
-    TextureRegion buttonTex;
+    Texture yarnie;
+    TextureRegion buttonNextTex;
     private AssetManager manager;
     private GameCanvas canvas;
     private Stage stage;
+    private ImageButton nextButton;
+    private ImageButton replaybutton;
+    private ImageButton mainMenu;
+    private boolean levelComplete;
 
-    public LevelTransition(AssetManager manager, GameCanvas canvas) {
+    public LevelTransition(AssetManager manager, GameCanvas canvas, boolean win) {
+        this.levelComplete = win;
         this.manager = manager;
         this.canvas = canvas;
         this.levels = new ArrayList<>();
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         background = new Texture(BK_FILE);
-        buttonTex = new TextureRegion(manager.get(BUTTON, Texture.class));
-        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonTex);
-        resize(canvas.getWidth(), canvas.getHeight());
-        ImageButton button = new ImageButton(myTexRegionDrawable);
-        //** Button text and style **//
-        button.setHeight(Gdx.graphics.getHeight()/3); //** Button Height **//
-        button.setWidth(Gdx.graphics.getWidth()/4); //** Button Width **//
-        button.setPosition(Gdx.graphics.getWidth()/2-button.getWidth()/2, Gdx.graphics.getHeight());
-        button.addListener(new InputListener() {
-                               public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                                   Gdx.app.log("my app", "Pressed"); //** Usually used to start Game, etc. **//
-                                   return true;
+        yarnie = win?new Texture(WIN): new Texture(FAIL);
+        Texture buttonNext = new Texture(BUTTON) ;
+        nextButton = createButton(buttonNext);
+        nextButton.setPosition(canvas.getWidth()*5/6-nextButton.getWidth()/2, canvas.getHeight()/6);
+        nextButton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("next");
+            };
+        });
+        stage.addActor(nextButton);
 
-                               }
-                           });
+        Texture buttonReplay = new Texture(REPLAY) ;
+        replaybutton = createButton(buttonReplay);
+        replaybutton.setPosition(canvas.getWidth()/6-replaybutton.getWidth()/2, canvas.getHeight()/6);
+        replaybutton.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("replay");
+            };
+        });
+        stage.addActor(replaybutton);
 
-        Gdx.input.setInputProcessor(this);
-        stage.addActor(button);
+        Texture buttonMain = new Texture(MEAN_MENU) ;
+        mainMenu = createButton(buttonMain);
+        mainMenu.setPosition(canvas.getWidth()/2-mainMenu.getWidth()/2, canvas.getHeight()/6);
+        mainMenu.addListener( new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("main");
+            };
+        });
+        stage.addActor(mainMenu);
+
+        Gdx.input.setInputProcessor(stage);
+
         try {
             // Let ANY connected controller start the game.
             for (Controller controller : Controllers.getControllers()) {
@@ -234,12 +258,22 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private void draw() {
           stage.draw();
            canvas.begin();
-            canvas.drawBackground(background);
+//           System.out.println(background.getWidth());
+            canvas.drawBackground(background, canvas.getWidth()/2, canvas.getHeight()/2,
+                    canvas.getWidth()/2, canvas.getHeight()/2, Color.GRAY);
+            canvas.draw(yarnie, canvas.getWidth()/2, canvas.getHeight()/2);
             canvas.actStage(stage);
             canvas.end();
     }
 
 
+    private ImageButton createButton(Texture texture){
+        TextureRegion buttonRegion = new TextureRegion(texture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonRegion);
+        ImageButton button = new ImageButton(myTexRegionDrawable);
+
+        return button;
+}
 
 
 

@@ -313,6 +313,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 canvas.drawBackground(forest);
                 break;
             case forest:
+                canvas.drawBackground(city);
                 canvas.drawBackground(mountain);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
