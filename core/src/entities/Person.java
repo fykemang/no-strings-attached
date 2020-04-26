@@ -111,6 +111,10 @@ public class Person extends CapsuleObstacle {
     private boolean isAlive;
 
     private boolean isTrampolining;
+
+    private boolean isOnNpc;
+
+    private NpcPerson onNpc;
     /**
      * Whether our feet are on the ground
      */
@@ -326,12 +330,30 @@ public class Person extends CapsuleObstacle {
         isJumping = false;
         isWalking = false;
         isTrampolining = false;
+        isOnNpc = false;
+        onNpc = null;
         this.sensorName = sensorName;
         this.inventory = new ArrayList<>();
         trampolineForce = new Vector2();
         isAttached = false;
         jumpCooldown = 0;
         setName(name);
+    }
+
+    public NpcPerson getOnNpc() {
+        return onNpc;
+    }
+
+    public void setOnNpc(NpcPerson n) {
+        this.onNpc = n;
+    }
+
+    public void setIsOnNpc(boolean b) {
+        this.isOnNpc = b;
+    }
+
+    public boolean isOnNpc() {
+        return isOnNpc;
     }
 
     public boolean isAttached() {
