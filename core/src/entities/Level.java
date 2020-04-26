@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import platform.NpcData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +24,18 @@ public class Level implements Json.Serializable {
     private List<TextureRegion> slight;
     private List<TextureRegion> moving;
 
-    private List<NpcData> npcData;
-    private List<float[]> couples;
-    private List<float[]> items;
+    private final List<NpcData> npcData;
+    private final List<float[]> couples;
+    private final List<float[]> items;
 
     public List<TextureRegion> getStillBackgroundTexture() {
         return still;
     }
+
     public List<TextureRegion> getSlightBackgroundTexture() {
         return slight;
     }
+
     public List<TextureRegion> getMovingBackgroundTexture() {
         return moving;
     }

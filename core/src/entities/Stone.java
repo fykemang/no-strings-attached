@@ -42,11 +42,11 @@ public class Stone extends PolygonObstacle {
     }
 
 
-    public Stone(float[] points, float x, float y, float width, float height, String type,  float scale) {
+    public Stone(float[] points, float x, float y, float width, float height, String type, float scale) {
         super(points, x, y);
         this.scale = scale;
         this.type = type;
-        switch (type){
+        switch (type) {
             case "mountain":
                 this.height = height + 0.6f;
                 this.width = width + 0.6f;
@@ -173,24 +173,24 @@ public class Stone extends PolygonObstacle {
                     }
                 }
             }
-        }else {
+        } else {
             if (height <= 2 && width <= 2) {
-             float firstx = getX() * drawScale.x;
-              float  firsty = getY() * drawScale.y;
+                float firstx = getX() * drawScale.x;
+                float firsty = getY() * drawScale.y;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             }
 
-           float scy = height*drawScale.y /texture.getRegionHeight();
-            float  num = (int) (width * drawScale.x /(texture.getRegionWidth()*scy));
-           float  dist = width * drawScale.x / num;
-           float  scx = dist / (texture.getRegionWidth()*scy);
-           num = num == 0 ? 1 : num;
+            float scy = height * drawScale.y / texture.getRegionHeight();
+            float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
+            float dist = width * drawScale.x / num;
+            float scx = dist / (texture.getRegionWidth() * scy);
+            num = num == 0 ? 1 : num;
 
             for (int i = 0; i < num; i++)
                 canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                       y * drawScale.y, getAngle(), scx*scy, scy);
+                        y * drawScale.y, getAngle(), scx * scy, scy);
 
 
         }

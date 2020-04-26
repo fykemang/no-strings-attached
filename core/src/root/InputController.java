@@ -14,8 +14,6 @@ package root;/*
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import util.XBox360Controller;
@@ -56,6 +54,11 @@ public class InputController {
      */
     private boolean resetPressed;
     private boolean resetPrevious;
+    /**
+     * Whether the shift button was pressed.
+     */
+    private boolean shiftPressed;
+    private boolean shiftPrevious;
     /**
      * Whether the button to advanced worlds was pressed.
      */
@@ -184,7 +187,7 @@ public class InputController {
      * This is a sustained button. It will returns true as long as the player
      * holds it down.
      *
-     * @return true if the secondary action button was pressed.
+     * @return true if the tertiary action button was pressed.
      */
     public boolean didTertiary() {
         return tertiaryPressed;
@@ -242,12 +245,12 @@ public class InputController {
      * if it exists.  Otherwise, it falls back to the keyboard control.
      */
     public InputController() {
-        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
-        int xHotspot = pixMap.getWidth() / 2;
-        int yHotspot = pixMap.getHeight() / 2;
-        Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);
-        Gdx.graphics.setCursor(cursor);
-        pixMap.dispose();
+//        Pixmap pixMap = new Pixmap(Gdx.files.internal("platform/crosshair.png"));
+//        int xHotspot = pixMap.getWidth() / 2;
+//        int yHotspot = pixMap.getHeight() / 2;
+//        Cursor cursor = Gdx.graphics.newCursor(pixMap, xHotspot, yHotspot);
+//        Gdx.graphics.setCursor(cursor);
+//        pixMap.dispose();
         // If we have a game-pad for id, then use it.
         xbox = new XBox360Controller(0);
         crosshair = new Vector2();
@@ -274,6 +277,7 @@ public class InputController {
         exitPrevious = exitPressed;
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
+        shiftPrevious = shiftPressed;
 
         // Check to see if a GamePad is connected
         if (xbox.isConnected()) {
@@ -335,7 +339,7 @@ public class InputController {
         // Give priority to gamepad results
         resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
         debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.M));
-        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.W));
+        primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.UP));
         secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Input.Keys.SPACE));
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
@@ -343,23 +347,26 @@ public class InputController {
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             horizontal += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             horizontal -= 1.0f;
         }
 
         vertical = (secondary ? vertical : 0.0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             vertical += 1.0f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             vertical -= 1.0f;
         }
 
+        shiftPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+        tertiaryPressed = shiftPressed;
+
         // Mouse results
-        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+//        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         crosshair.set(Gdx.input.getX(), Gdx.input.getY());
         crosshair.scl(1 / scale.x, -1 / scale.y);
         crosshair.y += bounds.height;

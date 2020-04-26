@@ -3,9 +3,11 @@ CS3152 Project
 
 ## Controls
 
-Movement - WASD
+Movement - Arrow Keys
 
-Shoot Bullet - Left Click
+Swing from NPCs - Hold Shift
+
+Release rope from NPC - Release Shift
 
 Cut - Space Bar
 
