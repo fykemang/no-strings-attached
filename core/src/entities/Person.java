@@ -142,7 +142,7 @@ public class Person extends CapsuleObstacle {
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
-
+    private boolean onMovingPlatform;
 
     /**
      * Which direction is the character facing
@@ -511,6 +511,11 @@ public class Person extends CapsuleObstacle {
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
+        }
+        if (onMovingPlatform){
+            setFriction(100f);
+        }else{
+            setFriction(0f);
         }
 
         super.update(dt);
