@@ -87,7 +87,7 @@ public class GameMode extends Mode implements Screen {
     // time after game ends
     private float timeSeconds = 0f;
     // wait time
-    private float period = 1f;
+    private float period = 2f;
 
 
     /**
