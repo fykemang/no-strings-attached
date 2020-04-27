@@ -68,8 +68,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     private FilmStrip animatedBkg;
 
-    private Music music;
-    private Sound clickSound;
+    private final Music music;
+    private final Sound clickSound;
 
     /**
      * Play button to display when done
@@ -114,57 +114,57 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Default budget for asset loader (do nothing but load 60 fps)
      */
-    private static int DEFAULT_BUDGET = 15;
+    private static final int DEFAULT_BUDGET = 15;
     /**
      * Standard window size (for scaling)
      */
-    private static int STANDARD_WIDTH = 800;
+    private static final int STANDARD_WIDTH = 800;
     /**
      * Standard window height (for scaling)
      */
-    private static int STANDARD_HEIGHT = 700;
+    private static final int STANDARD_HEIGHT = 700;
     /**
      * Ratio of the bar width to the screen
      */
-    private static float BAR_WIDTH_RATIO = 0.66f;
+    private static final float BAR_WIDTH_RATIO = 0.66f;
     /**
      * Ration of the bar height to the screen
      */
-    private static float BAR_HEIGHT_RATIO = 0.25f;
+    private static final float BAR_HEIGHT_RATIO = 0.25f;
     /**
      * Height of the progress bar
      */
-    private static int PROGRESS_HEIGHT = 30;
+    private static final int PROGRESS_HEIGHT = 30;
     /**
      * Width of the rounded cap on left or right
      */
-    private static int PROGRESS_CAP = 15;
+    private static final int PROGRESS_CAP = 15;
     /**
      * Width of the middle portion in texture atlas
      */
-    private static int PROGRESS_MIDDLE = 200;
+    private static final int PROGRESS_MIDDLE = 200;
     /**
      * Amount to scale the play button
      */
-    private static float BUTTON_SCALE = 0.9f;
+    private static final float BUTTON_SCALE = 0.9f;
 
     /**
      * Start button for XBox controller on Windows
      */
-    private static int WINDOWS_START = 7;
+    private static final int WINDOWS_START = 7;
     /**
      * Start button for XBox controller on Mac OS X
      */
-    private static int MAC_OS_X_START = 4;
+    private static final int MAC_OS_X_START = 4;
 
     /**
      * AssetManager to be loading in the background
      */
-    private AssetManager manager;
+    private final AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
      */
-    private GameCanvas canvas;
+    private final GameCanvas canvas;
     /**
      * Listener that will update the player mode when we are done
      */
@@ -214,7 +214,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Support for the X-Box start button in place of play button
      */
-    private int startButton;
+    private final int startButton;
     /**
      * Whether or not this player mode is still active
      */

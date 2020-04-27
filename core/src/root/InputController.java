@@ -105,11 +105,11 @@ public class InputController {
     /**
      * The crosshair position (for raddoll)
      */
-    private Vector2 crosshair;
+    private final Vector2 crosshair;
     /**
      * The crosshair cache (for using as a return value)
      */
-    private Vector2 crosscache;
+    private final Vector2 crosscache;
     /**
      * For the gamepad crosshair control
      */

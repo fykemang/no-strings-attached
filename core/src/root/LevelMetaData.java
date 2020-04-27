@@ -4,7 +4,7 @@ public class LevelMetaData {
 
     private boolean isComplete;
     private String filePath;
-    private String background;
+    private final String background;
 
     public LevelMetaData(boolean isCompleted, String filePath, String background) {
         this.isComplete = isCompleted;

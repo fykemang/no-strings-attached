@@ -87,7 +87,7 @@ public class GameMode extends Mode implements Screen {
     // time after game ends
     private float timeSeconds = 0f;
     // wait time
-    private float period = 2f;
+    private final float period = 2f;
 
 
     /**
@@ -376,7 +376,7 @@ public class GameMode extends Mode implements Screen {
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
     private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
+    //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-layer2.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-layer3.png"};
     private final String[] MT_BKG_FILES_LAYER_A = new String[]{"background/sky-1.png"};
@@ -1055,10 +1055,10 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
-                    if (timeSeconds > period) {
-                        timeSeconds = 0;
-                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
-                    }
+                if (timeSeconds > period) {
+                    timeSeconds = 0;
+                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                }
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {
@@ -1126,7 +1126,7 @@ public class GameMode extends Mode implements Screen {
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
-        if (player.won()){
+        if (player.won()) {
 //            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
