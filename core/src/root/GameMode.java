@@ -149,17 +149,15 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String BULLET_FILE = "entities/bullet.png";
     /**
-     * The sound file for a jump
+     * The sound effects
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
-    /**
-     * The sound file for a bullet fire
-     */
     private static final String PEW_FILE = "sounds/pew.mp3";
-    /**
-     * The sound file for a bullet collision
-     */
     private static final String POP_FILE = "sounds/plop.mp3";
+    private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
+    private static final String WIN_FILE = "sounds/win.mp3";
+    private static final String LOSE_FILE = "sounds/lose.mp3";
+    private static final String CLICK_FILE = "sounds/click.mp3";
     /**
      * The folder with all levels
      */
@@ -341,16 +339,22 @@ public class GameMode extends Mode implements Screen {
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
-
-
     /**
      * Music object played in the game
      */
     private Music music;
     /**
+     * Sound objects played in the game
+     */
+    private Sound jumpSound;
+    private Sound collectSound;
+    private Sound loseSound;
+    private Sound clickSound;
+    private Sound winSound;
+
+    /**
      * Files for region tiles
      */
-
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
     private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
@@ -372,6 +376,9 @@ public class GameMode extends Mode implements Screen {
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
     private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
+//    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
+//    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-layer2.png"};
+//    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-layer3.png"};
     private final String[] MT_BKG_FILES_LAYER_A = new String[]{"background/sky-1.png"};
     private final String[] MT_BKG_FILES_LAYER_B = new String[]{"background/sky-2.png", "background/sky-3.png", "background/sky-4.png"};
     private final String[] MT_BKG_FILES_LAYER_C = new String[]{};
@@ -569,6 +576,10 @@ public class GameMode extends Mode implements Screen {
         loadAsset(JUMP_FILE, Sound.class, manager);
         loadAsset(PEW_FILE, Sound.class, manager);
         loadAsset(POP_FILE, Sound.class, manager);
+        loadAsset(COLLECT_FILE, Sound.class, manager);
+        loadAsset(WIN_FILE, Sound.class, manager);
+        loadAsset(LOSE_FILE, Sound.class, manager);
+        loadAsset(CLICK_FILE, Sound.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
@@ -723,6 +734,15 @@ public class GameMode extends Mode implements Screen {
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, PEW_FILE);
         sounds.allocate(manager, POP_FILE);
+        sounds.allocate(manager, COLLECT_FILE);
+        sounds.allocate(manager, WIN_FILE);
+        sounds.allocate(manager, LOSE_FILE);
+        sounds.allocate(manager, CLICK_FILE);
+        jumpSound = manager.get(JUMP_FILE);
+        collectSound = manager.get(COLLECT_FILE);
+        winSound = manager.get(WIN_FILE);
+        loseSound = manager.get(LOSE_FILE);
+        clickSound = manager.get(CLICK_FILE);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -907,7 +927,6 @@ public class GameMode extends Mode implements Screen {
         gate.setDrawScale(scale);
         gate.setName("gate");
         addObject(gate);
-
     }
 
     public void createSpike(float[] points, float x, float y, String direction, String name, float sc, TextureRegion tex) {
@@ -1036,10 +1055,10 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
-                if (timeSeconds > period) {
-                    timeSeconds = 0;
-                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
-                }
+                    if (timeSeconds > period) {
+                        timeSeconds = 0;
+                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                    }
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {
@@ -1107,8 +1126,8 @@ public class GameMode extends Mode implements Screen {
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
-
-        if (player.won()) {
+        if (player.won()){
+//            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
@@ -1642,3 +1661,4 @@ public class GameMode extends Mode implements Screen {
         PLAYING, PAUSED
     }
 }
+
