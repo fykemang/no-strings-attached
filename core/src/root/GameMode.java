@@ -157,7 +157,7 @@ public class GameMode extends Mode implements Screen {
     private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
     private static final String WIN_FILE = "sounds/win.mp3";
     private static final String LOSE_FILE = "sounds/lose.mp3";
-    private static final String CLICK_FILE = "sounds/menuclick.mp3";
+    private static final String CLICK_FILE = "sounds/click.mp3";
     /**
      * The folder with all levels
      */
@@ -929,7 +929,6 @@ public class GameMode extends Mode implements Screen {
         gate.setDrawScale(scale);
         gate.setName("gate");
         addObject(gate);
-
     }
 
     public void createSpike(float[] points, float x, float y, String direction, String name, float sc, TextureRegion tex) {
@@ -1054,7 +1053,8 @@ public class GameMode extends Mode implements Screen {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
             }else if (!player.isAlive() || player.won()){
-                    timeSeconds += Gdx.graphics.getRawDeltaTime();
+//                loseSound.play(0.5f);
+                timeSeconds += Gdx.graphics.getRawDeltaTime();
                     if (timeSeconds > period) {
                         timeSeconds = 0;
                         listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
@@ -1107,7 +1107,7 @@ public class GameMode extends Mode implements Screen {
         player.setCollectedAll(items.size() == player.getInventory().size());
 
         if (player.won()){
-            winSound.play();
+//            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
@@ -1226,7 +1226,6 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setEnd(targetPos, false);
             }
         }else{
-            loseSound.play();
             player.setTexture(playerDeathAnimation);
         }
 
