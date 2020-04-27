@@ -8,34 +8,34 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import entities.Level;
+import entities.LevelMetadata;
 
 
 /**
  * Responsible for loading in JSON text files
  * which each represent a level
  */
-public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.LevelLoaderParameters> {
-    private Json json;
-    private Level level;
+public class LevelLoader extends AsynchronousAssetLoader<LevelMetadata, LevelLoader.LevelLoaderParameters> {
+    private final Json json;
+    private LevelMetadata level;
 
     public LevelLoader(FileHandleResolver resolver) {
         super(resolver);
         json = new Json();
     }
 
-    public Level getLoadedLevel() {
+    public LevelMetadata getLoadedLevel() {
         return level;
     }
 
     @Override
     public void loadAsync(AssetManager manager, String fileName, FileHandle file, LevelLoaderParameters parameter) {
-        level = json.fromJson(Level.class, file);
+        level = json.fromJson(LevelMetadata.class, file);
     }
 
     @Override
-    public Level loadSync(AssetManager manager, String fileName, FileHandle file, LevelLoaderParameters parameter) {
-        Level level = this.level;
+    public LevelMetadata loadSync(AssetManager manager, String fileName, FileHandle file, LevelLoaderParameters parameter) {
+        LevelMetadata level = this.level;
         this.level = null;
         return level;
     }
@@ -45,7 +45,7 @@ public class LevelLoader extends AsynchronousAssetLoader<Level, LevelLoader.Leve
         return null;
     }
 
-    public static class LevelLoaderParameters extends AssetLoaderParameters<Level> {
+    public static class LevelLoaderParameters extends AssetLoaderParameters<LevelMetadata> {
 
     }
 }

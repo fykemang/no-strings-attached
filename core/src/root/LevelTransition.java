@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import entities.Level;
 import util.ScreenListener;
 
 import java.util.ArrayList;
@@ -36,13 +37,15 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String FAIL = "ui/yarnie-fail.png";
-    private static final String WIN = "ui/yarnie-win.png";
+    private static final String WIN = "ui/soul-mate.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MEAN_MENU = "ui/main-menu.png";
+    private static final String WIN_TEXT = "ui/excellent.png";
 
 
     Texture background;
     Texture yarnie;
+    Texture winMessage;
     TextureRegion buttonNextTex;
     private AssetManager manager;
     private GameCanvas canvas;
@@ -61,9 +64,11 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         Gdx.input.setInputProcessor(stage);
         background = new Texture(BK_FILE);
         yarnie = win?new Texture(WIN): new Texture(FAIL);
+        winMessage = new Texture(WIN_TEXT);
         Texture buttonNext = new Texture(BUTTON) ;
         nextButton = createButton(buttonNext);
         nextButton.setPosition(canvas.getWidth()*5/6-nextButton.getWidth()/2, canvas.getHeight()/6);
+        final LevelTransition transition = this;
         nextButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -78,7 +83,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         replaybutton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("replay");
+                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             };
         });
         stage.addActor(replaybutton);
@@ -89,7 +94,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         mainMenu.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("main");
+                listener.exitScreen(transition, LevelSelector.INTO_SELECTOR);
             };
         });
         stage.addActor(mainMenu);
@@ -109,6 +114,10 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
+    }
+
+    public void exit(){
+
     }
 
     /**
@@ -259,9 +268,16 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
           stage.draw();
            canvas.begin();
 //           System.out.println(background.getWidth());
+
             canvas.drawBackground(background, canvas.getWidth()/2, canvas.getHeight()/2,
                     canvas.getWidth()/2, canvas.getHeight()/2, Color.GRAY);
-            canvas.draw(yarnie, canvas.getWidth()/2, canvas.getHeight()/2);
+            canvas.draw(yarnie, canvas.getWidth()/2- yarnie.getWidth()/2,
+                    canvas.getHeight()/2-yarnie.getHeight()/2);
+            if (levelComplete){
+            System.out.println("win");
+            canvas.draw(winMessage, canvas.getWidth()/2- winMessage.getWidth()/2,
+                      canvas.getHeight()*4/5-winMessage.getHeight()/2);
+            }
             canvas.actStage(stage);
             canvas.end();
     }

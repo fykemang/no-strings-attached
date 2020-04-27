@@ -1,0 +1,19 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "unlocked": true,
+      "path": "levels/level1.json"
+    },
+    {
+      "id": 2,
+      "unlocked": false,
+      "path": "levels/level2.json"
+    },
+    {
+      "id": 3,
+      "unlocked": false,
+      "path": "levels/level3.json"
+    }
+  ]
+}

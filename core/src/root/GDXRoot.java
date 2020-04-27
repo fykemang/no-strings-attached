@@ -14,6 +14,7 @@ package root;/*
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -24,7 +25,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
-import entities.Level;
+import entities.LevelMetadata;
 import util.ScreenListener;
 
 /**
@@ -48,16 +49,19 @@ public class GDXRoot extends Game implements ScreenListener {
     /**
      * Player mode for the asset loading screen (CONTROLLER CLASS)
      */
-    private LoadingMode loading;
+    private LoadingMode loadingMode;
 
-    private LevelSelector selector;
+    private LevelSelector levelSelector;
 
     /**
      * The controller for the game mode
      */
-    private GameMode controller;
+    private GameMode gameMode;
 
     private LevelTransition transition;
+
+    private GameCanvas UIcanvas;
+
 
     /**
      * Creates a new game from the configuration settings.
@@ -73,7 +77,7 @@ public class GDXRoot extends Game implements ScreenListener {
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-        manager.setLoader(Level.class, ".json", new LevelLoader(resolver));
+        manager.setLoader(LevelMetadata.class, ".json", new LevelLoader(resolver));
     }
 
     /**
@@ -84,13 +88,17 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void create() {
         canvas = new GameCanvas();
-        loading = new LoadingMode(canvas, manager, 1);
+        UIcanvas = new GameCanvas();
+        loadingMode = new LoadingMode(canvas, manager, 1);
 
-        controller = new GameMode();
-        controller.preLoadContent(manager);
+        gameMode = new GameMode();
+        gameMode.preLoadContent(manager);
 
-        loading.setScreenListener(this);
-        setScreen(loading);
+        levelSelector = new LevelSelector();
+        levelSelector.preloadContent(manager);
+
+        loadingMode.setScreenListener(this);
+        setScreen(loadingMode);
     }
 
     /**
@@ -101,8 +109,12 @@ public class GDXRoot extends Game implements ScreenListener {
     public void dispose() {
         // Call dispose on our children
         setScreen(null);
-        controller.unloadContent(manager);
-        controller.dispose();
+        gameMode.unloadContent(manager);
+        gameMode.dispose();
+
+        levelSelector.unloadContent(manager);
+        levelSelector.dispose();
+
         canvas.dispose();
         canvas = null;
 
@@ -141,39 +153,49 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         // If start is selected from the loading screen
-        if (screen == loading && exitCode == LevelSelector.INTO_SELECTOR) {
-            selector = new LevelSelector(manager, canvas);
-            selector.setScreenListener(this);
-            setScreen(selector);
-            loading.dispose();
-            loading = null;
+        if (screen == loadingMode && exitCode == LevelSelector.INTO_SELECTOR) {
+            levelSelector.loadContent(manager);
+            levelSelector.setScreenListener(this);
+            levelSelector.setCanvas(UIcanvas);
+            Gdx.input.setInputProcessor(levelSelector);
+            levelSelector.reset();
+            setScreen(levelSelector);
+            loadingMode.dispose();
+            loadingMode = null;
             // If level is selected from level selector screen
-        } else if (screen == selector && exitCode == GameMode.EXIT_INTO_GAME) {
-            controller.loadContent(manager, selector.getMetaData().getFilePath() );
-            controller.setScreenListener(this);
-            controller.setCanvas(canvas);
-            controller.reset();
-            setScreen(controller);
+        } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
+            Gdx.input.setInputProcessor(null);
+            gameMode.setLevel(levelSelector.getCurrentLevel());
+            gameMode.loadContent(manager);
+            gameMode.setScreenListener(this);
+            gameMode.setCanvas(canvas);
+            gameMode.reset();
+            setScreen(gameMode);
             // If level select is selected from in game
-        } else if (screen == controller && exitCode == LevelSelector.INTO_SELECTOR) {
-            canvas = new GameCanvas();
-            selector.reset(canvas);
-            selector.setScreenListener(this);
-            setScreen(selector);
-            controller.pause();
-            //5
-        }else if (screen == controller && exitCode == LevelTransition.INTO_TRANSITION){
-            canvas = new GameCanvas();
-            LevelTransition transition = new LevelTransition(manager, canvas, false);
+        } else if (screen == gameMode && exitCode == LevelSelector.INTO_SELECTOR) {
+            levelSelector.setCanvas(UIcanvas);
+            levelSelector.reset();
+            levelSelector.setScreenListener(this);
+            Gdx.input.setInputProcessor(levelSelector);
+            setScreen(levelSelector);
+            gameMode.pause();
+        } else if (screen == gameMode && exitCode == LevelTransition.INTO_TRANSITION){
+            transition = new LevelTransition(manager, UIcanvas, gameMode.levelComplete());
             transition.setScreenListener(this);
             setScreen(transition);
-            controller.pause();
-//            controller.unloadContent(manager);
-        } else if (screen == controller && exitCode == GameMode.EXIT_NEXT) {
-//            controller.loadContent(manager, );
-            controller.setScreenListener(this);
-            controller.setCanvas(canvas);
-            controller.reset();
+            gameMode.pause();
+        } else if (screen == transition){
+            switch(exitCode) {
+                case(LevelSelector.INTO_SELECTOR):
+                            levelSelector.reset();
+                             Gdx.input.setInputProcessor(levelSelector);
+                             setScreen(levelSelector);
+                             break;
+                case(GameMode.EXIT_INTO_GAME):
+                    gameMode.reset();
+                    setScreen(gameMode);
+                    break;
+            }
         } else if (exitCode == GameMode.EXIT_QUIT) {
             Gdx.app.exit();
         }

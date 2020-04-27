@@ -152,6 +152,8 @@ public class GameCanvas {
      */
     private TextureRegion holder;
 
+    private BitmapFont font;
+
     /**
      * Creates a new game.GameCanvas determined by the application configuration.
      * <p>
@@ -184,6 +186,11 @@ public class GameCanvas {
         cacheVector3 = new Vector3();
         cacheVector2 = new Vector2();
         vertex = new Vector2();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
+//        GlyphLayout layout = new GlyphLayout(font, text);
     }
 
     /**
@@ -419,6 +426,8 @@ public class GameCanvas {
         // Clear the screen
         Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f);  // Homage to the XNA years
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.viewportHeight = getHeight();
+        camera.viewportWidth = getWidth();
     }
 
     /**
@@ -1213,6 +1222,7 @@ public class GameCanvas {
             y1 = vertex.y;
             debugRender.line(x0, y0, x1, y1);
         }
+
         // Close the loop
         shape.getVertex(shape.getVertexCount() - 1, vertex);
         local.applyTo(vertex);
@@ -1323,12 +1333,7 @@ public class GameCanvas {
     public void drawUIText(String text, int x, int y) {
         spriteBatch.end();
         UIBatch.begin();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
-        BitmapFont font = generator.generateFont(parameter);
-        GlyphLayout layout = new GlyphLayout(font, text);
-        font.draw(UIBatch, layout, x - layout.width / 2, y);
+        font.draw(UIBatch,text, x, y);
         UIBatch.end();
         spriteBatch.begin();
     }
@@ -1367,7 +1372,6 @@ public class GameCanvas {
         debugRender.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
-
         // Initialize the cache objects
         holder = new TextureRegion();
         local = new Affine2();
@@ -1384,6 +1388,7 @@ public class GameCanvas {
         return cacheVector2.set(worldLocation.x, worldLocation.y);
     }
 
+
     public void actStage(Stage stage){
         spriteBatch.end();
         stage.act();
@@ -1395,3 +1400,5 @@ public class GameCanvas {
     }
 
 }
+
+
