@@ -62,6 +62,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private GameCanvas UIcanvas;
 
+    private int currentLevel;
+
 
     /**
      * Creates a new game from the configuration settings.
@@ -165,6 +167,7 @@ public class GDXRoot extends Game implements ScreenListener {
             // If level is selected from level selector screen
         } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
             Gdx.input.setInputProcessor(null);
+            currentLevel = levelSelector.getLevelIndex();
             gameMode.setLevel(levelSelector.getCurrentLevel());
             gameMode.loadContent(manager);
             gameMode.initializeContent(manager);
@@ -198,7 +201,8 @@ public class GDXRoot extends Game implements ScreenListener {
                     setScreen(gameMode);
                     break;
                 case(GameMode.EXIT_INTO_NEXT):
-                    gameMode.setLevel(levelSelector.getNextLevel());
+                    currentLevel++;
+                    gameMode.setLevel(levelSelector.getLevel(currentLevel));
                     gameMode.loadContent(manager);
                     gameMode.initializeContent(manager);
                     gameMode.reset();
