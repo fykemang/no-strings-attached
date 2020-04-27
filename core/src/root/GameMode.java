@@ -28,7 +28,6 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
-import com.badlogic.gdx.utils.Array;
 import entities.*;
 import obstacle.Obstacle;
 import util.*;
@@ -44,7 +43,7 @@ import java.util.*;
  * This is the purpose of our AssetState variable; it ensures that multiple instances
  * place nicely with the static assets.
  */
-public class GameMode implements Screen {
+public class GameMode extends Mode implements Screen {
     /**
      * Exit code for quitting the game
      */
@@ -184,14 +183,7 @@ public class GameMode implements Screen {
     private static String FONT_FILE = "ui/RetroGame.ttf";
     private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static int FONT_SIZE = 64;
-    /**
-     * Track asset loading from all instances and subclasses
-     */
-    protected AssetState worldAssetState = AssetState.EMPTY;
-    /**
-     * Track all loaded assets (for unloading purposes)
-     */
-    protected Array<String> assets;
+
     /**
      * The textures for walls and platforms
      */
@@ -311,10 +303,7 @@ public class GameMode implements Screen {
      */
     private TextureRegion bridgeTexture;
     private TextureRegion crosshairTexture;
-    /**
-     * Track asset loading from all instances and subclasses
-     */
-    private AssetState gameAssetState = AssetState.EMPTY;
+
     /**
      * Listener that will update the player mode when we are done
      */
@@ -343,10 +332,14 @@ public class GameMode implements Screen {
     /**
      * Files for music assets
      */
-    private final String CITY_MUSIC_FILE = "music/shine.mp3";
-    private final String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
-    private String FOREST_MUSIC_FILE;
-    private String MOUNTAIN_MUSIC_FILE;
+    private final String CITY_MUSIC_FILE = "music/flight.mp3";
+    private final String SUBURB_MUSIC_FILE = "music/warmsand.mp3";
+    private final String FOREST_MUSIC_FILE = "music/youare.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
+    private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
+
 
     /**
      * Music object played in the game
@@ -367,16 +360,16 @@ public class GameMode implements Screen {
     /**
      * Files for city background
      */
-    private String[] CITY_BKG_FILES_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
-    private String[] CITY_BKG_FILES_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
-    private String[] CITY_BKG_FILES_C = new String[]{"background/citylayer3.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
 
     /**
      * TextureRegions used in the game
      */
-    private List<TextureRegion> stillBackgroundTextures;
-    private List<TextureRegion> slightmoveBackgroundTextures;
-    private List<TextureRegion> movingBackgroundTextures;
+    private final List<TextureRegion> stillBackgroundTextures;
+    private final List<TextureRegion> slightMoveBackgroundTextures;
+    private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
 
     /**
@@ -390,11 +383,10 @@ public class GameMode implements Screen {
      * @param gravity The gravitational force on this Box2d world
      */
     protected GameMode(Rectangle bounds, Vector2 gravity) {
-        assets = new Array<>();
         items = new ArrayList<>();
         level = null;
         stillBackgroundTextures = new ArrayList<>();
-        slightmoveBackgroundTextures = new ArrayList<>();
+        slightMoveBackgroundTextures = new ArrayList<>();
         movingBackgroundTextures = new ArrayList<>();
         world = new World(gravity, false);
         rand = new Random();
@@ -405,25 +397,16 @@ public class GameMode implements Screen {
         debug = false;
         active = false;
         countdown = -1;
-        this.npcs = new HashMap<String, TextureRegion>();
-        this.npcShock = new HashMap<String, TextureRegion>();
+        this.npcs = new HashMap<>();
+        this.npcShock = new HashMap<>();
     }
 
-    /**
-     * Preloads the assets for this controller.
-     * <p>
-     * To make the game modes more for-loop friendly, we opted for nonstatic loaders
-     * this time.  However, we still want the assets themselves to be static.  So
-     * we have an AssetState that determines the current loading state.  If the
-     * assets are already loaded, this method will do nothing.
-     *
-     * @param manager Reference to global asset manager.
-     */
-    public void preLoadContent(AssetManager manager) {
-        if (gameAssetState != AssetState.EMPTY) {
+
+    public void preloadContent(AssetManager manager) {
+        if (assetState != AssetState.EMPTY) {
             return;
         }
-        gameAssetState = AssetState.LOADING;
+        assetState = AssetState.LOADING;
         manager.load(PLAYER_FALL, Texture.class);
         assets.add(PLAYER_FALL);
         manager.load(BARRIER_FILE, Texture.class);
@@ -478,15 +461,15 @@ public class GameMode implements Screen {
         assets.add(ESC_FILE);
         manager.load(ROPE_SEGMENT, Texture.class);
         assets.add(ROPE_SEGMENT);
-        for (String s : CITY_BKG_FILES_A) {
+        for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
-        for (String s : CITY_BKG_FILES_B) {
+        for (String s : CITY_BKG_FILES_LAYER_B) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
-        for (String s : CITY_BKG_FILES_C) {
+        for (String s : CITY_BKG_FILES_LAYER_C) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
@@ -535,24 +518,25 @@ public class GameMode implements Screen {
 
 
         // Load Sound Assets
-        manager.load(JUMP_FILE, Sound.class);
-        assets.add(JUMP_FILE);
-        manager.load(PEW_FILE, Sound.class);
-        assets.add(PEW_FILE);
-        manager.load(POP_FILE, Sound.class);
-        assets.add(POP_FILE);
+        loadAsset(JUMP_FILE, Sound.class, manager);
+        loadAsset(PEW_FILE, Sound.class, manager);
+        loadAsset(POP_FILE, Sound.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
         assets.add(CITY_MUSIC_FILE);
         manager.load(SUBURB_MUSIC_FILE, Music.class);
         assets.add(SUBURB_MUSIC_FILE);
-
-        if (worldAssetState != AssetState.EMPTY) {
-            return;
-        }
-
-        worldAssetState = AssetState.LOADING;
+        manager.load(FOREST_MUSIC_FILE, Music.class);
+        assets.add(FOREST_MUSIC_FILE);
+        manager.load(MOUNTAIN_MUSIC_FILE, Music.class);
+        assets.add(MOUNTAIN_MUSIC_FILE);
+        manager.load(OPENING_CUTSCENE_FILE, Music.class);
+        assets.add(OPENING_CUTSCENE_FILE);
+        manager.load(ENDING_CUTSCENE_FILE, Music.class);
+        assets.add(ENDING_CUTSCENE_FILE);
+        manager.load(TRANSITION_CUTSCENE_FILE, Music.class);
+        assets.add(TRANSITION_CUTSCENE_FILE);
 
         // Load the font
         FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
@@ -562,53 +546,48 @@ public class GameMode implements Screen {
         assets.add(FONT_FILE);
     }
 
-    /**
-     * Load the assets for this controller.
-     * <p>
-     * To make the game modes more for-loop friendly, we opted for nonstatic loaders
-     * this time.  However, we still want the assets themselves to be static.  So
-     * we have an AssetState that determines the current loading state.  If the
-     * assets are already loaded, this method will do nothing.
-     *
-     * @param manager Reference to global asset manager.
-     */
-    public void loadContent(AssetManager manager) {
+    public void initializeContent(AssetManager manager) {
         String type = level.getType();
-        if (type.contains("city")) {
-            music = manager.get(CITY_MUSIC_FILE);
-            for (String s : CITY_BKG_FILES_A) {
-                stillBackgroundTextures.add(createTexture(manager, s, false));
-            }
-            for (String s : CITY_BKG_FILES_B) {
-                slightmoveBackgroundTextures.add(createTexture(manager, s, false));
-            }
-            for (String s : CITY_BKG_FILES_C) {
-                movingBackgroundTextures.add(createTexture(manager, s, false));
-            }
-            tileTexture = createTexture(manager, CITY_TILE_FILE, false);
-            level.setBackgroundTexture(stillBackgroundTextures, slightmoveBackgroundTextures, movingBackgroundTextures);
-        } else if (type.contains("suburb")) {
-            music = manager.get(SUBURB_MUSIC_FILE);
-            tileTexture = createTexture(manager, SUBURB_TILE_FILE, false);
-        } else if (type.contains("forest")) {
-            music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
-            tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
-        } else {
-            music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
-            tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
-        }
+        stillBackgroundTextures.clear();
+        slightMoveBackgroundTextures.clear();
+        movingBackgroundTextures.clear();
 
-        if (gameAssetState != AssetState.LOADING) {
+        switch (type) {
+            case "city":
+                music = manager.get(CITY_MUSIC_FILE, Music.class);
+                tileTexture = createTexture(manager, CITY_TILE_FILE, false);
+                for (String s : CITY_BKG_FILES_LAYER_A) {
+                    stillBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : CITY_BKG_FILES_LAYER_B) {
+                    slightMoveBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : CITY_BKG_FILES_LAYER_C) {
+                    movingBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                break;
+            case "suburb":
+                music = manager.get(SUBURB_MUSIC_FILE, Music.class);
+                tileTexture = createTexture(manager, SUBURB_TILE_FILE, false);
+                break;
+            case "forest":
+                music = manager.get(FOREST_MUSIC_FILE, Music.class);
+                tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
+                break;
+            case "mountain":
+                music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
+                tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
+        }
+        music.play();
+        music.setLooping(true);
+    }
+
+    @Override
+    public void loadContent(AssetManager manager) {
+        if (assetState != AssetState.LOADING) {
             return;
         }
-
         itemTexture = new ArrayList<>();
-
-//        music.play();
-//        music.setVolume(0.5f);
-//        music.setLooping(true);
-//        levels.add(manager.get(file, Level.class));
-
         playerSwingAnimation = createFilmStrip(manager, PLAYER_SWING_ANIMATION, 1, 20, 20);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24);
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21);
@@ -676,8 +655,7 @@ public class GameMode implements Screen {
         } else {
             displayFont = null;
         }
-
-        gameAssetState = AssetState.COMPLETE;
+        assetState = AssetState.COMPLETE;
     }
 
     // Physics constants for initialization
@@ -776,11 +754,8 @@ public class GameMode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        currentlevel = level;
-        stillBackgroundTextures = level.getStillBackgroundTexture();
-        slightmoveBackgroundTextures = level.getSlightBackgroundTexture();
-        movingBackgroundTextures = level.getMovingBackgroundTexture();
 
+        currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
         List<Tile> tiles = level.getTiles();
         List<Tile> spikes = level.getSpikes();
@@ -886,7 +861,6 @@ public class GameMode implements Screen {
      * @return physical dimensions of the model in world units
      */
     private Vector2 getScaledDimensions(TextureRegion texture) {
-
         float dWidth = texture.getRegionWidth() / scale.x;
         float dHeight = texture.getRegionHeight() / scale.y;
         return new Vector2(dWidth, dHeight);
@@ -1167,7 +1141,7 @@ public class GameMode implements Screen {
         for (TextureRegion t : stillBackgroundTextures) {
             canvas.drawWrapped(t, 0f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
         }
-        for (TextureRegion t : slightmoveBackgroundTextures) {
+        for (TextureRegion t : slightMoveBackgroundTextures) {
             canvas.drawWrapped(t, -.1f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
         }
         for (TextureRegion t : movingBackgroundTextures) {
@@ -1275,22 +1249,6 @@ public class GameMode implements Screen {
             return strip;
         }
         return null;
-    }
-
-    /**
-     * Unloads the assets for this game.
-     * <p>
-     * This method erases the static variables.  It also deletes the associated textures
-     * from the asset manager. If no assets are loaded, this method does nothing.
-     *
-     * @param manager Reference to global asset manager.
-     */
-    public void unloadContent(AssetManager manager) {
-        for (String s : assets) {
-            if (manager.isLoaded(s)) {
-                manager.unload(s);
-            }
-        }
     }
 
     /**
@@ -1565,7 +1523,7 @@ public class GameMode implements Screen {
     public void exitToSelector() {
         if (listener != null) {
             music.dispose();
-            listener.exitScreen(this, LevelSelector.INTO_SELECTOR);
+            listener.exitScreen(this, LevelSelectorMode.INTO_SELECTOR);
         }
     }
 
@@ -1578,24 +1536,5 @@ public class GameMode implements Screen {
 
     public void setLevel(Level level) {
         this.level = level;
-    }
-
-
-    /**
-     * Tracks the asset state.  Otherwise subclasses will try to load assets
-     */
-    protected enum AssetState {
-        /**
-         * No assets loaded
-         */
-        EMPTY,
-        /**
-         * Still loading assets
-         */
-        LOADING,
-        /**
-         * Assets are complete
-         */
-        COMPLETE
     }
 }

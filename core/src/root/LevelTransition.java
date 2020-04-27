@@ -94,7 +94,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         mainMenu.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                listener.exitScreen(transition, LevelSelector.INTO_SELECTOR);
+                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             };
         });
         stage.addActor(mainMenu);
@@ -274,7 +274,6 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             canvas.draw(yarnie, canvas.getWidth()/2- yarnie.getWidth()/2,
                     canvas.getHeight()/2-yarnie.getHeight()/2);
             if (levelComplete){
-            System.out.println("win");
             canvas.draw(winMessage, canvas.getWidth()/2- winMessage.getWidth()/2,
                       canvas.getHeight()*4/5-winMessage.getHeight()/2);
             }
