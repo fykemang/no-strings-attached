@@ -164,6 +164,7 @@ public class GDXRoot extends Game implements ScreenListener {
             gameMode.setCanvas(canvas);
             gameMode.reset();
             setScreen(gameMode);
+            levelSelector.pause();
             // If level select is selected from in game
         } else if (screen == gameMode && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             canvas = new GameCanvas();

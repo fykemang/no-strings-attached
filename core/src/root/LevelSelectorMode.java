@@ -111,7 +111,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
 
-
     public void setCanvas(GameCanvas canvas) {
         this.canvas = canvas;
     }
@@ -174,7 +173,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
             ready = true;
-            levelSelectorMusic.stop();
+            levelSelectorMusic.dispose();
         }
         return false;
     }
@@ -189,11 +188,16 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         return false;
     }
 
+    int screen;
+    int start;
+    int end;
+    boolean select;
+
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        int screen = canvas.getHeight() - screenY;
-        int start = 0;
-        int end = 0;
+        screen = canvas.getHeight() - screenY;
+        start = 0;
+        end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;
@@ -214,7 +218,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
             theme = themes.none;
         }
 
-        boolean select = false;
+        select = false;
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
             if (screenP.dst(buttonPos.get(i)) < 50) {
@@ -343,6 +347,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 canvas.drawBackground(forest);
                 break;
             case forest:
+                canvas.drawBackground(city);
                 canvas.drawBackground(mountain);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
