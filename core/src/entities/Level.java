@@ -47,14 +47,6 @@ public class Level implements Json.Serializable {
         this.moving = moving;
     }
 
-    public void setTileTexture(TextureRegion tileTexture) {
-        this.tileTexture = tileTexture;
-    }
-
-    public TextureRegion getTileTexture() {
-        return tileTexture;
-    }
-
     public Level() {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
@@ -77,8 +69,7 @@ public class Level implements Json.Serializable {
     @Override
     public void read(Json json, JsonValue jsonData) {
         //environment information
-        JsonValue typeData = jsonData.get("type");
-        this.type = typeData.toString();
+        this.type = jsonData.getString("type");
 
         //Game Tiles
         JsonValue tilesData = jsonData.get("tiles");

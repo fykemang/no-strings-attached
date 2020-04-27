@@ -20,7 +20,7 @@ public class CuttingCallback extends AABBQueryCallback {
     public boolean reportFixture(Fixture fixture) {
         Body body = fixture.getBody();
         Obstacle obstacle = (Obstacle) body.getUserData();
-        if (obstacle.getName().equals("blob")) {
+        if (obstacle.getName() != null && obstacle.getName().equals("blob")) {
             Blob blob = (Blob) obstacle;
             Vector2 playerPosition = player.getPosition();
             Vector2 blobPosition = blob.getPosition();

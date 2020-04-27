@@ -50,7 +50,7 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     private LoadingMode loadingMode;
 
-    private LevelSelector levelSelector;
+    private LevelSelectorMode levelSelector;
 
     /**
      * The controller for the game mode
@@ -85,9 +85,9 @@ public class GDXRoot extends Game implements ScreenListener {
         loadingMode = new LoadingMode(canvas, manager, 1);
 
         gameMode = new GameMode();
-        gameMode.preLoadContent(manager);
+        gameMode.preloadContent(manager);
 
-        levelSelector = new LevelSelector();
+        levelSelector = new LevelSelectorMode();
         levelSelector.preloadContent(manager);
 
         loadingMode.setScreenListener(this);
@@ -146,7 +146,7 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         // If start is selected from the loading screen
-        if (screen == loadingMode && exitCode == LevelSelector.INTO_SELECTOR) {
+        if (screen == loadingMode && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(canvas);
@@ -159,12 +159,13 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
             gameMode.setLevel(levelSelector.getCurrentLevel());
             gameMode.loadContent(manager);
+            gameMode.initializeContent(manager);
             gameMode.setScreenListener(this);
             gameMode.setCanvas(canvas);
             gameMode.reset();
             setScreen(gameMode);
             // If level select is selected from in game
-        } else if (screen == gameMode && exitCode == LevelSelector.INTO_SELECTOR) {
+        } else if (screen == gameMode && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             canvas = new GameCanvas();
             levelSelector.setCanvas(canvas);
             levelSelector.reset();
