@@ -333,7 +333,7 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String SUBURB_MUSIC_FILE = "music/warmsand.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/warmsand.mp3";
     private final String FOREST_MUSIC_FILE = "music/youare.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
@@ -348,8 +348,10 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for region tiles
      */
+
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
+    private static final String VILLAGE_TILE_FILE = "entities/suburb-tiles.png";
     private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
 
@@ -358,12 +360,20 @@ public class GameMode extends Mode implements Screen {
      */
     private TextureRegion tileTexture;
     /**
-     * Files for city background
+     * Files for backgrounds
      */
-    private static final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
-    private static final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
-    private static final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
-
+    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
+    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
+    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village1.png", "background/village2.png", "background/village3.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village4.png", "background/village5.png", "background/village6.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village7.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
+    private final String[] MT_BKG_FILES_LAYER_A = new String[]{"background/sky-1.png"};
+    private final String[] MT_BKG_FILES_LAYER_B = new String[]{"background/sky-2.png", "background/sky-3.png", "background/sky-4.png"};
+    private final String[] MT_BKG_FILES_LAYER_C = new String[]{};
     /**
      * TextureRegions used in the game
      */
@@ -445,8 +455,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
         assets.add(CITY_TILE_FILE);
-        manager.load(SUBURB_TILE_FILE, Texture.class);
-        assets.add(SUBURB_TILE_FILE);
+        manager.load(VILLAGE_TILE_FILE, Texture.class);
+        assets.add(VILLAGE_TILE_FILE);
         manager.load(FOREST_TILE_FILE, Texture.class);
         assets.add(FOREST_TILE_FILE);
         manager.load(MOUNTAIN_TILE_FILE, Texture.class);
@@ -470,6 +480,42 @@ public class GameMode extends Mode implements Screen {
             manager.load(s, Texture.class);
         }
         for (String s : CITY_BKG_FILES_LAYER_C) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : VILLAGE_BKG_FILES_LAYER_A) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : VILLAGE_BKG_FILES_LAYER_B) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : VILLAGE_BKG_FILES_LAYER_C) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : FOREST_BKG_FILES_LAYER_A) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : FOREST_BKG_FILES_LAYER_B) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : FOREST_BKG_FILES_LAYER_C) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : MT_BKG_FILES_LAYER_A) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : MT_BKG_FILES_LAYER_B) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : MT_BKG_FILES_LAYER_C) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
@@ -525,8 +571,8 @@ public class GameMode extends Mode implements Screen {
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
         assets.add(CITY_MUSIC_FILE);
-        manager.load(SUBURB_MUSIC_FILE, Music.class);
-        assets.add(SUBURB_MUSIC_FILE);
+        manager.load(VILLAGE_MUSIC_FILE, Music.class);
+        assets.add(VILLAGE_MUSIC_FILE);
         manager.load(FOREST_MUSIC_FILE, Music.class);
         assets.add(FOREST_MUSIC_FILE);
         manager.load(MOUNTAIN_MUSIC_FILE, Music.class);
@@ -566,18 +612,46 @@ public class GameMode extends Mode implements Screen {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
                 break;
-            case "suburb":
-                music = manager.get(SUBURB_MUSIC_FILE, Music.class);
-                tileTexture = createTexture(manager, SUBURB_TILE_FILE, false);
+            case "village":
+                music = manager.get(VILLAGE_MUSIC_FILE, Music.class);
+                tileTexture = createTexture(manager, VILLAGE_TILE_FILE, false);
+                for (String s : VILLAGE_BKG_FILES_LAYER_A) {
+                    stillBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : VILLAGE_BKG_FILES_LAYER_B) {
+                    slightMoveBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : VILLAGE_BKG_FILES_LAYER_C) {
+                    movingBackgroundTextures.add(createTexture(manager, s, false));
+                }
                 break;
             case "forest":
                 music = manager.get(FOREST_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
+                for (String s : FOREST_BKG_FILES_LAYER_A) {
+                    stillBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : FOREST_BKG_FILES_LAYER_B) {
+                    slightMoveBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : FOREST_BKG_FILES_LAYER_C) {
+                    movingBackgroundTextures.add(createTexture(manager, s, false));
+                }
                 break;
             case "mountain":
                 music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
+                for (String s : MT_BKG_FILES_LAYER_A) {
+                    stillBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : MT_BKG_FILES_LAYER_B) {
+                    slightMoveBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : MT_BKG_FILES_LAYER_C) {
+                    movingBackgroundTextures.add(createTexture(manager, s, false));
+                }
         }
+
         music.play();
         music.setLooping(true);
     }

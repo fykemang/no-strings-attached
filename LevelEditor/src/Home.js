@@ -328,7 +328,6 @@ function Home() {
       </ButtonGroup>
       <div className="canvas-container">
         <Stage
-          draggable
           width={canvasWidth}
           height={canvasHeight}
           onMouseDown={(e) => {
