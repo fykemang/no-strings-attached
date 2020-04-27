@@ -23,6 +23,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -58,6 +59,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String START_FILE = "ui/start.png";
     private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
+    private static final String MENU_CLICK_FILE = "sounds/menuclick.mp3";
 
     /**
      * Background texture for start-up
@@ -67,6 +69,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private FilmStrip animatedBkg;
 
     private Music music;
+    private Sound clickSound;
 
     /**
      * Play button to display when done
@@ -329,6 +332,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         music.play();
         music.setVolume(0.5f);
         music.setLooping(true);
+
+        clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
 
         active = true;
     }
@@ -600,18 +605,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
+            clickSound.play();
             pressState = MouseState.START;
         }
 
         float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
         float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
+            clickSound.play();
             pressState = MouseState.SETTINGS;
         }
 
         float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
         float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
+            clickSound.play();
             pressState = MouseState.QUIT;
         }
 

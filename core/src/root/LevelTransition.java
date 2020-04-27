@@ -41,7 +41,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private static final String REPLAY = "ui/replay.png";
     private static final String MEAN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
-
+    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
 
     Texture background;
     Texture yarnie;
@@ -54,6 +54,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private ImageButton replaybutton;
     private ImageButton mainMenu;
     private boolean levelComplete;
+    private Music music;
 
     public LevelTransition(AssetManager manager, GameCanvas canvas, boolean win) {
         this.levelComplete = win;
@@ -61,6 +62,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         this.canvas = canvas;
         this.levels = new ArrayList<>();
         this.stage = new Stage();
+        this.music = manager.get(TRANSITION_MUSIC_FILE);
         Gdx.input.setInputProcessor(stage);
         background = new Texture(BK_FILE);
         yarnie = win?new Texture(WIN): new Texture(FAIL);
@@ -100,6 +102,9 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         stage.addActor(mainMenu);
 
         Gdx.input.setInputProcessor(stage);
+
+        music.play();
+        music.setLooping(true);
 
         try {
             // Let ANY connected controller start the game.
@@ -201,7 +206,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     @Override
     public void dispose() {
-//        music.dispose();
+        music.dispose();
     }
 
     @Override

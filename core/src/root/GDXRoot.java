@@ -195,11 +195,13 @@ public class GDXRoot extends Game implements ScreenListener {
                             levelSelector.reset();
                              Gdx.input.setInputProcessor(levelSelector);
                              setScreen(levelSelector);
+                             transition.dispose();
                              break;
                 case(GameMode.EXIT_INTO_GAME):
                     gameMode.reset();
                     gameMode.resume();
                     setScreen(gameMode);
+                    transition.dispose();
                     break;
                 case(GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
@@ -208,6 +210,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.initializeContent(manager);
                     gameMode.reset();
                     setScreen(gameMode);
+                    transition.dispose();
             }
         } else if (exitCode == GameMode.EXIT_QUIT) {
             Gdx.app.exit();

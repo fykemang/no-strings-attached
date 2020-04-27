@@ -16,7 +16,7 @@ public class CollisionController implements ContactListener {
     private ObjectSet<Fixture> sensorFixtures;
     private Person player;
     private Vector2 trampolineForce;
-
+    private final String COLLECT_FILE = "sounds/itemcollect.mp3";
 
     public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
