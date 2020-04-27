@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import obstacle.ComplexObstacle;
 import obstacle.WheelObstacle;
+import com.badlogic.gdx.graphics.Color;
+
+import java.awt.*;
 
 public abstract class Rope extends ComplexObstacle {
     protected final int MAX_DRAW_POINTS = 100;
@@ -19,6 +22,7 @@ public abstract class Rope extends ComplexObstacle {
     protected float spacing;
     protected float lWidth;
     protected int id;
+    protected Color tint;
 
     public Rope() {
         points = new Vector2[MAX_DRAW_POINTS];
@@ -34,6 +38,7 @@ public abstract class Rope extends ComplexObstacle {
         this.id = id;
         setName(ropeName);
         initializeSegments();
+        tint = new Color(1,0,0,0.7f);
     }
 
     abstract void initializeSegments();

@@ -347,12 +347,16 @@ public class NpcRope extends Rope {
     public void draw(GameCanvas canvas) {
         // Delegate to components
         setCurrentSplineCurve();
-        float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
-        float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
-        approxNorm.set(-dy, dx);
-        approxNorm.nor();
-        setNorms();
-        canvas.drawCatmullRom(splineCurve, MAX_DRAW_POINTS, points);
+        if (state != RopeState.COMPLETE){
+            tint.set(tint.r,tint.g,tint.b,tint.a*0.97f);
+        }else {
+            float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+            float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
+            approxNorm.set(-dy, dx);
+            approxNorm.nor();
+            setNorms();
+        }
+        canvas.drawCatmullRom(splineCurve, tint, MAX_DRAW_POINTS, points);
     }
 
     private void setNorms() {

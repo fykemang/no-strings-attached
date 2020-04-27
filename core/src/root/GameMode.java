@@ -1151,9 +1151,9 @@ public class GameMode extends Mode implements Screen {
                             NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                                for (NpcRope r : ropes) {
-                                    r.markRemoved(true);
-                                }
+//                                for (NpcRope r : ropes) {
+//                                    r.markRemoved(true);
+//                                }
                             }
                         }
                     }

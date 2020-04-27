@@ -151,7 +151,7 @@ public class PlayerRope extends Rope {
     public void draw(GameCanvas canvas) {
         // Delegate to components
         setCurrentSplineCurve();
-        canvas.drawCatmullRom(splineCurve, MAX_DRAW_POINTS, points);
+        canvas.drawCatmullRom(splineCurve, tint, MAX_DRAW_POINTS, points);
     }
 
     /**
