@@ -22,7 +22,7 @@ import util.ScreenListener;
 
 import java.util.ArrayList;
 
-public class LevelSelector implements Screen, InputProcessor, ControllerListener {
+public class LevelSelectorMode extends Mode implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 4;
     private static final String BACKGROUND_FILE = "ui/select_bg.png";
     private static final String CITY_FILE = "ui/city.png";
@@ -67,18 +67,14 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     int mon_u = 296;
     private ArrayList<Vector2> buttonPos = new ArrayList<>();
     private AssetState selectorAssetState = AssetState.EMPTY;
-    private Array<String> assets;
     private LevelMetadata levelMetadata;
 
     private enum themes {
         city, none, suburb, forest, mountain
     }
 
-    public void loadAsset(String filepath, Class type, AssetManager manager) {
-        manager.load(filepath, type);
-        assets.add(filepath);
-    }
 
+    @Override
     public void preloadContent(AssetManager manager) {
         if (selectorAssetState != AssetState.EMPTY) {
             return;
@@ -94,6 +90,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         loadAsset(MUSIC_FILE, Music.class, manager);
     }
 
+    @Override
     public void loadContent(AssetManager manager) {
         if (selectorAssetState != AssetState.LOADING) {
             return;
@@ -113,20 +110,13 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         selectorAssetState = AssetState.COMPLETE;
     }
 
-    public void unloadContent(AssetManager manager) {
-        for (String asset : assets) {
-            if (manager.isLoaded(asset)) {
-                manager.unload(asset);
-            }
-        }
-    }
 
     public void setCanvas(GameCanvas canvas) {
         this.canvas = canvas;
     }
 
 
-    public LevelSelector() {
+    public LevelSelectorMode() {
         this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
@@ -183,7 +173,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
             ready = true;
-            levelSelectorMusic.stop();
+            levelSelectorMusic.dispose();
         }
         return false;
     }
@@ -198,11 +188,16 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         return false;
     }
 
+    int screen;
+    int start;
+    int end;
+    boolean select;
+
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        int screen = canvas.getHeight() - screenY;
-        int start = 0;
-        int end = 0;
+        screen = canvas.getHeight() - screenY;
+        start = 0;
+        end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;
@@ -223,7 +218,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
             theme = themes.none;
         }
 
-        boolean select = false;
+        select = false;
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
             if (screenP.dst(buttonPos.get(i)) < 50) {
@@ -352,6 +347,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
                 canvas.drawBackground(forest);
                 break;
             case forest:
+                canvas.drawBackground(city);
                 canvas.drawBackground(mountain);
                 canvas.drawBackground(suburb);
                 canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
