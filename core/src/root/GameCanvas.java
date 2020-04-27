@@ -145,14 +145,14 @@ public class GameCanvas {
      */
     private Vector3 cacheVector3;
     private Vector2 cacheVector2;
-    private Stage stage;
+    private final Stage stage;
 
     /**
      * Cache object to handle raw textures
      */
     private TextureRegion holder;
 
-    private BitmapFont font;
+    private final BitmapFont font;
 
     /**
      * Creates a new game.GameCanvas determined by the application configuration.
@@ -209,7 +209,7 @@ public class GameCanvas {
         holder = null;
     }
 
-    private Vector2 positionCache = new Vector2();
+    private final Vector2 positionCache = new Vector2();
 
     /**
      * Private method to process the wrap offset of an image.

@@ -38,14 +38,14 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     Texture yarnie;
     Texture winMessage;
     TextureRegion buttonNextTex;
-    private AssetManager manager;
+    private final AssetManager manager;
     private GameCanvas canvas;
-    private Stage stage;
-    private ImageButton nextButton;
-    private ImageButton replaybutton;
-    private ImageButton mainMenu;
-    private boolean levelComplete;
-    private Music music;
+    private final Stage stage;
+    private final ImageButton nextButton;
+    private final ImageButton replaybutton;
+    private final ImageButton mainMenu;
+    private final boolean levelComplete;
+    private final Music music;
 
     public LevelTransition(AssetManager manager, GameCanvas canvas, boolean win) {
         this.levelComplete = win;
@@ -68,7 +68,6 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
-            ;
         });
         stage.addActor(nextButton);
 
@@ -81,7 +80,6 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
-            ;
         });
         stage.addActor(replaybutton);
 
@@ -94,7 +92,6 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
-            ;
         });
         stage.addActor(mainMenu);
 
@@ -127,12 +124,12 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
      */
     private ScreenListener listener;
 
-    private int level = -1;
+    private final int level = -1;
 
 
-    private boolean active;
+    private final boolean active;
 
-    private ArrayList<LevelMetaData> levels;
+    private final ArrayList<LevelMetaData> levels;
 
 
     @Override
