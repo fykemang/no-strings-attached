@@ -121,7 +121,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Texture file for the exit door
      */
-    private static final String CITYGATE = "entities/citydoor.png";
+    private static final String CITYGATE = "entities/citydoor1.png";
     /**
      * Texture files for items
      */
@@ -851,8 +851,8 @@ public class GameMode extends Mode implements Screen {
         player.setFilterData(playerFilter);
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
-        float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
-                citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
+        float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
+                citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
                 0f};
 
 
@@ -1032,6 +1032,9 @@ public class GameMode extends Mode implements Screen {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
             } else if (!player.isAlive() || player.won()) {
+                if (player.won() && player.isAttached() && playerRope != null) {
+                    destroyPlayerRope();
+                }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                 if (timeSeconds > period) {
                     timeSeconds = 0;
@@ -1069,6 +1072,17 @@ public class GameMode extends Mode implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             exitToSelector();
         }
+    }
+
+    private void destroyPlayerRope() {
+        playerRope.markRemoved(true);
+        player.setTarget(null);
+        ropeQueryCallback.reset();
+        playerRope = null;
+        world.destroyJoint(player.getSwingJoint());
+        player.setAttached(false);
+        player.setSwingJoint(null);
+        player.resetShootCooldown();
     }
 
     /**
@@ -1129,7 +1143,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 player.setTarget(ropeQueryCallback.getClosestNpc());
             }
 
@@ -1142,9 +1156,9 @@ public class GameMode extends Mode implements Screen {
                             NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                                for (NpcRope r : ropes) {
-                                    r.markRemoved(true);
-                                }
+//                                for (NpcRope r : ropes) {
+//                                    r.markRemoved(true);
+//                                }
                             }
                         }
                     }
@@ -1153,14 +1167,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
-                playerRope.markRemoved(true);
-                player.setTarget(null);
-                ropeQueryCallback.reset();
-                playerRope = null;
-                world.destroyJoint(player.getSwingJoint());
-                player.setAttached(false);
-                player.setSwingJoint(null);
-                player.resetShootCooldown();
+                destroyPlayerRope();
             }
 
             // Swinging
