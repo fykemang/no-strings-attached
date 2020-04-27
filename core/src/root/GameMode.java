@@ -339,10 +339,14 @@ public class GameMode implements Screen {
     /**
      * Files for music assets
      */
-    private final String CITY_MUSIC_FILE = "music/shine.mp3";
-    private final String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
-    private String FOREST_MUSIC_FILE;
-    private String MOUNTAIN_MUSIC_FILE;
+    private final String CITY_MUSIC_FILE = "music/flight.mp3";
+    private final String SUBURB_MUSIC_FILE = "music/warmsand.mp3";
+    private final String FOREST_MUSIC_FILE = "music/youare.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
+    private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
+
 
     /**
      * Music object played in the game
@@ -543,6 +547,16 @@ public class GameMode implements Screen {
         assets.add(CITY_MUSIC_FILE);
         manager.load(SUBURB_MUSIC_FILE, Music.class);
         assets.add(SUBURB_MUSIC_FILE);
+        manager.load(FOREST_MUSIC_FILE, Music.class);
+        assets.add(FOREST_MUSIC_FILE);
+        manager.load(MOUNTAIN_MUSIC_FILE, Music.class);
+        assets.add(MOUNTAIN_MUSIC_FILE);
+        manager.load(OPENING_CUTSCENE_FILE, Music.class);
+        assets.add(OPENING_CUTSCENE_FILE);
+        manager.load(ENDING_CUTSCENE_FILE, Music.class);
+        assets.add(ENDING_CUTSCENE_FILE);
+        manager.load(TRANSITION_CUTSCENE_FILE, Music.class);
+        assets.add(TRANSITION_CUTSCENE_FILE);
 
         if (worldAssetState != AssetState.EMPTY) {
             return;
@@ -587,10 +601,10 @@ public class GameMode implements Screen {
             music = manager.get(SUBURB_MUSIC_FILE);
             tileTexture = createTexture(manager, SUBURB_TILE_FILE, false);
         } else if (type.contains("forest")) {
-            music = Gdx.audio.newMusic(Gdx.files.internal(FOREST_MUSIC_FILE));
+            music = manager.get(FOREST_MUSIC_FILE);
             tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
         } else {
-            music = Gdx.audio.newMusic(Gdx.files.internal(MOUNTAIN_MUSIC_FILE));
+            music = manager.get(MOUNTAIN_MUSIC_FILE);
             tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
         }
 
