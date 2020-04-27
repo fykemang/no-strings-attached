@@ -72,7 +72,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         nextButton.addListener( new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("next");
+                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             };
         });
         stage.addActor(nextButton);

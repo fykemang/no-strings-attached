@@ -58,6 +58,8 @@ public class GameMode extends Mode implements Screen {
     public static final int EXIT_PREV = 2;
 
     public static final int EXIT_INTO_GAME = 3;
+
+    public static final int EXIT_INTO_NEXT = 6;
     /**
      * How many frames after winning/losing do we continue?
      */

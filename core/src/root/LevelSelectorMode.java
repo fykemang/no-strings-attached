@@ -387,6 +387,11 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         return levelMetadata.getLevel(level);
     }
 
+    public Level getNextLevel() {
+        if (level+1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level+1);
+    }
+
     public void reset() {
         level = -1;
         ready = false;
