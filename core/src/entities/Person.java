@@ -378,7 +378,7 @@ public class Person extends CapsuleObstacle {
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
-        }else if(len < MIN_TRAMPOLINE){
+        } else if (len < MIN_TRAMPOLINE) {
             trampolineForce.scl(MIN_TRAMPOLINE / len);
         }
     }
@@ -513,8 +513,7 @@ public class Person extends CapsuleObstacle {
                 ((FilmStrip) texture).setNextFrame();
             }
         }
-        if(won){
-            setAttached(false);
+        if (won) {
             setLinearVelocity(Vector2.Zero);
         }
 
@@ -611,8 +610,9 @@ public class Person extends CapsuleObstacle {
     }
 
     public void atGate() {
-        if (collectedAll)
+        if (collectedAll) {
             won = true;
+        }
     }
 
     public void setCollectedAll(boolean all) {

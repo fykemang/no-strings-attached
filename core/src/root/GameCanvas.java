@@ -1302,7 +1302,7 @@ public class GameCanvas {
         local.translate(-ox, -oy);
     }
 
-    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
+    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, Color tint, int k, Vector2[] points) {
         Gdx.gl20.glLineWidth(2);
         shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
@@ -1310,7 +1310,7 @@ public class GameCanvas {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl20.glLineWidth(3);
-        shapeRenderer.setColor(new Color(1, 0, 0, 0.7f));
+        shapeRenderer.setColor(tint);
         for (int i = 1; i < k - 1; i++) {
             shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
