@@ -574,6 +574,7 @@ public class GameMode extends Mode implements Screen {
                 music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
         }
+
         music.play();
         music.setLooping(true);
     }
