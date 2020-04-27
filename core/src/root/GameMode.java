@@ -792,7 +792,12 @@ public class GameMode extends Mode implements Screen {
 
         // Create platforms
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), level.getType(), "tile" + i, 1f);
+            Tile tile = tiles.get(i);
+            if(tile.isSliding()){
+                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight());
+            }else {
+                createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f);
+            }
         }
 
         for (Tile spike : spikes) {
