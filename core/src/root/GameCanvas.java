@@ -1333,7 +1333,7 @@ public class GameCanvas {
     public void drawUIText(String text, int x, int y) {
         spriteBatch.end();
         UIBatch.begin();
-        font.draw(UIBatch,text, x, y);
+        font.draw(UIBatch, text, x, y);
         UIBatch.end();
         spriteBatch.begin();
     }
@@ -1389,7 +1389,7 @@ public class GameCanvas {
     }
 
 
-    public void actStage(Stage stage){
+    public void actStage(Stage stage) {
         spriteBatch.end();
         stage.act();
         UIBatch.begin();

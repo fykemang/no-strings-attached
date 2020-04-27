@@ -65,6 +65,7 @@ public class FilmStrip extends TextureRegion {
      * at the current frame
      */
     private boolean freeze;
+
     /**
      * Creates a new filmstrip from the given texture.
      *

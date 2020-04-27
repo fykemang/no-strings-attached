@@ -181,9 +181,9 @@ public class GameMode extends Mode implements Screen {
     /**
      * Retro font for displaying messages
      */
-    private static String FONT_FILE = "ui/RetroGame.ttf";
+    private static final String FONT_FILE = "ui/RetroGame.ttf";
     private static final String ROPE_SEGMENT = "entities/rope_segment.png";
-    private static int FONT_SIZE = 64;
+    private static final int FONT_SIZE = 64;
 
     /**
      * The textures for walls and platforms
@@ -222,7 +222,7 @@ public class GameMode extends Mode implements Screen {
      * The world scale
      */
     protected Vector2 scale;
-    private Random rand;
+    private final Random rand;
 
     /**
      * Texture assets for character avatar
@@ -311,10 +311,6 @@ public class GameMode extends Mode implements Screen {
      */
     private ScreenListener listener;
     /**
-     * Whether or not this is an active controller
-     */
-    private boolean active;
-    /**
      * Whether we have completed this level
      */
     private boolean complete;
@@ -330,6 +326,8 @@ public class GameMode extends Mode implements Screen {
      * Countdown active for winning or losing
      */
     private int countdown;
+
+    private GameState gameState;
 
     /**
      * Files for music assets
@@ -415,7 +413,6 @@ public class GameMode extends Mode implements Screen {
         complete = false;
         failed = false;
         debug = false;
-        active = false;
         countdown = -1;
         this.npcs = new HashMap<>();
         this.npcShock = new HashMap<>();
@@ -848,6 +845,7 @@ public class GameMode extends Mode implements Screen {
         ropeQueryCallback.reset();
         cuttingCallback.setPlayer(player);
         cuttingCallback.reset();
+        gameState = GameState.PLAYING;
         playerDeathAnimation.setFrame(0);
     }
 
@@ -880,7 +878,7 @@ public class GameMode extends Mode implements Screen {
 
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
-       //add player
+        //add player
         addObject(player);
         // Create NPCs
         for (int i = 0; i < npcData.size(); i += 2) {
@@ -1052,7 +1050,7 @@ public class GameMode extends Mode implements Screen {
             } else if (input.didRetreat()) {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
-            }else if (!player.isAlive() || player.won()){
+            } else if (!player.isAlive() || player.won()){
 //                loseSound.play(0.5f);
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                     if (timeSeconds > period) {
@@ -1083,6 +1081,16 @@ public class GameMode extends Mode implements Screen {
         return true;
     }
 
+    public void updatePaused(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            gameState = GameState.PLAYING;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            exitToSelector();
+        }
+    }
+
     /**
      * The core gameplay loop of this world.
      * <p>
@@ -1097,15 +1105,14 @@ public class GameMode extends Mode implements Screen {
         // Process actions in object model
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
-                || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
-            music.dispose();
-            exitToSelector();
+                || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
+            gameState = GameState.PAUSED;
+//            exitToSelector();
         }
 
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
-
         if (player.won()){
 //            winSound.play();
             player.setTexture(playerExitAnimation);
@@ -1140,7 +1147,6 @@ public class GameMode extends Mode implements Screen {
                     onNpc.setTexture(normalTex);
                 }
             }
-
 
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
@@ -1225,7 +1231,7 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setStart(playerPos, false);
                 playerRope.setEnd(targetPos, false);
             }
-        }else{
+        } else {
             player.setTexture(playerDeathAnimation);
         }
 
@@ -1238,6 +1244,13 @@ public class GameMode extends Mode implements Screen {
         Vector2 worldCoordinates = canvas.getMouseCoordinates(screenCoordinate.x, screenCoordinate.y);
         worldCoordinates.scl(1 / scale.x, 1 / scale.y);
         return worldCoordinates;
+    }
+
+    public void drawPaused(float dt) {
+        canvas.begin();
+        canvas.drawUIText("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
+        canvas.drawUIText("Press Q to Quit", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2);
+        canvas.end();
     }
 
     public void draw(float dt) {
@@ -1359,7 +1372,7 @@ public class GameMode extends Mode implements Screen {
         return debug;
     }
 
-    public boolean levelComplete(){
+    public boolean levelComplete() {
         return player.won();
     }
 
@@ -1557,6 +1570,11 @@ public class GameMode extends Mode implements Screen {
         // IGNORE FOR NOW
     }
 
+    @Override
+    public void show() {
+
+    }
+
     /**
      * Called when the Screen should render itself.
      * <p>
@@ -1566,12 +1584,18 @@ public class GameMode extends Mode implements Screen {
      * @param delta Number of seconds since last animation frame
      */
     public void render(float delta) {
-        if (active) {
-            if (preUpdate(delta)) {
-                update(delta); // This is the one that must be defined.
-                postUpdate(delta);
-            }
-            draw(delta);
+        switch (gameState) {
+            case PLAYING:
+                if (preUpdate(delta)) {
+                    update(delta); // This is the one that must be defined.
+                    postUpdate(delta);
+                }
+                draw(delta);
+                break;
+            case PAUSED:
+                updatePaused(delta);
+                drawPaused(delta);
+                break;
         }
     }
 
@@ -1594,21 +1618,11 @@ public class GameMode extends Mode implements Screen {
         music.play();
     }
 
-    /**
-     * Called when this screen becomes the current screen for a Game.
-     */
-    public void show() {
-        // Useless if called in outside animation loop
-        active = true;
+    @Override
+    public void hide() {
+
     }
 
-    /**
-     * Called when this screen is no longer the current screen for a Game.
-     */
-    public void hide() {
-        // Useless if called in outside animation loop
-        active = false;
-    }
 
     /**
      * Sets the ScreenListener for this mode
@@ -1636,4 +1650,9 @@ public class GameMode extends Mode implements Screen {
     public void setLevel(Level level) {
         this.level = level;
     }
+
+    private enum GameState {
+        PLAYING, PAUSED
+    }
 }
+

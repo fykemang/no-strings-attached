@@ -14,7 +14,6 @@ package root;/*
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -184,37 +183,38 @@ public class GDXRoot extends Game implements ScreenListener {
             Gdx.input.setInputProcessor(levelSelector);
             setScreen(levelSelector);
             gameMode.pause();
-        } else if (screen == gameMode && exitCode == LevelTransition.INTO_TRANSITION){
+        } else if (screen == gameMode && exitCode == LevelTransition.INTO_TRANSITION) {
             transition = new LevelTransition(manager, UIcanvas, gameMode.levelComplete());
             transition.setScreenListener(this);
             setScreen(transition);
             gameMode.pause();
-        } else if (screen == transition){
-            switch(exitCode) {
-                case(LevelSelectorMode.INTO_SELECTOR):
-                            levelSelector.reset();
-                             Gdx.input.setInputProcessor(levelSelector);
-                             setScreen(levelSelector);
-                             transition.dispose();
-                             break;
-                case(GameMode.EXIT_INTO_GAME):
-                    gameMode.reset();
-                    gameMode.resume();
-                    setScreen(gameMode);
-                    transition.dispose();
-                    break;
-                case(GameMode.EXIT_INTO_NEXT):
-                    currentLevel++;
-                    gameMode.setLevel(levelSelector.getLevel(currentLevel));
-                    gameMode.loadContent(manager);
-                    gameMode.initializeContent(manager);
-                    gameMode.reset();
-                    setScreen(gameMode);
-                    transition.dispose();
+        } else if (screen == transition) {
+                switch (exitCode) {
+                    case (LevelSelectorMode.INTO_SELECTOR):
+                        levelSelector.reset();
+                        Gdx.input.setInputProcessor(levelSelector);
+                        setScreen(levelSelector);
+                        transition.dispose();
+                        break;
+                    case (GameMode.EXIT_INTO_GAME):
+                        gameMode.reset();
+                        gameMode.resume();
+                        setScreen(gameMode);
+                        transition.dispose();
+                        break;
+                    case (GameMode.EXIT_INTO_NEXT):
+                        currentLevel++;
+                        gameMode.setLevel(levelSelector.getLevel(currentLevel));
+                        gameMode.loadContent(manager);
+                        gameMode.initializeContent(manager);
+                        gameMode.reset();
+                        setScreen(gameMode);
+                        transition.dispose();
+                }
+            } else if (exitCode == GameMode.EXIT_QUIT) {
+                Gdx.app.exit();
             }
-        } else if (exitCode == GameMode.EXIT_QUIT) {
-            Gdx.app.exit();
         }
+
     }
 
-}

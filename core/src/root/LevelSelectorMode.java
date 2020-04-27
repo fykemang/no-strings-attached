@@ -266,7 +266,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void dispose() {
-        if (levelSelectorMusic!=null)
+        if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
     }
 
@@ -397,8 +397,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
     public Level getNextLevel() {
-        if (level+1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
-        return levelMetadata.getLevel(level+1);
+        if (level + 1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level + 1);
     }
 
     public void reset() {

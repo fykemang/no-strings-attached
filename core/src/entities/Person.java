@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
-import obstacle.WheelObstacle;
 import root.GameCanvas;
 import util.FilmStrip;
 
@@ -138,7 +137,8 @@ public class Person extends CapsuleObstacle {
     private Person target;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private final float MAX_TRAMPOLINE = 0.8f;
+    private final float MAX_TRAMPOLINE = 0.35f;
+    private final float MIN_TRAMPOLINE = 0.05f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
@@ -374,11 +374,12 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = 5.9f;
-        this.trampolineForce.set(magnitude * trampolineDir.x / adjust, magnitude * trampolineDir.y / adjust);
+        this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
+        }else if(len < MIN_TRAMPOLINE){
+            trampolineForce.scl(MIN_TRAMPOLINE / len);
         }
     }
 
@@ -512,6 +513,10 @@ public class Person extends CapsuleObstacle {
                 ((FilmStrip) texture).setNextFrame();
             }
         }
+        if(won){
+            setAttached(false);
+            setLinearVelocity(Vector2.Zero);
+        }
 
         super.update(dt);
     }
@@ -571,9 +576,9 @@ public class Person extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        if (won()){
-            tint.set(tint.r,tint.g,tint.b,tint.a*0.97f);
-        }else {
+        if (won()) {
+            tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
+        } else {
             tint.set(Color.WHITE);
         }
         canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
