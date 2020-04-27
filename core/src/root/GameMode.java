@@ -830,7 +830,6 @@ public class GameMode extends Mode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
         List<Tile> tiles = level.getTiles();
