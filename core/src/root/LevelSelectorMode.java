@@ -266,7 +266,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void dispose() {
-        levelSelectorMusic.dispose();
+        if (levelSelectorMusic!=null)
+            levelSelectorMusic.dispose();
     }
 
     @Override

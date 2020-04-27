@@ -87,7 +87,7 @@ public class GameMode extends Mode implements Screen {
     // time after game ends
     private float timeSeconds = 0f;
     // wait time
-    private float period = 1f;
+    private float period = 2f;
 
 
     /**
@@ -100,6 +100,7 @@ public class GameMode extends Mode implements Screen {
     private static final String PLAYER_FALL = "player/player_fall.png";
     private static final String PLAYER_ENTER = "player/player_enter.png";
     private static final String PLAYER_EXIT = "player/player_exit.png";
+    private static final String PLAYER_DEATH = "player/player_death.png";
 
     /**
      * NPC animations
@@ -281,6 +282,7 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip playerEnterAnimation;
     private FilmStrip playerExitAnimation;
     private FilmStrip playerJumpAnimation;
+    private FilmStrip playerDeathAnimation;
     /**
      * FilmStrip objects to show NPC animations
      */
@@ -536,6 +538,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(PLAYER_FALL);
         manager.load(PLAYER_SWING_ANIMATION, Texture.class);
         assets.add(PLAYER_SWING_ANIMATION);
+        manager.load(PLAYER_DEATH, Texture.class);
+        assets.add(PLAYER_DEATH);
 
         // Load NPC Animations
         manager.load(NPC_CHEESE, Texture.class);
@@ -668,6 +672,7 @@ public class GameMode extends Mode implements Screen {
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21);
         playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15);
         playerJumpAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
+        playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
         bulletTexture = createTexture(manager, BULLET_FILE, false);
         crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
@@ -823,6 +828,7 @@ public class GameMode extends Mode implements Screen {
         ropeQueryCallback.reset();
         cuttingCallback.setPlayer(player);
         cuttingCallback.reset();
+        playerDeathAnimation.setFrame(0);
     }
 
     /**
@@ -1080,7 +1086,9 @@ public class GameMode extends Mode implements Screen {
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
 
-        if (player.isAlive()) {
+        if (player.won()){
+            player.setTexture(playerExitAnimation);
+        }else if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
@@ -1196,6 +1204,8 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setStart(playerPos, false);
                 playerRope.setEnd(targetPos, false);
             }
+        }else{
+            player.setTexture(playerDeathAnimation);
         }
 
         // If we use sound, we must remember this.
