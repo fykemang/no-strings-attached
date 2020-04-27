@@ -28,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import entities.*;
 import obstacle.Obstacle;
 import util.*;
@@ -176,9 +177,9 @@ public class GameMode extends Mode implements Screen {
     /**
      * Retro font for displaying messages
      */
-    private static String FONT_FILE = "ui/RetroGame.ttf";
+    private static final String FONT_FILE = "ui/RetroGame.ttf";
     private static final String ROPE_SEGMENT = "entities/rope_segment.png";
-    private static int FONT_SIZE = 64;
+    private static final int FONT_SIZE = 64;
 
     /**
      * The textures for walls and platforms
@@ -217,7 +218,7 @@ public class GameMode extends Mode implements Screen {
      * The world scale
      */
     protected Vector2 scale;
-    private Random rand;
+    private final Random rand;
 
     /**
      * Texture assets for character avatar
@@ -305,10 +306,6 @@ public class GameMode extends Mode implements Screen {
      */
     private ScreenListener listener;
     /**
-     * Whether or not this is an active controller
-     */
-    private boolean active;
-    /**
      * Whether we have completed this level
      */
     private boolean complete;
@@ -324,6 +321,8 @@ public class GameMode extends Mode implements Screen {
      * Countdown active for winning or losing
      */
     private int countdown;
+
+    private GameState gameState;
 
     /**
      * Files for music assets
@@ -391,7 +390,6 @@ public class GameMode extends Mode implements Screen {
         complete = false;
         failed = false;
         debug = false;
-        active = false;
         countdown = -1;
         this.npcs = new HashMap<>();
         this.npcShock = new HashMap<>();
@@ -745,6 +743,7 @@ public class GameMode extends Mode implements Screen {
         ropeQueryCallback.reset();
         cuttingCallback.setPlayer(player);
         cuttingCallback.reset();
+        gameState = GameState.PLAYING;
     }
 
     /**
@@ -973,6 +972,16 @@ public class GameMode extends Mode implements Screen {
         return true;
     }
 
+    public void updatePaused(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            gameState = GameState.PLAYING;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            exitToSelector();
+        }
+    }
+
     /**
      * The core gameplay loop of this world.
      * <p>
@@ -987,131 +996,128 @@ public class GameMode extends Mode implements Screen {
         // Process actions in object model
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
-                || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))) {
-            music.dispose();
-            exitToSelector();
+                || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
+            gameState = GameState.PAUSED;
+//            exitToSelector();
         }
 
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
 
-        if (player.isAlive()) {
-            player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
-            player.setJumping(InputController.getInstance().didPrimary());
-            player.setShooting(InputController.getInstance().didTertiary());
-            player.setCutting(InputController.getInstance().didSecondary());
-            player.applyForce();
+        player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
+        player.setJumping(InputController.getInstance().didPrimary());
+        player.setShooting(InputController.getInstance().didTertiary());
+        player.setCutting(InputController.getInstance().didSecondary());
+        player.applyForce();
 
 
-            if (!player.isGrounded() && !player.isAttached()) {
-                player.setTexture(playerJumpAnimation);
-            } else if (player.isAttached()) {
-                player.setTexture(playerSwingAnimation);
-            } else if (player.isFalling()) {
-                player.setTexture(playerFallTexture);
-            } else if (player.isWalking()) {
-                player.setTexture(playerWalkingAnimation);
-            } else if (player.isGrounded()) {
-                player.setTexture(playerIdleAnimation);
+        if (!player.isGrounded() && !player.isAttached()) {
+            player.setTexture(playerJumpAnimation);
+        } else if (player.isAttached()) {
+            player.setTexture(playerSwingAnimation);
+        } else if (player.isFalling()) {
+            player.setTexture(playerFallTexture);
+        } else if (player.isWalking()) {
+            player.setTexture(playerWalkingAnimation);
+        } else if (player.isGrounded()) {
+            player.setTexture(playerIdleAnimation);
+        }
+
+        NpcPerson onNpc = player.getOnNpc();
+        if (onNpc != null) {
+            String type = onNpc.getType();
+            if (player.isOnNpc()) {
+                TextureRegion shockTex = npcShock.get(type);
+                onNpc.setTexture(shockTex);
+            } else {
+                TextureRegion normalTex = npcs.get(type);
+                onNpc.setTexture(normalTex);
             }
+        }
 
-            NpcPerson onNpc = player.getOnNpc();
-            if (onNpc != null) {
-                String type = onNpc.getType();
-                if (player.isOnNpc()) {
-                    TextureRegion shockTex = npcShock.get(type);
-                    onNpc.setTexture(shockTex);
-                } else {
-                    TextureRegion normalTex = npcs.get(type);
-                    onNpc.setTexture(normalTex);
-                }
-            }
+        if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+            world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
+            player.setTarget(ropeQueryCallback.getClosestNpc());
+        }
 
-
-            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
-                player.setTarget(ropeQueryCallback.getClosestNpc());
-            }
-
-            if (player.isCutting()) {
-                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
-                int id = cuttingCallback.getClosestBlobID();
-                if (id != -1) {
-                    for (Obstacle obs : objects) {
-                        if (obs.getName().equals("couples" + id)) {
-                            NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                            if (ropes != null) {
-                                ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                                for (NpcRope r : ropes) {
-                                    r.markRemoved(true);
-                                }
+        if (player.isCutting()) {
+            world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
+            int id = cuttingCallback.getClosestBlobID();
+            if (id != -1) {
+                for (Obstacle obs : objects) {
+                    if (obs.getName().equals("couples" + id)) {
+                        NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
+                        if (ropes != null) {
+                            ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                            for (NpcRope r : ropes) {
+                                r.markRemoved(true);
                             }
                         }
                     }
-                    cuttingCallback.reset();
                 }
+                cuttingCallback.reset();
             }
+        }
 
-            if (!player.isShooting() && player.isAttached() && playerRope != null) {
-                playerRope.markRemoved(true);
-                player.setTarget(null);
-                ropeQueryCallback.reset();
-                playerRope = null;
-                world.destroyJoint(player.getSwingJoint());
-                player.setAttached(false);
-                player.setSwingJoint(null);
-                player.resetShootCooldown();
-            }
+        if (!player.isShooting() && player.isAttached() && playerRope != null) {
+            playerRope.markRemoved(true);
+            player.setTarget(null);
+            ropeQueryCallback.reset();
+            playerRope = null;
+            world.destroyJoint(player.getSwingJoint());
+            player.setAttached(false);
+            player.setSwingJoint(null);
+            player.resetShootCooldown();
+        }
 
-            // Swinging
-            if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
-                Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
-                Vector2 playerPos = player.getPosition();
-                Vector2 targetPos = player.getTarget().getPosition();
-                playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 4.5f);
-                playerRope.setLinearVelocityAll(player.getLinearVelocity());
-                Filter playerRopeFilter = new Filter();
-                playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
-                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
-                playerRope.setFilterDataAll(playerRopeFilter);
-                playerRope.setName("player_rope");
-                playerRope.setDrawScale(scale);
-                addObject(playerRope);
+        // Swinging
+        if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
+            Vector2 anchor = new Vector2(player.getWidth() / 2f - 0.2f, player.getWidth() / 2f + 0.1f);
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 4.5f);
+            playerRope.setLinearVelocityAll(player.getLinearVelocity());
+            Filter playerRopeFilter = new Filter();
+            playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
+            playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+            playerRope.setFilterDataAll(playerRopeFilter);
+            playerRope.setName("player_rope");
+            playerRope.setDrawScale(scale);
+            addObject(playerRope);
 
-                revoluteJointDef.bodyB = player.getBody();
-                revoluteJointDef.bodyA = playerRope.getBody();
-                revoluteJointDef.localAnchorB.set(anchor);
-                revoluteJointDef.collideConnected = false;
-                world.createJoint(revoluteJointDef);
+            revoluteJointDef.bodyB = player.getBody();
+            revoluteJointDef.bodyA = playerRope.getBody();
+            revoluteJointDef.localAnchorB.set(anchor);
+            revoluteJointDef.collideConnected = false;
+            world.createJoint(revoluteJointDef);
 
-                anchor.set(0, 0);
-                revoluteJointDef.bodyB = playerRope.getLastLink();
-                revoluteJointDef.bodyA = player.getTarget().getBody();
-                revoluteJointDef.localAnchorA.set(anchor);
-                revoluteJointDef.localAnchorB.set(anchor);
-                revoluteJointDef.collideConnected = false;
-                world.createJoint(revoluteJointDef);
+            anchor.set(0, 0);
+            revoluteJointDef.bodyB = playerRope.getLastLink();
+            revoluteJointDef.bodyA = player.getTarget().getBody();
+            revoluteJointDef.localAnchorA.set(anchor);
+            revoluteJointDef.localAnchorB.set(anchor);
+            revoluteJointDef.collideConnected = false;
+            world.createJoint(revoluteJointDef);
 
-                ropeJointDef.bodyA = player.getBody();
-                ropeJointDef.bodyB = player.getTarget().getBody();
-                ropeJointDef.maxLength = playerRope.getLength();
-                ropeJointDef.collideConnected = true;
-                Joint swingJoint = world.createJoint(ropeJointDef);
-                player.setSwingJoint(swingJoint);
-                player.setAttached(true);
-            }
+            ropeJointDef.bodyA = player.getBody();
+            ropeJointDef.bodyB = player.getTarget().getBody();
+            ropeJointDef.maxLength = playerRope.getLength();
+            ropeJointDef.collideConnected = true;
+            Joint swingJoint = world.createJoint(ropeJointDef);
+            player.setSwingJoint(swingJoint);
+            player.setAttached(true);
+        }
 
-            /*
-             * Continuously update the rope position to match the player
-             * position
-             */
-            if (player.isAttached() && playerRope != null) {
-                Vector2 playerPos = player.getPosition();
-                Vector2 targetPos = player.getTarget().getPosition();
-                playerRope.setStart(playerPos, false);
-                playerRope.setEnd(targetPos, false);
-            }
+        /*
+         * Continuously update the rope position to match the player
+         * position
+         */
+        if (player.isAttached() && playerRope != null) {
+            Vector2 playerPos = player.getPosition();
+            Vector2 targetPos = player.getTarget().getPosition();
+            playerRope.setStart(playerPos, false);
+            playerRope.setEnd(targetPos, false);
         }
 
         // If we use sound, we must remember this.
@@ -1123,6 +1129,13 @@ public class GameMode extends Mode implements Screen {
         Vector2 worldCoordinates = canvas.getMouseCoordinates(screenCoordinate.x, screenCoordinate.y);
         worldCoordinates.scl(1 / scale.x, 1 / scale.y);
         return worldCoordinates;
+    }
+
+    public void drawPaused(float dt) {
+        canvas.begin();
+        canvas.drawUIText("Press Esc to return back to the game", canvas.getWidth() / 2, canvas.getHeight() / 2 + 100);
+        canvas.drawUIText("Press Q to Quit", canvas.getWidth() / 2, canvas.getHeight() / 2);
+        canvas.end();
     }
 
     public void draw(float dt) {
@@ -1462,6 +1475,11 @@ public class GameMode extends Mode implements Screen {
         // IGNORE FOR NOW
     }
 
+    @Override
+    public void show() {
+
+    }
+
     /**
      * Called when the Screen should render itself.
      * <p>
@@ -1471,12 +1489,18 @@ public class GameMode extends Mode implements Screen {
      * @param delta Number of seconds since last animation frame
      */
     public void render(float delta) {
-        if (active) {
-            if (preUpdate(delta)) {
-                update(delta); // This is the one that must be defined.
-                postUpdate(delta);
-            }
-            draw(delta);
+        switch (gameState) {
+            case PLAYING:
+                if (preUpdate(delta)) {
+                    update(delta); // This is the one that must be defined.
+                    postUpdate(delta);
+                }
+                draw(delta);
+                break;
+            case PAUSED:
+                updatePaused(delta);
+                drawPaused(delta);
+                break;
         }
     }
 
@@ -1498,21 +1522,11 @@ public class GameMode extends Mode implements Screen {
     public void resume() {
     }
 
-    /**
-     * Called when this screen becomes the current screen for a Game.
-     */
-    public void show() {
-        // Useless if called in outside animation loop
-        active = true;
+    @Override
+    public void hide() {
+
     }
 
-    /**
-     * Called when this screen is no longer the current screen for a Game.
-     */
-    public void hide() {
-        // Useless if called in outside animation loop
-        active = false;
-    }
 
     /**
      * Sets the ScreenListener for this mode
@@ -1539,5 +1553,9 @@ public class GameMode extends Mode implements Screen {
 
     public void setLevel(Level level) {
         this.level = level;
+    }
+
+    private enum GameState {
+        PLAYING, PAUSED
     }
 }
