@@ -829,6 +829,7 @@ public class GameMode extends Mode implements Screen {
         ropeQueryCallback.reset();
         cuttingCallback.setPlayer(player);
         cuttingCallback.reset();
+        playerDeathAnimation.setFrame(0);
     }
 
     /**
