@@ -515,7 +515,6 @@ public class Person extends CapsuleObstacle {
             }
         }
         if(won){
-            setAttached(false);
             setLinearVelocity(Vector2.Zero);
         }
 
@@ -612,8 +611,9 @@ public class Person extends CapsuleObstacle {
     }
 
     public void atGate() {
-        if (collectedAll)
+        if (collectedAll){
             won = true;
+        }
     }
 
     public void setCollectedAll(boolean all) {

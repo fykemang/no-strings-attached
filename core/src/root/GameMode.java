@@ -1036,11 +1036,14 @@ public class GameMode extends Mode implements Screen {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
             }else if (!player.isAlive() || player.won()){
-                    timeSeconds += Gdx.graphics.getRawDeltaTime();
-                    if (timeSeconds > period) {
-                        timeSeconds = 0;
-                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
-                    }
+                if(player.won() && player.isAttached() && playerRope != null) {
+                    destroyPlayerRope();
+                }
+                timeSeconds += Gdx.graphics.getRawDeltaTime();
+                if (timeSeconds > period) {
+                    timeSeconds = 0;
+                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                }
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {
@@ -1063,6 +1066,17 @@ public class GameMode extends Mode implements Screen {
         }
 
         return true;
+    }
+
+    private void destroyPlayerRope(){
+        playerRope.markRemoved(true);
+        player.setTarget(null);
+        ropeQueryCallback.reset();
+        playerRope = null;
+        world.destroyJoint(player.getSwingJoint());
+        player.setAttached(false);
+        player.setSwingJoint(null);
+        player.resetShootCooldown();
     }
 
     /**
@@ -1124,7 +1138,7 @@ public class GameMode extends Mode implements Screen {
 
 
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 3.8f, playerPosition.y - 3.8f, playerPosition.x + 3.8f, playerPosition.y + 3.8f);
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 player.setTarget(ropeQueryCallback.getClosestNpc());
             }
 
@@ -1148,14 +1162,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
-                playerRope.markRemoved(true);
-                player.setTarget(null);
-                ropeQueryCallback.reset();
-                playerRope = null;
-                world.destroyJoint(player.getSwingJoint());
-                player.setAttached(false);
-                player.setSwingJoint(null);
-                player.resetShootCooldown();
+                destroyPlayerRope();
             }
 
             // Swinging
