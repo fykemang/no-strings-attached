@@ -328,10 +328,14 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for music assets
      */
-    private final String CITY_MUSIC_FILE = "music/shine.mp3";
-    private final String SUBURB_MUSIC_FILE = "music/takingastroll.mp3";
-    private String FOREST_MUSIC_FILE;
-    private String MOUNTAIN_MUSIC_FILE;
+    private final String CITY_MUSIC_FILE = "music/flight.mp3";
+    private final String SUBURB_MUSIC_FILE = "music/warmsand.mp3";
+    private final String FOREST_MUSIC_FILE = "music/youare.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
+    private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
+
 
     /**
      * Music object played in the game
@@ -515,10 +519,20 @@ public class GameMode extends Mode implements Screen {
         loadAsset(POP_FILE, Sound.class, manager);
 
         // Load Music
-        loadAsset(CITY_MUSIC_FILE, Music.class, manager);
-        loadAsset(SUBURB_MUSIC_FILE, Music.class, manager);
-//        loadAsset(FOREST_MUSIC_FILE, Music.class, manager);
-//        loadAsset(MOUNTAIN_MUSIC_FILE, Music.class, manager);
+        manager.load(CITY_MUSIC_FILE, Music.class);
+        assets.add(CITY_MUSIC_FILE);
+        manager.load(SUBURB_MUSIC_FILE, Music.class);
+        assets.add(SUBURB_MUSIC_FILE);
+        manager.load(FOREST_MUSIC_FILE, Music.class);
+        assets.add(FOREST_MUSIC_FILE);
+        manager.load(MOUNTAIN_MUSIC_FILE, Music.class);
+        assets.add(MOUNTAIN_MUSIC_FILE);
+        manager.load(OPENING_CUTSCENE_FILE, Music.class);
+        assets.add(OPENING_CUTSCENE_FILE);
+        manager.load(ENDING_CUTSCENE_FILE, Music.class);
+        assets.add(ENDING_CUTSCENE_FILE);
+        manager.load(TRANSITION_CUTSCENE_FILE, Music.class);
+        assets.add(TRANSITION_CUTSCENE_FILE);
 
         // Load the font
         FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
@@ -559,7 +573,6 @@ public class GameMode extends Mode implements Screen {
             case "mountain":
                 music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
-
         }
     }
 
