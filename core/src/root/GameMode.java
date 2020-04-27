@@ -371,9 +371,9 @@ public class GameMode extends Mode implements Screen {
     /**
      * TextureRegions used in the game
      */
-    private List<TextureRegion> stillBackgroundTextures;
-    private List<TextureRegion> slightMoveBackgroundTextures;
-    private List<TextureRegion> movingBackgroundTextures;
+    private final List<TextureRegion> stillBackgroundTextures;
+    private final List<TextureRegion> slightMoveBackgroundTextures;
+    private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
 
     /**
@@ -401,8 +401,8 @@ public class GameMode extends Mode implements Screen {
         debug = false;
         active = false;
         countdown = -1;
-        this.npcs = new HashMap<String, TextureRegion>();
-        this.npcShock = new HashMap<String, TextureRegion>();
+        this.npcs = new HashMap<>();
+        this.npcShock = new HashMap<>();
     }
 
 
@@ -645,6 +645,9 @@ public class GameMode extends Mode implements Screen {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
         }
+
+        music.play();
+        music.setLooping(true);
     }
 
     @Override
@@ -803,7 +806,6 @@ public class GameMode extends Mode implements Screen {
         }
         objects.clear();
         addQueue.clear();
-        music.dispose();
         world.dispose();
         world = new World(gravity, false);
         setComplete(false);
@@ -820,8 +822,7 @@ public class GameMode extends Mode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        music.play();
-        music.setLooping(true);
+
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
         List<Tile> tiles = level.getTiles();
