@@ -142,6 +142,7 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
 
+    private Color tint = new Color(Color.WHITE);
 
     /**
      * Which direction is the character facing
@@ -505,6 +506,7 @@ public class Person extends CapsuleObstacle {
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
+
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
@@ -568,7 +570,12 @@ public class Person extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+        if (won()) {
+            tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
+        } else {
+            tint.set(Color.WHITE);
+        }
+        canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
     }
 

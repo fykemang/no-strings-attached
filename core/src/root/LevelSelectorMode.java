@@ -195,9 +195,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        screen = canvas.getHeight() - screenY;
-        start = 0;
-        end = 0;
+
+        int screen = canvas.getHeight() - screenY;
+        int start = 0;
+        int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;
@@ -265,7 +266,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void dispose() {
-        levelSelectorMusic.dispose();
+        if (levelSelectorMusic != null)
+            levelSelectorMusic.dispose();
     }
 
     @Override
@@ -380,10 +382,23 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         canvas.end();
     }
 
+    public int getLevelIndex() {
+        return level;
+    }
+
+    public Level getLevel(int level) {
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level);
+    }
 
     public Level getCurrentLevel() {
         if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
         return levelMetadata.getLevel(level);
+    }
+
+    public Level getNextLevel() {
+        if (level + 1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level + 1);
     }
 
     public void reset() {
