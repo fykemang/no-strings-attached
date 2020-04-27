@@ -512,6 +512,10 @@ public class Person extends CapsuleObstacle {
                 ((FilmStrip) texture).setNextFrame();
             }
         }
+        if(won){
+            setAttached(false);
+            setLinearVelocity(Vector2.Zero);
+        }
 
         super.update(dt);
     }
