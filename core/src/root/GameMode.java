@@ -1260,14 +1260,6 @@ public class GameMode extends Mode implements Screen {
         } else {
             canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
         }
-//        for (int i = 1; i <= items.size(); i++) {
-//            if (i <= player.getInventory().size()) {
-//                canvas.drawUI(redYarnTexture, UIX, UIY, 1f);
-//            } else {
-//                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
-//            }
-//            UIX += greyYarnTexture.getRegionWidth();
-//        }
         canvas.end();
 
 
@@ -1437,6 +1429,7 @@ public class GameMode extends Mode implements Screen {
         objects.clear();
         addQueue.clear();
         world.dispose();
+        music.dispose();
         objects = null;
         addQueue = null;
         bounds = null;
@@ -1559,7 +1552,7 @@ public class GameMode extends Mode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        music.dispose();
+        music.pause();
     }
 
     /**
@@ -1568,6 +1561,7 @@ public class GameMode extends Mode implements Screen {
      * This is usually when it regains focus.
      */
     public void resume() {
+        music.play();
     }
 
     /**
@@ -1597,7 +1591,7 @@ public class GameMode extends Mode implements Screen {
 
     public void exitToSelector() {
         if (listener != null) {
-            music.dispose();
+            music.pause();
             listener.exitScreen(this, LevelSelectorMode.INTO_SELECTOR);
         }
     }

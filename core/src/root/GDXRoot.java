@@ -198,6 +198,7 @@ public class GDXRoot extends Game implements ScreenListener {
                              break;
                 case(GameMode.EXIT_INTO_GAME):
                     gameMode.reset();
+                    gameMode.resume();
                     setScreen(gameMode);
                     break;
                 case(GameMode.EXIT_INTO_NEXT):
