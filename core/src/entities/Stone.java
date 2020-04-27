@@ -47,7 +47,7 @@ public class Stone extends PolygonObstacle {
         this.scale = scale;
         this.type = type;
         switch (type) {
-            case "forest" :
+            case "forest":
             case "mountain":
                 this.height = height + 0.6f;
                 this.width = width + 0.6f;

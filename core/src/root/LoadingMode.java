@@ -23,6 +23,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -58,6 +59,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String START_FILE = "ui/start.png";
     private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
+    private static final String MENU_CLICK_FILE = "sounds/click.mp3";
 
     /**
      * Background texture for start-up
@@ -66,7 +68,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     private FilmStrip animatedBkg;
 
-    private Music music;
+    private final Music music;
+    private final Sound clickSound;
 
     /**
      * Play button to display when done
@@ -111,57 +114,57 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Default budget for asset loader (do nothing but load 60 fps)
      */
-    private static int DEFAULT_BUDGET = 15;
+    private static final int DEFAULT_BUDGET = 15;
     /**
      * Standard window size (for scaling)
      */
-    private static int STANDARD_WIDTH = 800;
+    private static final int STANDARD_WIDTH = 800;
     /**
      * Standard window height (for scaling)
      */
-    private static int STANDARD_HEIGHT = 700;
+    private static final int STANDARD_HEIGHT = 700;
     /**
      * Ratio of the bar width to the screen
      */
-    private static float BAR_WIDTH_RATIO = 0.66f;
+    private static final float BAR_WIDTH_RATIO = 0.66f;
     /**
      * Ration of the bar height to the screen
      */
-    private static float BAR_HEIGHT_RATIO = 0.25f;
+    private static final float BAR_HEIGHT_RATIO = 0.25f;
     /**
      * Height of the progress bar
      */
-    private static int PROGRESS_HEIGHT = 30;
+    private static final int PROGRESS_HEIGHT = 30;
     /**
      * Width of the rounded cap on left or right
      */
-    private static int PROGRESS_CAP = 15;
+    private static final int PROGRESS_CAP = 15;
     /**
      * Width of the middle portion in texture atlas
      */
-    private static int PROGRESS_MIDDLE = 200;
+    private static final int PROGRESS_MIDDLE = 200;
     /**
      * Amount to scale the play button
      */
-    private static float BUTTON_SCALE = 0.9f;
+    private static final float BUTTON_SCALE = 0.9f;
 
     /**
      * Start button for XBox controller on Windows
      */
-    private static int WINDOWS_START = 7;
+    private static final int WINDOWS_START = 7;
     /**
      * Start button for XBox controller on Mac OS X
      */
-    private static int MAC_OS_X_START = 4;
+    private static final int MAC_OS_X_START = 4;
 
     /**
      * AssetManager to be loading in the background
      */
-    private AssetManager manager;
+    private final AssetManager manager;
     /**
      * Reference to game.GameCanvas created by the root
      */
-    private GameCanvas canvas;
+    private final GameCanvas canvas;
     /**
      * Listener that will update the player mode when we are done
      */
@@ -211,7 +214,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Support for the X-Box start button in place of play button
      */
-    private int startButton;
+    private final int startButton;
     /**
      * Whether or not this player mode is still active
      */
@@ -330,6 +333,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         music.setVolume(0.5f);
         music.setLooping(true);
 
+        clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
         active = true;
     }
 
@@ -600,18 +604,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
+            clickSound.play(0.5f);
             pressState = MouseState.START;
         }
 
         float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
         float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
+            clickSound.play(0.5f);
             pressState = MouseState.SETTINGS;
         }
 
         float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
         float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
+            clickSound.play(0.5f);
             pressState = MouseState.QUIT;
         }
 

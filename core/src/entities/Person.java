@@ -137,11 +137,13 @@ public class Person extends CapsuleObstacle {
     private Person target;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private final float MAX_TRAMPOLINE = 0.8f;
+    private final float MAX_TRAMPOLINE = 0.35f;
+    private final float MIN_TRAMPOLINE = 0.05f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
 
+    private Color tint = new Color(Color.WHITE);
 
     /**
      * Which direction is the character facing
@@ -372,11 +374,12 @@ public class Person extends CapsuleObstacle {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
         if (magnitude < 3)
             return;
-        float adjust = 5.9f;
-        this.trampolineForce.set(magnitude * trampolineDir.x / adjust, magnitude * trampolineDir.y / adjust);
+        this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
+        } else if (len < MIN_TRAMPOLINE) {
+            trampolineForce.scl(MIN_TRAMPOLINE / len);
         }
     }
 
@@ -505,9 +508,13 @@ public class Person extends CapsuleObstacle {
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
+
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
+        }
+        if (won) {
+            setLinearVelocity(Vector2.Zero);
         }
 
         super.update(dt);
@@ -568,7 +575,12 @@ public class Person extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+        if (won()) {
+            tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
+        } else {
+            tint.set(Color.WHITE);
+        }
+        canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
     }
 
@@ -598,8 +610,9 @@ public class Person extends CapsuleObstacle {
     }
 
     public void atGate() {
-        if (collectedAll)
+        if (collectedAll) {
             won = true;
+        }
     }
 
     public void setCollectedAll(boolean all) {

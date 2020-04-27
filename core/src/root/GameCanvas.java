@@ -145,14 +145,14 @@ public class GameCanvas {
      */
     private Vector3 cacheVector3;
     private Vector2 cacheVector2;
-    private Stage stage;
+    private final Stage stage;
 
     /**
      * Cache object to handle raw textures
      */
     private TextureRegion holder;
 
-    private BitmapFont font;
+    private final BitmapFont font;
 
     /**
      * Creates a new game.GameCanvas determined by the application configuration.
@@ -209,7 +209,7 @@ public class GameCanvas {
         holder = null;
     }
 
-    private Vector2 positionCache = new Vector2();
+    private final Vector2 positionCache = new Vector2();
 
     /**
      * Private method to process the wrap offset of an image.
@@ -1302,7 +1302,7 @@ public class GameCanvas {
         local.translate(-ox, -oy);
     }
 
-    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, int k, Vector2[] points) {
+    public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, Color tint, int k, Vector2[] points) {
         Gdx.gl20.glLineWidth(2);
         shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
@@ -1310,7 +1310,7 @@ public class GameCanvas {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl20.glLineWidth(3);
-        shapeRenderer.setColor(new Color(1, 0, 0, 0.7f));
+        shapeRenderer.setColor(tint);
         for (int i = 1; i < k - 1; i++) {
             shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),
                     catmull.valueAt(points[i + 1], ((float) (i + 1)) / ((float) k - 1)));
@@ -1333,7 +1333,7 @@ public class GameCanvas {
     public void drawUIText(String text, int x, int y) {
         spriteBatch.end();
         UIBatch.begin();
-        font.draw(UIBatch,text, x, y);
+        font.draw(UIBatch, text, x, y);
         UIBatch.end();
         spriteBatch.begin();
     }
@@ -1389,7 +1389,7 @@ public class GameCanvas {
     }
 
 
-    public void actStage(Stage stage){
+    public void actStage(Stage stage) {
         spriteBatch.end();
         stage.act();
         UIBatch.begin();

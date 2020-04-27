@@ -46,8 +46,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Texture selector;
     private BitmapFont selectorFont;
     private themes theme = themes.none;
-    private int city_level = 4;
-    private int suburb_level = 9;
+    private final int city_level = 4;
+    private final int suburb_level = 9;
     private boolean ready = false;
     int city_l = 200;
     int city_r = 600;
@@ -65,7 +65,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     int mon_r = 590;
     int mon_d = 150;
     int mon_u = 296;
-    private ArrayList<Vector2> buttonPos = new ArrayList<>();
+    private final ArrayList<Vector2> buttonPos = new ArrayList<>();
     private AssetState selectorAssetState = AssetState.EMPTY;
     private LevelMetadata levelMetadata;
 
@@ -145,7 +145,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     private int level = -1;
 
-    private boolean active;
+    private final boolean active;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -266,7 +266,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void dispose() {
-        levelSelectorMusic.dispose();
+        if (levelSelectorMusic != null)
+            levelSelectorMusic.dispose();
     }
 
     @Override
@@ -396,8 +397,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
     public Level getNextLevel() {
-        if (level+1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
-        return levelMetadata.getLevel(level+1);
+        if (level + 1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level + 1);
     }
 
     public void reset() {
