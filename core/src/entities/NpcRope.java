@@ -48,6 +48,7 @@ public class NpcRope extends Rope {
     private ArrayList<WheelObstacle> upperLayer;
     private ArrayList<WheelObstacle> lowerLayer;
     public RopeState state;
+    private boolean destroy = false;
 
     public enum RopeState {
         LEFT_BROKEN, RIGHT_BROKEN, COMPLETE
@@ -348,7 +349,7 @@ public class NpcRope extends Rope {
         // Delegate to components
         setCurrentSplineCurve();
         if (state != RopeState.COMPLETE){
-            tint.set(tint.r,tint.g,tint.b,tint.a*0.97f);
+            tint.set(tint.r,tint.g,tint.b,tint.a*0.975f);
         }else {
             float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
             float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;

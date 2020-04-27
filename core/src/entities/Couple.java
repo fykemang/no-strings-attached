@@ -153,6 +153,11 @@ public class Couple extends ComplexObstacle {
 //        rightFragment.markRemoved(true);
         l.setAttached(false);
         r.setAttached(false);
+
+        this.trampLeft = leftFragment;
+        this.trampRight = rightFragment;
+        this.bodies.add(leftFragment);
+        this.bodies.add(rightFragment);
     }
 
     public NpcRope getRope() {
