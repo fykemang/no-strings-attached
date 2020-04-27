@@ -381,6 +381,14 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         canvas.end();
     }
 
+    public int getLevelIndex() {
+        return level;
+    }
+
+    public Level getLevel(int level) {
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level);
+    }
 
     public Level getCurrentLevel() {
         if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
