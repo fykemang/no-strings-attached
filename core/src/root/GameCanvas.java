@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import util.FilmStrip;
@@ -144,11 +145,14 @@ public class GameCanvas {
      */
     private Vector3 cacheVector3;
     private Vector2 cacheVector2;
+    private Stage stage;
 
     /**
      * Cache object to handle raw textures
      */
     private TextureRegion holder;
+
+    private BitmapFont font;
 
     /**
      * Creates a new game.GameCanvas determined by the application configuration.
@@ -158,6 +162,7 @@ public class GameCanvas {
      * of the necessary graphics objects.
      */
     public GameCanvas() {
+
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
         UIBatch = new PolygonSpriteBatch();
@@ -168,7 +173,7 @@ public class GameCanvas {
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
         viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
-
+        stage = new Stage(viewport);
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -181,6 +186,11 @@ public class GameCanvas {
         cacheVector3 = new Vector3();
         cacheVector2 = new Vector2();
         vertex = new Vector2();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
+//        GlyphLayout layout = new GlyphLayout(font, text);
     }
 
     /**
@@ -975,6 +985,13 @@ public class GameCanvas {
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
+    public void drawBackground(Texture image, float ox, float oy, float x, float y, Color tint) {
+        computeTransform(ox, oy, x, y, 0, 1f, 1f);
+        spriteBatch.setColor(tint);
+        spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
+    }
+
+
     public void drawBackground(Texture image, Color tint, float ox, float oy, float x, float y, float sx, float sy) {
         computeTransform(ox, oy, x, y, 0, sx, sy);
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
@@ -1316,12 +1333,7 @@ public class GameCanvas {
     public void drawUIText(String text, int x, int y) {
         spriteBatch.end();
         UIBatch.begin();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
-        BitmapFont font = generator.generateFont(parameter);
-        GlyphLayout layout = new GlyphLayout(font, text);
-        font.draw(UIBatch, layout, x - layout.width / 2, y);
+        font.draw(UIBatch,text, x, y);
         UIBatch.end();
         spriteBatch.begin();
     }
@@ -1375,4 +1387,18 @@ public class GameCanvas {
         Vector3 worldLocation = viewport.unproject(cacheVector3);
         return cacheVector2.set(worldLocation.x, worldLocation.y);
     }
+
+
+    public void actStage(Stage stage){
+        spriteBatch.end();
+        stage.act();
+        UIBatch.begin();
+        stage.draw();
+        UIBatch.end();
+        spriteBatch.begin();
+
+    }
+
 }
+
+

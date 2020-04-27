@@ -195,9 +195,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        screen = canvas.getHeight() - screenY;
-        start = 0;
-        end = 0;
+
+        int screen = canvas.getHeight() - screenY;
+        int start = 0;
+        int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;

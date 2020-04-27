@@ -29,7 +29,7 @@ public class Gate extends PolygonObstacle {
         if (!super.activatePhysics(world)) {
             return false;
         }
-        Vector2 sensorCenter = new Vector2(getWidth() / 2, 1.4f);
+        Vector2 sensorCenter = new Vector2(getWidth() / 2, 1.1f);
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = 0f;
         sensorDef.isSensor = true;

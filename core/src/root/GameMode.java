@@ -82,6 +82,10 @@ public class GameMode extends Mode implements Screen {
      * Height of the game world in Box2d units
      */
     protected static final float DEFAULT_HEIGHT = 18.0f;
+    // time after game ends
+    private float timeSeconds = 0f;
+    // wait time
+    private float period = 1f;
 
 
     /**
@@ -344,7 +348,9 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for region tiles
      */
-    private static final String CITY_TILE_FILE = "entities/city-tile.png";
+
+    private static final String CITY_TILE_FILE = "entities/city-brick.png";
+    private static final String SUBURB_TILE_FILE = "entities/suburb-tiles.png";
     private static final String VILLAGE_TILE_FILE = "entities/suburb-tiles.png";
     private static final String FOREST_TILE_FILE = "entities/mossyrocks.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
@@ -844,11 +850,12 @@ public class GameMode extends Mode implements Screen {
         float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
                 citydoor.getRegionHeight() / 2 / scale.y, citydoor.getRegionWidth() / scale.x,
                 0f};
-        addObject(player);
+
 
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
-
+       //add player
+        addObject(player);
         // Create NPCs
         for (int i = 0; i < npcData.size(); i += 2) {
             NpcData curr = npcData.get(i);
@@ -1020,11 +1027,17 @@ public class GameMode extends Mode implements Screen {
             } else if (input.didRetreat()) {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
+            }else if (!player.isAlive() || player.won()){
+                    timeSeconds += Gdx.graphics.getRawDeltaTime();
+                    if (timeSeconds > period) {
+                        timeSeconds = 0;
+                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                    }
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {
                 if (failed) {
-                    reset();
+                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
                 } else if (complete) {
                     listener.exitScreen(this, EXIT_NEXT);
                     result = false;
@@ -1229,26 +1242,6 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
-        // Checks player win condition
-        if (player.won()) {
-            canvas.drawUIText("you won", canvas.getWidth() / 2, canvas.getHeight() / 2);
-//            final Timer t = new java.util.Timer();
-//            t.schedule(
-//                new java.util.TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        exitToNext();
-//                        t.cancel();
-//                    }
-//                    },
-//                    5000
-//            );
-        }
-
-        // Checks if player died
-        if (!player.isAlive()) {
-            canvas.drawUIText("press r to restart", canvas.getWidth() / 2, canvas.getHeight() / 2);
-        }
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
@@ -1341,6 +1334,10 @@ public class GameMode extends Mode implements Screen {
      */
     public boolean isDebug() {
         return debug;
+    }
+
+    public boolean levelComplete(){
+        return player.won();
     }
 
     /**
@@ -1518,6 +1515,9 @@ public class GameMode extends Mode implements Screen {
                 obj.update(dt);
             }
         }
+//        if (player.won() || !player.isAlive()){
+//            listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+//        }
     }
 
     /**
