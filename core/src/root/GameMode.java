@@ -356,16 +356,16 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for city background
      */
-    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
-    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
-    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
+    private static final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
 
     /**
      * TextureRegions used in the game
      */
-    private List<TextureRegion> stillBackgroundTextures;
-    private List<TextureRegion> slightMoveBackgroundTextures;
-    private List<TextureRegion> movingBackgroundTextures;
+    private final List<TextureRegion> stillBackgroundTextures;
+    private final List<TextureRegion> slightMoveBackgroundTextures;
+    private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
 
     /**
@@ -393,8 +393,8 @@ public class GameMode extends Mode implements Screen {
         debug = false;
         active = false;
         countdown = -1;
-        this.npcs = new HashMap<String, TextureRegion>();
-        this.npcShock = new HashMap<String, TextureRegion>();
+        this.npcs = new HashMap<>();
+        this.npcShock = new HashMap<>();
     }
 
 
@@ -574,6 +574,8 @@ public class GameMode extends Mode implements Screen {
                 music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
         }
+        music.play();
+        music.setLooping(true);
     }
 
     @Override
@@ -732,7 +734,6 @@ public class GameMode extends Mode implements Screen {
         }
         objects.clear();
         addQueue.clear();
-        music.dispose();
         world.dispose();
         world = new World(gravity, false);
         setComplete(false);
@@ -749,8 +750,7 @@ public class GameMode extends Mode implements Screen {
      * Lays out the game geography.
      */
     private void populateLevel() {
-        music.play();
-        music.setLooping(true);
+
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
         List<Tile> tiles = level.getTiles();
