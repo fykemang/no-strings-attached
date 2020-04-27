@@ -146,6 +146,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             } else if (height <= 2) {
+                this.x = getX();
+                this.y = getY();
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -161,6 +163,8 @@ public class Stone extends PolygonObstacle {
                             sc, sc);
                 }
             } else {
+                this.x = getX();
+                this.y = getY();
                 float sca = 1.1f;
                 approxDist = 0.6f;
                 float startX = x * drawScale.x + texture.getRegionWidth() / 2 * sca;
@@ -191,7 +195,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             }
-
+            this.x = getX();
+            this.y = getY();
             float scy = height * drawScale.y / texture.getRegionHeight();
             float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
             float dist = width * drawScale.x / num;
