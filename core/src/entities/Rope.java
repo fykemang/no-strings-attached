@@ -1,6 +1,7 @@
 package entities;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -19,6 +20,8 @@ public abstract class Rope extends ComplexObstacle {
     protected float spacing;
     protected float lWidth;
     protected int id;
+    protected Color tint = new Color(0.67f, 0f, 0f, 1f);
+    ;
 
     public Rope() {
         points = new Vector2[MAX_DRAW_POINTS];
@@ -34,6 +37,7 @@ public abstract class Rope extends ComplexObstacle {
         this.id = id;
         setName(ropeName);
         initializeSegments();
+
     }
 
     abstract void initializeSegments();

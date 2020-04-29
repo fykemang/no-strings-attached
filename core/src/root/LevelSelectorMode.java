@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -33,10 +34,12 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
     private static final String LEVEL_METADATA = "levels/levels.json";
     private static final String SELECTOR_FONT = "ui/blackjack.otf";
+    private static final String MENU_CLICK_FILE = "sounds/click.mp3";
     /**
      * Reference to game.GameCanvas created by the root
      */
     private Music levelSelectorMusic;
+    private Sound clickSound;
     private GameCanvas canvas;
     private Texture background;
     private Texture city;
@@ -46,8 +49,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Texture selector;
     private BitmapFont selectorFont;
     private themes theme = themes.none;
-    private int city_level = 4;
-    private int suburb_level = 9;
+    private final int city_level = 4;
+    private final int suburb_level = 9;
     private boolean ready = false;
     int city_l = 200;
     int city_r = 600;
@@ -65,7 +68,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     int mon_r = 590;
     int mon_d = 150;
     int mon_u = 296;
-    private ArrayList<Vector2> buttonPos = new ArrayList<>();
+    private final ArrayList<Vector2> buttonPos = new ArrayList<>();
     private AssetState selectorAssetState = AssetState.EMPTY;
     private LevelMetadata levelMetadata;
 
@@ -88,6 +91,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         loadAsset(SELECT_FILE, Texture.class, manager);
         loadAsset(CITY_FILE, Texture.class, manager);
         loadAsset(MUSIC_FILE, Music.class, manager);
+        loadAsset(MENU_CLICK_FILE, Sound.class, manager);
     }
 
     @Override
@@ -103,6 +107,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         selector = manager.get(SELECT_FILE, Texture.class);
         levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
+        clickSound = manager.get(MENU_CLICK_FILE, Sound.class);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
@@ -145,7 +150,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     private int level = -1;
 
-    private boolean active;
+    private final boolean active;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -172,6 +177,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //            }
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
+            clickSound.play(0.5f);
             ready = true;
             levelSelectorMusic.dispose();
         }
@@ -195,9 +201,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        screen = canvas.getHeight() - screenY;
-        start = 0;
-        end = 0;
+
+        int screen = canvas.getHeight() - screenY;
+        int start = 0;
+        int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = themes.city;
             start = 0;
@@ -265,7 +272,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void dispose() {
-        levelSelectorMusic.dispose();
+        if (levelSelectorMusic != null)
+            levelSelectorMusic.dispose();
     }
 
     @Override
@@ -380,10 +388,23 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         canvas.end();
     }
 
+    public int getLevelIndex() {
+        return level;
+    }
+
+    public Level getLevel(int level) {
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level);
+    }
 
     public Level getCurrentLevel() {
         if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
         return levelMetadata.getLevel(level);
+    }
+
+    public Level getNextLevel() {
+        if (level + 1 > levelMetadata.getLevelCount() + 1 || level == -1) return null;
+        return levelMetadata.getLevel(level + 1);
     }
 
     public void reset() {

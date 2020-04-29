@@ -29,7 +29,7 @@ public class Spikes extends PolygonObstacle {
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            getY() * drawScale.y, getAngle(), sc, 1);
+                            getY() * drawScale.y, getAngle(), sc, .6f);
                 break;
             case "down":
                 num = (int) (getWidth() * drawScale.x / texture.getRegionWidth());
@@ -38,7 +38,7 @@ public class Spikes extends PolygonObstacle {
                 sc = dist / texture.getRegionWidth();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            getY() * drawScale.y, getAngle(), -sc, -1);
+                            getY() * drawScale.y, getAngle(), -sc, -.6f);
                 break;
             case "right":
                 num = (int) (getHeight() * drawScale.y / texture.getRegionHeight());
@@ -47,7 +47,7 @@ public class Spikes extends PolygonObstacle {
                 sc = dist / texture.getRegionHeight();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x,
-                            getY() * drawScale.y + i * dist, getAngle(), 1, sc);
+                            getY() * drawScale.y + i * dist, getAngle(), .6f, sc);
                 break;
             case "left":
                 num = (int) (getHeight() * drawScale.y / texture.getRegionHeight());
@@ -56,7 +56,7 @@ public class Spikes extends PolygonObstacle {
                 sc = dist / texture.getRegionHeight();
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x,
-                            getY() * drawScale.y + i * dist, getAngle(), -1, -sc);
+                            getY() * drawScale.y + i * dist, getAngle(), -.6f, -sc);
                 break;
         }
 

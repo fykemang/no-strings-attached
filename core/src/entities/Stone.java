@@ -59,6 +59,7 @@ public class Stone extends PolygonObstacle {
         this.scale = scale;
         this.type = type;
         switch (type) {
+            case "forest":
             case "mountain":
                 this.height = height + 0.6f;
                 this.width = width + 0.6f;
@@ -136,7 +137,7 @@ public class Stone extends PolygonObstacle {
     public void draw(GameCanvas canvas) {
         Random rand = new Random();
 
-        if (type.equals("mountain")) {
+        if (type.equals("mountain") || type.equals("forest")) {
             if (height <= 2 && width <= 2) {
                 firstx = x * drawScale.x;
                 firsty = y * drawScale.y;

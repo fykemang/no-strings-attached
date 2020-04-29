@@ -57,7 +57,7 @@ public class Person extends CapsuleObstacle {
 
     private static final float EPSILON = 0.03f;
 
-    private static final float VERTICAL_EPSILON = 0.21f;
+    private static final float VERTICAL_EPSILON = 10f;
     /**
      * Cooldown (in animation frames) for jumping
      */
@@ -142,7 +142,7 @@ public class Person extends CapsuleObstacle {
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
-    private boolean onMovingPlatform;
+    private Color tint = new Color(Color.WHITE);
 
     /**
      * Which direction is the character facing
@@ -377,9 +377,8 @@ public class Person extends CapsuleObstacle {
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
-        }else if(len < MIN_TRAMPOLINE){
+        } else if (len < MIN_TRAMPOLINE) {
             trampolineForce.scl(MIN_TRAMPOLINE / len);
-
         }
     }
 
@@ -508,14 +507,13 @@ public class Person extends CapsuleObstacle {
 
         if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
             frameCount = 0;
+
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
         }
-        if (onMovingPlatform){
-            setFriction(100f);
-        }else{
-            setFriction(0f);
+        if (won) {
+            setLinearVelocity(Vector2.Zero);
         }
 
         super.update(dt);
@@ -576,7 +574,12 @@ public class Person extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x,
+        if (won()) {
+            tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
+        } else {
+            tint.set(Color.WHITE);
+        }
+        canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
     }
 
@@ -606,8 +609,9 @@ public class Person extends CapsuleObstacle {
     }
 
     public void atGate() {
-        if (collectedAll)
+        if (collectedAll) {
             won = true;
+        }
     }
 
     public void setCollectedAll(boolean all) {
