@@ -296,15 +296,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip npcSpikyShockAnimation;
     private FilmStrip npcWelcomeIdleAnimation;
     private FilmStrip npcWelcomeShockAnimation;
-    /**
-     * Texture asset for the bullet
-     */
-    private TextureRegion bulletTexture;
-    /**
-     * Texture asset for the bridge plank
-     */
-    private TextureRegion bridgeTexture;
-    private TextureRegion crosshairTexture;
 
     /**
      * Listener that will update the player mode when we are done
@@ -682,8 +673,6 @@ public class GameMode extends Mode implements Screen {
         playerJumpAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
         playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
-        bulletTexture = createTexture(manager, BULLET_FILE, false);
-        crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
         npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
@@ -728,7 +717,6 @@ public class GameMode extends Mode implements Screen {
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         citydoor = createTexture(manager, CITYGATE, false);
-        bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -993,7 +981,7 @@ public class GameMode extends Mode implements Screen {
         } else {
             rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
         }
-        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
+        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
@@ -1183,9 +1171,6 @@ public class GameMode extends Mode implements Screen {
                             NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world, player.getHeight());
                             if (ropes != null) {
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
-//                                for (NpcRope r : ropes) {
-//                                    r.markRemoved(true);
-//                                }
                             }
                         }
                     }

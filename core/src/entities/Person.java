@@ -233,6 +233,10 @@ public class Person extends CapsuleObstacle {
         return isCutting;
     }
 
+    public void setIsFacingRight(boolean t){
+        isFacingRight = t;
+    }
+
     public void setCutting(boolean isCutting) {
         this.isCutting = isCutting;
     }
