@@ -88,7 +88,6 @@ public class Couple extends ComplexObstacle {
 
         setDensity(10f);
         setLinearDamping(100f);
-        avatar.setFriction(100f);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
         avatar.setTexture(t);
