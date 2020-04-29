@@ -109,7 +109,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_CHEESE = "entities/cheese_idle.png";
     private static final String NPC_NERVY = "entities/nervy_idle.png";
     private static final String NPC_SPIKY = "entities/spiky_idle.png";
-    private static final String NPC_HEYO = "entities/heyo_idle.png";
+    private static final String NPC_HEYO = "entities/hey_idle.png";
     private static final String NPC_WELCOME = "entities/welcome_idle.png";
     private static final String NPC_COZY_SHOCK = "entities/cozy_shock.png";
     private static final String NPC_CHEESE_SHOCK = "entities/cheese_shock.png";
