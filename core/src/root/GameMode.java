@@ -1262,17 +1262,21 @@ public class GameMode extends Mode implements Screen {
         canvas.end();
     }
 
+
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
         for (TextureRegion t : stillBackgroundTextures) {
-            canvas.drawWrapped(t, 0f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+            canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f,t.getRegionWidth(), t.getRegionHeight() );
         }
         for (TextureRegion t : slightMoveBackgroundTextures) {
-            canvas.drawWrapped(t, -.1f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+            canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
+//        for (TextureRegion t : movingBackgroundTextures) {
+////            canvas.drawWrapped(t, -.3f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+////        }
         for (TextureRegion t : movingBackgroundTextures) {
-            canvas.drawWrapped(t, -.3f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
+            canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f,t.getRegionWidth(), t.getRegionHeight());
         }
 //        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
 //        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
