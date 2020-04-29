@@ -1277,10 +1277,6 @@ public class GameMode extends Mode implements Screen {
 //        canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
-        float xpos = player.getX() * scale.x > 240 ? player.getX() * scale.x : 240;
-        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
-        canvas.moveCamera(xpos, ypos);
-
         canvas.begin();
         for (Obstacle obj : objects) {
             if (obj.getName().equals("player_rope")) {
@@ -1557,6 +1553,10 @@ public class GameMode extends Mode implements Screen {
                 // Note that update is called last!
                 obj.update(dt);
             }
+            float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+            float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+            canvas.moveCamera(xpos, ypos);
+
         }
 //        if (player.won() || !player.isAlive()){
 //            listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
