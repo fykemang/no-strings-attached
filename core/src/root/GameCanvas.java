@@ -1303,13 +1303,12 @@ public class GameCanvas {
     }
 
     public void drawCatmullRom(CatmullRomSpline<Vector2> catmull, Color tint, int k, Vector2[] points) {
-        Gdx.gl20.glLineWidth(2);
         shapeRenderer.setProjectionMatrix(camera.combined);
         spriteBatch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        Gdx.gl20.glLineWidth(3);
+        Gdx.gl20.glLineWidth(2);
         shapeRenderer.setColor(tint);
         for (int i = 1; i < k - 1; i++) {
             shapeRenderer.line(catmull.valueAt(points[i], ((float) i) / ((float) k - 1)),

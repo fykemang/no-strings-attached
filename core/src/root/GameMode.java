@@ -1474,7 +1474,8 @@ public class GameMode extends Mode implements Screen {
         objects.clear();
         addQueue.clear();
         world.dispose();
-        music.dispose();
+        if(music!=null)
+            music.dispose();
         objects = null;
         addQueue = null;
         bounds = null;

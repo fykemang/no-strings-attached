@@ -57,7 +57,7 @@ public class Person extends CapsuleObstacle {
 
     private static final float EPSILON = 0.03f;
 
-    private static final float VERTICAL_EPSILON = 0.21f;
+    private static final float VERTICAL_EPSILON = 10f;
     /**
      * Cooldown (in animation frames) for jumping
      */

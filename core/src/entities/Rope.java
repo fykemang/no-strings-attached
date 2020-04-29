@@ -20,7 +20,7 @@ public abstract class Rope extends ComplexObstacle {
     protected float spacing;
     protected float lWidth;
     protected int id;
-    protected Color tint = new Color(1, 0, 0, 0.7f);
+    protected Color tint = new Color(0.67f, 0f, 0f, 1f);
     ;
 
     public Rope() {
