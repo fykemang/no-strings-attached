@@ -36,6 +36,18 @@ public class Stone extends PolygonObstacle {
     float y;
     String type;
 
+    public void setIsSliding(boolean b){
+        isSliding = b;
+    }
+    public void setSlideLim(float[] left, float[] right){
+//        setFriction(10f);
+        isSliding = true;
+        back = false;
+        leftSlideLim = new Vector2(left[0], left[1]);
+        rightSlideLim = new Vector2(right[0], right[1]);
+        slideDir = new Vector2(left[0] - getX(), left[1] - getY());
+        slideDir.nor();
+    }
 
     public Stone(float[] points) {
         super(points);
@@ -79,19 +91,14 @@ public class Stone extends PolygonObstacle {
 
     public Stone(float[] points, float x, float y, float width, float height, String type, float sc, float[] leftPos, float[] rightPos) {
         this(points, x, y, width, height, type, sc);
-        setFriction(100f);
+        setFriction(10f);
         isSliding = true;
-        back = false;
-        leftSlideLim = new Vector2(leftPos[0], leftPos[1]);
-        rightSlideLim = new Vector2(rightPos[0], rightPos[1]);
-        slideDir = new Vector2(leftPos[0] - getX(), leftPos[1] - getY());
-        slideDir.nor();
-        setName("stone");
+        setSlideLim(leftPos, rightPos);
     }
 
     public Stone(float[] points, float x, float y, float width, float height, String type, float sc, float[] rotatingCenter, float rotatingDegree) {
         this(points, x, y, width, height, type, sc);
-        setFriction(100f);
+        setFriction(10f);
         this.rotatingRadians = rotatingDegree * (float) Math.PI / 180f;
         this.center = new Vector2(rotatingCenter[0], rotatingCenter[1]);
         isRotating = true;
@@ -102,8 +109,10 @@ public class Stone extends PolygonObstacle {
     public void update(float dt) {
         super.update(dt);
         if (isSliding) {
+
             if (getPosition().epsilonEquals(leftSlideLim, 0.05f) ||
                     getPosition().epsilonEquals(rightSlideLim, 0.05f)) {
+
                 if (!back) {
                     slideDir.set(rightSlideLim.x - leftSlideLim.x, rightSlideLim.y - leftSlideLim.y);
                     slideDir.nor();
@@ -111,6 +120,7 @@ public class Stone extends PolygonObstacle {
                 } else
                     slideDir.scl(-1f);
             }
+
             setLinearVelocity(slideDir);
         }
 //        if(isRotating){
@@ -137,6 +147,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             } else if (height <= 2) {
+                this.x = getX();
+                this.y = getY();
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -152,6 +164,8 @@ public class Stone extends PolygonObstacle {
                             sc, sc);
                 }
             } else {
+                this.x = getX();
+                this.y = getY();
                 float sca = 1.1f;
                 approxDist = 0.6f;
                 float startX = x * drawScale.x + texture.getRegionWidth() / 2 * sca;
@@ -182,7 +196,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             }
-
+            this.x = getX();
+            this.y = getY();
             float scy = height * drawScale.y / texture.getRegionHeight();
             float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
             float dist = width * drawScale.x / num;

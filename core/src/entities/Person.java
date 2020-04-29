@@ -380,6 +380,7 @@ public class Person extends CapsuleObstacle {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
         } else if (len < MIN_TRAMPOLINE) {
             trampolineForce.scl(MIN_TRAMPOLINE / len);
+
         }
     }
 
