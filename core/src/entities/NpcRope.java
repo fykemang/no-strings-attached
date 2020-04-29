@@ -292,7 +292,7 @@ public class NpcRope extends Rope {
     }
 
 
-    public NpcRope[] cut(final Vector2 pos, World w) {
+    public NpcRope[] cut(final Vector2 pos, World w, float h) {
         if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)) {
             return null;
         }
@@ -305,7 +305,7 @@ public class NpcRope extends Rope {
                 closest = cur;
                 index = i;
             } else {
-                if (isCloser(cur, closest, pos)) {
+                if (isCloser(cur, closest, pos, h)) {
                     closest = cur;
                     index = i;
                 }

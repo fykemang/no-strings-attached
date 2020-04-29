@@ -54,8 +54,8 @@ public abstract class Rope extends ComplexObstacle {
             splineCurve.set(contPoints, false);
     }
 
-    boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos) {
-        return a.getPosition().dst2(pos) < b.getPosition().dst2(pos);
+    boolean isCloser(WheelObstacle a, WheelObstacle b, Vector2 pos, float h) {
+        return a.getPosition().dst2(pos.x, pos.y-h/2) <= b.getPosition().dst2(pos.x, pos.y-h/2);
     }
 
     public void setStart(Vector2 start, boolean scaled) {
