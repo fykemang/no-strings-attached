@@ -161,7 +161,7 @@ public class GameCanvas {
      * object used to start the application.  This constructor initializes all
      * of the necessary graphics objects.
      */
-    public GameCanvas() {
+    public GameCanvas(boolean UI) {
 
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();
@@ -172,7 +172,12 @@ public class GameCanvas {
 
         camera = new OrthographicCamera(getWidth(), getHeight());
         camera.setToOrtho(false);
+        if (!UI) {
+            viewport = new ScalingViewport(Scaling.fit, getWidth() * 3 / 5, getHeight() * 3 / 5, camera);
+            System.out.println();
+        }else
         viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
+
         stage = new Stage(viewport);
         spriteBatch.setProjectionMatrix(camera.combined);
         debugRender.setProjectionMatrix(camera.combined);
@@ -1348,11 +1353,20 @@ public class GameCanvas {
         spriteBatch.draw(image, positionCache.x - w, positionCache.y, width, height);
     }
 
+    public void drawMirrorred(Texture image, float x, float y, float width, float height, int srcX, int srcY) {
+        positionCache.set(x, y);
+        wrapPosition(positionCache);
+
+        float w = getWidth();
+        // Have to draw the background twice for continuous scrolling.
+        spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
+        spriteBatch.draw(image, positionCache.x - w*1.2f, positionCache.y, width, height, 0, 0,srcX, srcY,  true, false);
+        spriteBatch.draw(image, positionCache.x + w*1.2f, positionCache.y, width, height, 0, 0,srcX, srcY,  true, false);
+    }
+
     public void moveCamera(float x, float y) {
         camera.position.x = x;
         camera.position.y = Math.max(y, 170f);
-        camera.viewportHeight = (float) getHeight() * 3 / 5;
-        camera.viewportWidth = (float) getWidth() * 3 / 5;
         camera.update();
     }
 
