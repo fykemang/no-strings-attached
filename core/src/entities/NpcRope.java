@@ -295,7 +295,9 @@ public class NpcRope extends Rope {
 
 
     public NpcRope[] cut(final Vector2 pos, World w, float h) {
-        if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)) {
+        System.out.println(this.state);
+        if ((this.state != RopeState.COMPLETE)) {
+            System.out.println(tint.a);
             return null;
         }
         NpcRope[] cutNpcRopes = new NpcRope[2];
@@ -348,8 +350,9 @@ public class NpcRope extends Rope {
      */
     @Override
     public void draw(GameCanvas canvas) {
-        if(tint.a< 0.03f)
+        if(tint.a< 0.03f) {
             return;
+        }
         // Delegate to components
         setCurrentSplineCurve();
         if (state != RopeState.COMPLETE) {

@@ -16,7 +16,7 @@ import util.FilmStrip;
 public class Couple extends ComplexObstacle {
     private final NpcPerson l;
     private final NpcPerson r;
-    private final NpcRope trampoline;
+    private NpcRope trampoline;
     private final Stone leftTile;
     private final Stone rightTile;
 
@@ -125,6 +125,7 @@ public class Couple extends ComplexObstacle {
         r.setAttached(false);
         this.bodies.add(leftFragment);
         this.bodies.add(rightFragment);
+        trampoline = null;
     }
 
     public NpcRope getRope() {
