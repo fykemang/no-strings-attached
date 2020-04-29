@@ -333,7 +333,7 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/warmsand.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/takingastroll.mp3";
     private final String FOREST_MUSIC_FILE = "music/youare.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
@@ -1085,10 +1085,12 @@ public class GameMode extends Mode implements Screen {
 
     public void updatePaused(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            clickSound.play(0.5f);
             gameState = GameState.PLAYING;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            clickSound.play(0.5f);
             exitToSelector();
         }
     }
@@ -1119,6 +1121,7 @@ public class GameMode extends Mode implements Screen {
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
+            clickSound.play(0.5f);
             gameState = GameState.PAUSED;
 //            exitToSelector();
         }
