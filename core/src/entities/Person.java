@@ -142,7 +142,6 @@ public class Person extends CapsuleObstacle {
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
-
     private Color tint = new Color(Color.WHITE);
 
     /**
@@ -232,6 +231,10 @@ public class Person extends CapsuleObstacle {
      */
     public boolean isCutting() {
         return isCutting;
+    }
+
+    public void setIsFacingRight(boolean t){
+        isFacingRight = t;
     }
 
     public void setCutting(boolean isCutting) {
@@ -380,7 +383,6 @@ public class Person extends CapsuleObstacle {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
         } else if (len < MIN_TRAMPOLINE) {
             trampolineForce.scl(MIN_TRAMPOLINE / len);
-
         }
     }
 
@@ -477,6 +479,11 @@ public class Person extends CapsuleObstacle {
 
     }
 
+    private void setJumpAnimationFrame(){
+        //rising: 0 - 7
+        //falling: 8 - 21
+
+    }
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
@@ -499,6 +506,7 @@ public class Person extends CapsuleObstacle {
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
+//            setJumpAnimationFrame();
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
