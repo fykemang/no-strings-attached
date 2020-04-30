@@ -1195,7 +1195,7 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
-                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_NO_COLLISION.getID();
                 playerRope.setFilterDataAll(playerRopeFilter);
                 playerRope.setName("player_rope");
                 playerRope.setDrawScale(scale);
