@@ -110,10 +110,10 @@ public class Couple extends ComplexObstacle {
             l.setLinearVelocity(leftTile.rotDir);
             leftTile.setLinearVelocity(leftTile.rotDir);
 
-            if (l.left && trampoline!=null) {
+            if (l.left) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
                 trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else if (trampoline!=null){
+            } else{
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
@@ -125,11 +125,10 @@ public class Couple extends ComplexObstacle {
         r.setAttached(false);
         this.bodies.add(leftFragment);
         this.bodies.add(rightFragment);
-        trampoline = null;
     }
 
     public NpcRope getRope() {
-        return trampoline;
+        return l.isAttached() ? trampoline : null;
     }
 
 }
