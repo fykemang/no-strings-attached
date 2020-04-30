@@ -1369,6 +1369,11 @@ public class GameCanvas {
         camera.update();
     }
 
+    public void moveCameraX(float x) {
+        camera.position.x = x;
+    //    camera.position.y = Math.max(y, 170f);
+        camera.update();
+    }
     public void resetCamara() {
         active = DrawPass.INACTIVE;
         spriteBatch = new PolygonSpriteBatch();

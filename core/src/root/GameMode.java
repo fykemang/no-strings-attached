@@ -89,6 +89,8 @@ public class GameMode extends Mode implements Screen {
     // wait time
     private final float period = 2f;
 
+    private Vector2 lastpos;
+
 
     /**
      * Player animations
@@ -843,6 +845,7 @@ public class GameMode extends Mode implements Screen {
     private void populateLevel() {
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
+
         List<Tile> tiles = level.getTiles();
         List<Tile> spikes = level.getSpikes();
         items = (ArrayList<float[]>) level.getItems();
@@ -863,7 +866,10 @@ public class GameMode extends Mode implements Screen {
                 citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
                 0f};
 
-
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+        lastpos = new Vector2(xpos, ypos);
+        canvas.moveCamera(xpos, ypos);
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
         //add player
@@ -1532,6 +1538,8 @@ public class GameMode extends Mode implements Screen {
      *
      * @param dt Number of seconds since last animation frame
      */
+
+    private int direction = 0;
     public void postUpdate(float dt) {
         // Add any objects created by actions
         while (!addQueue.isEmpty()) {
@@ -1555,15 +1563,44 @@ public class GameMode extends Mode implements Screen {
                 // Note that update is called last!
                 obj.update(dt);
             }
-            float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
-            float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
-             ypos = ypos > 700 ? 700: ypos;
-            canvas.moveCamera(xpos, ypos);
-
         }
-//        if (player.won() || !player.isAlive()){
-//            listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
-//        }
+
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+
+
+        System.out.println("ypos" + ypos + "current camera" + lastpos.y);
+        ypos = ypos > 700 ? 700: ypos;
+
+        switch (direction){
+            case 1: if (lastpos.y > ypos -20) {
+                direction = 0;
+            }else {
+                canvas.moveCamera(xpos, lastpos.y +6);
+                lastpos = new Vector2(xpos, lastpos.y +6 );
+            }
+                break;
+            case -1: if (lastpos.y < ypos + 20) {
+                direction = 0;
+            }else {
+                canvas.moveCamera(xpos, lastpos.y -6);
+                lastpos = new Vector2(xpos, lastpos.y -6);
+            }
+            default: canvas.moveCameraX(xpos);
+        }
+
+        if (ypos >lastpos.y + 120) {
+            direction = 1;
+//                    canvas.moveCamera(xpos, lastpos.y +2);
+//                    lastpos = new Vector2(xpos, lastpos.y +2 );
+        }else if (ypos < lastpos.y -80)  {
+            direction = -1;
+//                    canvas.moveCamera(xpos, lastpos.y-2);
+//                    lastpos = new Vector2(xpos,   lastpos.y - 2 );
+        }
+  //      canvas.moveCamera(xpos, ypos);
+
+
     }
 
     /**
