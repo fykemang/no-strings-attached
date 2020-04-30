@@ -109,7 +109,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_CHEESE = "entities/cheese_idle.png";
     private static final String NPC_NERVY = "entities/nervy_idle.png";
     private static final String NPC_SPIKY = "entities/spiky_idle.png";
-    private static final String NPC_HEYO = "entities/heyo_idle.png";
+    private static final String NPC_HEYO = "entities/hey_idle.png";
     private static final String NPC_WELCOME = "entities/welcome_idle.png";
     private static final String NPC_COZY_SHOCK = "entities/cozy_shock.png";
     private static final String NPC_CHEESE_SHOCK = "entities/cheese_shock.png";
@@ -296,15 +296,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip npcSpikyShockAnimation;
     private FilmStrip npcWelcomeIdleAnimation;
     private FilmStrip npcWelcomeShockAnimation;
-    /**
-     * Texture asset for the bullet
-     */
-    private TextureRegion bulletTexture;
-    /**
-     * Texture asset for the bridge plank
-     */
-    private TextureRegion bridgeTexture;
-    private TextureRegion crosshairTexture;
 
     /**
      * Listener that will update the player mode when we are done
@@ -682,8 +673,6 @@ public class GameMode extends Mode implements Screen {
         playerJumpAnimation = createFilmStrip(manager, PLAYER_JUMP_ANIMATION, 1, 22, 22);
         playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
-        bulletTexture = createTexture(manager, BULLET_FILE, false);
-        crosshairTexture = createTexture(manager, CROSSHAIR_FILE, false);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17);
         npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33);
@@ -728,7 +717,6 @@ public class GameMode extends Mode implements Screen {
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         citydoor = createTexture(manager, CITYGATE, false);
-        bridgeTexture = createTexture(manager, ROPE_SEGMENT, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -895,7 +883,12 @@ public class GameMode extends Mode implements Screen {
 
         // Create platforms
         for (int i = 0; i < tiles.size(); i++) {
-            createTile(tiles.get(i).getCorners(), tiles.get(i).getX(), tiles.get(i).getY(), tiles.get(i).getWidth(), tiles.get(i).getHeight(), level.getType(), "tile" + i, 1f);
+            Tile tile = tiles.get(i);
+            if(tile.isSliding()){
+                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight());
+            }else {
+                createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f);
+            }
         }
 
         for (Tile spike : spikes) {
@@ -988,7 +981,7 @@ public class GameMode extends Mode implements Screen {
         } else {
             rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
         }
-        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, bridgeTexture, scale, leftTile, rightTile, id);
+        Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
@@ -1175,12 +1168,10 @@ public class GameMode extends Mode implements Screen {
                 if (id != -1) {
                     for (Obstacle obs : objects) {
                         if (obs.getName().equals("couples" + id)) {
-                            NpcRope[] ropes = ((Couple) obs).getRope().cut(player.getPosition(), world);
-                            if (ropes != null) {
+                            NpcRope r = ((Couple) obs).getRope();
+                            if(r!=null) {
+                                NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
-//                                for (NpcRope r : ropes) {
-//                                    r.markRemoved(true);
-//                                }
                             }
                         }
                     }

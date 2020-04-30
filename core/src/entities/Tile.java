@@ -12,6 +12,22 @@ public class Tile implements Json.Serializable {
     private String direction;
     private String type;
 
+    private boolean isSliding;
+    private float[] left;
+    private float[] right;
+
+    public boolean isSliding() {
+        return isSliding;
+    }
+
+    public float[] getRight() {
+        return right;
+    }
+
+    public float[] getLeft() {
+        return left;
+    }
+
     public float[] getCorners() {
         return corners;
     }
@@ -62,5 +78,15 @@ public class Tile implements Json.Serializable {
         corners[5] = height;
         corners[6] = width;
         corners[7] = 0;
+
+        isSliding = jsonData.getBoolean("isSliding");
+        if (isSliding) {
+            left = new float[2];
+            left[0] = jsonData.get("leftPos").getFloat("x");
+            left[1] = jsonData.get("leftPos").getFloat("y");
+            right = new float[2];
+            right[0] = jsonData.get("rightPos").getFloat("x");
+            right[1] = jsonData.get("rightPos").getFloat("y");
+        }
     }
 }

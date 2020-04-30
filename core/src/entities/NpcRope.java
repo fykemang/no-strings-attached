@@ -73,11 +73,13 @@ public class NpcRope extends Rope {
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
-        float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
-        float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
+        if (state==RopeState.COMPLETE) {
+            float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
+            float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
 
-        approxNorm = new Vector2(-dy, dx);
-        approxNorm.nor();
+            approxNorm = new Vector2(-dy, dx);
+            approxNorm.nor();
+        }
         setCurrentSplineCurve();
     }
 
@@ -292,8 +294,10 @@ public class NpcRope extends Rope {
     }
 
 
-    public NpcRope[] cut(final Vector2 pos, World w) {
-        if ((this.state == RopeState.RIGHT_BROKEN || this.state == RopeState.LEFT_BROKEN)) {
+    public NpcRope[] cut(final Vector2 pos, World w, float h) {
+        System.out.println(this.state);
+        if ((this.state != RopeState.COMPLETE)) {
+            System.out.println(tint.a);
             return null;
         }
         NpcRope[] cutNpcRopes = new NpcRope[2];
@@ -305,7 +309,7 @@ public class NpcRope extends Rope {
                 closest = cur;
                 index = i;
             } else {
-                if (isCloser(cur, closest, pos)) {
+                if (isCloser(cur, closest, pos, h)) {
                     closest = cur;
                     index = i;
                 }
@@ -346,6 +350,9 @@ public class NpcRope extends Rope {
      */
     @Override
     public void draw(GameCanvas canvas) {
+        if(tint.a< 0.03f) {
+            return;
+        }
         // Delegate to components
         setCurrentSplineCurve();
         if (state != RopeState.COMPLETE) {
