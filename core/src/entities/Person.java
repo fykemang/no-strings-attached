@@ -233,7 +233,7 @@ public class Person extends CapsuleObstacle {
         return isCutting;
     }
 
-    public void setIsFacingRight(boolean t){
+    public void setIsFacingRight(boolean t) {
         isFacingRight = t;
     }
 
@@ -408,12 +408,12 @@ public class Person extends CapsuleObstacle {
         // To determine whether or not the dude is on the ground,
         // we create a thin sensor under his feet, which reports
         // collisions with the world but has no collision response.
-        Vector2 sensorCenter = new Vector2(0, 0);
+        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
         FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = PLAYER_DENSITY / 6f;
+        sensorDef.density = PLAYER_DENSITY;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(SSHRINK * getWidth() * 1.5f, SSHRINK * getHeight() * 1.5f, sensorCenter, 0.0f);
+        sensorShape.setAsBox(SSHRINK * getWidth(), SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
         sensorDef.filter.maskBits = getFilterData().maskBits;
         sensorDef.filter.categoryBits = getFilterData().categoryBits;
@@ -479,7 +479,7 @@ public class Person extends CapsuleObstacle {
 
     }
 
-    private void setJumpAnimationFrame(){
+    private void setJumpAnimationFrame() {
         //rising: 0 - 7
         //falling: 8 - 21
 

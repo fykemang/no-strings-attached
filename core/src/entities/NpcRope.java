@@ -73,7 +73,7 @@ public class NpcRope extends Rope {
         for (int i = 0; i < contPoints.length; i++) {
             contPoints[i] = new Vector2();
         }
-        if (state==RopeState.COMPLETE) {
+        if (state == RopeState.COMPLETE) {
             float dx = contPoints[contPoints.length - 1].x - contPoints[0].x;
             float dy = contPoints[contPoints.length - 1].y - contPoints[0].y;
 
@@ -350,7 +350,7 @@ public class NpcRope extends Rope {
      */
     @Override
     public void draw(GameCanvas canvas) {
-        if(tint.a< 0.03f) {
+        if (tint.a < 0.03f) {
             return;
         }
         // Delegate to components
