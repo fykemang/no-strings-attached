@@ -295,9 +295,7 @@ public class NpcRope extends Rope {
 
 
     public NpcRope[] cut(final Vector2 pos, World w, float h) {
-        System.out.println(this.state);
         if ((this.state != RopeState.COMPLETE)) {
-            System.out.println(tint.a);
             return null;
         }
         NpcRope[] cutNpcRopes = new NpcRope[2];
