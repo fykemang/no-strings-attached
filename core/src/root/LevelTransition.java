@@ -87,6 +87,13 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                currentSelection = SELECTEDBUTTON.Next;
+
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                currentSelection = null;
+            }
 
         });
         stage.addActor(nextButton);
@@ -120,6 +127,14 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+            }
+
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                currentSelection = SELECTEDBUTTON.Exit;
+
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor){
+                currentSelection = null;
             }
 
         });
@@ -314,11 +329,11 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                         canvas.getHeight() / 6, 1.1f);
                 break;
             case Exit:
-                canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 2,
+                canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 4,
                         canvas.getHeight() / 6, 1.1f);
                 break;
             case Next:
-                canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 2,
+                canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 4,
                         canvas.getHeight() / 6, 1.1f);
                 break;
             default:
