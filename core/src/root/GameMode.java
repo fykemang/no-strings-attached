@@ -1051,9 +1051,9 @@ public class GameMode extends Mode implements Screen {
                 if (timeSeconds > period) {
                     timeSeconds = 0;
                     if (player.won())
-                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
                     else
-                    reset();
+                        reset();
                 }
             } else if (countdown > 0) {
                 countdown--;

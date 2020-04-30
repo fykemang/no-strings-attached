@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -35,12 +34,14 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private static final String MEAN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
-    private final String SELECTOR =  "ui/next-select.png";
+    private final String SELECTOR = "ui/next-select.png";
+
     enum SELECTEDBUTTON {
         Replay,
         Exit,
         Next
     }
+
     private SELECTEDBUTTON currentSelection;
 
     Texture background;
@@ -87,18 +88,18 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SELECTEDBUTTON.Next;
 
             }
-            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor){
+
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = null;
             }
 
         });
         stage.addActor(nextButton);
-
-
 
 
         Texture buttonReplay = new Texture(REPLAY);
@@ -109,11 +110,13 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SELECTEDBUTTON.Replay;
 
             }
-            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor){
+
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = null;
             }
 
@@ -129,11 +132,12 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor){
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SELECTEDBUTTON.Exit;
 
             }
-            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor){
+
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = null;
             }
 
@@ -322,23 +326,23 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                     canvas.getHeight() * 4 / 5 - winMessage.getHeight() / 2);
         }
 
-     if (currentSelection != null)
-        switch(currentSelection){
-            case Replay:
-                canvas.drawUI(selected, canvas.getWidth() / 6 - replaybutton.getWidth() / 4,
-                        canvas.getHeight() / 6, 1.1f);
-                break;
-            case Exit:
-                canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 4,
-                        canvas.getHeight() / 6, 1.1f);
-                break;
-            case Next:
-                canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 4,
-                        canvas.getHeight() / 6, 1.1f);
-                break;
-            default:
-                break;
-        }
+        if (currentSelection != null)
+            switch (currentSelection) {
+                case Replay:
+                    canvas.drawUI(selected, canvas.getWidth() / 6 - replaybutton.getWidth() / 4,
+                            canvas.getHeight() / 6, 1.1f);
+                    break;
+                case Exit:
+                    canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 4,
+                            canvas.getHeight() / 6, 1.1f);
+                    break;
+                case Next:
+                    canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 4,
+                            canvas.getHeight() / 6, 1.1f);
+                    break;
+                default:
+                    break;
+            }
         canvas.actStage(stage);
         canvas.end();
     }

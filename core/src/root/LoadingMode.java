@@ -434,8 +434,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         } else {
             canvas.drawBackground(background);
         }
-        if (startGameButton == null){
-            canvas.drawUIText("LOADING...", canvas.getWidth()*3/5, buttonY2);
+        if (startGameButton == null) {
+            canvas.drawUIText("LOADING...", canvas.getWidth() * 3 / 5, buttonY2);
         }
 
         if (startGameButton != null) {
