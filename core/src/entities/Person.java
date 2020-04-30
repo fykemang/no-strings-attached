@@ -152,22 +152,8 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
     private Color tint = new Color(Color.WHITE);
-    private float capSpacing;
-    private float capSpeed;
     private boolean fallingBack;
 
-
-    public void setCapSpacing(float capSpacing) {
-        this.capSpacing = capSpacing;
-    }
-
-    public float getCapSpeed() {
-        return capSpeed;
-    }
-
-    public void setCapSpeed(float capSpeed) {
-        this.capSpeed = capSpeed;
-    }
     /**
      * Which direction is the character facing
      */
@@ -182,25 +168,6 @@ public class Person extends CapsuleObstacle {
 
     private boolean onString = false;
     private boolean turned = false;
-
-    public Joint getHandJoint() {
-        return handJoint;
-    }
-
-    public void setHandJoint(Joint handJoint) {
-        this.handJoint = handJoint;
-    }
-
-    private Joint handJoint;
-
-    public boolean isTurned() {
-        return turned;
-    }
-
-    public void setTurned(boolean turned) {
-        this.turned = turned;
-    }
-
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -388,17 +355,11 @@ public class Person extends CapsuleObstacle {
         isAttached = false;
         jumpCooldown = 0;
         setName(name);
-        capSpacing = 0f;
-        capSpeed = 0f;
     }
 
     public NpcPerson getOnNpc() {
         return onNpc;
     }
-    public float getCapSpacing(){
-        return capSpacing;
-    }
-
     public void setOnNpc(NpcPerson n) {
         this.onNpc = n;
     }

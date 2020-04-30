@@ -1284,8 +1284,7 @@ public class GameMode extends Mode implements Screen {
                 revoluteJointDef.bodyA = playerRope.getBody();
                 revoluteJointDef.localAnchorB.set(anchor);
                 revoluteJointDef.collideConnected = false;
-                Joint handJoint = world.createJoint(revoluteJointDef);
-                player.setHandJoint(handJoint);
+                world.createJoint(revoluteJointDef);
 
                 anchor.set(0, 0);
                 revoluteJointDef.bodyB = playerRope.getLastLink();
