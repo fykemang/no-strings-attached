@@ -1051,15 +1051,15 @@ public class GameMode extends Mode implements Screen {
                 if (timeSeconds > period) {
                     timeSeconds = 0;
                     if (player.won())
-                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
                     else
-                    reset();
+                        reset();
                 }
             } else if (countdown > 0) {
                 countdown--;
             } else if (countdown == 0) {
                 if (failed) {
-                    listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                    reset();
                 } else if (complete) {
                     listener.exitScreen(this, EXIT_NEXT);
                     result = false;
@@ -1557,6 +1557,7 @@ public class GameMode extends Mode implements Screen {
             }
             float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
             float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+             ypos = ypos > 700 ? 700: ypos;
             canvas.moveCamera(xpos, ypos);
 
         }
