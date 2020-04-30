@@ -143,7 +143,21 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
     private Color tint = new Color(Color.WHITE);
+    private float capSpacing;
+    private float capSpeed;
 
+
+    public void setCapSpacing(float capSpacing) {
+        this.capSpacing = capSpacing;
+    }
+
+    public float getCapSpeed() {
+        return capSpeed;
+    }
+
+    public void setCapSpeed(float capSpeed) {
+        this.capSpeed = capSpeed;
+    }
     /**
      * Which direction is the character facing
      */
@@ -343,10 +357,15 @@ public class Person extends CapsuleObstacle {
         isAttached = false;
         jumpCooldown = 0;
         setName(name);
+        capSpacing = 0f;
+        capSpeed = 0f;
     }
 
     public NpcPerson getOnNpc() {
         return onNpc;
+    }
+    public float getCapSpacing(){
+        return capSpacing;
     }
 
     public void setOnNpc(NpcPerson n) {
@@ -479,11 +498,6 @@ public class Person extends CapsuleObstacle {
 
     }
 
-    private void setJumpAnimationFrame() {
-        //rising: 0 - 7
-        //falling: 8 - 21
-
-    }
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
@@ -506,7 +520,6 @@ public class Person extends CapsuleObstacle {
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
-//            setJumpAnimationFrame();
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
@@ -515,7 +528,7 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || isAttached())) {
             frameCount = 0;
 
             if (!((FilmStrip) texture).getShouldFreeze()) {

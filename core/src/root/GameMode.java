@@ -1101,7 +1101,30 @@ public class GameMode extends Mode implements Screen {
         player.setSwingJoint(null);
         player.resetShootCooldown();
     }
+    private void setJumpAnimationFrame(float dt){
 
+        //rising: 0 - 7
+        //falling: 8 - 21
+        float vy = player.getVY();
+        if(vy<0)
+            return;
+        System.out.println(vy);
+        float yDecel = 9.18f;
+        float risingTime = vy / yDecel;
+        playerJumpAnimation.setWaitTime(risingTime/8f);
+        playerJumpAnimation.setElapsedTime(dt);
+//        float spacing = 0f;
+//        if (vy > 0 && player.getCapSpeed() == 0f){//just starting & jumping up
+//            spacing = vy / yDecel;
+//            player.setCapSpacing(spacing);
+//            player.setCapSpeed(vy - spacing);
+//        }
+//        System.out.println("cap"+player.getCapSpeed());
+//        if (vy >= player.getCapSpeed() - eps && vy <= player.getCapSpeed() + eps){
+//            player.setCapSpeed(vy - spacing);
+//            playerJumpAnimation.setNextFrame();
+//        }
+    }
     /**
      * The core gameplay loop of this world.
      * <p>
@@ -1137,6 +1160,7 @@ public class GameMode extends Mode implements Screen {
 
 
             if (!player.isGrounded() && !player.isAttached()) {
+                setJumpAnimationFrame(dt);
                 player.setTexture(playerJumpAnimation);
             } else if (player.isAttached()) {
                 player.setTexture(playerSwingAnimation);

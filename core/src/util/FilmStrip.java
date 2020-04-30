@@ -60,6 +60,25 @@ public class FilmStrip extends TextureRegion {
      */
     private int frame;
 
+    public float getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(float waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public float getElapsedTime() {
+        return elapsedTime; // time since last frame
+    }
+
+    public void setElapsedTime(float elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    private float waitTime; //Time to wait between a frame and the next one.
+    private float elapsedTime;
+
     /**
      * Whether or whether not to freeze the animation
      * at the current frame
@@ -100,6 +119,7 @@ public class FilmStrip extends TextureRegion {
         rWidth = texture.getWidth() / cols;
         rheight = texture.getHeight() / rows;
         setFrame(0);
+        waitTime = 0f;
     }
 
     /**
