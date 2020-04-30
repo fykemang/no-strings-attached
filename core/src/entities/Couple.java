@@ -110,10 +110,10 @@ public class Couple extends ComplexObstacle {
             l.setLinearVelocity(leftTile.rotDir);
             leftTile.setLinearVelocity(leftTile.rotDir);
 
-            if (l.left) {
+            if (l.left && trampoline!=null) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
                 trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else {
+            } else if (trampoline!=null){
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
