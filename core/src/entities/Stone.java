@@ -36,10 +36,11 @@ public class Stone extends PolygonObstacle {
     float y;
     String type;
 
-    public void setIsSliding(boolean b){
+    public void setIsSliding(boolean b) {
         isSliding = b;
     }
-    public void setSlideLim(float[] left, float[] right){
+
+    public void setSlideLim(float[] left, float[] right) {
 //        setFriction(10f);
         isSliding = true;
         back = false;

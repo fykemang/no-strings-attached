@@ -175,8 +175,8 @@ public class GameCanvas {
         if (!UI) {
             viewport = new ScalingViewport(Scaling.fit, getWidth() * 3 / 5, getHeight() * 3 / 5, camera);
             System.out.println();
-        }else
-        viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
+        } else
+            viewport = new ScalingViewport(Scaling.fit, getWidth(), getHeight(), camera);
 
         stage = new Stage(viewport);
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -1359,8 +1359,8 @@ public class GameCanvas {
         float w = getWidth();
         // Have to draw the background twice for continuous scrolling.
         spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
-        spriteBatch.draw(image, positionCache.x - w*1.2f, positionCache.y, width, height, 0, 0,srcX, srcY,  true, false);
-        spriteBatch.draw(image, positionCache.x + w*1.2f, positionCache.y, width, height, 0, 0,srcX, srcY,  true, false);
+        spriteBatch.draw(image, positionCache.x - w * 1.2f, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
+        spriteBatch.draw(image, positionCache.x + w * 1.2f, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
     }
 
     public void moveCamera(float x, float y) {

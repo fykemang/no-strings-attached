@@ -884,9 +884,9 @@ public class GameMode extends Mode implements Screen {
         // Create platforms
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
-            if(tile.isSliding()){
+            if (tile.isSliding()) {
                 createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight());
-            }else {
+            } else {
                 createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f);
             }
         }
@@ -1172,7 +1172,7 @@ public class GameMode extends Mode implements Screen {
                     for (Obstacle obs : objects) {
                         if (obs.getName().equals("couples" + id)) {
                             NpcRope r = ((Couple) obs).getRope();
-                            if(r!=null) {
+                            if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
                             }
@@ -1261,16 +1261,16 @@ public class GameMode extends Mode implements Screen {
         canvas.begin();
         float camera = player.getX() * scale.x;
         for (TextureRegion t : stillBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f,t.getRegionWidth(), t.getRegionHeight() );
+            canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
         for (TextureRegion t : slightMoveBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f, t.getRegionWidth(), t.getRegionHeight());
+            canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
 //        for (TextureRegion t : movingBackgroundTextures) {
 ////            canvas.drawWrapped(t, -.3f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
 ////        }
         for (TextureRegion t : movingBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth()*1.2f, canvas.getHeight()*1.2f,t.getRegionWidth(), t.getRegionHeight());
+            canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
 //        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
 //        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
@@ -1475,7 +1475,7 @@ public class GameMode extends Mode implements Screen {
         objects.clear();
         addQueue.clear();
         world.dispose();
-        if(music!=null)
+        if (music != null)
             music.dispose();
         objects = null;
         addQueue = null;

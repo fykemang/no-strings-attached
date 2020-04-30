@@ -113,7 +113,7 @@ public class Couple extends ComplexObstacle {
             if (l.left) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
                 trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else{
+            } else {
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
