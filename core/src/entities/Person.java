@@ -133,6 +133,15 @@ public class Person extends CapsuleObstacle {
     private int shootCooldown;
     private PolygonShape sensorShape;
     private boolean canCut;
+
+    public boolean isFallingBack() {
+        return fallingBack;
+    }
+
+    public void setFallingBack(boolean fallingBack) {
+        this.fallingBack = fallingBack;
+    }
+
     private final String sensorName;
     private Person target;
     private final Vector2 trampolineDir;
@@ -145,6 +154,7 @@ public class Person extends CapsuleObstacle {
     private Color tint = new Color(Color.WHITE);
     private float capSpacing;
     private float capSpeed;
+    private boolean fallingBack;
 
 
     public void setCapSpacing(float capSpacing) {
@@ -171,6 +181,31 @@ public class Person extends CapsuleObstacle {
     private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
+    private boolean turned = false;
+    private Vector2 anchorRight = new Vector2(getWidth() / 2f - 0.21f, getWidth() / 2f + 0.1f);
+    private Vector2 anchorLeft = new Vector2(getWidth() / 2f + 0.21f, getWidth() / 2f + 0.1f);
+
+    public Vector2 getAnchor(){
+        return isFacingRight ? anchorRight : anchorLeft;
+    }
+
+    public Joint getHandJoint() {
+        return handJoint;
+    }
+
+    public void setHandJoint(Joint handJoint) {
+        this.handJoint = handJoint;
+    }
+
+    private Joint handJoint;
+
+    public boolean isTurned() {
+        return turned;
+    }
+
+    public void setTurned(boolean turned) {
+        this.turned = turned;
+    }
 
     /**
      * Returns left/right movement of this character.
@@ -193,9 +228,11 @@ public class Person extends CapsuleObstacle {
     public void setMovement(float value) {
         // Change facing if appropriate
         if (value < 0) {
+            turned = isFacingRight;
             isFacingRight = false;
             movement = value;
         } else if (value > 0) {
+            turned = !isFacingRight;
             isFacingRight = true;
             movement = value;
         }
@@ -528,7 +565,7 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || isAttached())) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && isGrounded()) {
             frameCount = 0;
 
             if (!((FilmStrip) texture).getShouldFreeze()) {

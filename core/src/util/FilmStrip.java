@@ -60,6 +60,18 @@ public class FilmStrip extends TextureRegion {
      */
     private int frame;
 
+    public boolean isReversed() {
+        return reversed;
+    }
+
+    public void setReversed(boolean reversed) {
+        this.reversed = reversed;
+//        setRefreshed(!reversed);
+    }
+
+    private boolean reversed;
+
+
     public float getFrameDuration() {
         return frameDuration;
     }
@@ -126,12 +138,14 @@ public class FilmStrip extends TextureRegion {
         setFrame(0);
         frameDuration = 0f;
         loop = l;
-
+        elapsedTime = 0f;
+        reversed = false;
     }
 
     public void refresh() {
         refreshed = true;
-        setFrame(0);
+        setFrame(reversed?frame:0);
+        elapsedTime = 0f;
     }
 
     /**
@@ -171,9 +185,17 @@ public class FilmStrip extends TextureRegion {
     }
 
     public void setNextFrame() {
-        if (frame + 1 >= size && !loop)
-            return;
-        frame = frame + 1 >= size ?  0 : frame + 1;
+
+        if (!reversed) {
+            if (frame + 1 >= size && !loop)
+                return;
+            frame = frame + 1 >= size ? 0 : frame + 1;
+        }else{
+            if (frame == 0 && !loop){
+                return;
+            }
+            frame = frame == 0 ? size - 1 : frame - 1;
+        }
         int x = (frame % cols) * rWidth;
         int y = (frame / cols) * rheight;
         setRegion(x, y, rWidth, rheight);
