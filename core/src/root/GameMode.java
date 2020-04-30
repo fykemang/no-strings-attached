@@ -1569,36 +1569,38 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
 
-        System.out.println("ypos" + ypos + "current camera" + lastpos.y);
+    //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
         ypos = ypos > 700 ? 700: ypos;
-
-        switch (direction){
-            case 1: if (lastpos.y > ypos -20) {
-                direction = 0;
-            }else {
-                canvas.moveCamera(xpos, lastpos.y +6);
-                lastpos = new Vector2(xpos, lastpos.y +6 );
-            }
-                break;
-            case -1: if (lastpos.y < ypos + 20) {
-                direction = 0;
-            }else {
-                canvas.moveCamera(xpos, lastpos.y -6);
-                lastpos = new Vector2(xpos, lastpos.y -6);
-            }
-            default: canvas.moveCameraX(xpos);
-        }
-
-        if (ypos >lastpos.y + 120) {
-            direction = 1;
-//                    canvas.moveCamera(xpos, lastpos.y +2);
-//                    lastpos = new Vector2(xpos, lastpos.y +2 );
-        }else if (ypos < lastpos.y -80)  {
-            direction = -1;
-//                    canvas.moveCamera(xpos, lastpos.y-2);
-//                    lastpos = new Vector2(xpos,   lastpos.y - 2 );
-        }
-  //      canvas.moveCamera(xpos, ypos);
+/**
+ * code for lazy follow camera
+ */
+//        switch (direction){
+//            case 1: if (lastpos.y > ypos -20) {
+//                direction = 0;
+//            }else {
+//                canvas.moveCamera(xpos, lastpos.y +4);
+//                lastpos = new Vector2(xpos, lastpos.y +4 );
+//            }
+//                break;
+//            case -1: if (lastpos.y < ypos + 20) {
+//                direction = 0;
+//            }else {
+//                canvas.moveCamera(xpos, lastpos.y -4);
+//                lastpos = new Vector2(xpos, lastpos.y -4);
+//            }
+//            default: canvas.moveCameraX(xpos);
+//        }
+//
+//        if (ypos >lastpos.y + 120) {
+//            direction = 1;
+////                    canvas.moveCamera(xpos, lastpos.y +2);
+////                    lastpos = new Vector2(xpos, lastpos.y +2 );
+//        }else if (ypos < lastpos.y -80)  {
+//            direction = -1;
+////                    canvas.moveCamera(xpos, lastpos.y-2);
+////                    lastpos = new Vector2(xpos,   lastpos.y - 2 );
+//        }
+        canvas.moveCamera(xpos, ypos);
 
 
     }
