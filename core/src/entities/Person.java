@@ -182,12 +182,6 @@ public class Person extends CapsuleObstacle {
 
     private boolean onString = false;
     private boolean turned = false;
-    private Vector2 anchorRight = new Vector2(getWidth() / 2f - 0.21f, getWidth() / 2f + 0.1f);
-    private Vector2 anchorLeft = new Vector2(getWidth() / 2f + 0.21f, getWidth() / 2f + 0.1f);
-
-    public Vector2 getAnchor(){
-        return isFacingRight ? anchorRight : anchorLeft;
-    }
 
     public Joint getHandJoint() {
         return handJoint;

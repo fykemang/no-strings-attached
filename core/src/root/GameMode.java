@@ -1266,7 +1266,8 @@ public class GameMode extends Mode implements Screen {
 
             // Swinging
             if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
-                Vector2 anchor = new Vector2();
+                float ancX = player.isFacingRight() ? player.getWidth() / 2f - 0.21f : -player.getWidth() / 2f + 0.21f;
+                Vector2 anchor = new Vector2(ancX, player.getWidth() / 2f + 0.1f);
                 Vector2 playerPos = player.getPosition();
                 Vector2 targetPos = player.getTarget().getPosition();
                 playerRope = new PlayerRope(playerPos.x, playerPos.y, targetPos.x, targetPos.y, 4.5f);
@@ -1279,7 +1280,6 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setDrawScale(scale);
                 addObject(playerRope);
 
-                anchor.set(player.getAnchor());
                 revoluteJointDef.bodyB = player.getBody();
                 revoluteJointDef.bodyA = playerRope.getBody();
                 revoluteJointDef.localAnchorB.set(anchor);
@@ -1304,10 +1304,9 @@ public class GameMode extends Mode implements Screen {
                 player.setAttached(true);
             }
 
-            if (player.isAttached()){
-                Joint handJoint = player.getHandJoint();
-                handJoint.localAnchorB.set
-            }
+//            if (player.isAttached()){
+//                Joint swingJoint = player.getSwingJoint();
+//            }
             /*
              * Continuously update the rope position to match the player
              * position
