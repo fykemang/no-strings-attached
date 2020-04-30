@@ -1050,7 +1050,10 @@ public class GameMode extends Mode implements Screen {
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                 if (timeSeconds > period) {
                     timeSeconds = 0;
+                    if (player.won())
                     listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                    else
+                    reset();
                 }
             } else if (countdown > 0) {
                 countdown--;
