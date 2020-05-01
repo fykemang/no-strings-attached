@@ -45,9 +45,13 @@ public class Person extends CapsuleObstacle {
      */
     private static final float PLAYER_FRICTION = 0.05f;
     /**
-     * The maximum character speed
+     * The maximum horizontal character speed
      */
-    private static final float PLAYER_MAXSPEED = 4.0f;
+    private static final float PLAYER_MAX_HORIZONTAL_SPEED = 4.0f;
+    /**
+     * The maximum vertical character speed
+     */
+    private static final float PLAYER_MAX_VERTICAL_SPEED = 12f;
     /**
      * The impulse for the character jump
      */
@@ -149,8 +153,8 @@ public class Person extends CapsuleObstacle {
     private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private final float MAX_TRAMPOLINE = 0.35f;
-    private final float MIN_TRAMPOLINE = 0.05f;
+    private static final float MAX_TRAMPOLINE = 1.6f;
+    private static final float MIN_TRAMPOLINE = 0.6f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
@@ -307,8 +311,12 @@ public class Person extends CapsuleObstacle {
      *
      * @return the upper limit on dude left-right movement.
      */
-    public float getMaxSpeed() {
-        return PLAYER_MAXSPEED;
+    public float getMaxHorizontalSpeed() {
+        return PLAYER_MAX_HORIZONTAL_SPEED;
+    }
+    
+    public float getMaxVerticalSpeed() {
+        return PLAYER_MAX_VERTICAL_SPEED;
     }
 
     public void setOnString(boolean onString) {
@@ -472,14 +480,17 @@ public class Person extends CapsuleObstacle {
             }
 
             // Velocity too high, clamp it
-            if (Math.abs(getVX()) >= getMaxSpeed()) {
-                setVX(Math.signum(getVX()) * getMaxSpeed());
+            if (Math.abs(getVX()) >= getMaxHorizontalSpeed()) {
+                setVX(Math.signum(getVX()) * getMaxHorizontalSpeed());
+            }
+
+            if (Math.abs(getVY()) >= getMaxVerticalSpeed()) {
+                setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
             }
 
             float vertical = PLAYER_JUMP;
 
             if (isTrampolining) {
-                vertical = PLAYER_JUMP / 2.5f;
                 calculateTrampolineForce();
                 forceCache.set(trampolineForce.x, trampolineForce.y);
                 body.applyLinearImpulse(forceCache, getPosition(), true);
