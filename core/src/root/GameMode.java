@@ -352,8 +352,10 @@ public class GameMode extends Mode implements Screen {
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
     private static final String FOREST_TILE_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
+    private static final String FOREST_SPIKES_VERT_FILE = "entities/forest-spikes-vert.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
     protected TextureRegion forestSpikeTile;
+    protected TextureRegion forestSpikeVertTile;
 
     /**
      * Tile texture used in the game
@@ -467,6 +469,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(MOUNTAIN_TILE_FILE);
         manager.load(FOREST_SPIKES_FILE, Texture.class);
         assets.add(FOREST_SPIKES_FILE);
+        manager.load(FOREST_SPIKES_VERT_FILE, Texture.class);
+        assets.add(FOREST_SPIKES_VERT_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
         manager.load(SPIKE_VERT, Texture.class);
@@ -750,6 +754,7 @@ public class GameMode extends Mode implements Screen {
         loseSound = manager.get(LOSE_FILE);
         clickSound = manager.get(CLICK_FILE);
         forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
+        forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -923,7 +928,7 @@ public class GameMode extends Mode implements Screen {
 
         if (level.getType().contains("forest")) {
             for (Tile spike : spikes) {
-                TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : spikeVertTile;
+                TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : forestSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, forestSpikeTexture);
             }
         } else {
