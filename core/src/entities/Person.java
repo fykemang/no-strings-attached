@@ -31,7 +31,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.3f;
+    private static final float PLAYER_DENSITY = 1.5f;
     /**
      * The factor to multiply by the input
      */
@@ -51,7 +51,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float PLAYER_JUMP = 10f;
+    private static final float PLAYER_JUMP = 9.5f;
 
     private static final float FRICTION = 0.6f;
 
