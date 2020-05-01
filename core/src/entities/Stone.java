@@ -6,8 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import obstacle.PolygonObstacle;
 import root.GameCanvas;
 
-import java.util.Random;
-
 public class Stone extends PolygonObstacle {
 
     float scale;
@@ -162,7 +160,7 @@ public class Stone extends PolygonObstacle {
                             start + (i + 1) * dist, firsty + height * drawScale.y / 2, getAngle(),
                             sc, sc);
                 }
-            } else if (height > 2*width){
+            } else if (height > 2 * width) {
                 this.x = getX();
                 this.y = getY();
                 float scx = width * drawScale.x / texture.getRegionWidth();
@@ -173,9 +171,9 @@ public class Stone extends PolygonObstacle {
 
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
-                            y * drawScale.y +  i * dist, getAngle(), scx, scx*scy);
+                            y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
 
-            }else {
+            } else {
                 this.x = getX();
                 this.y = getY();
                 float sca = 1.1f;
@@ -207,7 +205,7 @@ public class Stone extends PolygonObstacle {
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
-            }else if (height > 2*width){
+            } else if (height > 2 * width) {
                 this.x = getX();
                 this.y = getY();
                 float scx = width * drawScale.x / texture.getRegionWidth();
@@ -218,9 +216,9 @@ public class Stone extends PolygonObstacle {
 
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
-                            y * drawScale.y +  i * dist, getAngle(), scx, scx*scy);
+                            y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
 
-            }else {
+            } else {
                 this.x = getX();
                 this.y = getY();
                 float scy = height * drawScale.y / texture.getRegionHeight();

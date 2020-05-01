@@ -456,7 +456,7 @@ public class Person extends CapsuleObstacle {
 
         float horizontalMovement = getHorizontalMovement();
         if (isGod) {
-           body.setLinearVelocity(horizontalMovement, verticalMovement);
+            body.setLinearVelocity(horizontalMovement, verticalMovement);
         } else {
             Vector2 linearVelocity = body.getLinearVelocity();
             if (linearVelocity.x > 0 && horizontalMovement < 0) {
