@@ -1031,7 +1031,7 @@ public class GameMode extends Mode implements Screen {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
-        tile.setFriction(BASIC_FRICTION);
+        tile.setFriction(200f);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
         tile.setTexture(tileTexture);
