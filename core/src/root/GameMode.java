@@ -386,6 +386,7 @@ public class GameMode extends Mode implements Screen {
     private final List<TextureRegion> slightMoveBackgroundTextures;
     private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
+    private List<TextBox> textBoxes;
 
     /**
      * Creates a new game world
@@ -879,6 +880,7 @@ public class GameMode extends Mode implements Screen {
         List<Tile> spikes = level.getSpikes();
         items = (ArrayList<float[]>) level.getItems();
         List<NpcData> npcData = level.getNpcData();
+        this.textBoxes = level.getText();
 
 
         // Create main dude
@@ -1473,6 +1475,12 @@ public class GameMode extends Mode implements Screen {
 ////        } else {
 ////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
 ////        }
+        for (TextBox text : textBoxes) {
+            /**
+             * TODO: VIVI DRAW :)
+             */
+            canvas.drawText(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
+        }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();

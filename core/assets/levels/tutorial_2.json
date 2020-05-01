@@ -53,5 +53,12 @@
   "exit": {
     "x": 16,
     "y": 4
-  }
+  },
+  "text": [
+    {
+      "x": 10,
+      "y": 10,
+      "text": "No String Attached"
+    }
+  ]
 }

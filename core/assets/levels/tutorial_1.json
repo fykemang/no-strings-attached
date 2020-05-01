@@ -54,5 +54,12 @@
   "exit": {
     "x": 19,
     "y": 12.5
-  }
+  },
+  "text": [
+    {
+      "x": 10,
+      "y": 10,
+      "text": "Use arrow keys to move the character and jump."
+    }
+  ]
 }
