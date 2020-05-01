@@ -17,6 +17,7 @@ package entities;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
@@ -24,6 +25,7 @@ import obstacle.Obstacle;
 import obstacle.SimpleObstacle;
 import obstacle.WheelObstacle;
 import root.GameCanvas;
+import util.CollisionFilterConstants;
 
 import java.util.ArrayList;
 
@@ -326,12 +328,16 @@ public class NpcRope extends Rope {
         ArrayList<WheelObstacle> rightUpper = new ArrayList<>(upperLayer.subList(index, upperLayer.size()));
         ArrayList<WheelObstacle> rightLower = new ArrayList<>(lowerLayer.subList(lowIdx, lowerLayer.size()));
 
+        Filter ropeFragmentFilter = new Filter();
+        ropeFragmentFilter.maskBits = CollisionFilterConstants.MASK_NO_COLLISION.getID();
         NpcRope l = new NpcRope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
+        l.setFilterDataAll(ropeFragmentFilter);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
         cutNpcRopes[0] = l;
 
         NpcRope r = new NpcRope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
+        r.setFilterDataAll(ropeFragmentFilter);
         r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
         cutNpcRopes[1] = r;

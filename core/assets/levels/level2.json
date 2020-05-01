@@ -42,7 +42,7 @@
     {
       "x": 23,
       "y": 7.5,
-      "width": 0.2,
+      "width": 1,
       "height": 11,
       "type": "spikes",
       "direction": "left",

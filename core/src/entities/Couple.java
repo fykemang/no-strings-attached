@@ -42,8 +42,6 @@ public class Couple extends ComplexObstacle {
         this.bodies.add(r);
         this.leftTile = leftTile;
         this.rightTile = rightTile;
-        assert (l.isAttached());
-        assert (r.isAttached());
         setName("couples" + id);
     }
 
@@ -58,7 +56,6 @@ public class Couple extends ComplexObstacle {
         NpcPerson avatar = new NpcPerson(x, y, dWidth, dHeight, "npc", "npcSensor", l);
         avatar.setAttached(true);
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
-
         setDensity(10f);
         setLinearDamping(100f);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);

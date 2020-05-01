@@ -89,6 +89,8 @@ public class GameMode extends Mode implements Screen {
     // wait time
     private final float period = 2f;
 
+    private Vector2 lastpos;
+
 
     /**
      * Player animations
@@ -279,7 +281,7 @@ public class GameMode extends Mode implements Screen {
      */
     private FilmStrip playerIdleAnimation;
     private FilmStrip playerSwingForwardAnimation;
-//    private FilmStrip playerSwingBackAnimation;
+    //    private FilmStrip playerSwingBackAnimation;
     private FilmStrip playerWalkingAnimation;
     private FilmStrip playerEnterAnimation;
     private FilmStrip playerExitAnimation;
@@ -679,25 +681,25 @@ public class GameMode extends Mode implements Screen {
         itemTexture = new ArrayList<>();
         playerSwingForwardAnimation = createFilmStrip(manager, PLAYER_SWING_FORWARD, 1, 7, 7, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24, true);
-        playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21,true);
-        playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15,true);
-        playerJumpUpAnimation = createFilmStrip(manager, PLAYER_JUMP_UP, 1, 8, 8,false);
-        playerJumpDownAnimation = createFilmStrip(manager, PLAYER_JUMP_DOWN, 1, 14, 14,false);
-        playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24,false);
+        playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21, true);
+        playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15, true);
+        playerJumpUpAnimation = createFilmStrip(manager, PLAYER_JUMP_UP, 1, 8, 8, false);
+        playerJumpDownAnimation = createFilmStrip(manager, PLAYER_JUMP_DOWN, 1, 14, 14, false);
+        playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24, false);
         playerFallTexture = createTexture(manager, PLAYER_FALL, false);
-        playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17,true);
-        npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49,true);
-        npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33,true);
-        npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33,true);
-        npcHeyoTexture = createFilmStrip(manager, NPC_HEYO, 1, 4, 4,true);
-        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16,true);
-        npcWelcomeTexture = createFilmStrip(manager, NPC_WELCOME, 1, 7, 7,true);
-        npcHeyoShockTexture = createFilmStrip(manager, NPC_HEYO_SHOCK, 1, 9, 9,true);
-        npcCheeseShockTexture = createFilmStrip(manager, NPC_CHEESE_SHOCK, 1, 9, 9,true);
-        npcCozyShockTexture = createFilmStrip(manager, NPC_COZY_SHOCK, 1, 12, 12,true);
-        npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21,true);
-        npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17,true);
-        npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13,true);
+        playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, true);
+        npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49, true);
+        npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33, true);
+        npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33, true);
+        npcHeyoTexture = createFilmStrip(manager, NPC_HEYO, 1, 4, 4, true);
+        npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16, true);
+        npcWelcomeTexture = createFilmStrip(manager, NPC_WELCOME, 1, 7, 7, true);
+        npcHeyoShockTexture = createFilmStrip(manager, NPC_HEYO_SHOCK, 1, 9, 9, true);
+        npcCheeseShockTexture = createFilmStrip(manager, NPC_CHEESE_SHOCK, 1, 9, 9, true);
+        npcCozyShockTexture = createFilmStrip(manager, NPC_COZY_SHOCK, 1, 12, 12, true);
+        npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21, true);
+        npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17, true);
+        npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -858,6 +860,7 @@ public class GameMode extends Mode implements Screen {
     private void populateLevel() {
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
+
         List<Tile> tiles = level.getTiles();
         List<Tile> spikes = level.getSpikes();
         items = (ArrayList<float[]>) level.getItems();
@@ -875,8 +878,14 @@ public class GameMode extends Mode implements Screen {
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
-                citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x, 0f};
 
+                citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
+                0f};
+
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+        lastpos = new Vector2(xpos, ypos);
+        canvas.moveCamera(xpos, ypos);
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
         //add player
@@ -1114,7 +1123,8 @@ public class GameMode extends Mode implements Screen {
         player.setSwingJoint(null);
         player.resetShootCooldown();
     }
-    private void setJumpUpAnimationFrame(float dt){
+
+    private void setJumpUpAnimationFrame(float dt) {
         if (playerJumpUpAnimation.isRefreshed()) {
             float vy = player.getVY();
             float yDecel = 9.18f;
@@ -1123,13 +1133,14 @@ public class GameMode extends Mode implements Screen {
             playerJumpUpAnimation.setRefreshed(false);
         }
         playerJumpUpAnimation.setElapsedTime(dt);
-        if (playerJumpUpAnimation.getFrameDuration() * 8f < 0.25f){
+        if (playerJumpUpAnimation.getFrameDuration() * 8f < 0.25f) {
             playerJumpUpAnimation.setFrame(6);
-        }else {
+        } else {
             playerJumpUpAnimation.updateFrame();
         }
     }
-    private void setJumpDownAnimationFrame(float dt){
+
+    private void setJumpDownAnimationFrame(float dt) {
         if (playerJumpDownAnimation.isRefreshed()) {
             float risingTime = 1f;//estimate 1s
             playerJumpDownAnimation.setFrameDuration(risingTime / (float) playerJumpUpAnimation.getSize());
@@ -1139,34 +1150,35 @@ public class GameMode extends Mode implements Screen {
         playerJumpDownAnimation.updateFrame();
     }
 
-    private void setSwingingAnimations(float dt){
+    private void setSwingingAnimations(float dt) {
         float eps = 0f;
         // playerVX: left (-) right (+)
         float npcPosX = playerRope.getNPC();
         float vx = (player.isFacingRight() ? 1 : -1) * player.getVX();
         boolean forwardHalf = player.getX() < npcPosX;
-        if (player.isFallingBack()){
+        if (player.isFallingBack()) {
             playerSwingForwardAnimation.refresh();
         }
-        if (vx > eps){
-                playerSwingForwardAnimation.setReversed(false);
-                if (playerSwingForwardAnimation.isRefreshed()) {
-                    float risingTime = 1.5f;//estimate 1s
-                    playerSwingForwardAnimation.setFrameDuration(risingTime / (float) playerSwingForwardAnimation.getSize());
-                    playerSwingForwardAnimation.setRefreshed(false);
-                }
-                playerSwingForwardAnimation.setElapsedTime(dt);
-                playerSwingForwardAnimation.updateFrame();
-                player.setTexture(playerSwingForwardAnimation);
-        }else if (vx < -eps){
-                player.setFallingBack(!playerSwingForwardAnimation.isReversed());
-                playerSwingForwardAnimation.setReversed(true);
-                playerSwingForwardAnimation.setElapsedTime(dt);
-                playerSwingForwardAnimation.updateFrame();
-                player.setTexture(playerSwingForwardAnimation);
+        if (vx > eps) {
+            playerSwingForwardAnimation.setReversed(false);
+            if (playerSwingForwardAnimation.isRefreshed()) {
+                float risingTime = 1.5f;//estimate 1s
+                playerSwingForwardAnimation.setFrameDuration(risingTime / (float) playerSwingForwardAnimation.getSize());
+                playerSwingForwardAnimation.setRefreshed(false);
+            }
+            playerSwingForwardAnimation.setElapsedTime(dt);
+            playerSwingForwardAnimation.updateFrame();
+            player.setTexture(playerSwingForwardAnimation);
+        } else if (vx < -eps) {
+            player.setFallingBack(!playerSwingForwardAnimation.isReversed());
+            playerSwingForwardAnimation.setReversed(true);
+            playerSwingForwardAnimation.setElapsedTime(dt);
+            playerSwingForwardAnimation.updateFrame();
+            player.setTexture(playerSwingForwardAnimation);
         }
 
     }
+
     /**
      * The core gameplay loop of this world.
      * <p>
@@ -1200,7 +1212,7 @@ public class GameMode extends Mode implements Screen {
             player.setCutting(InputController.getInstance().didSecondary());
             player.applyForce();
 
-            if (!player.isAttached()){
+            if (!player.isAttached()) {
                 playerSwingForwardAnimation.refresh();
             }
 
@@ -1208,7 +1220,7 @@ public class GameMode extends Mode implements Screen {
                 if (player.getVY() > 0) {
                     setJumpUpAnimationFrame(dt);
                     player.setTexture(playerJumpUpAnimation);
-                }else{
+                } else {
                     setJumpDownAnimationFrame(dt);
                     player.setTexture(playerJumpDownAnimation);
                 }
@@ -1217,13 +1229,13 @@ public class GameMode extends Mode implements Screen {
                 playerJumpDownAnimation.refresh();
                 if (player.isAttached()) {
                     setSwingingAnimations(dt);
-            } else if (player.isFalling()) {
-                player.setTexture(playerFallTexture);
-            } else if (player.isWalking()) {
-                player.setTexture(playerWalkingAnimation);
-            } else if (player.isGrounded()) {
-                player.setTexture(playerIdleAnimation);
-            }
+                } else if (player.isFalling()) {
+                    player.setTexture(playerFallTexture);
+                } else if (player.isWalking()) {
+                    player.setTexture(playerWalkingAnimation);
+                } else if (player.isGrounded()) {
+                    player.setTexture(playerIdleAnimation);
+                }
             }
 
             NpcPerson onNpc = player.getOnNpc();
@@ -1274,7 +1286,7 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setLinearVelocityAll(player.getLinearVelocity());
                 Filter playerRopeFilter = new Filter();
                 playerRopeFilter.categoryBits = CollisionFilterConstants.CATEGORY_PLAYER_ROPE.getID();
-                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_PLAYER_ROPE.getID();
+                playerRopeFilter.maskBits = CollisionFilterConstants.MASK_NO_COLLISION.getID();
                 playerRope.setFilterDataAll(playerRopeFilter);
                 playerRope.setName("player_rope");
                 playerRope.setDrawScale(scale);
@@ -1614,6 +1626,9 @@ public class GameMode extends Mode implements Screen {
      *
      * @param dt Number of seconds since last animation frame
      */
+
+    private final int direction = 0;
+
     public void postUpdate(float dt) {
         // Add any objects created by actions
         while (!addQueue.isEmpty()) {
@@ -1637,15 +1652,46 @@ public class GameMode extends Mode implements Screen {
                 // Note that update is called last!
                 obj.update(dt);
             }
-            float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
-            float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
-             ypos = ypos > 700 ? 700: ypos;
-            canvas.moveCamera(xpos, ypos);
-
         }
-//        if (player.won() || !player.isAlive()){
-//            listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+
+
+        //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
+        ypos = ypos > 700 ? 700 : ypos;
+/**
+ * code for lazy follow camera
+ */
+//        switch (direction){
+//            case 1: if (lastpos.y > ypos -20) {
+//                direction = 0;
+//            }else {
+//                canvas.moveCamera(xpos, lastpos.y +4);
+//                lastpos = new Vector2(xpos, lastpos.y +4 );
+//            }
+//                break;
+//            case -1: if (lastpos.y < ypos + 20) {
+//                direction = 0;
+//            }else {
+//                canvas.moveCamera(xpos, lastpos.y -4);
+//                lastpos = new Vector2(xpos, lastpos.y -4);
+//            }
+//            default: canvas.moveCameraX(xpos);
 //        }
+//
+//        if (ypos >lastpos.y + 120) {
+//            direction = 1;
+////                    canvas.moveCamera(xpos, lastpos.y +2);
+////                    lastpos = new Vector2(xpos, lastpos.y +2 );
+//        }else if (ypos < lastpos.y -80)  {
+//            direction = -1;
+////                    canvas.moveCamera(xpos, lastpos.y-2);
+////                    lastpos = new Vector2(xpos,   lastpos.y - 2 );
+//        }
+        canvas.moveCamera(xpos, ypos);
+
+
     }
 
     /**
