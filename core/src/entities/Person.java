@@ -49,9 +49,8 @@ public class Person extends CapsuleObstacle {
      */
     private static final float PLAYER_MAX_HORIZONTAL_SPEED = 4.5f;
     /**
-     * The maximum vertical character speed
-     */
-    private static final float PLAYER_MAX_VERTICAL_SPEED = 12.25f;
+     * The maximum vertical character speed*/
+    private static final float PLAYER_MAX_VERTICAL_SPEED = 13.5f;
     /**
      * The impulse for the character jump
      */
@@ -404,8 +403,9 @@ public class Person extends CapsuleObstacle {
 
     public void calculateTrampolineForce() {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
-        if (magnitude < 3)
+        if (magnitude < 3.5f)
             return;
+
         this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
