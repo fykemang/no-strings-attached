@@ -136,8 +136,6 @@ public class Stone extends PolygonObstacle {
 
     @Override
     public void draw(GameCanvas canvas) {
-        Random rand = new Random();
-
         if (type.equals("mountain") || type.equals("forest")) {
             if (height <= 2 && width <= 2) {
                 firstx = x * drawScale.x;

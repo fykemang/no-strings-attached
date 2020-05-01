@@ -235,6 +235,7 @@ function Home() {
           y: tile.y / yScale,
           height: tile.height / yScale,
           width: tile.width / xScale,
+          direction: "up"
         };
       }),
       npc: state.couples.reduce((acc, couple) => {
