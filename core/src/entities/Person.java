@@ -144,6 +144,7 @@ public class Person extends CapsuleObstacle {
 
     private final String sensorName;
     private Person target;
+    private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
     private final float MAX_TRAMPOLINE = 0.35f;
@@ -548,6 +549,14 @@ public class Person extends CapsuleObstacle {
 
     public boolean canCut() {
         return canCut;
+    }
+
+    public void setCanSwingTo(NpcPerson canSwingTo) {
+        this.canSwingTo = canSwingTo;
+    }
+
+    public NpcPerson getCanSwingTo() {
+        return canSwingTo;
     }
 
     /**

@@ -66,11 +66,6 @@ public class CollisionController implements ContactListener {
                 player.setIsOnNpc(false);
             }
 
-//            if (player.getSensorName().equals(fd1) && bd2.getName().equals(Blob.BLOB_NAME)) {
-//                player.setCanCut(true);
-//                player.setClosestCoupleID(((Blob) bd2).getPlankParentID());
-//            }
-
             if (bd1 == player && bd2.getName().equals(Blob.BLOB_NAME)) {
                 Vector2 norm = ((Blob) bd2).getNorm();
                 player.setTrampolineDir(norm);
