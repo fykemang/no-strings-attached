@@ -11,6 +11,10 @@ public class NpcPerson extends Person {
     public boolean left;
     public boolean flip;
 
+    public NpcPerson getCouple() {
+        return couple;
+    }
+
     /**
      * Creates a new dude avatar at the given position.
      * <p>
@@ -33,7 +37,6 @@ public class NpcPerson extends Person {
         this.type = "";
         flip = false;
         this.setName("npc");
-
     }
 
     public void setType(String type) {
