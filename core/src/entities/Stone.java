@@ -35,6 +35,10 @@ public class Stone extends PolygonObstacle {
     float x;
     float y;
     String type;
+    Vector2 rotBeginLim;
+    Vector2 rotEndLim;
+    float degree;
+    float rotX, rotY;
 
     public void setIsSliding(boolean b) {
         isSliding = b;
@@ -104,6 +108,23 @@ public class Stone extends PolygonObstacle {
         this.center = new Vector2(rotatingCenter[0], rotatingCenter[1]);
         isRotating = true;
         rotDir = new Vector2();
+        degree = rotatingDegree* (float) Math.PI / 180f;
+    }
+
+    public void setRotationData(Vector2 center, Vector2 pos) {
+        this.center = center;
+        float rotatedX=0f, rotatedY=0f;
+        rotX = pos.x;
+        rotY = pos.y;
+        rotatedX = (float) Math.cos(degree) * (pos.x - center.x) - (float) Math.sin(degree) * (pos.y - center.y) + center.x;
+        rotatedY = (float) Math.sin(degree) * (pos.x - center.x) + (float) Math.cos(degree) * (pos.y - center.y) + center.y;
+
+        rotBeginLim = new Vector2(rotX, rotY);
+        rotEndLim = new Vector2(rotatedX, rotatedY);
+    }
+    public void setPosData(Vector2 pos){
+        rotX = pos.x;
+        rotY = pos.y;
     }
 
     @Override
@@ -124,14 +145,27 @@ public class Stone extends PolygonObstacle {
 
             setLinearVelocity(slideDir);
         }
-//        if(isRotating){
-//            float rotateBy = 10 * dt * (float)Math.PI/180f;
-//            float rotatedX = (float) Math.cos(rotateBy) * (getX() - center.x) - (float) Math.sin(rotateBy) * (getY() - center.y) + center.x;
-//            float rotatedY = (float) Math.sin(rotateBy) * (getX() - center.x) + (float)Math.cos(rotateBy) * (getY() - center.y) + center.y;
-//            rotDir.set(rotatedX - getX(), rotatedY - getY());
-//            rotDir.nor();
-//            setLinearVelocity(rotDir);
-//        }
+        if(isRotating) {
+            float rotateBy = 10 * dt * (float) Math.PI / 180f;
+            float rotatedX=0f, rotatedY = 0f;
+            if(!back) {//ccw
+                 rotatedX = (float) Math.cos(rotateBy) * (rotX - center.x) - (float) Math.sin(rotateBy) * (rotY - center.y) + center.x;
+                 rotatedY = (float) Math.sin(rotateBy) * (rotX - center.x) + (float) Math.cos(rotateBy) * (rotY - center.y) + center.y;
+            }else{
+                rotatedX = (float) Math.sin(rotateBy) * (rotY - center.y) + (float) Math.cos(rotateBy) * (rotX - center.x) + center.x;
+                rotatedY = (float) Math.cos(rotateBy) * (rotY - center.y) - (float) Math.sin(rotateBy) * (rotX - center.x) + center.y;
+            }
+            rotDir.set(rotatedX - rotX, rotatedY - rotY);
+            rotDir.nor();
+            rotDir.scl(0.6f);
+            setLinearVelocity(rotDir);
+            if (getPosition().epsilonEquals(rotEndLim, 0.05f)) {
+                back = true;
+            }else if (getPosition().epsilonEquals(rotBeginLim, 0.05f)){
+                back = false;
+
+            }
+        }
     }
 
     @Override
