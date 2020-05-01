@@ -28,11 +28,6 @@
     {
       "id": 6,
       "unlocked": false,
-      "path": "levels/level4.json"
-    },
-    {
-      "id": 7,
-      "unlocked": false,
       "path": "levels/level5.json"
     }
   ]
