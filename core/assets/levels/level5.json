@@ -34,7 +34,7 @@
       "isSliding": false
     },
     {
-      "x": 22.5,
+      "x": 21.5,
       "y": 7,
       "width": 1.0,
       "height": 10,
@@ -44,9 +44,9 @@
       "isSliding": false
     },
     {
-      "x": 19.5,
-      "y": 8,
-      "width": 1,
+      "x": 20,
+      "y": 7,
+      "width": 1.5,
       "height": 10,
       "type": "normal",
       "id": 3,
