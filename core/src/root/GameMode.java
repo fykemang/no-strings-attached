@@ -1388,14 +1388,29 @@ public class GameMode extends Mode implements Screen {
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
-        for (TextureRegion t : stillBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
-        }
-        for (TextureRegion t : slightMoveBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
-        }
-        for (TextureRegion t : movingBackgroundTextures) {
-            canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+        if (level.getType().equals("forest")) {
+            for (TextureRegion t : stillBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f,
+                        t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+            }
+            for (TextureRegion t : slightMoveBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f,
+                        canvas.getWidth() * 1.2f, t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+            }
+            for (TextureRegion t : movingBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f,
+                        canvas.getWidth() * 1.2f, t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+            }
+        }else {
+            for (TextureRegion t : stillBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+            }
+            for (TextureRegion t : slightMoveBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+            }
+            for (TextureRegion t : movingBackgroundTextures) {
+                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+            }
         }
 
         canvas.end();
