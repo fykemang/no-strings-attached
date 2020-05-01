@@ -144,7 +144,7 @@ public class FilmStrip extends TextureRegion {
 
     public void refresh() {
         refreshed = true;
-        setFrame(reversed?frame:0);
+        setFrame(reversed ? frame : 0);
         elapsedTime = 0f;
     }
 
@@ -190,8 +190,8 @@ public class FilmStrip extends TextureRegion {
             if (frame + 1 >= size && !loop)
                 return;
             frame = frame + 1 >= size ? 0 : frame + 1;
-        }else{
-            if (frame == 0 && !loop){
+        } else {
+            if (frame == 0 && !loop) {
                 return;
             }
             frame = frame == 0 ? size - 1 : frame - 1;
@@ -209,8 +209,8 @@ public class FilmStrip extends TextureRegion {
         return freeze;
     }
 
-    public void updateFrame(){
-        if(elapsedTime >= frameDuration){
+    public void updateFrame() {
+        if (elapsedTime >= frameDuration) {
             setNextFrame();
             elapsedTime = 0f;
         }

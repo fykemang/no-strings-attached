@@ -65,7 +65,7 @@ public class Person extends CapsuleObstacle {
     /**
      * Height of the sensor attached to the player's feet
      */
-    private static final float SENSOR_HEIGHT = 0.25f;
+    private static final float SENSOR_HEIGHT = 0.05f;
 
     // This is to fit the image to a tigher hitbox
     /**
@@ -426,7 +426,7 @@ public class Person extends CapsuleObstacle {
         sensorDef.density = PLAYER_DENSITY;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(SSHRINK * getWidth(), SENSOR_HEIGHT, sensorCenter, 0.0f);
+        sensorShape.setAsBox(SSHRINK * getWidth() * .75f, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
         sensorDef.filter.maskBits = getFilterData().maskBits;
         sensorDef.filter.categoryBits = getFilterData().categoryBits;

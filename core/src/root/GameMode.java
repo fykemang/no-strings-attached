@@ -885,7 +885,6 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
         lastpos = new Vector2(xpos, ypos);
         canvas.moveCamera(xpos, ypos);
-
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
         //add player
@@ -1627,7 +1626,7 @@ public class GameMode extends Mode implements Screen {
      * @param dt Number of seconds since last animation frame
      */
 
-    private int direction = 0;
+    private final int direction = 0;
 
     public void postUpdate(float dt) {
         // Add any objects created by actions
