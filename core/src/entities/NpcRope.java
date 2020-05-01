@@ -316,7 +316,12 @@ public class NpcRope extends Rope {
             }
         }
 
+        if (index < 2 || index > upperLayer.size() - 2) {
+            return null;
+        }
+
         int lowIdx = index >= lowerLayer.size() ? lowerLayer.size() - 1 : index;
+
         w.destroyBody(upperLayer.get(index).getBody());
         w.destroyBody(lowerLayer.get(lowIdx).getBody());
 
@@ -330,18 +335,17 @@ public class NpcRope extends Rope {
 
         Filter ropeFragmentFilter = new Filter();
         ropeFragmentFilter.maskBits = CollisionFilterConstants.MASK_NO_COLLISION.getID();
+
         NpcRope l = new NpcRope(leftUpper, leftLower, RopeState.LEFT_BROKEN);
         l.setFilterDataAll(ropeFragmentFilter);
         l.setStart(contPoints[0], true);
         l.setDrawScale(this.drawScale);
         cutNpcRopes[0] = l;
-
         NpcRope r = new NpcRope(rightUpper, rightLower, RopeState.RIGHT_BROKEN);
         r.setFilterDataAll(ropeFragmentFilter);
         r.setEnd(contPoints[contPoints.length - 1], true);
         r.setDrawScale(this.drawScale);
         cutNpcRopes[1] = r;
-
         this.bodyinfo.active = false;
         return cutNpcRopes;
     }
@@ -368,7 +372,12 @@ public class NpcRope extends Rope {
             approxNorm.nor();
             setNorms();
         }
+
         canvas.drawCatmullRom(splineCurve, tint, MAX_DRAW_POINTS, points);
+//        }catch (Exception e){
+//            System.out.println(state);
+//            System.out.println(contPoints.length);
+//        }
     }
 
     private void setNorms() {

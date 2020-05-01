@@ -92,7 +92,6 @@ public class PlayerRope extends Rope {
             jointDef.bodyB = next.getBody();
             jointDef.localAnchorA.set(anchor1);
             jointDef.localAnchorB.set(anchor2);
-            jointDef.collideConnected = false;
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
         }
