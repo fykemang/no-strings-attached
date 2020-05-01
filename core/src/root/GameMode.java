@@ -878,7 +878,6 @@ public class GameMode extends Mode implements Screen {
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
         float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
-
                 citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
                 0f};
 
