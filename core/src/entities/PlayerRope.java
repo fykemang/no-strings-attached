@@ -22,9 +22,9 @@ public class PlayerRope extends Rope {
         super(x0, y0, x1, y1, "player_rope", PLAYER_ROPE_DENSITY, ropeLength, SEGMENT_LENGTH, -1);
     }
 
-    public float getNPC(){
+    public float getNPC() {
         float x = contPoints[0].x;
-        return x /drawScale.x;
+        return x / drawScale.x;
     }
 
     @Override
