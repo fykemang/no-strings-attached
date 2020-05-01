@@ -883,7 +883,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size) {
         if (manager.isLoaded(file)) {
-            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size);
+            FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size, true);
             strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             return strip;
         }

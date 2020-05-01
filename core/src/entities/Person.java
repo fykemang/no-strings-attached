@@ -133,6 +133,15 @@ public class Person extends CapsuleObstacle {
     private int shootCooldown;
     private PolygonShape sensorShape;
     private boolean canCut;
+
+    public boolean isFallingBack() {
+        return fallingBack;
+    }
+
+    public void setFallingBack(boolean fallingBack) {
+        this.fallingBack = fallingBack;
+    }
+
     private final String sensorName;
     private Person target;
     private final Vector2 trampolineDir;
@@ -143,6 +152,7 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
     private Color tint = new Color(Color.WHITE);
+    private boolean fallingBack;
 
     /**
      * Which direction is the character facing
@@ -157,7 +167,7 @@ public class Person extends CapsuleObstacle {
     private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
-
+    private boolean turned = false;
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -179,9 +189,11 @@ public class Person extends CapsuleObstacle {
     public void setMovement(float value) {
         // Change facing if appropriate
         if (value < 0) {
+            turned = isFacingRight;
             isFacingRight = false;
             movement = value;
         } else if (value > 0) {
+            turned = !isFacingRight;
             isFacingRight = true;
             movement = value;
         }
@@ -348,7 +360,6 @@ public class Person extends CapsuleObstacle {
     public NpcPerson getOnNpc() {
         return onNpc;
     }
-
     public void setOnNpc(NpcPerson n) {
         this.onNpc = n;
     }
@@ -479,11 +490,6 @@ public class Person extends CapsuleObstacle {
 
     }
 
-    private void setJumpAnimationFrame() {
-        //rising: 0 - 7
-        //falling: 8 - 21
-
-    }
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
@@ -506,7 +512,6 @@ public class Person extends CapsuleObstacle {
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
-//            setJumpAnimationFrame();
         } else {
             jumpCooldown = Math.max(0, jumpCooldown - 1);
         }
@@ -515,7 +520,7 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && isGrounded()) {
             frameCount = 0;
 
             if (!((FilmStrip) texture).getShouldFreeze()) {
