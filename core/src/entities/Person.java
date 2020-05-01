@@ -146,6 +146,7 @@ public class Person extends CapsuleObstacle {
 
     private final String sensorName;
     private Person target;
+    private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
     private final float MAX_TRAMPOLINE = 0.35f;
@@ -515,10 +516,9 @@ public class Person extends CapsuleObstacle {
      */
     public void update(float dt) {
         frameCount++;
-        int frameRate = 3;
+        int frameRate = 4;
         if (horizontalMovement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / horizontalMovement)));
-            frameRate = temp == 0 ? frameRate : temp;
         }
 
         if (horizontalMovement == 0) {
@@ -535,9 +535,8 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && isGrounded()) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || getName().equals("npc"))) {
             frameCount = 0;
-
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
@@ -563,6 +562,14 @@ public class Person extends CapsuleObstacle {
 
     public boolean canCut() {
         return canCut;
+    }
+
+    public void setCanSwingTo(NpcPerson canSwingTo) {
+        this.canSwingTo = canSwingTo;
+    }
+
+    public NpcPerson getCanSwingTo() {
+        return canSwingTo;
     }
 
     /**
