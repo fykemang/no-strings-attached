@@ -28,7 +28,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     public static final int INTO_TRANSITION = 5;
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
-    private static final String FAIL = "ui/yarnie-fail.png";
+    private static final String PC = "player/player_idle.png";
     private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MEAN_MENU = "ui/main-menu.png";
@@ -46,6 +46,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     Texture background;
     Texture yarnie;
+    TextureRegion pc;
     Texture winMessage;
     TextureRegion buttonNextDown;
     private final AssetManager manager;
@@ -72,8 +73,9 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         Texture select = new Texture(SELECTOR);
         selected = new TextureRegion(select);
         buttonNextDown = new TextureRegion(new Texture("ui/next-down.png"));
+        pc = new TextureRegion(new Texture(PC));
         background = new Texture(BK_FILE);
-        yarnie = win ? new Texture(WIN) : new Texture(FAIL);
+        yarnie =  new Texture(WIN);
         winMessage = new Texture(WIN_TEXT);
         Texture buttonNext = new Texture(BUTTON);
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -315,12 +317,12 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private void draw() {
         stage.draw();
         canvas.begin();
-//           System.out.println(background.getWidth());
-
         canvas.drawBackground(background, canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
         canvas.draw(yarnie, canvas.getWidth() / 2 - yarnie.getWidth() / 2,
                 canvas.getHeight() / 2 - yarnie.getHeight() / 2);
+        canvas.drawUI(pc, canvas.getWidth()*2 / 3 - pc.getRegionWidth() / 2,
+                canvas.getHeight() / 2 - pc.getRegionHeight() / 2, 0.5f);
         if (levelComplete) {
             canvas.draw(winMessage, canvas.getWidth() / 2 - winMessage.getWidth() / 2,
                     canvas.getHeight() * 4 / 5 - winMessage.getHeight() / 2);
