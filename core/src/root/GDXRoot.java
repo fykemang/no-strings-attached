@@ -14,7 +14,6 @@ package root;/*
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -207,7 +206,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
-                    if (levelSelector.getLevel(currentLevel) == null){
+                    if (levelSelector.getLevel(currentLevel) == null) {
                         levelSelector.reset();
                         Gdx.input.setInputProcessor(levelSelector);
                         setScreen(levelSelector);

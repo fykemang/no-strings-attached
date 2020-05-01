@@ -1413,8 +1413,6 @@ public class GameCanvas {
     }
 
 
-
-
     public void actStage(Stage stage) {
         spriteBatch.end();
         stage.act();
