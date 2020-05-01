@@ -47,7 +47,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The maximum horizontal character speed
      */
-    private static final float PLAYER_MAX_HORIZONTAL_SPEED = 4.0f;
+    private static final float PLAYER_MAX_HORIZONTAL_SPEED = 4.5f;
     /**
      * The maximum vertical character speed
      */
@@ -55,7 +55,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float PLAYER_JUMP = 9.5f;
+    private static final float PLAYER_JUMP = 10f;
 
     private static final float FRICTION = 0.6f;
 
