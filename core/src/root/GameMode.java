@@ -1309,12 +1309,10 @@ public class GameMode extends Mode implements Screen {
                 }
             }
 
-            if (! player.isAttached() && ! player.isShooting()) {
+            if (!player.isAttached() && player.isShooting()) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
-//                if (p!=null)
-//                    System.out.println("x " + p.getX() + "y " + p.getY());
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
