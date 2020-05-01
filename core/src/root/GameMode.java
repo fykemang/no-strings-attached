@@ -1070,7 +1070,7 @@ public class GameMode extends Mode implements Screen {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
             } else if (!player.isAlive() || player.won()) {
-                if (player.won() && player.isAttached() && playerRope != null) {
+                if (player.isAttached() && playerRope != null) {
                     destroyPlayerRope();
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
@@ -1467,6 +1467,7 @@ public class GameMode extends Mode implements Screen {
     protected FilmStrip createFilmStrip(AssetManager manager, String file, int rows, int cols, int size, boolean loop) {
         if (manager.isLoaded(file)) {
             FilmStrip strip = new FilmStrip(manager.get(file, Texture.class), rows, cols, size, loop);
+//            strip.set
             strip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             return strip;
         }

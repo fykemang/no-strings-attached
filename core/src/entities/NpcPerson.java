@@ -65,6 +65,5 @@ public class NpcPerson extends Person {
         } else {
             return rightAttachPt;
         }
-
     }
 }

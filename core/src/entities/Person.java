@@ -31,7 +31,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.3f;
+    private static final float PLAYER_DENSITY = 1.5f;
     /**
      * The factor to multiply by the input
      */
@@ -51,7 +51,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The impulse for the character jump
      */
-    private static final float PLAYER_JUMP = 10f;
+    private static final float PLAYER_JUMP = 8.5f;
 
     private static final float FRICTION = 0.6f;
 
@@ -502,7 +502,7 @@ public class Person extends CapsuleObstacle {
      */
     public void update(float dt) {
         frameCount++;
-        int frameRate = 3;
+        int frameRate = 4;
         if (movement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
@@ -522,9 +522,8 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && isGrounded()) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || getName().equals("npc"))) {
             frameCount = 0;
-
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
