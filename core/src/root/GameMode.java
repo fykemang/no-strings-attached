@@ -749,6 +749,7 @@ public class GameMode extends Mode implements Screen {
         winSound = manager.get(WIN_FILE);
         loseSound = manager.get(LOSE_FILE);
         clickSound = manager.get(CLICK_FILE);
+        forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -920,11 +921,18 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
-        for (Tile spike : spikes) {
-            TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
-            createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
+        if (level.getType().contains("forest")) {
+            for (Tile spike : spikes) {
+                TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : spikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, forestSpikeTexture);
+            }
         }
-
+        else {
+            for (Tile spike : spikes) {
+                TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
+            }
+        }
     }
 
     public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc) {
