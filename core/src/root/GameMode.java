@@ -689,7 +689,7 @@ public class GameMode extends Mode implements Screen {
         npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21, true);
         npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17, true);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
-        exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 60, 60, true);
+        exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -1385,11 +1385,14 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
+//        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
+//                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+//        ((FilmStrip) exclamationTexture).setNextFrame();
         NpcPerson p = player.getCanSwingTo();
         if (p != null) {
-            System.out.println("NPC x" + p.getX() + "   y" + p.getY());
-//            canvas.draw(basketEmptyTexture, p.getX(), p.getY());
-            canvas.draw(exclamationTexture, Color.WHITE, p.getCloserAttachPoint().x, p.getCloserAttachPoint().y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+        canvas.draw(exclamationTexture, Color.WHITE,p.getX()*scale.x,
+                p.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+        ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
 
