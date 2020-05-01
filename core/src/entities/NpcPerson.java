@@ -1,6 +1,10 @@
 package entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class NpcPerson extends Person {
 
@@ -10,6 +14,13 @@ public class NpcPerson extends Person {
     private NpcPerson couple;
     public boolean left;
     public boolean flip;
+    private static final float PLAYER_DENSITY = 1.3f;
+    private Fixture sensorFixture;
+    private PolygonShape sensorShape;
+
+    public NpcPerson getCouple() {
+        return couple;
+    }
 
     /**
      * Creates a new dude avatar at the given position.
@@ -33,7 +44,6 @@ public class NpcPerson extends Person {
         this.type = "";
         flip = false;
         this.setName("npc");
-
     }
 
     public void setType(String type) {
