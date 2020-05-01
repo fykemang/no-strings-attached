@@ -162,7 +162,20 @@ public class Stone extends PolygonObstacle {
                             start + (i + 1) * dist, firsty + height * drawScale.y / 2, getAngle(),
                             sc, sc);
                 }
-            } else {
+            } else if (height > 2*width){
+                this.x = getX();
+                this.y = getY();
+                float scx = width * drawScale.x / texture.getRegionWidth();
+                float num = (int) (height * drawScale.y / (texture.getRegionHeight() * scx));
+                float dist = height * drawScale.y / num;
+                float scy = dist / (texture.getRegionHeight() * scx);
+                num = num == 0 ? 1 : num;
+
+                for (int i = 0; i < num; i++)
+                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
+                            y * drawScale.y +  i * dist, getAngle(), scx, scx*scy);
+
+            }else {
                 this.x = getX();
                 this.y = getY();
                 float sca = 1.1f;
@@ -194,19 +207,32 @@ public class Stone extends PolygonObstacle {
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
+            }else if (height > 2*width){
+                this.x = getX();
+                this.y = getY();
+                float scx = width * drawScale.x / texture.getRegionWidth();
+                float num = (int) (height * drawScale.y / (texture.getRegionHeight() * scx));
+                float dist = height * drawScale.y / num;
+                float scy = dist / (texture.getRegionHeight() * scx);
+                num = num == 0 ? 1 : num;
+
+                for (int i = 0; i < num; i++)
+                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
+                            y * drawScale.y +  i * dist, getAngle(), scx, scx*scy);
+
+            }else {
+                this.x = getX();
+                this.y = getY();
+                float scy = height * drawScale.y / texture.getRegionHeight();
+                float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
+                float dist = width * drawScale.x / num;
+                float scx = dist / (texture.getRegionWidth() * scy);
+                num = num == 0 ? 1 : num;
+
+                for (int i = 0; i < num; i++)
+                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                            y * drawScale.y, getAngle(), scx * scy, scy);
             }
-            this.x = getX();
-            this.y = getY();
-            float scy = height * drawScale.y / texture.getRegionHeight();
-            float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
-            float dist = width * drawScale.x / num;
-            float scx = dist / (texture.getRegionWidth() * scy);
-            num = num == 0 ? 1 : num;
-
-            for (int i = 0; i < num; i++)
-                canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                        y * drawScale.y, getAngle(), scx * scy, scy);
-
 
         }
     }
