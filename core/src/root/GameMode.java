@@ -323,7 +323,7 @@ public class GameMode extends Mode implements Screen {
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
     private final String VILLAGE_MUSIC_FILE = "music/village_theme.mp3";
     private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
-    private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
@@ -1301,12 +1301,11 @@ public class GameMode extends Mode implements Screen {
                 }
             }
 
+            // Nearest NPC for exclamation
             if (! player.isAttached() && ! player.isShooting()) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
-//                if (p!=null)
-//                    System.out.println("x " + p.getX() + "y " + p.getY());
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
