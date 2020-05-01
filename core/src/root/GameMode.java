@@ -16,6 +16,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -114,7 +115,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_CHEESE = "entities/cheese_idle.png";
     private static final String NPC_NERVY = "entities/nervy_idle.png";
     private static final String NPC_SPIKY = "entities/spiky_idle.png";
-    private static final String NPC_HEYO = "entities/hey_idle.png";
+    private static final String NPC_HEYO = "entities/heyo_idle.png";
     private static final String NPC_WELCOME = "entities/welcome_idle.png";
     private static final String NPC_COZY_SHOCK = "entities/cozy_shock.png";
     private static final String NPC_CHEESE_SHOCK = "entities/cheese_shock.png";
@@ -122,6 +123,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_SPIKY_SHOCK = "entities/spiky_shock.png";
     private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
+    private static final String EXCLAMATION = "entities/exclamation.png";
 
     /**
      * Texture file for the exit door
@@ -132,6 +134,7 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String NEEDLE = "entities/needles.png";
     private static final String YARN = "entities/yarn.png";
+    private static final String GREY_YARN = "entities/grey_yarn.png";
     private static final String BUTTON = "entities/buttons.png";
     private static final String FABRIC_1 = "entities/fabric1.png";
     private static final String FABRIC_2 = "entities/fabric2.png";
@@ -248,12 +251,14 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion npcHeyoShockTexture;
     private TextureRegion npcSpikyShockTexture;
     private TextureRegion npcWelcomeShockTexture;
+    private TextureRegion exclamationTexture;
     /**
      * Texture assets for items
      */
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
+    private TextureRegion greyYarnTexture;
     private TextureRegion fabric1Texture;
     private TextureRegion fabric2Texture;
     private TextureRegion spoolTexture;
@@ -288,21 +293,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip playerJumpUpAnimation;
     private FilmStrip playerJumpDownAnimation;
     private FilmStrip playerDeathAnimation;
-    /**
-     * FilmStrip objects to show NPC animations
-     */
-    private FilmStrip npcCozyIdleAnimation;
-    private FilmStrip npcCozyShockAnimation;
-    private FilmStrip npcCheeseIdleAnimation;
-    private FilmStrip npcCheeseShockAnimation;
-    private FilmStrip npcHeyoIdleAnimation;
-    private FilmStrip npcHeyoShockAnimation;
-    private FilmStrip npcNervyIdleAnimation;
-    private FilmStrip npcNervyShockAnimation;
-    private FilmStrip npcSpikyIdleAnimation;
-    private FilmStrip npcSpikyShockAnimation;
-    private FilmStrip npcWelcomeIdleAnimation;
-    private FilmStrip npcWelcomeShockAnimation;
 
     /**
      * Listener that will update the player mode when we are done
@@ -331,8 +321,8 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/takingastroll.mp3";
-    private final String FOREST_MUSIC_FILE = "music/youare.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/village_theme.mp3";
+    private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/happylittleclouds.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
@@ -349,6 +339,11 @@ public class GameMode extends Mode implements Screen {
     private Sound loseSound;
     private Sound clickSound;
     private Sound winSound;
+    private boolean didPlayWin;
+    private boolean didPlayLose;
+    private boolean didPlayJump;
+    private boolean didPlayCollect;
+
 
     /**
      * Files for region tiles
@@ -438,6 +433,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
+        manager.load(GREY_YARN, Texture.class);
+        assets.add(GREY_YARN);
         manager.load(FABRIC_1, Texture.class);
         assets.add(FABRIC_1);
         manager.load(FABRIC_2, Texture.class);
@@ -574,7 +571,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(NPC_WELCOME);
         manager.load(NPC_WELCOME_SHOCK, Texture.class);
         assets.add(NPC_WELCOME_SHOCK);
-
+        manager.load(EXCLAMATION, Texture.class);
+        assets.add(EXCLAMATION);
 
         // Load Sound Assets
         loadAsset(JUMP_FILE, Sound.class, manager);
@@ -700,6 +698,7 @@ public class GameMode extends Mode implements Screen {
         npcNervyShockTexture = createFilmStrip(manager, NPC_NERVY_SHOCK, 1, 21, 21, true);
         npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17, true);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
+        exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -715,6 +714,7 @@ public class GameMode extends Mode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
+        greyYarnTexture = createTexture(manager, GREY_YARN, false);
         fabric1Texture = createTexture(manager, FABRIC_1, false);
         fabric2Texture = createTexture(manager, FABRIC_2, false);
         spoolTexture = createTexture(manager, SPOOL, false);
@@ -852,6 +852,10 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation.refresh();
         playerJumpUpAnimation.refresh();
         playerJumpDownAnimation.refresh();
+        didPlayWin = false;
+        didPlayLose = false;
+        didPlayCollect = false;
+        didPlayJump = false;
     }
 
     /**
@@ -1025,7 +1029,7 @@ public class GameMode extends Mode implements Screen {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
-        tile.setFriction(BASIC_FRICTION);
+        tile.setFriction(200f);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
         tile.setTexture(tileTexture);
@@ -1065,8 +1069,16 @@ public class GameMode extends Mode implements Screen {
                 listener.exitScreen(this, EXIT_PREV);
                 result = false;
             } else if (!player.isAlive() || player.won()) {
-                if (player.won() && player.isAttached() && playerRope != null) {
+                if (player.isAttached() && playerRope != null) {
                     destroyPlayerRope();
+                }
+                if (player.won() && !didPlayWin) {
+                    winSound.play();
+                    didPlayWin = true;
+                }
+                if (!player.isAlive() && !didPlayLose) {
+                    loseSound.play();
+                    didPlayLose = true;
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                 if (timeSeconds > period) {
@@ -1177,6 +1189,25 @@ public class GameMode extends Mode implements Screen {
         }
 
     }
+    private void setShockNpc(NpcPerson n, String command) {
+        if (command.equals("onNpc")) {
+            if (n != null) {
+                String type = n.getType();
+                if (player.isOnNpc()) {
+                    TextureRegion shockTex = npcShock.get(type);
+                    n.setTexture(shockTex);
+                } else if (n.getCouple() != null) {
+                    TextureRegion normalTex = npcs.get(type);
+                    n.setTexture(normalTex);
+                }
+            }
+        }
+       else if (command.equals("cutrope"))  {
+            String type = n.getType();
+            TextureRegion shockTex = npcShock.get(type);
+            n.setTexture(shockTex);
+        }
+    }
 
     /**
      * The core gameplay loop of this world.
@@ -1213,7 +1244,6 @@ public class GameMode extends Mode implements Screen {
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.won()) {
-//            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
@@ -1250,18 +1280,10 @@ public class GameMode extends Mode implements Screen {
             }
 
             NpcPerson onNpc = player.getOnNpc();
-            if (onNpc != null) {
-                String type = onNpc.getType();
-                if (player.isOnNpc()) {
-                    TextureRegion shockTex = npcShock.get(type);
-                    onNpc.setTexture(shockTex);
-                } else {
-                    TextureRegion normalTex = npcs.get(type);
-                    onNpc.setTexture(normalTex);
-                }
-            }
+            setShockNpc(onNpc, "onNpc");
 
             if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+                player.setCanSwingTo(null);
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 player.setTarget(ropeQueryCallback.getClosestNpc());
             }
@@ -1276,11 +1298,23 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                                NpcPerson left = ((Couple) obs).getL();
+                                setShockNpc(left, "cutrope");
+                                NpcPerson right = ((Couple) obs).getR();
+                                setShockNpc(right, "cutrope");
                             }
                         }
                     }
                     cuttingCallback.reset();
                 }
+            }
+
+            if (! player.isAttached() && ! player.isShooting()) {
+                world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
+                NpcPerson p = ropeQueryCallback.getClosestNpc();
+                player.setCanSwingTo(p);
+//                if (p!=null)
+//                    System.out.println("x " + p.getX() + "y " + p.getY());
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
@@ -1326,9 +1360,6 @@ public class GameMode extends Mode implements Screen {
                 player.setAttached(true);
             }
 
-//            if (player.isAttached()){
-//                Joint swingJoint = player.getSwingJoint();
-//            }
             /*
              * Continuously update the rope position to match the player
              * position
@@ -1371,16 +1402,9 @@ public class GameMode extends Mode implements Screen {
         for (TextureRegion t : slightMoveBackgroundTextures) {
             canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
-//        for (TextureRegion t : movingBackgroundTextures) {
-////            canvas.drawWrapped(t, -.3f * camera, 0f, t.getRegionWidth() / 2, t.getRegionHeight() / 2);
-////        }
         for (TextureRegion t : movingBackgroundTextures) {
             canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
         }
-//        canvas.drawWrapped(skyTexture, 0f * camera, 0f, skyTexture.getRegionWidth() / 2, skyTexture.getRegionHeight() / 2);
-//        canvas.drawWrapped(sunTexture, 0f * camera, 0f, sunTexture.getRegionWidth() / 2, sunTexture.getRegionHeight() / 2);
-//        canvas.drawWrapped(cityTexture, -0.1f * camera, 0f, cityTexture.getRegionWidth() / 2, cityTexture.getRegionHeight() / 2);
-//        canvas.drawWrapped(cloudTexture, -0.5f * camera, 0f, cloudTexture.getRegionWidth() / 2, cloudTexture.getRegionHeight() / 2);
 
         canvas.end();
         canvas.begin();
@@ -1394,22 +1418,42 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
+//        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
+//                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+//        ((FilmStrip) exclamationTexture).setNextFrame();
+        NpcPerson p = player.getCanSwingTo();
+        if (p != null) {
+        canvas.draw(exclamationTexture, Color.WHITE,p.getX()*scale.x,
+                p.getY()*scale.y, exclamationTexture.getRegionWidth()*2.2f/scale.x, exclamationTexture.getRegionHeight()*2.2f/scale.y);
+        ((FilmStrip) exclamationTexture).setNextFrame();
+        }
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        float UIX = 120;
-        float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
-        int itemCount = player.getInventory().size();
-        if (itemCount == 0) {
-            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
-        } else if (itemCount == 1) {
-            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
-        } else if (itemCount == 2) {
-            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
-        } else {
-            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
+ //       float UIX = 120;
+ //       float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
+//        int itemCount = player.getInventory().size();
+//        if (itemCount == 0) {
+////            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
+////        } else if (itemCount == 1) {
+////            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
+////        } else if (itemCount == 2) {
+////            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
+////        } else {
+////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
+////        }
+
+        float UIX = 70;
+        float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
+        for (int i = 1; i <= items.size(); i++) {
+            if (i <= player.getInventory().size()) {
+                canvas.drawUI(yarnTexture, UIX, UIY, 0.25f);
+            } else {
+                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+            }
+            UIX += greyYarnTexture.getRegionWidth()+10;
         }
         canvas.end();
 
@@ -1802,5 +1846,6 @@ public class GameMode extends Mode implements Screen {
     private enum GameState {
         PLAYING, PAUSED
     }
+
 }
 
