@@ -1321,7 +1321,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             // Nearest NPC for exclamation
-            if (!player.isAttached() && !player.isShooting()) {
+            if (!player.isAttached() && player.isShooting()) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
