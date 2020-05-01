@@ -153,8 +153,8 @@ public class Person extends CapsuleObstacle {
     private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private static final float MAX_TRAMPOLINE = 1.7f;
-    private static final float MIN_TRAMPOLINE = 0.7f;
+    private static final float MAX_TRAMPOLINE = 1.55f;
+    private static final float MIN_TRAMPOLINE = 0.1f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
