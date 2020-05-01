@@ -368,7 +368,7 @@ public class GameMode extends Mode implements Screen {
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village1.png", "background/village2.png", "background/village3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village4.png", "background/village5.png", "background/village6.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village7.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
+    //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
@@ -926,8 +926,7 @@ public class GameMode extends Mode implements Screen {
                 TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, forestSpikeTexture);
             }
-        }
-        else {
+        } else {
             for (Tile spike : spikes) {
                 TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
@@ -1201,6 +1200,7 @@ public class GameMode extends Mode implements Screen {
         }
 
     }
+
     private void setShockNpc(NpcPerson n, String command) {
         if (command.equals("onNpc")) {
             if (n != null) {
@@ -1213,8 +1213,7 @@ public class GameMode extends Mode implements Screen {
                     n.setTexture(normalTex);
                 }
             }
-        }
-       else if (command.equals("cutrope"))  {
+        } else if (command.equals("cutrope")) {
             String type = n.getType();
             TextureRegion shockTex = npcShock.get(type);
             n.setTexture(shockTex);
@@ -1241,13 +1240,25 @@ public class GameMode extends Mode implements Screen {
 //            exitToSelector();
         }
 
+        boolean isGodModeKeyPressed = Gdx.input.isKeyPressed(Input.Keys.G);
+
+        if (player.isGodModeActivated() && isGodModeKeyPressed) {
+            player.setGodMode(false);
+            player.setBodyType(BodyDef.BodyType.DynamicBody);
+        } else if (!player.isGodModeActivated() && isGodModeKeyPressed) {
+            player.setGodMode(true);
+            player.setBodyType(BodyDef.BodyType.KinematicBody);
+        }
+
+
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.won()) {
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
-            player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
+            player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
+            player.setVerticalMovement(InputController.getInstance().getVertical() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
             player.setCutting(InputController.getInstance().didSecondary());
@@ -1310,7 +1321,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             // Nearest NPC for exclamation
-            if (! player.isAttached() && ! player.isShooting()) {
+            if (!player.isAttached() && !player.isShooting()) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
@@ -1398,17 +1409,17 @@ public class GameMode extends Mode implements Screen {
         if (level.getType().equals("forest")) {
             for (TextureRegion t : stillBackgroundTextures) {
                 canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f,
-                        t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+                        t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
             }
             for (TextureRegion t : slightMoveBackgroundTextures) {
                 canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
             }
             for (TextureRegion t : movingBackgroundTextures) {
                 canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight()*(canvas.getWidth()/ t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
             }
-        }else {
+        } else {
             for (TextureRegion t : stillBackgroundTextures) {
                 canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
             }
@@ -1437,17 +1448,17 @@ public class GameMode extends Mode implements Screen {
 //        ((FilmStrip) exclamationTexture).setNextFrame();
         NpcPerson p = player.getCanSwingTo();
         if (p != null) {
-        canvas.draw(exclamationTexture, Color.WHITE,p.getX()*scale.x,
-                p.getY()*scale.y, exclamationTexture.getRegionWidth()*2.2f/scale.x, exclamationTexture.getRegionHeight()*2.2f/scale.y);
-        ((FilmStrip) exclamationTexture).setNextFrame();
+            canvas.draw(exclamationTexture, Color.WHITE, p.getX() * scale.x,
+                    p.getY() * scale.y, exclamationTexture.getRegionWidth() * 2.2f / scale.x, exclamationTexture.getRegionHeight() * 2.2f / scale.y);
+            ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
- //       float UIX = 120;
- //       float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
+        //       float UIX = 120;
+        //       float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
 //        int itemCount = player.getInventory().size();
 //        if (itemCount == 0) {
 ////            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
@@ -1467,7 +1478,7 @@ public class GameMode extends Mode implements Screen {
             } else {
                 canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
             }
-            UIX += greyYarnTexture.getRegionWidth()+10;
+            UIX += greyYarnTexture.getRegionWidth() + 10;
         }
         canvas.end();
 

@@ -1,0 +1,58 @@
+{
+  "type": "city",
+  "player": {
+    "x": 8,
+    "y": 11.0
+  },
+  "tiles": [
+    {
+      "x": 4,
+      "y": 9,
+      "width": 6,
+      "height": 1,
+      "type": "normal",
+      "direction": "up",
+      "isSliding": false,
+      "leftPos": {
+        "x": 8.5,
+        "y": 0.0
+      },
+      "rightPos": {
+        "x": 10.5,
+        "y": 1.0
+      }
+    }
+  ],
+  "npc": [
+    {
+      "x": 12,
+      "y": 9,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0
+    },
+    {
+      "x": 17.0,
+      "y": 9,
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {},
+      "isRotating": false,
+      "center": {},
+      "degree": 0
+    }
+  ],
+  "items": [
+    {
+      "x": 17.5,
+      "y": 15.5
+    }
+  ],
+  "exit": {
+    "x": 19,
+    "y": 12.5
+  }
+}
