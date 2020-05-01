@@ -45,13 +45,17 @@ public class Person extends CapsuleObstacle {
      */
     private static final float PLAYER_FRICTION = 0.05f;
     /**
-     * The maximum character speed
+     * The maximum horizontal character speed
      */
-    private static final float PLAYER_MAXSPEED = 4.0f;
+    private static final float PLAYER_MAX_HORIZONTAL_SPEED = 4.5f;
+    /**
+     * The maximum vertical character speed
+     */
+    private static final float PLAYER_MAX_VERTICAL_SPEED = 12.25f;
     /**
      * The impulse for the character jump
      */
-    private static final float PLAYER_JUMP = 8.5f;
+    private static final float PLAYER_JUMP = 10f;
 
     private static final float FRICTION = 0.6f;
 
@@ -94,7 +98,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The current horizontal movement of the character
      */
-    private float movement;
+    private float horizontalMovement;
     /**
      * How long until we can jump again
      */
@@ -113,6 +117,8 @@ public class Person extends CapsuleObstacle {
     private boolean isTrampolining;
 
     private boolean isOnNpc;
+
+    private boolean isGod;
 
     private NpcPerson onNpc;
     /**
@@ -147,8 +153,8 @@ public class Person extends CapsuleObstacle {
     private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private final float MAX_TRAMPOLINE = 0.35f;
-    private final float MIN_TRAMPOLINE = 0.05f;
+    private static final float MAX_TRAMPOLINE = 1.55f;
+    private static final float MIN_TRAMPOLINE = 0.1f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
     private boolean released;
@@ -160,6 +166,7 @@ public class Person extends CapsuleObstacle {
      */
     private boolean isFacingRight;
     private boolean isWalking;
+    private float verticalMovement;
     /**
      * Cache for internal force calculations
      */
@@ -177,8 +184,8 @@ public class Person extends CapsuleObstacle {
      *
      * @return left/right movement of this character.
      */
-    public float getMovement() {
-        return movement;
+    public float getHorizontalMovement() {
+        return horizontalMovement;
     }
 
     /**
@@ -188,23 +195,27 @@ public class Person extends CapsuleObstacle {
      *
      * @param value left/right movement of this character.
      */
-    public void setMovement(float value) {
+    public void setHorizontalMovement(float value) {
         // Change facing if appropriate
         if (value < 0) {
             turned = isFacingRight;
             isFacingRight = false;
-            movement = value;
+            horizontalMovement = value;
         } else if (value > 0) {
             turned = !isFacingRight;
             isFacingRight = true;
-            movement = value;
+            horizontalMovement = value;
         }
 
         if (isWalking && value == 0) {
-            movement = Math.abs(movement * FRICTION) < EPSILON ? 0 : movement * FRICTION;
+            horizontalMovement = Math.abs(horizontalMovement * FRICTION) < EPSILON ? 0 : horizontalMovement * FRICTION;
         }
 
-        isWalking = movement != 0;
+        isWalking = horizontalMovement != 0;
+    }
+
+    public void setVerticalMovement(float verticalMovement) {
+        this.verticalMovement = verticalMovement;
     }
 
     public void addItem(String s) {
@@ -300,8 +311,12 @@ public class Person extends CapsuleObstacle {
      *
      * @return the upper limit on dude left-right movement.
      */
-    public float getMaxSpeed() {
-        return PLAYER_MAXSPEED;
+    public float getMaxHorizontalSpeed() {
+        return PLAYER_MAX_HORIZONTAL_SPEED;
+    }
+    
+    public float getMaxVerticalSpeed() {
+        return PLAYER_MAX_VERTICAL_SPEED;
     }
 
     public void setOnString(boolean onString) {
@@ -446,50 +461,59 @@ public class Person extends CapsuleObstacle {
         if (!isActive()) {
             return;
         }
-        float horizontalMovement = getMovement();
-        Vector2 linearVelocity = body.getLinearVelocity();
-        if (linearVelocity.x > 0 && horizontalMovement < 0) {
-            body.setLinearVelocity(0.1f, linearVelocity.y);
-        } else if (linearVelocity.x < 0 && horizontalMovement > 0) {
-            body.setLinearVelocity(-0.1f, linearVelocity.y);
-        }
 
-        // Don't want to be moving. Damp out player motion
-        if (horizontalMovement == 0f && !isAttached) {
-            forceCache.set(-getDamping() * getVX(), 0);
+        float horizontalMovement = getHorizontalMovement();
+        if (isGod) {
+            body.setLinearVelocity(horizontalMovement, verticalMovement);
+        } else {
+            Vector2 linearVelocity = body.getLinearVelocity();
+            if (linearVelocity.x > 0 && horizontalMovement < 0) {
+                body.setLinearVelocity(0.1f, linearVelocity.y);
+            } else if (linearVelocity.x < 0 && horizontalMovement > 0) {
+                body.setLinearVelocity(-0.1f, linearVelocity.y);
+            }
+
+            // Don't want to be moving. Damp out player motion
+            if (horizontalMovement == 0f && !isAttached) {
+                forceCache.set(-getDamping() * getVX(), 0);
+                body.applyForce(forceCache, getPosition(), true);
+            }
+
+            // Velocity too high, clamp it
+            if (Math.abs(getVX()) >= getMaxHorizontalSpeed()) {
+                setVX(Math.signum(getVX()) * getMaxHorizontalSpeed());
+            }
+
+            if (Math.abs(getVY()) >= getMaxVerticalSpeed()) {
+                setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
+            }
+
+            float vertical = PLAYER_JUMP;
+
+            if (isTrampolining) {
+                calculateTrampolineForce();
+                forceCache.set(trampolineForce.x, trampolineForce.y);
+                body.applyLinearImpulse(forceCache, getPosition(), true);
+                isTrampolining = false;
+            }
+
+
+            if (isAttached) {
+                horizontalMovement = horizontalMovement * 8f;
+            } else if (released) {
+                horizontalMovement = getVX() * 15f + getHorizontalMovement();
+            }
+
+            forceCache.set(horizontalMovement, 0);
             body.applyForce(forceCache, getPosition(), true);
+
+            // Jump!
+            if (isJumping()) {
+                forceCache.set(0, vertical);
+                body.applyLinearImpulse(forceCache, getPosition(), true);
+            }
+            released = false;
         }
-
-        // Velocity too high, clamp it
-        if (Math.abs(getVX()) >= getMaxSpeed()) {
-            setVX(Math.signum(getVX()) * getMaxSpeed());
-        }
-        float vertical = PLAYER_JUMP;
-
-        if (isTrampolining) {
-            vertical = PLAYER_JUMP / 2.5f;
-            calculateTrampolineForce();
-            forceCache.set(trampolineForce.x, trampolineForce.y);
-            body.applyLinearImpulse(forceCache, getPosition(), true);
-            isTrampolining = false;
-        }
-
-
-        if (isAttached) {
-            horizontalMovement = horizontalMovement * 8f;
-        } else if (released) {
-            horizontalMovement = getVX() * 15f + getMovement();
-        }
-
-        forceCache.set(horizontalMovement, 0);
-        body.applyForce(forceCache, getPosition(), true);
-
-        // Jump!
-        if (isJumping()) {
-            forceCache.set(0, vertical);
-            body.applyLinearImpulse(forceCache, getPosition(), true);
-        }
-        released = false;
 
     }
 
@@ -504,12 +528,11 @@ public class Person extends CapsuleObstacle {
     public void update(float dt) {
         frameCount++;
         int frameRate = 4;
-        if (movement != 0) {
-            int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
-            frameRate = temp == 0 ? frameRate : temp;
+        if (horizontalMovement != 0) {
+            int temp = Math.abs(((int) (frameRate * 0.16f / horizontalMovement)));
         }
 
-        if (movement == 0) {
+        if (horizontalMovement == 0) {
             frameRate = 7;
         }
 
@@ -529,6 +552,7 @@ public class Person extends CapsuleObstacle {
                 ((FilmStrip) texture).setNextFrame();
             }
         }
+
         if (won) {
             setLinearVelocity(Vector2.Zero);
         }
@@ -662,6 +686,14 @@ public class Person extends CapsuleObstacle {
     public void setAttached(boolean isAttached) {
         released = this.isAttached && !isAttached;
         this.isAttached = isAttached;
+    }
+
+    public void setGodMode(boolean isGod) {
+        this.isGod = isGod;
+    }
+
+    public boolean isGodModeActivated() {
+        return this.isGod;
     }
 
 }
