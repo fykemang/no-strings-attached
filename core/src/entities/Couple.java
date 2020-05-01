@@ -136,4 +136,11 @@ public class Couple extends ComplexObstacle {
         return l.isAttached() ? trampoline : null;
     }
 
+    public NpcPerson getL() {
+        return l;
+    }
+
+    public NpcPerson getR() {
+        return r;
+    }
 }

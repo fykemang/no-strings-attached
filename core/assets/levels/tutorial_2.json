@@ -1,0 +1,57 @@
+{
+  "type": "mountain",
+  "player": {
+    "x": 2,
+    "y": 14
+  },
+  "tiles": [
+    {
+      "x": 0,
+      "y": 13,
+      "width": 5,
+      "height": 1,
+      "type": "normal",
+      "id": 0,
+      "direction": "up",
+      "isSliding": false,
+      "leftPos": {},
+      "rightPos": {}
+    }
+  ],
+  "npc": [
+    {
+      "x": 8,
+      "y": 9,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 90,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 13,
+      "y": 9,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    }
+  ],
+  "items": [
+    {
+      "x": 5,
+      "y": 9.5
+    }
+  ],
+  "exit": {
+    "x": 16,
+    "y": 4
+  }
+}
