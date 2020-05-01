@@ -1138,7 +1138,6 @@ public class GameMode extends Mode implements Screen {
     private void destroyPlayerRope() {
         playerRope.markRemoved(true);
         player.setTarget(null);
-        ropeQueryCallback.reset();
         playerRope = null;
         world.destroyJoint(player.getSwingJoint());
         player.setAttached(false);
@@ -1293,10 +1292,9 @@ public class GameMode extends Mode implements Screen {
             NpcPerson onNpc = player.getOnNpc();
             setShockNpc(onNpc, "onNpc");
 
-            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+            if (player.isShooting() && !player.isAttached() && player.getTarget() == null && player.getCanSwingTo() != null) {
+                player.setTarget(player.getCanSwingTo());
                 player.setCanSwingTo(null);
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
-                player.setTarget(ropeQueryCallback.getClosestNpc());
             }
 
             if (player.isCutting()) {
@@ -1321,10 +1319,11 @@ public class GameMode extends Mode implements Screen {
             }
 
             // Nearest NPC for exclamation
-            if (!player.isAttached() && player.isShooting()) {
+            if (!player.isAttached() && player.getTarget() == null) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
+                ropeQueryCallback.reset();
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
