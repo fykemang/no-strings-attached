@@ -316,7 +316,7 @@ public class NpcRope extends Rope {
             }
         }
 
-        if (index <2 || index>upperLayer.size()-2){
+        if (index < 2 || index > upperLayer.size() - 2) {
             return null;
         }
 

@@ -25,10 +25,10 @@ public class Couple extends ComplexObstacle {
         this.drawScale = drawScale;
         this.l = createAvatar(x1, y1, avatar1, true);
         this.r = createAvatar(x2, y2, avatar2, false);
-        if(leftTile.isRotating){
+        if (leftTile.isRotating) {
             leftTile.setRotationData(r.getPosition(), l.getPosition());
 
-        }else if(rightTile.isRotating){
+        } else if (rightTile.isRotating) {
             rightTile.setRotationData(l.getPosition(), r.getPosition());
         }
         l.setType(type1);
@@ -112,7 +112,7 @@ public class Couple extends ComplexObstacle {
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
-        }else if(rightTile.isRotating){
+        } else if (rightTile.isRotating) {
             rightTile.setPosData(r.getPosition());
             if (l.left) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
@@ -128,10 +128,10 @@ public class Couple extends ComplexObstacle {
     public void breakBond(NpcRope leftFragment, NpcRope rightFragment) {
         l.setAttached(false);
         r.setAttached(false);
-        if (leftFragment !=null)
-        this.bodies.add(leftFragment);
-        if(rightFragment != null)
-        this.bodies.add(rightFragment);
+        if (leftFragment != null)
+            this.bodies.add(leftFragment);
+        if (rightFragment != null)
+            this.bodies.add(rightFragment);
     }
 
     public NpcRope getRope() {
