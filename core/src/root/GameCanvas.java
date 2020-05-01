@@ -1342,6 +1342,11 @@ public class GameCanvas {
         spriteBatch.begin();
     }
 
+
+    public void drawText(String text, int x, int y) {
+        font.draw(spriteBatch, text, x, y);
+    }
+
     public void drawWrapped(TextureRegion image, float x, float y, float width, float height) {
         positionCache.set(x, y);
         wrapPosition(positionCache);
