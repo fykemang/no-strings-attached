@@ -168,6 +168,7 @@ public class Person extends CapsuleObstacle {
 
     private boolean onString = false;
     private boolean turned = false;
+
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -360,6 +361,7 @@ public class Person extends CapsuleObstacle {
     public NpcPerson getOnNpc() {
         return onNpc;
     }
+
     public void setOnNpc(NpcPerson n) {
         this.onNpc = n;
     }
