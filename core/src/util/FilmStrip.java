@@ -60,6 +60,42 @@ public class FilmStrip extends TextureRegion {
      */
     private int frame;
 
+    public boolean isReversed() {
+        return reversed;
+    }
+
+    public void setReversed(boolean reversed) {
+        this.reversed = reversed;
+//        setRefreshed(!reversed);
+    }
+
+    private boolean reversed;
+
+
+    public float getFrameDuration() {
+        return frameDuration;
+    }
+
+    public void setFrameDuration(float fd) {
+        this.frameDuration = fd;
+    }
+
+    public float getElapsedTime() {
+        return elapsedTime; // time since last frame
+    }
+
+    public void setElapsedTime(float elapsedTime) {
+        this.elapsedTime += elapsedTime;
+    }
+
+    private float frameDuration; //Time to wait between a frame and the next one.
+    private float elapsedTime;
+
+    private boolean loop;
+    private boolean refreshed;
+//runningAnimation = new Animation(FRAME_DURATION, runningFrames, PlayMode.LOOP);
+//        ...
+//    }
     /**
      * Whether or whether not to freeze the animation
      * at the current frame
@@ -73,8 +109,8 @@ public class FilmStrip extends TextureRegion {
      * @param rows    The number of rows in the filmstrip
      * @param cols    The number of columns in the filmstrip
      */
-    public FilmStrip(Texture texture, int rows, int cols) {
-        this(texture, rows, cols, rows * cols);
+    public FilmStrip(Texture texture, int rows, int cols, boolean t) {
+        this(texture, rows, cols, rows * cols, t);
     }
 
     /**
@@ -89,7 +125,7 @@ public class FilmStrip extends TextureRegion {
      * @param cols    The number of columns in the filmstrip
      * @param size    The number of frames in the filmstrip
      */
-    public FilmStrip(Texture texture, int rows, int cols, int size) {
+    public FilmStrip(Texture texture, int rows, int cols, int size, boolean l) {
         super(texture);
         if (size > rows * cols) {
             Gdx.app.error("FilmStrip", "Invalid strip size", new IllegalArgumentException());
@@ -100,6 +136,16 @@ public class FilmStrip extends TextureRegion {
         rWidth = texture.getWidth() / cols;
         rheight = texture.getHeight() / rows;
         setFrame(0);
+        frameDuration = 0f;
+        loop = l;
+        elapsedTime = 0f;
+        reversed = false;
+    }
+
+    public void refresh() {
+        refreshed = true;
+        setFrame(reversed?frame:0);
+        elapsedTime = 0f;
     }
 
     /**
@@ -139,7 +185,17 @@ public class FilmStrip extends TextureRegion {
     }
 
     public void setNextFrame() {
-        frame = frame + 1 >= size ? 0 : frame + 1;
+
+        if (!reversed) {
+            if (frame + 1 >= size && !loop)
+                return;
+            frame = frame + 1 >= size ? 0 : frame + 1;
+        }else{
+            if (frame == 0 && !loop){
+                return;
+            }
+            frame = frame == 0 ? size - 1 : frame - 1;
+        }
         int x = (frame % cols) * rWidth;
         int y = (frame / cols) * rheight;
         setRegion(x, y, rWidth, rheight);
@@ -153,4 +209,18 @@ public class FilmStrip extends TextureRegion {
         return freeze;
     }
 
+    public void updateFrame(){
+        if(elapsedTime >= frameDuration){
+            setNextFrame();
+            elapsedTime = 0f;
+        }
+    }
+
+    public boolean isRefreshed() {
+        return refreshed;
+    }
+
+    public void setRefreshed(boolean refreshed) {
+        this.refreshed = refreshed;
+    }
 }
