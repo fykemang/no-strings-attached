@@ -337,6 +337,10 @@ public class GameMode extends Mode implements Screen {
     private Sound loseSound;
     private Sound clickSound;
     private Sound winSound;
+    private boolean hasPlayedWin;
+    private boolean hasPlayedLose;
+    private boolean hasPlayedCollect;
+    private boolean hasPlayedJump;
 
     /**
      * Files for region tiles
@@ -659,6 +663,7 @@ public class GameMode extends Mode implements Screen {
         }
 
         music.play();
+        music.setVolume(0.5f);
         music.setLooping(true);
     }
 
@@ -842,6 +847,10 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation.refresh();
         playerJumpUpAnimation.refresh();
         playerJumpDownAnimation.refresh();
+        hasPlayedWin = false;
+        hasPlayedLose = false;
+        hasPlayedCollect = false;
+        hasPlayedJump = false;
     }
 
     /**
@@ -1058,13 +1067,26 @@ public class GameMode extends Mode implements Screen {
                 if (player.isAttached() && playerRope != null) {
                     destroyPlayerRope();
                 }
+                if (player.won() && !hasPlayedWin) {
+                    winSound.play();
+                    hasPlayedWin = true;
+                }
+                else if (!player.isAlive() && !hasPlayedLose) {
+                    loseSound.play();
+                    hasPlayedLose = true;
+                }
+
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                 if (timeSeconds > period) {
                     timeSeconds = 0;
-                    if (player.won())
+                    if (player.won()) {
+//                        winSound.play();
                         listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
-                    else
+                    }
+                    else {
+//                        loseSound.play();
                         reset();
+                    }
                 }
             } else if (countdown > 0) {
                 countdown--;
@@ -1387,7 +1409,7 @@ public class GameMode extends Mode implements Screen {
 
         NpcPerson p = player.getCanSwingTo();
         if (p != null) {
-            System.out.println("NPC x" + p.getX() + "   y" + p.getY());
+//            System.out.println("NPC x" + p.getX() + "   y" + p.getY());
 //            canvas.draw(basketEmptyTexture, p.getX(), p.getY());
             canvas.draw(exclamationTexture, Color.WHITE, p.getX()*scale.x, p.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
         }
