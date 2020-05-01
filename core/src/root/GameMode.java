@@ -1143,7 +1143,6 @@ public class GameMode extends Mode implements Screen {
     private void destroyPlayerRope() {
         playerRope.markRemoved(true);
         player.setTarget(null);
-        ropeQueryCallback.reset();
         playerRope = null;
         world.destroyJoint(player.getSwingJoint());
         player.setAttached(false);
@@ -1298,10 +1297,9 @@ public class GameMode extends Mode implements Screen {
             NpcPerson onNpc = player.getOnNpc();
             setShockNpc(onNpc, "onNpc");
 
-            if (player.isShooting() && !player.isAttached() && player.getTarget() == null) {
+            if (player.isShooting() && !player.isAttached() && player.getTarget() == null && player.getCanSwingTo() != null) {
+                player.setTarget(player.getCanSwingTo());
                 player.setCanSwingTo(null);
-                world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
-                player.setTarget(ropeQueryCallback.getClosestNpc());
             }
 
             if (player.isCutting()) {
@@ -1326,10 +1324,11 @@ public class GameMode extends Mode implements Screen {
             }
 
             // Nearest NPC for exclamation
-            if (!player.isAttached() && player.isShooting()) {
+            if (!player.isAttached() && player.getTarget() == null) {
                 world.QueryAABB(ropeQueryCallback, playerPosition.x - 2.8f, playerPosition.y - 2.8f, playerPosition.x + 2.8f, playerPosition.y + 2.8f);
                 NpcPerson p = ropeQueryCallback.getClosestNpc();
                 player.setCanSwingTo(p);
+                ropeQueryCallback.reset();
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
@@ -1451,10 +1450,10 @@ public class GameMode extends Mode implements Screen {
 //        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
 //                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
 //        ((FilmStrip) exclamationTexture).setNextFrame();
-        NpcPerson p = player.getCanSwingTo();
-        if (p != null) {
-            canvas.draw(exclamationTexture, Color.WHITE, p.getX() * scale.x,
-                    p.getY() * scale.y, exclamationTexture.getRegionWidth() * 2.2f / scale.x, exclamationTexture.getRegionHeight() * 2.2f / scale.y);
+        NpcPerson target = player.getCanSwingTo();
+        if (target != null) {
+            canvas.draw(exclamationTexture, Color.WHITE, target.getX() * scale.x - 15,
+                    target.getY() * scale.y + 25, exclamationTexture.getRegionWidth() * 2.5f / scale.x, exclamationTexture.getRegionHeight() * 2.5f / scale.y);
             ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
