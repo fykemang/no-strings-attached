@@ -314,7 +314,7 @@ public class Person extends CapsuleObstacle {
     public float getMaxHorizontalSpeed() {
         return PLAYER_MAX_HORIZONTAL_SPEED;
     }
-    
+
     public float getMaxVerticalSpeed() {
         return PLAYER_MAX_VERTICAL_SPEED;
     }

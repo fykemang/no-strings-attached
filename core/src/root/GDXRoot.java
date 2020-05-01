@@ -189,6 +189,8 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(transition);
             gameMode.pause();
         } else if (screen == transition) {
+
+            transition.dispose();
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
@@ -204,6 +206,13 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
+                    if (levelSelector.getLevel(currentLevel) == null) {
+                        levelSelector.reset();
+                        Gdx.input.setInputProcessor(levelSelector);
+                        setScreen(levelSelector);
+                        transition.dispose();
+                        return;
+                    }
                     gameMode.setLevel(levelSelector.getLevel(currentLevel));
                     gameMode.loadContent(manager);
                     gameMode.initializeContent(manager);

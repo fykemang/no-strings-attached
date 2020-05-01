@@ -164,7 +164,7 @@ public class GameMode extends Mode implements Screen {
     private static final String POP_FILE = "sounds/plop.mp3";
     private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
     private static final String WIN_FILE = "sounds/win.mp3";
-    private static final String LOSE_FILE = "sounds/lose.mp3";
+    private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     /**
      * The folder with all levels
@@ -321,9 +321,9 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/village_theme.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/icefishing.mp3";
     private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
-    private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/youshoulddosomereflecting.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
