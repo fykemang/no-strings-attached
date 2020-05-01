@@ -251,7 +251,13 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     @Override
     public void dispose() {
+
         music.dispose();
+        nextButton.setDisabled(true);
+        replaybutton.setDisabled(true);
+        nextButton.setDisabled(true);
+
+
     }
 
     @Override
