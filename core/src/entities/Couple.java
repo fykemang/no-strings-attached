@@ -128,7 +128,9 @@ public class Couple extends ComplexObstacle {
     public void breakBond(NpcRope leftFragment, NpcRope rightFragment) {
         l.setAttached(false);
         r.setAttached(false);
+        if (leftFragment !=null)
         this.bodies.add(leftFragment);
+        if(rightFragment != null)
         this.bodies.add(rightFragment);
     }
 
