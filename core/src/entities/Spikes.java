@@ -33,7 +33,7 @@ public class Spikes extends PolygonObstacle {
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            getY() * drawScale.y, getAngle(), scx*scy, scy);
+                            getY() * drawScale.y, getAngle(), scx * scy, scy);
                 break;
             case "down":
                 scy = 1.2f * drawScale.y / texture.getRegionHeight();
@@ -43,7 +43,7 @@ public class Spikes extends PolygonObstacle {
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x + i * dist,
-                            (getY() + 1) * drawScale.y, getAngle(), scx*scy, -scy);
+                            (getY() + 1) * drawScale.y, getAngle(), scx * scy, -scy);
                 break;
             case "right":
                 scx = 1.2f * drawScale.x / texture.getRegionWidth();
@@ -53,7 +53,7 @@ public class Spikes extends PolygonObstacle {
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
                     canvas.draw(texture, Color.WHITE, 0, 0, (getX()) * drawScale.x,
-                            getY() * drawScale.y + i * dist, getAngle(), scx, scy*scx);
+                            getY() * drawScale.y + i * dist, getAngle(), scx, scy * scx);
                 break;
             case "left":
                 scx = 1.2f * drawScale.x / texture.getRegionWidth();
@@ -62,8 +62,8 @@ public class Spikes extends PolygonObstacle {
                 scy = dist / (texture.getRegionHeight() * scx);
                 num = num == 0 ? 1 : num;
                 for (int i = 0; i < num; i++)
-                    canvas.draw(texture, Color.WHITE, 0, 0, (getX()+1) * drawScale.x,
-                            getY() * drawScale.y + i * dist, getAngle(), -scx, scy*scx);
+                    canvas.draw(texture, Color.WHITE, 0, 0, (getX() + 1) * drawScale.x,
+                            getY() * drawScale.y + i * dist, getAngle(), -scx, scy * scx);
                 break;
         }
 

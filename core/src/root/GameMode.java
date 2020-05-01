@@ -1540,6 +1540,7 @@ public class GameMode extends Mode implements Screen {
      */
 
     private int direction = 0;
+
     public void postUpdate(float dt) {
         // Add any objects created by actions
         while (!addQueue.isEmpty()) {
@@ -1569,8 +1570,8 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
 
-    //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
-        ypos = ypos > 700 ? 700: ypos;
+        //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
+        ypos = ypos > 700 ? 700 : ypos;
 /**
  * code for lazy follow camera
  */
