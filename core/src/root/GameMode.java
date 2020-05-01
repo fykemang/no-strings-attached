@@ -339,6 +339,11 @@ public class GameMode extends Mode implements Screen {
     private Sound loseSound;
     private Sound clickSound;
     private Sound winSound;
+    private boolean didPlayWin;
+    private boolean didPlayLose;
+    private boolean didPlayJump;
+    private boolean didPlayCollect;
+
 
     /**
      * Files for region tiles
@@ -847,6 +852,10 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation.refresh();
         playerJumpUpAnimation.refresh();
         playerJumpDownAnimation.refresh();
+        didPlayWin = false;
+        didPlayLose = false;
+        didPlayCollect = false;
+        didPlayJump = false;
     }
 
     /**
@@ -1063,6 +1072,14 @@ public class GameMode extends Mode implements Screen {
                 if (player.isAttached() && playerRope != null) {
                     destroyPlayerRope();
                 }
+                if (player.won() && !didPlayWin) {
+                    winSound.play();
+                    didPlayWin = true;
+                }
+                if (!player.isAlive() && !didPlayLose) {
+                    loseSound.play();
+                    didPlayLose = true;
+                }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
                 if (timeSeconds > period) {
                     timeSeconds = 0;
@@ -1216,7 +1233,6 @@ public class GameMode extends Mode implements Screen {
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.won()) {
-//            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
             player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
