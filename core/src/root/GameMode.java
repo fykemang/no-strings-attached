@@ -1396,10 +1396,9 @@ public class GameMode extends Mode implements Screen {
         NpcPerson p = player.getCanSwingTo();
         if (p != null) {
         canvas.draw(exclamationTexture, Color.WHITE,p.getX()*scale.x,
-                p.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+                p.getY()*scale.y, exclamationTexture.getRegionWidth()*2.2f/scale.x, exclamationTexture.getRegionHeight()*2.2f/scale.y);
         ((FilmStrip) exclamationTexture).setNextFrame();
         }
-
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
