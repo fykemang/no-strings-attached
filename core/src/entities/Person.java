@@ -502,7 +502,7 @@ public class Person extends CapsuleObstacle {
      */
     public void update(float dt) {
         frameCount++;
-        int frameRate = 3;
+        int frameRate = 4;
         if (movement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / movement)));
             frameRate = temp == 0 ? frameRate : temp;
@@ -522,9 +522,8 @@ public class Person extends CapsuleObstacle {
             shootCooldown = Math.max(0, shootCooldown - 1);
         }
 
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && isGrounded()) {
+        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || getName().equals("npc"))) {
             frameCount = 0;
-
             if (!((FilmStrip) texture).getShouldFreeze()) {
                 ((FilmStrip) texture).setNextFrame();
             }
