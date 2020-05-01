@@ -1198,6 +1198,17 @@ public class GameMode extends Mode implements Screen {
 //            exitToSelector();
         }
 
+        boolean isGodModeKeyPressed = Gdx.input.isKeyPressed(Input.Keys.G);
+
+        if (player.isGodModeActivated() && isGodModeKeyPressed) {
+            player.setGodMode(false);
+            player.setBodyType(BodyDef.BodyType.DynamicBody);
+        } else if (!player.isGodModeActivated() && isGodModeKeyPressed) {
+            player.setGodMode(true);
+            player.setBodyType(BodyDef.BodyType.KinematicBody);
+        }
+
+
         Vector2 playerPosition = player.getPosition();
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
@@ -1205,7 +1216,8 @@ public class GameMode extends Mode implements Screen {
 //            winSound.play();
             player.setTexture(playerExitAnimation);
         } else if (player.isAlive()) {
-            player.setMovement(InputController.getInstance().getHorizontal() * player.getForce());
+            player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
+            player.setVerticalMovement(InputController.getInstance().getVertical() * player.getForce());
             player.setJumping(InputController.getInstance().didPrimary());
             player.setShooting(InputController.getInstance().didTertiary());
             player.setCutting(InputController.getInstance().didSecondary());
