@@ -29,7 +29,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String FAIL = "ui/yarnie-fail.png";
-    private static final String WIN = "ui/soul-mate.png";
+    private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MEAN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
