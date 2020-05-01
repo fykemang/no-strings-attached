@@ -129,6 +129,7 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String NEEDLE = "entities/needles.png";
     private static final String YARN = "entities/yarn.png";
+    private static final String GREY_YARN = "entities/grey_yarn.png";
     private static final String BUTTON = "entities/buttons.png";
     private static final String FABRIC_1 = "entities/fabric1.png";
     private static final String FABRIC_2 = "entities/fabric2.png";
@@ -251,6 +252,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion buttonTexture;
     private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
+    private TextureRegion greyYarnTexture;
     private TextureRegion fabric1Texture;
     private TextureRegion fabric2Texture;
     private TextureRegion spoolTexture;
@@ -433,6 +435,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
+        manager.load(GREY_YARN, Texture.class);
+        assets.add(GREY_YARN);
         manager.load(FABRIC_1, Texture.class);
         assets.add(FABRIC_1);
         manager.load(FABRIC_2, Texture.class);
@@ -703,6 +707,7 @@ public class GameMode extends Mode implements Screen {
         buttonTexture = createTexture(manager, BUTTON, false);
         needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
+        greyYarnTexture = createTexture(manager, GREY_YARN, false);
         fabric1Texture = createTexture(manager, FABRIC_1, false);
         fabric2Texture = createTexture(manager, FABRIC_2, false);
         spoolTexture = createTexture(manager, SPOOL, false);
@@ -1300,17 +1305,28 @@ public class GameMode extends Mode implements Screen {
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        float UIX = 120;
-        float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
-        int itemCount = player.getInventory().size();
-        if (itemCount == 0) {
-            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
-        } else if (itemCount == 1) {
-            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
-        } else if (itemCount == 2) {
-            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
-        } else {
-            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
+ //       float UIX = 120;
+ //       float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
+//        int itemCount = player.getInventory().size();
+//        if (itemCount == 0) {
+////            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
+////        } else if (itemCount == 1) {
+////            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
+////        } else if (itemCount == 2) {
+////            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
+////        } else {
+////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
+////        }
+
+        float UIX = 70;
+        float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
+        for (int i = 1; i <= items.size(); i++) {
+            if (i <= player.getInventory().size()) {
+                canvas.drawUI(yarnTexture, UIX, UIY, 0.25f);
+            } else {
+                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+            }
+            UIX += greyYarnTexture.getRegionWidth()+10;
         }
         canvas.end();
 
