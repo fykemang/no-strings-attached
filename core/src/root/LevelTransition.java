@@ -319,10 +319,10 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         canvas.begin();
         canvas.drawBackground(background, canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
-        canvas.draw(yarnie, canvas.getWidth() / 2 - yarnie.getWidth() / 2,
-                canvas.getHeight() / 2 - yarnie.getHeight() / 2);
-        canvas.drawUI(pc, canvas.getWidth()*2 / 3 - pc.getRegionWidth() / 2,
-                canvas.getHeight() / 2 - pc.getRegionHeight() / 2, 0.5f);
+        canvas.draw(yarnie, canvas.getWidth()*2.2f / 5 - yarnie.getWidth() / 2,
+                canvas.getHeight() / 2 - yarnie.getHeight() / 2 - pc.getRegionHeight()/5);
+        canvas.drawUI(pc, canvas.getWidth()*3 / 5,
+                canvas.getHeight() /2, 0.5f);
         if (levelComplete) {
             canvas.draw(winMessage, canvas.getWidth() / 2 - winMessage.getWidth() / 2,
                     canvas.getHeight() * 4 / 5 - winMessage.getHeight() / 2);
