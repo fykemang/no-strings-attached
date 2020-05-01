@@ -80,7 +80,7 @@ public class PlayerRope extends Rope {
     protected boolean createJoints(World world) {
         assert segmentLayer.size() > 0;
         float anc = this.lWidth / 2;
-        Vector2 anchor1 = new Vector2(anc / 2, 0);
+        Vector2 anchor1 = new Vector2(anc / 3, 0);
         Vector2 anchor2 = new Vector2(-anc / 2, 0);
 
         RevoluteJointDef jointDef = new RevoluteJointDef();
@@ -92,7 +92,6 @@ public class PlayerRope extends Rope {
             jointDef.bodyB = next.getBody();
             jointDef.localAnchorA.set(anchor1);
             jointDef.localAnchorB.set(anchor2);
-            jointDef.collideConnected = false;
             Joint joint = world.createJoint(jointDef);
             joints.add(joint);
         }
