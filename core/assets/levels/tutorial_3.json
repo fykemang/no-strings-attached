@@ -1,8 +1,8 @@
-{"type":"city",
+{"type":"forest",
   "items": [{"x":18,"y":5}],
   "tiles":[
     {"x":4,
-      "y":10,
+      "y":20,
       "width":3,
       "height":1,
       "type":"normal",
@@ -35,8 +35,8 @@
       "rightPos": {}
     }],
   "npc":[
-    {"x":7,
-      "y":8,
+    {"x":10,
+      "y":20,
       "isSliding":false,
       "isRotating":false,
       "center":{},
@@ -46,8 +46,8 @@
       "id":0,
       "leftPos":{},
       "rightPos":{}},
-    {"x":12,
-      "y":8,
+    {"x":16,
+      "y":20,
       "isSliding":false,
       "isRotating":false,
       "center":{},
@@ -101,5 +101,5 @@
       "id":2,
       "leftPos":{},
       "rightPos":{}}],
-  "player": {"x":5, "y":12},
+  "player": {"x":5, "y":22},
   "exit":{"x":23,"y":7}}

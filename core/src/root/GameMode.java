@@ -355,9 +355,13 @@ public class GameMode extends Mode implements Screen {
     private static final String FOREST_TILE_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
     private static final String FOREST_SPIKES_VERT_FILE = "entities/forest-spikes-vert.png";
+    private static final String VILLAGE_SPIKES_FILE = "entities/village-obstacle.png";
+    private static final String VILLAGE_SPIKES_VERT_FILE = "entities/village-obstacle-vert.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
     protected TextureRegion forestSpikeTile;
     protected TextureRegion forestSpikeVertTile;
+    protected TextureRegion villageSpikeTile;
+    protected TextureRegion villageSpikeVertTile;
 
     /**
      * Tile texture used in the game
@@ -369,9 +373,9 @@ public class GameMode extends Mode implements Screen {
     private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
     private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
     private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village1.png", "background/village2.png", "background/village3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village4.png", "background/village5.png", "background/village6.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village7.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
     //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
@@ -473,6 +477,10 @@ public class GameMode extends Mode implements Screen {
         assets.add(FOREST_SPIKES_FILE);
         manager.load(FOREST_SPIKES_VERT_FILE, Texture.class);
         assets.add(FOREST_SPIKES_VERT_FILE);
+        manager.load(VILLAGE_SPIKES_FILE, Texture.class);
+        assets.add(VILLAGE_SPIKES_FILE);
+        manager.load(VILLAGE_SPIKES_VERT_FILE, Texture.class);
+        assets.add(VILLAGE_SPIKES_VERT_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
         manager.load(SPIKE_VERT, Texture.class);
@@ -760,6 +768,8 @@ public class GameMode extends Mode implements Screen {
         clickSound = manager.get(CLICK_FILE);
         forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
+        villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
+        villageSpikeVertTile = createTexture(manager, VILLAGE_SPIKES_VERT_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -936,7 +946,13 @@ public class GameMode extends Mode implements Screen {
                 TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : forestSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, forestSpikeTexture);
             }
-        } else {
+        } else if (level.getType().contains("village")) {
+            for (Tile spike : spikes) {
+                TextureRegion villageSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? villageSpikeTile : villageSpikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, villageSpikeTexture);
+            }
+        }
+        else {
             for (Tile spike : spikes) {
                 TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
