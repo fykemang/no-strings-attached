@@ -54,5 +54,17 @@
   "exit": {
     "x": 19,
     "y": 12.5
-  }
+  },
+  "text": [
+    {
+      "x": 8,
+      "y": 12,
+      "text": "Use arrow keys to move the character and jump"
+    },
+    {
+      "x": 17,
+      "y": 18,
+      "text": "Collect the item and proceed to the exit"
+    }
+  ]
 }

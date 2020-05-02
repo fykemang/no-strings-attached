@@ -26,6 +26,7 @@ public class Level implements Json.Serializable {
 
     private final List<NpcData> npcData;
     private final List<float[]> couples;
+    private final List<TextBox> text;
     private final List<float[]> items;
 
     public List<TextureRegion> getStillBackgroundTexture() {
@@ -55,6 +56,7 @@ public class Level implements Json.Serializable {
         items = new ArrayList<>();
         npcData = new ArrayList<>();
         spikes = new ArrayList<>();
+        text = new ArrayList<>();
     }
 
     public String getType() {
@@ -107,6 +109,13 @@ public class Level implements Json.Serializable {
             coordinate[1] = itemData.getFloat("y");
             items.add(coordinate);
         }
+
+        JsonValue textBoxData = jsonData.get("text");
+        for (JsonValue textData : textBoxData) {
+            String textJson = textData.toJson(JsonWriter.OutputType.minimal);
+            TextBox text = json.fromJson(TextBox.class, textJson);
+            this.text.add(text);
+        }
     }
 
     /**
@@ -144,6 +153,10 @@ public class Level implements Json.Serializable {
 
     public List<float[]> getItems() {
         return items;
+    }
+
+    public List<TextBox> getText() {
+        return text;
     }
 
 

@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -190,7 +191,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Retro font for displaying messages
      */
-    private static final String FONT_FILE = "ui/RetroGame.ttf";
+    private static final String FONT_FILE = "ui/Pacifico.ttf";
     private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static final int FONT_SIZE = 64;
 
@@ -392,6 +393,7 @@ public class GameMode extends Mode implements Screen {
     private final List<TextureRegion> slightMoveBackgroundTextures;
     private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
+    private List<TextBox> textBoxes;
 
     /**
      * Creates a new game world
@@ -775,7 +777,11 @@ public class GameMode extends Mode implements Screen {
         UI_restart = createTexture(manager, RESTART_FILE, false);
         UI_exit = createTexture(manager, ESC_FILE, false);
         if (manager.isLoaded(FONT_FILE)) {
-            displayFont = manager.get(FONT_FILE, BitmapFont.class);
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.size = 20;
+            displayFont = generator.generateFont(parameter);
+            //  displayFont = manager.get(FONT_FILE, BitmapFont.class);
         } else {
             displayFont = null;
         }
@@ -894,6 +900,7 @@ public class GameMode extends Mode implements Screen {
         List<Tile> spikes = level.getSpikes();
         items = (ArrayList<float[]>) level.getItems();
         List<NpcData> npcData = level.getNpcData();
+        this.textBoxes = level.getText();
 
 
         // Create main dude
@@ -1425,8 +1432,8 @@ public class GameMode extends Mode implements Screen {
 
     public void drawPaused(float dt) {
         canvas.begin();
-        canvas.drawUIText("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
-        canvas.drawUIText("Press Q to Quit", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2);
+        canvas.drawUITextPause("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
+        canvas.drawUITextPause("Press Q to Quit", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2);
         canvas.end();
     }
 
@@ -1497,6 +1504,10 @@ public class GameMode extends Mode implements Screen {
 ////        } else {
 ////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
 ////        }
+        for (TextBox text : textBoxes) {
+//            displayFont
+            canvas.drawTextCenter(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
+        }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
