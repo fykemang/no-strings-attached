@@ -388,7 +388,7 @@ public class GameMode extends Mode implements Screen {
     private final List<TextureRegion> slightMoveBackgroundTextures;
     private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
-
+    private FilmStrip playerSwingBackwardAnimation;
     /**
      * Creates a new game world
      * <p>
@@ -690,6 +690,7 @@ public class GameMode extends Mode implements Screen {
         }
         itemTexture = new ArrayList<>();
         playerSwingForwardAnimation = createFilmStrip(manager, PLAYER_SWING_FORWARD, 1, 7, 7, false);
+        playerSwingBackwardAnimation = createFilmStrip(manager, PLAYER_SWING_BACK, 1, 6, 6, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24, true);
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21, true);
         playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15, true);
@@ -1183,31 +1184,58 @@ public class GameMode extends Mode implements Screen {
     }
 
     private void setSwingingAnimations(float dt) {
-        float eps = 0f;
-        // playerVX: left (-) right (+)
-        float npcPosX = playerRope.getNPC();
-        float vx = (player.isFacingRight() ? 1 : -1) * player.getVX();
-        boolean forwardHalf = player.getX() < npcPosX;
+        float playerVX = player.getVX() * (player.isFacingRight() ? 1 : -1);
+        float animationTime = 1.5f;
         if (player.isFallingBack()) {
             playerSwingForwardAnimation.refresh();
+        } else if (!player.isFallingBack()) {
+            playerSwingBackwardAnimation.refresh();
         }
-        if (vx > eps) {
-            playerSwingForwardAnimation.setReversed(false);
-            if (playerSwingForwardAnimation.isRefreshed()) {
-                float risingTime = 1.5f;//estimate 1s
-                playerSwingForwardAnimation.setFrameDuration(risingTime / (float) playerSwingForwardAnimation.getSize());
-                playerSwingForwardAnimation.setRefreshed(false);
-            }
+
+        if (playerVX > 0) {
+            player.setTexture(playerSwingForwardAnimation);
             playerSwingForwardAnimation.setElapsedTime(dt);
             playerSwingForwardAnimation.updateFrame();
-            player.setTexture(playerSwingForwardAnimation);
-        } else if (vx < -eps) {
-            player.setFallingBack(!playerSwingForwardAnimation.isReversed());
-            playerSwingForwardAnimation.setReversed(true);
-            playerSwingForwardAnimation.setElapsedTime(dt);
-            playerSwingForwardAnimation.updateFrame();
-            player.setTexture(playerSwingForwardAnimation);
+            player.setFallingBack(false);
+            playerSwingForwardAnimation.setFrameDuration(animationTime / (float) playerSwingForwardAnimation.getSize());
+        } else if (playerVX < 0) {
+            player.setFallingBack(true);
+            player.setTexture(playerSwingBackwardAnimation);
+            playerSwingBackwardAnimation.setElapsedTime(dt);
+            playerSwingBackwardAnimation.updateFrame();
+            playerSwingBackwardAnimation.setFrameDuration(animationTime / (float) playerSwingBackwardAnimation.getSize());
+
         }
+//        float eps = 0f;
+//        // playerVX: left (-) right (+)
+//        float npcPosX = playerRope.getNPC();
+//        float vx =  player.getVX();
+//        boolean forwardHalf = player.getX() < npcPosX;
+//        float risingTime = 1.5f;//estimate 1s
+//        if (player.isFallingBack()) {
+//            playerSwingForwardAnimation.refresh();
+//        }
+//        if (vx > eps) {
+//            playerSwingForwardAnimation.setReversed(false);
+//            if (playerSwingForwardAnimation.isRefreshed()) {
+//                playerSwingForwardAnimation.setFrameDuration(risingTime / (float) playerSwingForwardAnimation.getSize());
+//                playerSwingForwardAnimation.setRefreshed(false);
+//            }
+//            playerSwingForwardAnimation.setElapsedTime(dt);
+//            playerSwingForwardAnimation.updateFrame();
+//            player.setTexture(playerSwingForwardAnimation);
+//        } else if (vx < -eps) {
+//            player.setFallingBack(!playerSwingForwardAnimation.isReversed());
+//            player.setTexture(playerSwingBackwardAnimation);
+//            playerSwingBackwardAnimation.refresh();
+//            playerSwingBackwardAnimation.updateFrame();
+//            playerSwingBackwardAnimation.setElapsedTime(dt);
+//            playerSwingBackwardAnimation.setFrameDuration(risingTime / (float) playerSwingBackwardAnimation.getSize());
+//            playerSwingBackwardAnimation.setRefreshed(false);
+//            playerSwingForwardAnimation.setReversed(true);
+//            playerSwingForwardAnimation.setElapsedTime(dt);
+//            playerSwingForwardAnimation.updateFrame();
+//        }
 
     }
 
@@ -1415,6 +1443,7 @@ public class GameMode extends Mode implements Screen {
     }
 
     NpcPerson target;
+
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
@@ -1708,18 +1737,6 @@ public class GameMode extends Mode implements Screen {
         boolean vert = (bounds.y <= obj.getY() && obj.getY() <= bounds.y + bounds.height);
         return horiz && vert;
     }
-
-    /**
-     * Processes physics
-     * <p>
-     * Once the update phase is over, but before we draw, we are ready to handle
-     * physics.  The primary method is the step() method in world.  This implementation
-     * works for all applications and should not need to be overwritten.
-     *
-     * @param dt Number of seconds since last animation frame
-     */
-
-    private final int direction = 0;
 
     public void postUpdate(float dt) {
         // Add any objects created by actions

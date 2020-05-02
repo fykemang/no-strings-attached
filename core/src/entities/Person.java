@@ -489,8 +489,6 @@ public class Person extends CapsuleObstacle {
                 setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
             }
 
-            float vertical = PLAYER_JUMP;
-
             if (isTrampolining) {
                 calculateTrampolineForce();
                 forceCache.set(trampolineForce.x, trampolineForce.y);
@@ -510,7 +508,7 @@ public class Person extends CapsuleObstacle {
 
             // Jump!
             if (isJumping()) {
-                forceCache.set(0, vertical);
+                forceCache.set(0, PLAYER_JUMP);
                 body.applyLinearImpulse(forceCache, getPosition(), true);
             }
             released = false;
