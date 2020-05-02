@@ -55,6 +55,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String CHAR_ANIMATION_FILE = "ui/background_sc.png";
     private static final String PROGRESS_FILE = "ui/progressbar.png";
     private static final String SETTINGS_FILE = "ui/settings.png";
+    private static final String LOGO_FILE = "ui/game-logo.png";
     private static final String QUIT_FILE = "ui/quit.png";
     private static final String START_FILE = "ui/start.png";
     private static final String SELECT_FILE = "ui/select.png";
@@ -65,7 +66,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Background texture for start-up
      */
     private Texture background;
-
+    private Texture logo;
     private FilmStrip animatedBkg;
 
     private final Music music;
@@ -174,6 +175,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private int buttonY1;
     private int buttonY2;
     private int buttonY3;
+    private int logoX;
+    private int logoY;
 
 
     /**
@@ -299,7 +302,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         select = new Texture(SELECT_FILE);
         background = new Texture(BACKGROUND_FILE);
         statusBar = new Texture(PROGRESS_FILE);
-
+        logo = new Texture(LOGO_FILE);
         // No progress so far.
         progress = 0;
         frameCount = 0;
@@ -459,6 +462,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
                     buttonX, y, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
+
+        canvas.draw(logo, Color.WHITE, logo.getWidth() / 2, logo.getHeight() / 2,
+                logoX, logoY, 0,  0.8f*scale, 0.8f*scale);
+
         canvas.end();
     }
 
@@ -528,11 +535,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         this.width = (int) (BAR_WIDTH_RATIO * width);
         centerY = (int) (BAR_HEIGHT_RATIO * height);
         centerX = width / 2;
+
+        logoX = 6 * width / 9;
+        logoY = 2 * height / 3;
         heightY = height;
         buttonX = (3 * width) / 4;
-        buttonY1 = 5 * height / 9;
-        buttonY2 = 4 * height / 9;
-        buttonY3 = height / 3;
+        buttonY1 = 4 * height / 9;
+        buttonY2 = 3 * height / 9;
+        buttonY3 = 2 * height / 9;
     }
 
     /**
