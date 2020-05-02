@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -189,7 +190,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Retro font for displaying messages
      */
-    private static final String FONT_FILE = "ui/RetroGame.ttf";
+    private static final String FONT_FILE = "ui/Pacifico.ttf";
     private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static final int FONT_SIZE = 64;
 
@@ -761,7 +762,11 @@ public class GameMode extends Mode implements Screen {
         UI_restart = createTexture(manager, RESTART_FILE, false);
         UI_exit = createTexture(manager, ESC_FILE, false);
         if (manager.isLoaded(FONT_FILE)) {
-            displayFont = manager.get(FONT_FILE, BitmapFont.class);
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.size = 20;
+            displayFont = generator.generateFont(parameter);
+          //  displayFont = manager.get(FONT_FILE, BitmapFont.class);
         } else {
             displayFont = null;
         }
@@ -1479,6 +1484,7 @@ public class GameMode extends Mode implements Screen {
             /**
              * TODO: VIVI DRAW :)
              */
+//            displayFont
             canvas.drawText(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
         }
 
