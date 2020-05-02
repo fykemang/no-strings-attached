@@ -1414,7 +1414,7 @@ public class GameMode extends Mode implements Screen {
         canvas.end();
     }
 
-
+    NpcPerson target;
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
@@ -1458,7 +1458,7 @@ public class GameMode extends Mode implements Screen {
 //        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
 //                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
 //        ((FilmStrip) exclamationTexture).setNextFrame();
-        NpcPerson target = player.getCanSwingTo();
+        target = player.getCanSwingTo();
         if (target != null) {
             canvas.draw(targetTexture, Color.WHITE, target.getX() * scale.x - 40,
                     target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
