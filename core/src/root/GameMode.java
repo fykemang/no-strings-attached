@@ -167,6 +167,7 @@ public class GameMode extends Mode implements Screen {
     private static final String WIN_FILE = "sounds/win.mp3";
     private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
+    private static final String SNIP_FILE = "sounds/snip.mp3";
     /**
      * The folder with all levels
      */
@@ -341,6 +342,7 @@ public class GameMode extends Mode implements Screen {
     private Sound loseSound;
     private Sound clickSound;
     private Sound winSound;
+    private Sound snipSound;
     private boolean didPlayWin;
     private boolean didPlayLose;
     private boolean didPlayJump;
@@ -602,6 +604,7 @@ public class GameMode extends Mode implements Screen {
         loadAsset(WIN_FILE, Sound.class, manager);
         loadAsset(LOSE_FILE, Sound.class, manager);
         loadAsset(CLICK_FILE, Sound.class, manager);
+        loadAsset(SNIP_FILE, Sound.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
@@ -761,11 +764,13 @@ public class GameMode extends Mode implements Screen {
         sounds.allocate(manager, WIN_FILE);
         sounds.allocate(manager, LOSE_FILE);
         sounds.allocate(manager, CLICK_FILE);
+        sounds.allocate(manager, SNIP_FILE);
         jumpSound = manager.get(JUMP_FILE);
         collectSound = manager.get(COLLECT_FILE);
         winSound = manager.get(WIN_FILE);
         loseSound = manager.get(LOSE_FILE);
         clickSound = manager.get(CLICK_FILE);
+        snipSound = manager.get(SNIP_FILE);
         forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
         villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
@@ -1334,6 +1339,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
+                                    snipSound.play();
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
