@@ -124,6 +124,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
     private static final String EXCLAMATION = "entities/exclamation.png";
+    private static final String TARGET = "entities/target.png";
 
     /**
      * Texture file for the exit door
@@ -252,6 +253,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion npcSpikyShockTexture;
     private TextureRegion npcWelcomeShockTexture;
     private TextureRegion exclamationTexture;
+    private TextureRegion targetTexture;
     /**
      * Texture assets for items
      */
@@ -581,6 +583,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(NPC_WELCOME_SHOCK);
         manager.load(EXCLAMATION, Texture.class);
         assets.add(EXCLAMATION);
+        manager.load(TARGET, Texture.class);
+        assets.add(TARGET);
 
         // Load Sound Assets
         loadAsset(JUMP_FILE, Sound.class, manager);
@@ -707,6 +711,7 @@ public class GameMode extends Mode implements Screen {
         npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17, true);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
+        targetTexture = createTexture(manager, TARGET, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -1455,9 +1460,9 @@ public class GameMode extends Mode implements Screen {
 //        ((FilmStrip) exclamationTexture).setNextFrame();
         NpcPerson target = player.getCanSwingTo();
         if (target != null) {
-            canvas.draw(exclamationTexture, Color.WHITE, target.getX() * scale.x - 15,
-                    target.getY() * scale.y + 25, exclamationTexture.getRegionWidth() * 2.5f / scale.x, exclamationTexture.getRegionHeight() * 2.5f / scale.y);
-            ((FilmStrip) exclamationTexture).setNextFrame();
+            canvas.draw(targetTexture, Color.WHITE, target.getX() * scale.x - 40,
+                    target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
+//            ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
