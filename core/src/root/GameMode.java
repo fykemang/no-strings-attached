@@ -1408,8 +1408,8 @@ public class GameMode extends Mode implements Screen {
 
     public void drawPaused(float dt) {
         canvas.begin();
-        canvas.drawUIText("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
-        canvas.drawUIText("Press Q to Quit", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2);
+        canvas.drawUITextPause("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
+        canvas.drawUITextPause("Press Q to Quit", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2);
         canvas.end();
     }
 

@@ -1365,6 +1365,16 @@ public class GameCanvas {
         spriteBatch.begin();
     }
 
+
+    public void drawUITextPause(String text, int x, int y) {
+        spriteBatch.end();
+        UIBatch.begin();
+        font.setColor(Color.BLACK);
+        font.draw(UIBatch, text, x, y);
+        UIBatch.end();
+        spriteBatch.begin();
+    }
+
     public void drawWrapped(TextureRegion image, float x, float y, float width, float height) {
         positionCache.set(x, y);
         wrapPosition(positionCache);
