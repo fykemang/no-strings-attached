@@ -1038,6 +1038,29 @@ public class GameCanvas {
         font.draw(spriteBatch, layout, x, y);
     }
 
+    public void drawTextCenter(String text, BitmapFont font, float x, float y) {
+
+        GlyphLayout layout = new GlyphLayout(font, text);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        spriteBatch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.setColor(136 / 255.0f, 140 / 255.0f, 137 / 255.0f, 0.2f);
+        shapeRenderer.rect(x-layout.width/2-5, y- 2*layout.height, layout.width+10, layout.height*1.7f);
+        shapeRenderer.end();
+        spriteBatch.begin();
+
+        if (active != DrawPass.STANDARD) {
+            Gdx.app.error("game.GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+            return;
+        }
+
+        font.draw(spriteBatch, layout, x-layout.width/2, y-layout.height/2);
+
+
+    }
+
     /**
      * Draws text centered on the screen.
      *

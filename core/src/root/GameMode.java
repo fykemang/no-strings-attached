@@ -1481,11 +1481,8 @@ public class GameMode extends Mode implements Screen {
 ////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
 ////        }
         for (TextBox text : textBoxes) {
-            /**
-             * TODO: VIVI DRAW :)
-             */
 //            displayFont
-            canvas.drawText(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
+            canvas.drawTextCenter(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
         }
 
         float UIX = 70;
