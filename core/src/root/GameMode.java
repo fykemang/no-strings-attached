@@ -963,8 +963,7 @@ public class GameMode extends Mode implements Screen {
                 TextureRegion villageSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? villageSpikeTile : villageSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, villageSpikeTexture);
             }
-        }
-        else {
+        } else {
             for (Tile spike : spikes) {
                 TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
@@ -1444,6 +1443,7 @@ public class GameMode extends Mode implements Screen {
     }
 
     NpcPerson target;
+
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;

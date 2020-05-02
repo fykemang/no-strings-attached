@@ -386,7 +386,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      *
      * @param delta Number of seconds since last animation frame
      */
-    private void update(float delta){
+    private void update(float delta) {
         if (startGameButton == null) {
             manager.update(budget);
             this.progress = manager.getProgress();
@@ -395,7 +395,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 startGameButton = new Texture(START_FILE);
                 startGameButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX1 = buttonX + startGameButton.getWidth() / 2 * scale * BUTTON_SCALE-70f;
+                buttonX1 = buttonX + startGameButton.getWidth() / 2 * scale * BUTTON_SCALE - 70f;
             }
         }
         if (settingsButton == null) {
@@ -406,7 +406,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 settingsButton = new Texture(SETTINGS_FILE);
                 settingsButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX2 = buttonX + settingsButton.getWidth() / 2* BUTTON_SCALE * scale-70f;
+                buttonX2 = buttonX + settingsButton.getWidth() / 2 * BUTTON_SCALE * scale - 70f;
             }
         }
         if (quitButton == null) {
@@ -417,7 +417,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 quitButton = new Texture(QUIT_FILE);
                 quitButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX3 = buttonX + quitButton.getWidth() / 2 * BUTTON_SCALE * scale-70f;
+                buttonX3 = buttonX + quitButton.getWidth() / 2 * BUTTON_SCALE * scale - 70f;
             }
         }
         if (animatedBkg == null) {
@@ -447,7 +447,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.drawBackground(background);
         }
         if (startGameButton == null) {
-            canvas.drawUIText("LOADING...", canvas.getWidth() * 3 / 5, (int)buttonY2);
+            canvas.drawUIText("LOADING...", canvas.getWidth() * 3 / 5, (int) buttonY2);
         }
 
         if (startGameButton != null) {
@@ -474,7 +474,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         }
 
         canvas.draw(logo, Color.WHITE, logo.getWidth() / 2, logo.getHeight() / 2,
-                logoX, logoY, 0,  0.85f*scale, 0.85f*scale);
+                logoX, logoY, 0, 0.85f * scale, 0.85f * scale);
 
         canvas.end();
     }
