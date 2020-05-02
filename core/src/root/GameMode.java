@@ -125,6 +125,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
     private static final String EXCLAMATION = "entities/exclamation.png";
+    private static final String TARGET = "entities/target.png";
 
     /**
      * Texture file for the exit door
@@ -165,7 +166,7 @@ public class GameMode extends Mode implements Screen {
     private static final String POP_FILE = "sounds/plop.mp3";
     private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
     private static final String WIN_FILE = "sounds/win.mp3";
-    private static final String LOSE_FILE = "sounds/lose.mp3";
+    private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     /**
      * The folder with all levels
@@ -253,6 +254,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion npcSpikyShockTexture;
     private TextureRegion npcWelcomeShockTexture;
     private TextureRegion exclamationTexture;
+    private TextureRegion targetTexture;
     /**
      * Texture assets for items
      */
@@ -322,9 +324,9 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/village_theme.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/icefishing.mp3";
     private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
-    private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/youshoulddosomereflecting.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
@@ -354,9 +356,13 @@ public class GameMode extends Mode implements Screen {
     private static final String FOREST_TILE_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
     private static final String FOREST_SPIKES_VERT_FILE = "entities/forest-spikes-vert.png";
+    private static final String VILLAGE_SPIKES_FILE = "entities/village-obstacle.png";
+    private static final String VILLAGE_SPIKES_VERT_FILE = "entities/village-obstacle-vert.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
     protected TextureRegion forestSpikeTile;
     protected TextureRegion forestSpikeVertTile;
+    protected TextureRegion villageSpikeTile;
+    protected TextureRegion villageSpikeVertTile;
 
     /**
      * Tile texture used in the game
@@ -368,9 +374,9 @@ public class GameMode extends Mode implements Screen {
     private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
     private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
     private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village1.png", "background/village2.png", "background/village3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village4.png", "background/village5.png", "background/village6.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village7.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
     //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
@@ -473,6 +479,10 @@ public class GameMode extends Mode implements Screen {
         assets.add(FOREST_SPIKES_FILE);
         manager.load(FOREST_SPIKES_VERT_FILE, Texture.class);
         assets.add(FOREST_SPIKES_VERT_FILE);
+        manager.load(VILLAGE_SPIKES_FILE, Texture.class);
+        assets.add(VILLAGE_SPIKES_FILE);
+        manager.load(VILLAGE_SPIKES_VERT_FILE, Texture.class);
+        assets.add(VILLAGE_SPIKES_VERT_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
         manager.load(SPIKE_VERT, Texture.class);
@@ -583,6 +593,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(NPC_WELCOME_SHOCK);
         manager.load(EXCLAMATION, Texture.class);
         assets.add(EXCLAMATION);
+        manager.load(TARGET, Texture.class);
+        assets.add(TARGET);
 
         // Load Sound Assets
         loadAsset(JUMP_FILE, Sound.class, manager);
@@ -709,6 +721,7 @@ public class GameMode extends Mode implements Screen {
         npcSpikyShockTexture = createFilmStrip(manager, NPC_SPIKY_SHOCK, 1, 17, 17, true);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
+        targetTexture = createTexture(manager, TARGET, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -757,6 +770,8 @@ public class GameMode extends Mode implements Screen {
         clickSound = manager.get(CLICK_FILE);
         forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
+        villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
+        villageSpikeVertTile = createTexture(manager, VILLAGE_SPIKES_VERT_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -938,7 +953,13 @@ public class GameMode extends Mode implements Screen {
                 TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : forestSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, forestSpikeTexture);
             }
-        } else {
+        } else if (level.getType().contains("village")) {
+            for (Tile spike : spikes) {
+                TextureRegion villageSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? villageSpikeTile : villageSpikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, villageSpikeTexture);
+            }
+        }
+        else {
             for (Tile spike : spikes) {
                 TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
@@ -1157,6 +1178,7 @@ public class GameMode extends Mode implements Screen {
         player.resetShootCooldown();
     }
 
+
     private void setJumpUpAnimationFrame(float dt) {
         if (playerJumpUpAnimation.isRefreshed()) {
             float vy = player.getVY();
@@ -1318,11 +1340,13 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
-                                ((Couple) obs).breakBond(ropes[0], ropes[1]);
-                                NpcPerson left = ((Couple) obs).getL();
-                                setShockNpc(left, "cutrope");
-                                NpcPerson right = ((Couple) obs).getR();
-                                setShockNpc(right, "cutrope");
+                                if (ropes != null) {
+                                    ((Couple) obs).breakBond(ropes[0], ropes[1]);
+                                    NpcPerson left = ((Couple) obs).getL();
+                                    setShockNpc(left, "cutrope");
+                                    NpcPerson right = ((Couple) obs).getR();
+                                    setShockNpc(right, "cutrope");
+                                }
                             }
                         }
                     }
@@ -1413,7 +1437,7 @@ public class GameMode extends Mode implements Screen {
         canvas.end();
     }
 
-
+    NpcPerson target;
     public void draw(float dt) {
         canvas.begin();
         float camera = player.getX() * scale.x;
@@ -1457,11 +1481,11 @@ public class GameMode extends Mode implements Screen {
 //        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
 //                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
 //        ((FilmStrip) exclamationTexture).setNextFrame();
-        NpcPerson target = player.getCanSwingTo();
+        target = player.getCanSwingTo();
         if (target != null) {
-            canvas.draw(exclamationTexture, Color.WHITE, target.getX() * scale.x - 15,
-                    target.getY() * scale.y + 25, exclamationTexture.getRegionWidth() * 2.5f / scale.x, exclamationTexture.getRegionHeight() * 2.5f / scale.y);
-            ((FilmStrip) exclamationTexture).setNextFrame();
+            canvas.draw(targetTexture, Color.WHITE, target.getX() * scale.x - 40,
+                    target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
+//            ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),

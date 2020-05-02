@@ -1,4 +1,5 @@
 {
+  "tutorial": true,
   "type": "city",
   "player": {
     "x": 8,

@@ -25,6 +25,12 @@ public class Couple extends ComplexObstacle {
         this.drawScale = drawScale;
         this.l = createAvatar(x1, y1, avatar1, true);
         this.r = createAvatar(x2, y2, avatar2, false);
+        if (leftTile.isRotating) {
+            leftTile.setRotationData(r.getPosition(), l.getPosition());
+
+        } else if (rightTile.isRotating) {
+            rightTile.setRotationData(l.getPosition(), r.getPosition());
+        }
         l.setType(type1);
         r.setType(type2);
         l.setCouple(r);
@@ -98,15 +104,7 @@ public class Couple extends ComplexObstacle {
         l.setLinearVelocity(leftTile.getLinearVelocity());
         r.setLinearVelocity(rightTile.getLinearVelocity());
         if (leftTile.isRotating) {
-            float rotateBy = 10 * dt * (float) Math.PI / 180f;
-            float rotatedX = (float) Math.cos(rotateBy) * (l.getX() - leftTile.center.x) - (float) Math.sin(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.x;
-            float rotatedY = (float) Math.sin(rotateBy) * (l.getX() - leftTile.center.x) + (float) Math.cos(rotateBy) * (l.getY() - leftTile.center.y) + leftTile.center.y;
-            leftTile.rotDir.set(rotatedX - l.getX(), rotatedY - l.getY());
-            leftTile.rotDir.nor();
-            leftTile.rotDir.scl(0.4f);
-            l.setLinearVelocity(leftTile.rotDir);
-            leftTile.setLinearVelocity(leftTile.rotDir);
-
+            leftTile.setPosData(l.getPosition());
             if (l.left) {
                 trampoline.moveStart(l.getCloserAttachPoint(), false);
                 trampoline.moveEnd(r.getCloserAttachPoint(), false);
@@ -114,14 +112,26 @@ public class Couple extends ComplexObstacle {
                 trampoline.moveStart(r.getCloserAttachPoint(), false);
                 trampoline.moveEnd(l.getCloserAttachPoint(), false);
             }
+        } else if (rightTile.isRotating) {
+            rightTile.setPosData(r.getPosition());
+            if (l.left) {
+                trampoline.moveStart(l.getCloserAttachPoint(), false);
+                trampoline.moveEnd(r.getCloserAttachPoint(), false);
+            } else {
+                trampoline.moveStart(r.getCloserAttachPoint(), false);
+                trampoline.moveEnd(l.getCloserAttachPoint(), false);
+            }
+
         }
     }
 
     public void breakBond(NpcRope leftFragment, NpcRope rightFragment) {
         l.setAttached(false);
         r.setAttached(false);
-        this.bodies.add(leftFragment);
-        this.bodies.add(rightFragment);
+        if (leftFragment != null)
+            this.bodies.add(leftFragment);
+        if (rightFragment != null)
+            this.bodies.add(rightFragment);
     }
 
     public NpcRope getRope() {
