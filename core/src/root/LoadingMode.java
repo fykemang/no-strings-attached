@@ -464,7 +464,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         }
 
         canvas.draw(logo, Color.WHITE, logo.getWidth() / 2, logo.getHeight() / 2,
-                logoX, logoY, 0,  0.8f*scale, 0.8f*scale);
+                logoX, logoY, 0,  0.85f*scale, 0.85f*scale);
 
         canvas.end();
     }
@@ -536,7 +536,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         centerY = (int) (BAR_HEIGHT_RATIO * height);
         centerX = width / 2;
 
-        logoX = 6 * width / 9;
+        logoX = 6 * width / 10;
         logoY = 2 * height / 3;
         heightY = height;
         buttonX = (3 * width) / 4;
