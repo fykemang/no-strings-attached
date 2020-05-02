@@ -57,8 +57,13 @@
   "text": [
     {
       "x": 11,
-      "y": 11,
-      "text": "No String Attached"
+      "y": 14,
+      "text": "Press space to cut the string"
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "text": "Press left shift to swing"
     }
   ]
 }

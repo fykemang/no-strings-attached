@@ -58,8 +58,13 @@
   "text": [
     {
       "x": 3,
-      "y": 12,
-      "text": "Use arrow keys to move the character and jump."
+      "y": 13,
+      "text": "Use arrow keys to move the character and jump"
+    },
+    {
+      "x": 7,
+      "y": 16,
+      "text": "Collect the item and proceed to the exit"
     }
   ]
 }
