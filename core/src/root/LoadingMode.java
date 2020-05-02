@@ -395,7 +395,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 startGameButton = new Texture(START_FILE);
                 startGameButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX1 = buttonX + startGameButton.getWidth() / 2 * scale * BUTTON_SCALE-60f;
+                buttonX1 = buttonX + startGameButton.getWidth() / 2 * scale * BUTTON_SCALE-70f;
             }
         }
         if (settingsButton == null) {
@@ -406,7 +406,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 settingsButton = new Texture(SETTINGS_FILE);
                 settingsButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX2 = buttonX + settingsButton.getWidth() / 2* BUTTON_SCALE * scale-60f;
+                buttonX2 = buttonX + settingsButton.getWidth() / 2* BUTTON_SCALE * scale-70f;
             }
         }
         if (quitButton == null) {
@@ -417,7 +417,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 quitButton = new Texture(QUIT_FILE);
                 quitButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-                buttonX3 = buttonX + quitButton.getWidth() / 2 * BUTTON_SCALE * scale-60f;
+                buttonX3 = buttonX + quitButton.getWidth() / 2 * BUTTON_SCALE * scale-70f;
             }
         }
         if (animatedBkg == null) {
@@ -551,8 +551,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         heightY = height;
         buttonX = (3 * width) / 4;
         buttonY1 = 4 * height / 10;
-        buttonY2 = 3 * height / 10;
-        buttonY3 = 2 * height / 10;
+        buttonY2 = buttonY1 - height / 9;
+        buttonY3 = buttonY2 - height / 9;
     }
 
     /**
