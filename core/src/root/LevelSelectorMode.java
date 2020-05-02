@@ -129,8 +129,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         buttonPos.add(new Vector2(520, 650));
         buttonPos.add(new Vector2(600, 680));
         buttonPos.add(new Vector2(680, 680));
-        buttonPos.add(new Vector2(760, 670));
-        buttonPos.add(new Vector2(780, 650));
 
         try {
             // Let ANY connected controller start the game.

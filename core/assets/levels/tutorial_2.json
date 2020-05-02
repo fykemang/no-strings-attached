@@ -53,5 +53,17 @@
   "exit": {
     "x": 16,
     "y": 4
-  }
+  },
+  "text": [
+    {
+      "x": 11,
+      "y": 14,
+      "text": "Press space to cut the string"
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "text": "Press left shift to swing"
+    }
+  ]
 }
