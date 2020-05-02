@@ -23,23 +23,6 @@
       }
     },
     {
-      "x": 25.5,
-      "y": 3,
-      "width": 7,
-      "height": 1,
-      "type": "normal",
-      "direction": "up",
-      "isSliding": false,
-      "leftPos": {
-        "x": 8.5,
-        "y": 0.0
-      },
-      "rightPos": {
-        "x": 10.5,
-        "y": 1.0
-      }
-    },
-    {
       "x": 23,
       "y": 7.5,
       "width": 1,
