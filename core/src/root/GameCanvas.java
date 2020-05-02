@@ -1047,7 +1047,7 @@ public class GameCanvas {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.setColor(136 / 255.0f, 140 / 255.0f, 137 / 255.0f, 0.2f);
-        shapeRenderer.rect(x-layout.width/2-5, y- 2*layout.height, layout.width+10, layout.height*1.7f);
+        shapeRenderer.rect(x - layout.width / 2 - 5, y - 2 * layout.height, layout.width + 10, layout.height * 1.7f);
         shapeRenderer.end();
         spriteBatch.begin();
 
@@ -1056,7 +1056,7 @@ public class GameCanvas {
             return;
         }
 
-        font.draw(spriteBatch, layout, x-layout.width/2, y-layout.height/2);
+        font.draw(spriteBatch, layout, x - layout.width / 2, y - layout.height / 2);
 
 
     }

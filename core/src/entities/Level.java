@@ -112,9 +112,9 @@ public class Level implements Json.Serializable {
 
         JsonValue textBoxData = jsonData.get("text");
         for (JsonValue textData : textBoxData) {
-           String textJson = textData.toJson(JsonWriter.OutputType.minimal);
-           TextBox text = json.fromJson(TextBox.class, textJson);
-           this.text.add(text);
+            String textJson = textData.toJson(JsonWriter.OutputType.minimal);
+            TextBox text = json.fromJson(TextBox.class, textJson);
+            this.text.add(text);
         }
     }
 

@@ -766,7 +766,7 @@ public class GameMode extends Mode implements Screen {
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 20;
             displayFont = generator.generateFont(parameter);
-          //  displayFont = manager.get(FONT_FILE, BitmapFont.class);
+            //  displayFont = manager.get(FONT_FILE, BitmapFont.class);
         } else {
             displayFont = null;
         }
