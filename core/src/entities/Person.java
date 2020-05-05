@@ -645,7 +645,7 @@ public class Person extends CapsuleObstacle {
         if (won()) {
             tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
         } else if (isFading()){
-            lastTint.set(1,1,1,lastTint.a * 0.6f);
+            lastTint.set(1,1,1,lastTint.a * 0.6f);//cross fade
             tint.set(1,1,1,1f - lastTint.a);
         }else {
             lastTint.set(1,1,1,0);
@@ -654,7 +654,6 @@ public class Person extends CapsuleObstacle {
         if(!won()&&lastTexture!=null) {
             canvas.draw(lastTexture, lastTint, origin.x, origin.y, getX() * drawScale.x,
                     getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
-            System.out.println("here");
         }
         canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
