@@ -325,9 +325,9 @@ public class GameMode extends Mode implements Screen {
      * Files for music assets
      */
     private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/icefishing.mp3";
-    private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
-    private final String MOUNTAIN_MUSIC_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/harp.mp3";
+    private final String FOREST_MUSIC_FILE = "music/forest_song.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
