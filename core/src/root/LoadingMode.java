@@ -50,6 +50,8 @@ import util.ScreenListener;
  * loading screen.
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
+    public static float MUSIC_VOLUME = 0.5f;
+    public static float SFX_VOLUME = 0.5f;
     // Textures necessary to support the loading screen
     private static final String BACKGROUND_FILE = "ui/background.png";
     private static final String CHAR_ANIMATION_FILE = "ui/background_sc.png";
@@ -336,7 +338,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
         music.play();
-        music.setVolume(0.5f);
+        music.setVolume(MUSIC_VOLUME);
         music.setLooping(true);
 
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
@@ -627,21 +629,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             pressState = MouseState.START;
         }
 
         float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
         float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             pressState = MouseState.SETTINGS;
         }
 
         float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
         float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             pressState = MouseState.QUIT;
         }
 

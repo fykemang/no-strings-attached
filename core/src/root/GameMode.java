@@ -46,6 +46,8 @@ import java.util.*;
  * place nicely with the static assets.
  */
 public class GameMode extends Mode implements Screen {
+    public static float MUSIC_VOLUME = 0.5f;
+    public static float SFX_VOLUME = 0.5f;
     /**
      * Exit code for quitting the game
      */
@@ -693,6 +695,7 @@ public class GameMode extends Mode implements Screen {
         }
 
         music.play();
+        music.setVolume(MUSIC_VOLUME);
         music.setLooping(true);
     }
 
@@ -1121,11 +1124,11 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 if (player.won() && !didPlayWin) {
-                    winSound.play();
+                    winSound.play(SFX_VOLUME);
                     didPlayWin = true;
                 }
                 if (!player.isAlive() && !didPlayLose) {
-                    loseSound.play();
+                    loseSound.play(SFX_VOLUME);
                     didPlayLose = true;
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
@@ -1162,12 +1165,12 @@ public class GameMode extends Mode implements Screen {
 
     public void updatePaused(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             gameState = GameState.PLAYING;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             exitToSelector();
         }
     }
@@ -1272,7 +1275,7 @@ public class GameMode extends Mode implements Screen {
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             gameState = GameState.PAUSED;
 //            exitToSelector();
         }
@@ -1345,7 +1348,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play();
+                                    snipSound.play(SFX_VOLUME);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
@@ -1372,7 +1375,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isDidCollect() && !didPlayCollect) {
-                collectSound.play(0.5f);
+                collectSound.play(SFX_VOLUME);
                 didPlayCollect = true;
             }
             if (didPlayCollect) {
@@ -1891,6 +1894,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
+        music.setVolume(MUSIC_VOLUME);
     }
 
     @Override

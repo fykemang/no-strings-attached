@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 public class LevelSelectorMode extends Mode implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 4;
+    public static float MUSIC_VOLUME = 0.5f;
+    public static float SFX_VOLUME = 0.5f;
     private static final String BACKGROUND_FILE = "ui/select_bg.png";
     private static final String CITY_FILE = "ui/city.png";
     private static final String SUBURB_FILE = "ui/suburbs.png";
@@ -179,7 +181,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //            }
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
-            clickSound.play(0.5f);
+            clickSound.play(SFX_VOLUME);
             ready = true;
             levelSelectorMusic.dispose();
         }
@@ -276,6 +278,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     public void dispose() {
         if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
+        clickSound.dispose();
     }
 
     @Override
@@ -413,7 +416,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f);
+        levelSelectorMusic.setVolume(MUSIC_VOLUME);
         levelSelectorMusic.setLooping(true);
     }
 }
