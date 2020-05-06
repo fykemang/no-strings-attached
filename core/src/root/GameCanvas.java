@@ -1402,6 +1402,11 @@ public class GameCanvas {
         camera.update();
     }
 
+    public void changeViewport(float x, float y) {
+       camera.viewportHeight = y;
+       camera.viewportWidth = x;
+    }
+
     public void moveCameraX(float x) {
         camera.position.x = x;
         //    camera.position.y = Math.max(y, 170f);
