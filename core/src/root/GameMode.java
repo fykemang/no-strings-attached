@@ -324,7 +324,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for music assets
      */
-    private final String CITY_MUSIC_FILE = "music/flight.mp3";
+    private final String CITY_MUSIC_FILE = "music/takingastroll.mp3";
     private final String VILLAGE_MUSIC_FILE = "music/harp.mp3";
     private final String FOREST_MUSIC_FILE = "music/forest_song.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
@@ -1371,6 +1371,15 @@ public class GameMode extends Mode implements Screen {
                 destroyPlayerRope();
             }
 
+            if (player.isDidCollect() && !didPlayCollect) {
+                collectSound.play(0.5f);
+                didPlayCollect = true;
+            }
+            if (didPlayCollect) {
+                player.setDidCollect(false);
+            }
+
+
             // Swinging
             if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
                 float ancX = player.isFacingRight() ? player.getWidth() / 2f - 0.21f : -player.getWidth() / 2f + 0.21f;
@@ -1702,6 +1711,10 @@ public class GameMode extends Mode implements Screen {
         scale = null;
         world = null;
         canvas = null;
+        winSound.dispose();
+        loseSound.dispose();
+        collectSound.dispose();
+        jumpSound.dispose();
     }
 
     /**

@@ -177,6 +177,16 @@ public class Person extends CapsuleObstacle {
     private boolean onString = false;
     private boolean turned = false;
 
+    private boolean didCollect = false;
+
+    public boolean isDidCollect() {
+        return this.didCollect;
+    }
+
+    public void setDidCollect(boolean didCollect) {
+        this.didCollect = didCollect;
+    }
+
     /**
      * Returns left/right movement of this character.
      * <p>
