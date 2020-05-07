@@ -1111,7 +1111,6 @@ public class GameMode extends Mode implements Screen {
         input.readInput(bounds, scale);
         if (listener != null) {// Toggle debug
             if (input.isCameraZoom()){
-                System.out.println("true");
                 isZoomed = false;
                 direction = new Vector2(canvas.getWidth()/2, canvas.getHeight()/2);
                 targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
