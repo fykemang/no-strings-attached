@@ -385,9 +385,9 @@ public class GameMode extends Mode implements Screen {
     //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-layer2.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-layer3.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
+    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{};
     private final String[] MT_BKG_FILES_LAYER_A = new String[]{"background/sky-1.png"};
     private final String[] MT_BKG_FILES_LAYER_B = new String[]{"background/sky-2.png", "background/sky-3.png", "background/sky-4.png"};
     private final String[] MT_BKG_FILES_LAYER_C = new String[]{};
@@ -1204,13 +1204,26 @@ public class GameMode extends Mode implements Screen {
             isZoomed = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && !isZoomed){
-            direction = new Vector2(canvas.getWidth()/2 + 300, canvas.getHeight()/2);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !isZoomed && lastpos.x < canvas.getWidth()/2 + 500){
+            direction = new Vector2(lastpos.x + 20, lastpos.y);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && !isZoomed){
-            direction = new Vector2(canvas.getWidth()/2 - 200, canvas.getHeight()/2);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && !isZoomed && lastpos.x > canvas.getWidth()/2 - 300){
+            direction = new Vector2(lastpos.x - 20, lastpos.y);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+    //    System.out.println((stillBackgroundTextures.get(0).getRegionHeight()/ stillBackgroundTextures.get(0).getRegionWidth())
+            //    * canvas.getWidth());
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && !isZoomed && lastpos.y <
+                (((float)stillBackgroundTextures.get(0).getRegionHeight()/ (float)stillBackgroundTextures.get(0).getRegionWidth())
+                * canvas.getWidth() - canvas.getHeight()*0.55f)){
+            direction = new Vector2(lastpos.x, lastpos.y + 20);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && !isZoomed && lastpos.y > canvas.getHeight()/2 - 200){
+            direction = new Vector2(lastpos.x , lastpos.y-20);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
@@ -1561,26 +1574,18 @@ public class GameMode extends Mode implements Screen {
         float camera = player.getX() * scale.x;
         if (level.getType().equals("forest")) {
             for (TextureRegion t : stillBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f,
-                        t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
-            }
-            for (TextureRegion t : slightMoveBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
-            }
-            for (TextureRegion t : movingBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth(),
+                        t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight(), 1f);
             }
         } else {
             for (TextureRegion t : stillBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
             for (TextureRegion t : slightMoveBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
             for (TextureRegion t : movingBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
         }
 

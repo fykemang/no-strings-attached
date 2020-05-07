@@ -1385,18 +1385,20 @@ public class GameCanvas {
         spriteBatch.draw(image, positionCache.x - w, positionCache.y, width, height);
     }
 
-    public void drawMirrorred(Texture image, float x, float y, float width, float height, int srcX, int srcY) {
+    public void drawMirrorred(Texture image, float x, float y, float width, float height, int srcX, int srcY, float sc) {
         positionCache.set(x, y);
         wrapPosition(positionCache);
 
         float w = getWidth();
-        float h = getHeight();
+        float h = (height/width) * getWidth();
+        System.out.println(h);
         // Have to draw the background twice for continuous scrolling.
         spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
-        spriteBatch.draw(image, positionCache.x - w * 1.2f, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
-        spriteBatch.draw(image, positionCache.x + w * 1.2f, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
-        spriteBatch.draw(image, positionCache.x , positionCache.y + h*1.2f, width, height, 0, 0, srcX, srcY, false, true);
-        spriteBatch.draw(image, positionCache.x + w * 1.2f, positionCache.y -h*1.2f, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
+        spriteBatch.draw(image, positionCache.x + w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
+      //  spriteBatch.draw(image, positionCache.x , positionCache.y + h*sc, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, false, true);
 
     }
 
