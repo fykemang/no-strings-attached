@@ -1204,12 +1204,12 @@ public class GameMode extends Mode implements Screen {
             isZoomed = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && !isZoomed){
             direction = new Vector2(canvas.getWidth()/2 + 300, canvas.getHeight()/2);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && !isZoomed){
             direction = new Vector2(canvas.getWidth()/2 - 200, canvas.getHeight()/2);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
@@ -1218,16 +1218,21 @@ public class GameMode extends Mode implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             reset();
         }
+
+        if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
+          && direction.x == lastpos.x && lastpos.y == direction.y){
+            if (isZoomed) gameState = GameState.PLAYING;
+        }
+
+
        if (direction != null && targetViewPort != null) {
-           boolean zready = false;
-           boolean mready = false;
            float xz = lastviewport.x, yz = lastviewport.y;
            float xp = lastpos.x, yp = lastpos.y;
-           if (xz >= targetViewPort.x - 8 && xz <= targetViewPort.x + 8
-                   && yz >= targetViewPort.y - 8 && yz <= targetViewPort.y + 8) {
+           if (xz >= targetViewPort.x - 10 && xz <= targetViewPort.x + 10
+                   && yz >= targetViewPort.y - 10 && yz <= targetViewPort.y + 10) {
                xz = targetViewPort.x;
                yz = targetViewPort.y;
-               zready = true;
+
            } else {
                if (xz < targetViewPort.x) {
                    xz += 15;
@@ -1245,7 +1250,7 @@ public class GameMode extends Mode implements Screen {
                boolean xr = false, yr = false;
                if(xp >= direction.x - 6 && xp <= direction.x + 6){
                    xp = direction.x;
-                   xr = true;
+
                }else
                if (xp < direction.x) {
                    xp += 8;
@@ -1254,27 +1259,22 @@ public class GameMode extends Mode implements Screen {
                    xp -= 8;
                }
 
-               if(yp >= direction.y - 5 && yp <= direction.y + 5){
+               if(yp >= direction.y - 6 && yp <= direction.y + 6){
                    yp = direction.y;
-                   yr = true;
-               }
-               if (yp < direction.y) {
+
+               }else if (yp < direction.y) {
                    yp += 8;
                }
-               if (yp > direction.y) {
+               else {
                    yp -= 8;
                }
 
            canvas.moveCamera(xp, yp);
            canvas.changeViewport(xz, yz);
+
            lastpos = new Vector2(xp, yp);
            lastviewport = new Vector2(xz, yz);
-           if (zready && xr && yr && targetViewPort.x ==canvas.getWidth() *0.6f) {
-               gameState = GameState.PLAYING;
-           }else if (zready && xr && yr){
-               targetViewPort = null;
-               direction = null;
-           }
+
        }
 
 
