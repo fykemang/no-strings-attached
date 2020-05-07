@@ -316,9 +316,7 @@ public class NpcRope extends Rope {
             }
         }
 
-        if (index < 2 || index > upperLayer.size() - 2) {
-            return null;
-        }
+        index = index < 2 ? 2 : index > upperLayer.size() - 2 ? upperLayer.size() - 2 : index;
 
         int lowIdx = index >= lowerLayer.size() ? lowerLayer.size() - 1 : index;
 

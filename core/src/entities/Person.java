@@ -528,7 +528,7 @@ public class Person extends CapsuleObstacle {
      */
     public void update(float dt) {
         frameCount++;
-        int frameRate = 4;
+        int frameRate = 3;
         if (horizontalMovement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / horizontalMovement)));
         }
