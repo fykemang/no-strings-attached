@@ -1158,11 +1158,13 @@ public class GameMode extends Mode implements Screen {
                     didPlayLose = true;
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
-                if(volume > 0.00f)
-                    volume -= timeSeconds * 0.005f;
-                else
-                    volume = 0.0f;
-                music.setVolume(Math.abs(volume));
+                if (player.won()) {
+                    if (volume > 0.00f)
+                        volume -= timeSeconds * 0.005f;
+                    else
+                        volume = 0.0f;
+                    music.setVolume(Math.abs(volume));
+                }
                 if (timeSeconds > period) {
                     timeSeconds = 0;
                     if (player.won()) {
