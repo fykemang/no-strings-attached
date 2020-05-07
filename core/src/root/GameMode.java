@@ -1112,7 +1112,14 @@ public class GameMode extends Mode implements Screen {
         if (listener != null) {// Toggle debug
             if (input.isCameraZoom()){
                 isZoomed = false;
-                direction = new Vector2(canvas.getWidth()/2, canvas.getHeight()/2);
+                float x = canvas.getWidth()/2, y=canvas.getHeight()/2;
+                if (player.getX()*scale.x > canvas.getWidth()*0.7f){
+                    x = canvas.getWidth();
+                }
+                if (player.getY()*scale.y > canvas.getHeight()*0.7f){
+                    y = canvas.getHeight();
+                }
+                direction = new Vector2(x, y);
                 targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
             }
             if (input.didDebug()) {
