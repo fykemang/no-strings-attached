@@ -1391,14 +1391,13 @@ public class GameCanvas {
 
         float w = getWidth();
         float h = (height/width) * getWidth();
-        System.out.println(h);
         // Have to draw the background twice for continuous scrolling.
         spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
         spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
         spriteBatch.draw(image, positionCache.x + w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
       //  spriteBatch.draw(image, positionCache.x , positionCache.y + h*sc, width, height, 0, 0, srcX, srcY, false, true);
         spriteBatch.draw(image, positionCache.x, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, false, true);
-        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, true, true);
 
     }
 
