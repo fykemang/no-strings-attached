@@ -1270,7 +1270,7 @@ public class GameMode extends Mode implements Screen {
            canvas.changeViewport(xz, yz);
            lastpos = new Vector2(xp, yp);
            lastviewport = new Vector2(xz, yz);
-           if (zready && xr && yr && isZoomed) {
+           if (zready && xr && yr && targetViewPort.x ==canvas.getWidth() *0.6f) {
                gameState = GameState.PLAYING;
            }else if (zready && xr && yr){
                targetViewPort = null;
