@@ -154,14 +154,6 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_TWO = "ui/basket_3.png";
     private static final String BASKET_THREE = "ui/basket_2.png";
     /**
-     * The texture file for the spinning barrier
-     */
-    private static final String BARRIER_FILE = "entities/barrier.png";
-    /**
-     * The texture file for the bullet
-     */
-    private static final String BULLET_FILE = "entities/bullet.png";
-    /**
      * The sound effects
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
@@ -172,11 +164,6 @@ public class GameMode extends Mode implements Screen {
     private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String SNIP_FILE = "sounds/snip.mp3";
-    /**
-     * The folder with all levels
-     */
-    private static final String TEST_LEVEL = "levels/level1.json";
-    private static final String CROSSHAIR_FILE = "ui/crosshair.png";
     /**
      * File to texture for walls and platforms
      */
@@ -196,7 +183,6 @@ public class GameMode extends Mode implements Screen {
      * Retro font for displaying messages
      */
     private static final String FONT_FILE = "ui/Pacifico.ttf";
-    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static final int FONT_SIZE = 64;
 
     /**
@@ -436,8 +422,6 @@ public class GameMode extends Mode implements Screen {
         assetState = AssetState.LOADING;
         manager.load(PLAYER_FALL, Texture.class);
         assets.add(PLAYER_FALL);
-        manager.load(BARRIER_FILE, Texture.class);
-        assets.add(BARRIER_FILE);
         manager.load(UI_GreyYarn, Texture.class);
         assets.add(UI_GreyYarn);
         manager.load(UI_RedYarn, Texture.class);
@@ -468,10 +452,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(BASKET_TWO);
         manager.load(BASKET_THREE, Texture.class);
         assets.add(BASKET_THREE);
-        manager.load(BULLET_FILE, Texture.class);
-        assets.add(BULLET_FILE);
-        manager.load(CROSSHAIR_FILE, Texture.class);
-        assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
         assets.add(CITY_TILE_FILE);
         manager.load(VILLAGE_TILE_FILE, Texture.class);
@@ -496,8 +476,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
-        manager.load(ROPE_SEGMENT, Texture.class);
-        assets.add(ROPE_SEGMENT);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
