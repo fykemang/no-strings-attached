@@ -65,7 +65,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * How many frames after winning/losing do we continue?
      */
-    public static final int EXIT_COUNT = 120;
+    public static final int EXIT_COUNT = 60;
     /**
      * The amount of time for a physics engine step.
      */
@@ -1193,21 +1193,90 @@ public class GameMode extends Mode implements Screen {
 
 
     public void updateZoom(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
-            float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)||Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+        || Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             direction = new Vector2(xpos, ypos);
             targetViewPort = new Vector2(canvas.getWidth()*0.6f, canvas.getHeight()*0.6f);
             isZoomed = true;
-            gameState = GameState.PLAYING;
         }
 
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-////            clickSound.play(0.5f);
-////            exitToSelector();
-////        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            direction = new Vector2(canvas.getWidth()/2 + 300, canvas.getHeight()/2);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            direction = new Vector2(canvas.getWidth()/2 - 200, canvas.getHeight()/2);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            reset();
+        }
+       if (direction != null && targetViewPort != null) {
+           boolean zready = false;
+           boolean mready = false;
+           float xz = lastviewport.x, yz = lastviewport.y;
+           float xp = lastpos.x, yp = lastpos.y;
+           if (xz >= targetViewPort.x - 8 && xz <= targetViewPort.x + 8
+                   && yz >= targetViewPort.y - 8 && yz <= targetViewPort.y + 8) {
+               xz = targetViewPort.x;
+               yz = targetViewPort.y;
+               zready = true;
+           } else {
+               if (xz < targetViewPort.x) {
+                   xz += 15;
+               }
+               if (xz > targetViewPort.x) {
+                   xz -= 15;
+               }
+               if (yz < targetViewPort.y) {
+                   yz += 10;
+               }
+               if (yz > targetViewPort.y) {
+                   yz -= 10;
+               }
+           }
+               boolean xr = false, yr = false;
+               if(xp >= direction.x - 6 && xp <= direction.x + 6){
+                   xp = direction.x;
+                   xr = true;
+               }else
+               if (xp < direction.x) {
+                   xp += 8;
+               }
+               else {
+                   xp -= 8;
+               }
+
+               if(yp >= direction.y - 5 && yp <= direction.y + 5){
+                   yp = direction.y;
+                   yr = true;
+               }
+               if (yp < direction.y) {
+                   yp += 8;
+               }
+               if (yp > direction.y) {
+                   yp -= 8;
+               }
+
+           canvas.moveCamera(xp, yp);
+           canvas.changeViewport(xz, yz);
+           lastpos = new Vector2(xp, yp);
+           lastviewport = new Vector2(xz, yz);
+           if (zready && xr && yr && isZoomed) {
+               gameState = GameState.PLAYING;
+           }else if (zready && xr && yr){
+               targetViewPort = null;
+               direction = null;
+           }
+       }
 
 
     }
@@ -1831,63 +1900,27 @@ public class GameMode extends Mode implements Screen {
 
         //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
         ypos = ypos > 700 ? 700 : ypos;
-        if (direction == null && isZoomed) {
+        if (isZoomed) {
             canvas.moveCamera(xpos, ypos);
             lastpos = new Vector2(xpos, ypos);
         }else {
-            boolean zready = false;
-            boolean mready = false;
-            if (isZoomed) direction = new Vector2(xpos, ypos);
-           float xz = lastviewport.x, yz = lastviewport.y;
-           float xp=  lastpos.x, yp=lastpos.y;
-            if (xz >= targetViewPort.x - 5 && xz <= targetViewPort.x + 5
-                    && yz >= targetViewPort.y - 5 && yz <= targetViewPort.y + 5) {
-                xz = targetViewPort.x;
-                yz = targetViewPort.y;
-                zready = true;
-            } else {
-                if (xz < targetViewPort.x) {
-                    xz += 6;
-                }
-                if (xz > targetViewPort.x) {
-                    xz -= 6;
-                }
-                if (yz < targetViewPort.y) {
-                    yz += 4;
-                }
-                if (yz > targetViewPort.y) {
-                    yz -= 4;
-                }
-            }
-           if (xp >= direction.x-5 && xp <= direction.x+5
-                   && yp >= direction.y-5 && yp <= direction.y+5){
-            xp= direction.x; yp = direction.y;
-            mready = true;
-           }else {
-               if (xp < direction.x) {
-                   xp += 3;
-               }
-               if (xp > direction.x) {
-                   xp-= 3;
-               }
-               if (yp < direction.y) {
-                   yp+=3;
-               }
-               if (yp > direction.y) {
-                   yp-=3;
-               }
-           }
-            canvas.moveCamera(xp, yp);
-            canvas.changeViewport(xz, yz);
-            lastpos = new Vector2(xp, yp);
-            lastviewport = new Vector2(xz, yz);
-            if (zready && mready && !isZoomed){
-                gameState = GameState.ZOOM;
-            }else if (zready && mready ) {
-                targetViewPort = null;
-                direction = null;
+            gameState = GameState.ZOOM;
+        }
+
+    }
+
+
+    public void zoomcleanup(float dt){
+        Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
+        while (iterator.hasNext()) {
+            PooledList<Obstacle>.Entry entry = iterator.next();
+            Obstacle obj = entry.getValue();
+            if (obj.isRemoved()) {
+                obj.deactivatePhysics(world);
+                entry.remove();
             }
         }
+
 
     }
 
@@ -1933,6 +1966,10 @@ public class GameMode extends Mode implements Screen {
                 break;
             case ZOOM:
                 updateZoom(delta);
+                draw(delta);
+                zoomcleanup(delta);
+
+
 
         }
     }
