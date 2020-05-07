@@ -253,9 +253,10 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     public void dispose() {
 
         music.dispose();
-        nextButton.setDisabled(true);
-        replaybutton.setDisabled(true);
-        nextButton.setDisabled(true);
+       for (Actor a : stage.getActors()){
+           a.remove();
+       }
+      // stage.dispose();
 
 
     }
