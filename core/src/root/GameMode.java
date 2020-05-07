@@ -1903,7 +1903,6 @@ public class GameMode extends Mode implements Screen {
 
 
         //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
-        ypos = ypos > 700 ? 700 : ypos;
         if (isZoomed) {
             canvas.moveCamera(xpos, ypos);
             lastpos = new Vector2(xpos, ypos);
