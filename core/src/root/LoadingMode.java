@@ -459,7 +459,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                     buttonX3, buttonY3, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
         if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
-
             float y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
             Color tint = Color.WHITE;
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
