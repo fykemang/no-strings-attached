@@ -21,70 +21,96 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
-import java.util.ArrayList;
 
-
-public class LevelTransition implements Screen, InputProcessor, ControllerListener {
+public class LevelTransitionMode extends Mode implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_TRANSITION = 5;
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
     private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
-    private static final String MEAN_MENU = "ui/main-menu.png";
+    private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
+    private static final String BUTTON_PRESSED = "ui/next-down.png";
     private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
     private final String SELECTOR = "ui/next-select.png";
 
-    enum SELECTEDBUTTON {
-        Replay,
-        Exit,
-        Next
+    private Texture background;
+    private Texture yarnie;
+    private TextureRegion pc;
+    private Texture winMessage;
+    private Texture replayButtonTexture;
+    private final ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+    private Texture mainMenuButtonTexture;
+    private Texture nextButtonTexture;
+    private TextureRegion selectTexture;
+
+    @Override
+    public void preloadContent(AssetManager manager) {
+        if (assetState != AssetState.EMPTY) {
+            return;
+        }
+        assetState = AssetState.LOADING;
+        loadAsset(BK_FILE, Texture.class, manager);
+        loadAsset(BUTTON, Texture.class, manager);
+        loadAsset(PC, Texture.class, manager);
+        loadAsset(WIN, Texture.class, manager);
+        loadAsset(REPLAY, Texture.class, manager);
+        loadAsset(MAIN_MENU, Texture.class, manager);
+        loadAsset(WIN_TEXT, Texture.class, manager);
+        loadAsset(TRANSITION_MUSIC_FILE, Music.class, manager);
+        loadAsset(SELECTOR, Texture.class, manager);
+        loadAsset(BUTTON_PRESSED, Texture.class, manager);
     }
 
-    private SELECTEDBUTTON currentSelection;
+    @Override
+    public void loadContent(AssetManager manager) {
+        if (assetState != AssetState.LOADING) {
+            return;
+        }
+        background = manager.get(BK_FILE, Texture.class);
+        yarnie = manager.get(WIN, Texture.class);
+        winMessage = manager.get(WIN_TEXT, Texture.class);
+        pc = new TextureRegion(manager.get(PC, Texture.class));
+        TextureRegion nextButtonPressed = new TextureRegion(manager.get(BUTTON_PRESSED, Texture.class));
+        replayButtonTexture = manager.get(REPLAY, Texture.class);
+        mainMenuButtonTexture = manager.get(MAIN_MENU, Texture.class);
+        selectTexture = new TextureRegion(manager.get(SELECTOR, Texture.class));
+        nextButtonTexture = manager.get(BUTTON, Texture.class);
+        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(nextButtonTexture));
+        buttonStyle.over = new TextureRegionDrawable(nextButtonPressed);
+        music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
+        assetState = AssetState.COMPLETE;
+    }
 
-    Texture background;
-    Texture yarnie;
-    TextureRegion pc;
-    Texture winMessage;
-    TextureRegion buttonNextDown;
-    private final AssetManager manager;
-    private GameCanvas canvas;
+    enum SelectedButton {
+        REPLAY,
+        EXIT,
+        NEXT
+    }
+
+    private SelectedButton currentSelection;
+
+
     private final Stage stage;
-    TextureRegion selected;
-    private final ImageButton nextButton;
-    private final ImageButton replaybutton;
-    private final ImageButton mainMenu;
-    private final boolean levelComplete;
-    private final Music music;
+    private ImageButton replayButton;
+    private ImageButton mainMenuButton;
+    private boolean isLevelComplete;
+    private  Music music;
 
-    public LevelTransition(AssetManager manager, GameCanvas canvas, boolean win) {
-        this.levelComplete = win;
-        this.manager = manager;
-        this.canvas = canvas;
-        this.levels = new ArrayList<>();
+    public LevelTransitionMode() {
         this.stage = new Stage();
-        this.music = manager.get(TRANSITION_MUSIC_FILE);
+        active = true;
+    }
 
+    public void setScreenListener(ScreenListener listener) {
+        this.listener = listener;
+    }
 
-        Gdx.input.setInputProcessor(stage);
-
-        Texture select = new Texture(SELECTOR);
-        selected = new TextureRegion(select);
-        buttonNextDown = new TextureRegion(new Texture("ui/next-down.png"));
-        pc = new TextureRegion(new Texture(PC));
-        background = new Texture(BK_FILE);
-        yarnie = new Texture(WIN);
-        winMessage = new Texture(WIN_TEXT);
-        Texture buttonNext = new Texture(BUTTON);
-        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        style.up = new TextureRegionDrawable(new TextureRegion(buttonNext));
-        style.over = new TextureRegionDrawable(buttonNextDown);
-
-        nextButton = new ImageButton(style);
-        nextButton.setPosition(canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 2, canvas.getHeight() / 6);
-        final LevelTransition transition = this;
+    public void initializeInterface() {
+        ImageButton nextButton = new ImageButton(buttonStyle);
+        nextButton.setPosition(canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 2, canvas.getHeight() / 6);
+        final LevelTransitionMode transition = this;
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -92,7 +118,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             }
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                currentSelection = SELECTEDBUTTON.Next;
+                currentSelection = SelectedButton.NEXT;
 
             }
 
@@ -104,17 +130,16 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         stage.addActor(nextButton);
 
 
-        Texture buttonReplay = new Texture(REPLAY);
-        replaybutton = createButton(buttonReplay);
-        replaybutton.setPosition(canvas.getWidth() / 6 - replaybutton.getWidth() / 2, canvas.getHeight() / 6);
-        replaybutton.addListener(new ClickListener() {
+        replayButton = createButton(replayButtonTexture);
+        replayButton.setPosition(canvas.getWidth() / 6 - replayButton.getWidth() / 2, canvas.getHeight() / 6);
+        replayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                currentSelection = SELECTEDBUTTON.Replay;
+                currentSelection = SelectedButton.REPLAY;
 
             }
 
@@ -123,19 +148,18 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             }
 
         });
-        stage.addActor(replaybutton);
+        stage.addActor(replayButton);
 
-        Texture buttonMain = new Texture(MEAN_MENU);
-        mainMenu = createButton(buttonMain);
-        mainMenu.setPosition(canvas.getWidth() / 2 - mainMenu.getWidth() / 2, canvas.getHeight() / 6);
-        mainMenu.addListener(new ClickListener() {
+        mainMenuButton = createButton(mainMenuButtonTexture);
+        mainMenuButton.setPosition(canvas.getWidth() / 2 - mainMenuButton.getWidth() / 2, canvas.getHeight() / 6);
+        mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                currentSelection = SELECTEDBUTTON.Exit;
+                currentSelection = SelectedButton.EXIT;
 
             }
 
@@ -144,9 +168,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
             }
 
         });
-        stage.addActor(mainMenu);
-
-        Gdx.input.setInputProcessor(stage);
+        stage.addActor(mainMenuButton);
 
         music.play();
         music.setLooping(true);
@@ -159,11 +181,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         } catch (Exception e) {
             System.out.println("Error: Game Controllers could not be initialized");
         }
-        active = true;
-    }
-
-    public void setScreenListener(ScreenListener listener) {
-        this.listener = listener;
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void exit() {
@@ -175,13 +193,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
      */
     private ScreenListener listener;
 
-    private final int level = -1;
-
-
     private final boolean active;
-
-    private final ArrayList<LevelMetaData> levels;
-
 
     @Override
     public boolean keyDown(int keycode) {
@@ -253,10 +265,10 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     public void dispose() {
 
         music.dispose();
-       for (Actor a : stage.getActors()){
-           a.remove();
-       }
-      // stage.dispose();
+        for (Actor a : stage.getActors()) {
+            a.remove();
+        }
+        // stage.dispose();
 
 
     }
@@ -330,23 +342,23 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
                 canvas.getHeight() / 2 - yarnie.getHeight() / 2 - pc.getRegionHeight() / 5);
         canvas.drawUI(pc, canvas.getWidth() * 3 / 5,
                 canvas.getHeight() / 2, 0.5f);
-        if (levelComplete) {
+        if (isLevelComplete) {
             canvas.draw(winMessage, canvas.getWidth() / 2 - winMessage.getWidth() / 2,
                     canvas.getHeight() * 4 / 5 - winMessage.getHeight() / 2);
         }
 
         if (currentSelection != null)
             switch (currentSelection) {
-                case Replay:
-                    canvas.drawUI(selected, canvas.getWidth() / 6 - replaybutton.getWidth() / 4,
+                case REPLAY:
+                    canvas.drawUI(selectTexture, canvas.getWidth() / 6 - replayButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
-                case Exit:
-                    canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 4,
+                case EXIT:
+                    canvas.drawUI(selectTexture, canvas.getWidth() / 2 - mainMenuButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
-                case Next:
-                    canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 4,
+                case NEXT:
+                    canvas.drawUI(selectTexture, canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 default:
@@ -360,14 +372,16 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private ImageButton createButton(Texture texture) {
         TextureRegion buttonRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonRegion);
-        ImageButton button = new ImageButton(myTexRegionDrawable);
-
-        return button;
+        return new ImageButton(myTexRegionDrawable);
     }
 
 
     public void reset(GameCanvas canvas) {
         this.canvas = canvas;
+    }
+
+    public void setLevelComplete(boolean isLevelComplete) {
+        this.isLevelComplete = isLevelComplete;
     }
 
 }

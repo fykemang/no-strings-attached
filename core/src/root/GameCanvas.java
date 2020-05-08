@@ -1390,15 +1390,15 @@ public class GameCanvas {
         wrapPosition(positionCache);
 
         float w = getWidth();
-        float h = (height/width) * getWidth();
+        float h = (height / width) * getWidth();
         // Have to draw the background twice for continuous scrolling.
         spriteBatch.draw(image, positionCache.x, positionCache.y, width, height);
         spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
         spriteBatch.draw(image, positionCache.x + w * sc, positionCache.y, width, height, 0, 0, srcX, srcY, true, false);
-        spriteBatch.draw(image, positionCache.x , positionCache.y + h*sc, width, height, 0, 0, srcX, srcY, false, true);
-        spriteBatch.draw(image, positionCache.x - w*sc , positionCache.y + h*sc, width, height, 0, 0, srcX, srcY, true, true);
-        spriteBatch.draw(image, positionCache.x, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, false, true);
-        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y - h*sc, width, height, 0, 0, srcX, srcY, true, true);
+        spriteBatch.draw(image, positionCache.x, positionCache.y + h * sc, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y + h * sc, width, height, 0, 0, srcX, srcY, true, true);
+        spriteBatch.draw(image, positionCache.x, positionCache.y - h * sc, width, height, 0, 0, srcX, srcY, false, true);
+        spriteBatch.draw(image, positionCache.x - w * sc, positionCache.y - h * sc, width, height, 0, 0, srcX, srcY, true, true);
 
     }
 
@@ -1409,8 +1409,8 @@ public class GameCanvas {
     }
 
     public void changeViewport(float x, float y) {
-       camera.viewportHeight = y;
-       camera.viewportWidth = x;
+        camera.viewportHeight = y;
+        camera.viewportWidth = x;
     }
 
     public void moveCameraX(float x) {

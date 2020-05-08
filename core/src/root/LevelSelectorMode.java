@@ -40,7 +40,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
      */
     private Music levelSelectorMusic;
     private Sound clickSound;
-    private GameCanvas canvas;
     private Texture background;
     private Texture city;
     private Texture suburb;
@@ -116,9 +115,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
 
-    public void setCanvas(GameCanvas canvas) {
-        this.canvas = canvas;
-    }
+
 
 
     public LevelSelectorMode() {
