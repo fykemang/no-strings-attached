@@ -251,13 +251,11 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     @Override
     public void dispose() {
-
         music.dispose();
        for (Actor a : stage.getActors()){
            a.remove();
        }
-      // stage.dispose();
-
+       stage.clear();
 
     }
 
