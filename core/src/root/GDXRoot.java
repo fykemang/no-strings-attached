@@ -176,17 +176,20 @@ public class GDXRoot extends Game implements ScreenListener {
                     cutScene.loadContent(manager);
                     cutScene.setScreenListener(this);
                     setScreen(cutScene);
+                    loadingMode.hide();
                     break;
                 case SettingMode.INTO_SETTING:
                     settings.setScreenListener(this);
                     settings.loadContent(manager);
                     setScreen(settings);
+                    loadingMode.hide();
             }
 
             // If level is selected from level selector screen
         } else if (screen == settings) {
             if (exitCode == LoadingMode.INTO_STARTSCREEN){
                 Gdx.input.setInputProcessor(loadingMode);
+                loadingMode.reset();
                 setScreen(loadingMode);
             }
         }else

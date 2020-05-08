@@ -342,6 +342,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         active = true;
     }
 
+
     /**
      * Called when this screen should release all resources.
      */
@@ -587,6 +588,11 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
+        music.pause();
+    }
+
+    public void reset(){
+        music.play();
     }
 
     /**
