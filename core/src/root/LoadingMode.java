@@ -64,7 +64,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Background texture for start-up
      */
-    private Texture logo;
+    private final Texture logo;
     private FilmStrip animatedBkg;
 
     private final Music music;

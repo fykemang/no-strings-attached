@@ -115,9 +115,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
 
-
-
-
     public LevelSelectorMode() {
         this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));

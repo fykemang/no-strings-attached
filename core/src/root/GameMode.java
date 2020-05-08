@@ -1216,13 +1216,11 @@ public class GameMode extends Mode implements Screen {
             reset();
         }
 
-        if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
-                && direction.x == lastpos.x && lastpos.y == direction.y) {
-            if (isZoomed) gameState = GameState.PLAYING;
-        }
-
-
         if (direction != null && targetViewPort != null) {
+            if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
+                    && direction.x == lastpos.x && lastpos.y == direction.y) {
+                if (isZoomed) gameState = GameState.PLAYING;
+            }
             float xz = lastviewport.x, yz = lastviewport.y;
             float xp = lastpos.x, yp = lastpos.y;
             if (xz >= targetViewPort.x - 10 && xz <= targetViewPort.x + 10
@@ -1270,8 +1268,6 @@ public class GameMode extends Mode implements Screen {
             lastviewport = new Vector2(xz, yz);
 
         }
-
-
     }
 
 

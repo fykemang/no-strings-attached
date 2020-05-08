@@ -96,7 +96,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
     private boolean isLevelComplete;
-    private  Music music;
+    private Music music;
 
     public LevelTransitionMode() {
         this.stage = new Stage();
