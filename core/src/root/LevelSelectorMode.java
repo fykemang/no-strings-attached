@@ -253,7 +253,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void pause() {
-
+        levelSelectorMusic.pause();
     }
 
     @Override
