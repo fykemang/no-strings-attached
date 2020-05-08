@@ -63,7 +63,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private CutScene cutScene;
 
+    private SettingMode settings;
+
     private int currentLevel;
+
+    private boolean TransitionLoaded = false;
 
 
     /**
@@ -97,6 +101,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
         cutScene = new CutScene(manager, UIcanvas);
         cutScene.preloadContent(manager);
+
+        settings = new SettingMode(manager, UIcanvas);
+        settings.preloadContent(manager);
 
         gameMode = new GameMode();
         gameMode.preloadContent(manager);
@@ -159,13 +166,21 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         // If start is selected from the loading screen
-        if (screen == loadingMode && exitCode == CutScene.INTO_CUTSCENE) {
-            cutScene.setTheme(CutScene.THEME.OPENING);
-            cutScene.loadContent(manager);
-            cutScene.setScreenListener(this);
-            loadingMode.dispose();
-            loadingMode = null;
-            setScreen(cutScene);
+        if (screen == loadingMode) {
+            switch(exitCode){
+                case CutScene.INTO_CUTSCENE:
+                    cutScene.setTheme(CutScene.THEME.OPENING);
+                    cutScene.loadContent(manager);
+                    cutScene.setScreenListener(this);
+//                    loadingMode.dispose();
+//                    loadingMode = null;
+                    setScreen(cutScene);
+                    break;
+                case SettingMode.INTO_SETTING:
+                    settings.setScreenListener(this);
+
+            }
+
             // If level is selected from level selector screen
         } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR){
             levelSelector.loadContent(manager);
@@ -200,15 +215,19 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case  LevelTransitionMode.INTO_TRANSITION:
                     transitionMode.setCanvas(UIcanvas);
-                    transitionMode.loadContent(manager);
-                    transitionMode.initializeInterface();
+                    if(!TransitionLoaded) {
+                        transitionMode.loadContent(manager);
+                        transitionMode.initializeInterface();
+                        TransitionLoaded = true;
+                    }
+                    transitionMode.reset();
                     transitionMode.setLevelComplete(gameMode.levelComplete());
                     transitionMode.setScreenListener(this);
                     setScreen(transitionMode);
                     gameMode.pause();
             }
         } else if (screen == transitionMode) {
-            transitionMode.dispose();
+           Gdx.input.setInputProcessor(null);
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
@@ -228,7 +247,6 @@ public class GDXRoot extends Game implements ScreenListener {
                         levelSelector.reset();
                         Gdx.input.setInputProcessor(levelSelector);
                         setScreen(levelSelector);
-                        transitionMode.dispose();
                         return;
                     }
                     gameMode.setLevel(levelSelector.getLevel(currentLevel));
@@ -236,7 +254,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.initializeContent(manager);
                     gameMode.reset();
                     setScreen(gameMode);
-                    transitionMode.dispose();
             }
         } else if (exitCode == GameMode.EXIT_QUIT) {
             Gdx.app.exit();

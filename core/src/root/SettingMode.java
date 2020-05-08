@@ -31,12 +31,13 @@ import java.util.ArrayList;
 public class SettingMode  extends Mode implements Screen{
 
 
-    public static final int INTO_CUTSCENE= 8;
+    public static final int INTO_SETTING= 15;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
             "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
     private static final String SKIP = "cutscenes/PressEnterSkip.png";
     private static final String RIGHT = "cutscenes/skipButton.png";
     private static final String START = "ui/start.png";
+    private static final String BKG = "background/grey.png";
     private final ImageButton.ImageButtonStyle skipbuttonStyle = new ImageButton.ImageButtonStyle();
     private ArrayList<TextureRegion> textures = new ArrayList<>();
     private TextureRegion skiptexture;
@@ -117,7 +118,7 @@ public class SettingMode  extends Mode implements Screen{
 
     private void draw() {
         canvas.begin();
-
+        canvas.drawBackground(new Texture(BKG));
         canvas.actStage(stage);
         canvas.end();
     }
@@ -127,8 +128,8 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.EMPTY) {
             return;
         }
-        for (String s : opening) loadAsset(s, Texture.class, manager);
-        for (String s : city) loadAsset(s, Texture.class, manager);
+//        for (String s : opening) loadAsset(s, Texture.class, manager);
+//        for (String s : city) loadAsset(s, Texture.class, manager);
 
         selectorAssetState = AssetState.LOADING;
     }
@@ -138,8 +139,8 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-        skiptexture =  createTexture(manager,SKIP, false);
-        nextTexture = createTexture(manager, RIGHT, false);
+//        skiptexture =  createTexture(manager,SKIP, false);
+//        nextTexture = createTexture(manager, RIGHT, false);
 
         selectorAssetState = AssetState.COMPLETE;
     }

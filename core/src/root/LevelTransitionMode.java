@@ -114,6 +114,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                System.out.println("clicked");
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -181,7 +182,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         } catch (Exception e) {
             System.out.println("Error: Game Controllers could not be initialized");
         }
-        Gdx.input.setInputProcessor(stage);
+       Gdx.input.setInputProcessor(stage);
     }
 
     public void exit() {
@@ -376,8 +377,9 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
 
-    public void reset(GameCanvas canvas) {
-        this.canvas = canvas;
+
+    public void reset(){
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void setLevelComplete(boolean isLevelComplete) {
