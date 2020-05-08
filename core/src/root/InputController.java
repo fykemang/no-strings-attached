@@ -352,7 +352,7 @@ public class InputController {
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed = (secondary && exitPressed);
-        cameraZoom =  (Gdx.input.isKeyJustPressed(Input.Keys.Z));
+        cameraZoom = (Gdx.input.isKeyJustPressed(Input.Keys.Z));
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);

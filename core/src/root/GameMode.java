@@ -154,14 +154,6 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_TWO = "ui/basket_3.png";
     private static final String BASKET_THREE = "ui/basket_2.png";
     /**
-     * The texture file for the spinning barrier
-     */
-    private static final String BARRIER_FILE = "entities/barrier.png";
-    /**
-     * The texture file for the bullet
-     */
-    private static final String BULLET_FILE = "entities/bullet.png";
-    /**
      * The sound effects
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
@@ -172,11 +164,6 @@ public class GameMode extends Mode implements Screen {
     private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String SNIP_FILE = "sounds/snip.mp3";
-    /**
-     * The folder with all levels
-     */
-    private static final String TEST_LEVEL = "levels/level1.json";
-    private static final String CROSSHAIR_FILE = "ui/crosshair.png";
     /**
      * File to texture for walls and platforms
      */
@@ -196,7 +183,6 @@ public class GameMode extends Mode implements Screen {
      * Retro font for displaying messages
      */
     private static final String FONT_FILE = "ui/Pacifico.ttf";
-    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static final int FONT_SIZE = 64;
 
     /**
@@ -436,8 +422,6 @@ public class GameMode extends Mode implements Screen {
         assetState = AssetState.LOADING;
         manager.load(PLAYER_FALL, Texture.class);
         assets.add(PLAYER_FALL);
-        manager.load(BARRIER_FILE, Texture.class);
-        assets.add(BARRIER_FILE);
         manager.load(UI_GreyYarn, Texture.class);
         assets.add(UI_GreyYarn);
         manager.load(UI_RedYarn, Texture.class);
@@ -468,10 +452,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(BASKET_TWO);
         manager.load(BASKET_THREE, Texture.class);
         assets.add(BASKET_THREE);
-        manager.load(BULLET_FILE, Texture.class);
-        assets.add(BULLET_FILE);
-        manager.load(CROSSHAIR_FILE, Texture.class);
-        assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
         assets.add(CITY_TILE_FILE);
         manager.load(VILLAGE_TILE_FILE, Texture.class);
@@ -496,8 +476,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
-        manager.load(ROPE_SEGMENT, Texture.class);
-        assets.add(ROPE_SEGMENT);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -928,7 +906,7 @@ public class GameMode extends Mode implements Screen {
         float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
         lastpos = new Vector2(xpos, ypos);
-        lastviewport = new Vector2(canvas.getWidth()*0.6f, canvas.getHeight()*0.6f);
+        lastviewport = new Vector2(canvas.getWidth() * 0.6f, canvas.getHeight() * 0.6f);
         canvas.moveCamera(lastpos.x, lastpos.y);
         canvas.changeViewport(lastviewport.x, lastviewport.y);
         isZoomed = true;
@@ -1110,13 +1088,13 @@ public class GameMode extends Mode implements Screen {
         InputController input = InputController.getInstance();
         input.readInput(bounds, scale);
         if (listener != null) {// Toggle debug
-            if (input.isCameraZoom()){
+            if (input.isCameraZoom()) {
                 isZoomed = false;
-                float x = canvas.getWidth()/2, y=canvas.getHeight()/2;
-                if (player.getX()*scale.x > canvas.getWidth()*0.7f){
+                float x = canvas.getWidth() / 2, y = canvas.getHeight() / 2;
+                if (player.getX() * scale.x > canvas.getWidth() * 0.7f) {
                     x = canvas.getWidth();
                 }
-                if (player.getY()*scale.y > canvas.getHeight()*0.7f){
+                if (player.getY() * scale.y > canvas.getHeight() * 0.7f) {
                     y = canvas.getHeight();
                 }
                 direction = new Vector2(x, y);
@@ -1153,7 +1131,7 @@ public class GameMode extends Mode implements Screen {
                 if (timeSeconds > period) {
                     timeSeconds = 0;
                     if (player.won())
-                        listener.exitScreen(this, LevelTransition.INTO_TRANSITION);
+                        listener.exitScreen(this, LevelTransitionMode.INTO_TRANSITION);
                     else
                         reset();
                 }
@@ -1168,7 +1146,6 @@ public class GameMode extends Mode implements Screen {
                 }
             }
         }
-
 
 
 //        System.out.println(isZoomed);
@@ -1204,33 +1181,33 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)||Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-        || Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+                || Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
             direction = new Vector2(xpos, ypos);
-            targetViewPort = new Vector2(canvas.getWidth()*0.6f, canvas.getHeight()*0.6f);
+            targetViewPort = new Vector2(canvas.getWidth() * 0.6f, canvas.getHeight() * 0.6f);
             isZoomed = true;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !isZoomed && lastpos.x < canvas.getWidth()/2 + 500){
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !isZoomed && lastpos.x < canvas.getWidth() / 2 + 500) {
             direction = new Vector2(lastpos.x + 20, lastpos.y);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && !isZoomed && lastpos.x > canvas.getWidth()/2 - 300){
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && !isZoomed && lastpos.x > canvas.getWidth() / 2 - 300) {
             direction = new Vector2(lastpos.x - 20, lastpos.y);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
-    //    System.out.println((stillBackgroundTextures.get(0).getRegionHeight()/ stillBackgroundTextures.get(0).getRegionWidth())
-            //    * canvas.getWidth());
+        //    System.out.println((stillBackgroundTextures.get(0).getRegionHeight()/ stillBackgroundTextures.get(0).getRegionWidth())
+        //    * canvas.getWidth());
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && !isZoomed && lastpos.y <
-                (((float)stillBackgroundTextures.get(0).getRegionHeight()/ (float)stillBackgroundTextures.get(0).getRegionWidth())
-                * canvas.getWidth() - canvas.getHeight()*0.55f)){
+                (((float) stillBackgroundTextures.get(0).getRegionHeight() / (float) stillBackgroundTextures.get(0).getRegionWidth())
+                        * canvas.getWidth() - canvas.getHeight() * 0.55f)) {
             direction = new Vector2(lastpos.x, lastpos.y + 20);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && !isZoomed && lastpos.y > canvas.getHeight()/2 - 200){
-            direction = new Vector2(lastpos.x , lastpos.y-20);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && !isZoomed && lastpos.y > canvas.getHeight() / 2 - 200) {
+            direction = new Vector2(lastpos.x, lastpos.y - 20);
             targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
         }
 
@@ -1239,70 +1216,59 @@ public class GameMode extends Mode implements Screen {
             reset();
         }
 
+        if (direction != null && targetViewPort != null) {
+            if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
+                    && direction.x == lastpos.x && lastpos.y == direction.y) {
+                if (isZoomed) gameState = GameState.PLAYING;
+            }
+            float xz = lastviewport.x, yz = lastviewport.y;
+            float xp = lastpos.x, yp = lastpos.y;
+            if (xz >= targetViewPort.x - 10 && xz <= targetViewPort.x + 10
+                    && yz >= targetViewPort.y - 10 && yz <= targetViewPort.y + 10) {
+                xz = targetViewPort.x;
+                yz = targetViewPort.y;
 
+            } else {
+                if (xz < targetViewPort.x) {
+                    xz += 15;
+                }
+                if (xz > targetViewPort.x) {
+                    xz -= 15;
+                }
+                if (yz < targetViewPort.y) {
+                    yz += 10;
+                }
+                if (yz > targetViewPort.y) {
+                    yz -= 10;
+                }
+            }
+            boolean xr = false, yr = false;
+            if (xp >= direction.x - 6 && xp <= direction.x + 6) {
+                xp = direction.x;
 
+            } else if (xp < direction.x) {
+                xp += 8;
+            } else {
+                xp -= 8;
+            }
 
-       if (direction != null && targetViewPort != null) {
-           if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
-                   && direction.x == lastpos.x && lastpos.y == direction.y){
-               if (isZoomed) gameState = GameState.PLAYING;
-           }
-           float xz = lastviewport.x, yz = lastviewport.y;
-           float xp = lastpos.x, yp = lastpos.y;
-           if (xz >= targetViewPort.x - 10 && xz <= targetViewPort.x + 10
-                   && yz >= targetViewPort.y - 10 && yz <= targetViewPort.y + 10) {
-               xz = targetViewPort.x;
-               yz = targetViewPort.y;
+            if (yp >= direction.y - 6 && yp <= direction.y + 6) {
+                yp = direction.y;
 
-           } else {
-               if (xz < targetViewPort.x) {
-                   xz += 15;
-               }
-               if (xz > targetViewPort.x) {
-                   xz -= 15;
-               }
-               if (yz < targetViewPort.y) {
-                   yz += 10;
-               }
-               if (yz > targetViewPort.y) {
-                   yz -= 10;
-               }
-           }
-               boolean xr = false, yr = false;
-               if(xp >= direction.x - 6 && xp <= direction.x + 6){
-                   xp = direction.x;
+            } else if (yp < direction.y) {
+                yp += 8;
+            } else {
+                yp -= 8;
+            }
 
-               }else
-               if (xp < direction.x) {
-                   xp += 8;
-               }
-               else {
-                   xp -= 8;
-               }
+            canvas.moveCamera(xp, yp);
+            canvas.changeViewport(xz, yz);
 
-               if(yp >= direction.y - 6 && yp <= direction.y + 6){
-                   yp = direction.y;
+            lastpos = new Vector2(xp, yp);
+            lastviewport = new Vector2(xz, yz);
 
-               }else if (yp < direction.y) {
-                   yp += 8;
-               }
-               else {
-                   yp -= 8;
-               }
-
-           canvas.moveCamera(xp, yp);
-           canvas.changeViewport(xz, yz);
-
-           lastpos = new Vector2(xp, yp);
-           lastviewport = new Vector2(xz, yz);
-
-       }
-
-
+        }
     }
-
-
-
 
 
     private void destroyPlayerRope() {
@@ -1553,7 +1519,7 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setStart(playerPos, false);
                 playerRope.setEnd(targetPos, false);
             }
-        } else if (!player.isAlive()){
+        } else if (!player.isAlive()) {
             player.setTexture(playerDeathAnimation);
         }
 
@@ -1877,9 +1843,9 @@ public class GameMode extends Mode implements Screen {
      * @param dt Number of seconds since last animation frame
      */
 
-  //  private final int direction = 0;
+    //  private final int direction = 0;
     private Vector2 direction = null;
-    private  Vector2 targetViewPort = null;
+    private Vector2 targetViewPort = null;
 
     public void postUpdate(float dt) {
         // Add any objects created by actions
@@ -1914,14 +1880,14 @@ public class GameMode extends Mode implements Screen {
         if (isZoomed) {
             canvas.moveCamera(xpos, ypos);
             lastpos = new Vector2(xpos, ypos);
-        }else {
+        } else {
             gameState = GameState.ZOOM;
         }
 
     }
 
 
-    public void zoomcleanup(float dt){
+    public void zoomcleanup(float dt) {
         Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
         while (iterator.hasNext()) {
             PooledList<Obstacle>.Entry entry = iterator.next();
@@ -1979,7 +1945,6 @@ public class GameMode extends Mode implements Screen {
                 updateZoom(delta);
                 draw(delta);
                 zoomcleanup(delta);
-
 
 
         }

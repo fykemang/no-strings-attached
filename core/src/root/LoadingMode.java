@@ -51,7 +51,6 @@ import util.ScreenListener;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     // Textures necessary to support the loading screen
-    private static final String BACKGROUND_FILE = "ui/background.png";
     private static final String CHAR_ANIMATION_FILE = "ui/background_sc.png";
     private static final String PROGRESS_FILE = "ui/progressbar.png";
     private static final String SETTINGS_FILE = "ui/settings.png";
@@ -65,8 +64,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Background texture for start-up
      */
-    private Texture background;
-    private Texture logo;
+    private final Texture logo;
     private FilmStrip animatedBkg;
 
     private final Music music;
@@ -303,7 +301,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         quitButton = null;
         animatedBkg = null;
         select = new Texture(SELECT_FILE);
-        background = new Texture(BACKGROUND_FILE);
         statusBar = new Texture(PROGRESS_FILE);
         logo = new Texture(LOGO_FILE);
         // No progress so far.
@@ -355,10 +352,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         statusFrgRight = null;
         statusFrgMiddle = null;
 
-        background.dispose();
         statusBar.dispose();
         music.dispose();
-        background = null;
         statusBar = null;
         select = null;
         animatedBkg = null;
@@ -443,8 +438,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 frameCount = 0;
             }
             canvas.drawAnimatedBkg(animatedBkg);
-        } else {
-            canvas.drawBackground(background);
         }
         if (startGameButton == null) {
             canvas.drawUIText("LOADING...", canvas.getWidth() * 3 / 5, (int) buttonY2);
