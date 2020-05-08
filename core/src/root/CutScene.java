@@ -15,6 +15,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -35,19 +37,27 @@ public class CutScene  extends Mode implements Screen{
     };
     private THEME theme;
     public static final int INTO_CUTSCENE= 8;
-    private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png"};
+    private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
+            "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
+    private static final String SKIP = "cutscenes/skip.png";
+    private static final String RIGHT = "cutscenes/arrow.png";
+    private static final String START = "ui/start.png";
+    private final ImageButton.ImageButtonStyle skipbuttonStyle = new ImageButton.ImageButtonStyle();
     private ArrayList<TextureRegion> textures = new ArrayList<>();
+    private TextureRegion skiptexture;
+    private TextureRegion nextTexture;
     private static final String[] city = {};
     private boolean slideMode;
     private int currentSlide =  0;
 
-    TextureRegion pc;
-    TextureRegion buttonNextDown;
     private final AssetManager manager;
     private GameCanvas canvas;
     private final Stage stage;
     private ScreenListener listener;
     private final boolean active;
+    private ImageButton skipButtom;
+    private ImageButton nextButtom;
+    private CutScene cutScene;
 
     private AssetState selectorAssetState = AssetState.EMPTY;
 
@@ -55,8 +65,10 @@ public class CutScene  extends Mode implements Screen{
         this.manager = manager;
         this.canvas = canvas;
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        cutScene = this;
+
         active = true;
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -112,10 +124,9 @@ public class CutScene  extends Mode implements Screen{
 
     private void draw() {
         canvas.begin();
-
-        canvas.drawBackground(textures.get(0).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
+        canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
-
+        canvas.actStage(stage);
         canvas.end();
     }
 
@@ -126,6 +137,9 @@ public class CutScene  extends Mode implements Screen{
         }
         for (String s : opening) loadAsset(s, Texture.class, manager);
         for (String s : city) loadAsset(s, Texture.class, manager);
+        loadAsset(RIGHT, Texture.class, manager);
+        loadAsset(SKIP, Texture.class, manager);
+        loadAsset(START, Texture.class, manager);
         selectorAssetState = AssetState.LOADING;
     }
 
@@ -134,18 +148,51 @@ public class CutScene  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
+        skiptexture =  createTexture(manager,SKIP, false);
+        nextTexture = createTexture(manager, RIGHT, false);
         switch(theme){
             case OPENING:
                 for (String file: opening) {
-                    System.out.println("here");
                     textures.add(createTexture(manager, file, false));
-                    slideMode = true;
                 }
+                slideMode = true;
             default:
         }
         if (slideMode){
-            //set up the buttoms
 
+            skipbuttonStyle.up = new TextureRegionDrawable(skiptexture);
+            skipButtom = new ImageButton(skipbuttonStyle);
+            skipButtom.setPosition(canvas.getWidth()*0.9f - skipButtom.getWidth()/2,
+                    canvas.getHeight()*0.01f);
+            skipButtom.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    listener.exitScreen( cutScene, LevelSelectorMode.INTO_SELECTOR);
+                }
+
+            });
+
+            nextButtom = createButton(nextTexture);
+            nextButtom.setPosition(canvas.getWidth()*0.9f - skipButtom.getWidth()/2,
+                    canvas.getHeight()*0.5f);
+            nextButtom.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (currentSlide<textures.size()-2)
+                         currentSlide++;
+                    else if (currentSlide==textures.size()-2) {
+                        currentSlide++;
+                        stage.clear();
+                        addStart();
+                    }
+                 }
+
+            });
+            stage.addActor(nextButtom);
+            stage.addActor(skipButtom);
+
+
+            Gdx.input.setInputProcessor(stage);
 
         }else {
             //set up the buttoms
@@ -156,12 +203,25 @@ public class CutScene  extends Mode implements Screen{
         selectorAssetState = AssetState.COMPLETE;
     }
 
+    private void addStart(){
+        TextureRegion startTexture = createTexture(manager, START, false);
+        ImageButton start = createButton(startTexture);
+        start.setPosition(canvas.getWidth()*0.7f - skipButtom.getWidth()/2,
+                canvas.getHeight()*0.1f);
+        start.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen( cutScene, LevelSelectorMode.INTO_SELECTOR);
+            }
 
-    private ImageButton createButton(Texture texture) {
-        TextureRegion buttonRegion = new TextureRegion(texture);
-        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonRegion);
+        });
+        stage.addActor(start);
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    private ImageButton createButton(TextureRegion texture) {
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(texture);
         ImageButton button = new ImageButton(myTexRegionDrawable);
-
         return button;
     }
 
