@@ -179,6 +179,20 @@ public class Person extends CapsuleObstacle {
 
     private boolean didCollect = false;
 
+    private boolean onTrampoline = false;
+
+    public boolean didJump() {
+        return this.isJumping;
+    }
+
+    public boolean isOnTrampoline() {
+        return this.onTrampoline;
+    }
+
+    public void setOnTrampoline(boolean onTrampoline) {
+        this.onTrampoline = onTrampoline;
+    }
+
     public boolean isDidCollect() {
         return this.didCollect;
     }
@@ -334,6 +348,7 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setIsTrampolining(boolean isTrampolining) {
+        setOnTrampoline(true);
         this.isTrampolining = isTrampolining;
     }
 

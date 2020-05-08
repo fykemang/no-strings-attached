@@ -160,6 +160,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         Gdx.input.setInputProcessor(stage);
 
         music.play();
+        music.setVolume(MUSIC_VOLUME);
         music.setLooping(true);
 
         try {

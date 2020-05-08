@@ -1343,6 +1343,11 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isGrounded() && !player.isAttached()) {//rising
+                if (!player.isOnTrampoline() && !didPlayJump) {
+                    jumpSound.play(SFX_VOLUME);
+                    didPlayJump = true;
+                    didPlayLand = false;
+                }
                 if (player.getVY() > 0) {
                     setJumpUpAnimationFrame(dt);
                     player.setTexture(playerJumpUpAnimation);
@@ -1360,6 +1365,11 @@ public class GameMode extends Mode implements Screen {
                 } else if (player.isWalking()) {
                     player.setTexture(playerWalkingAnimation);
                 } else if (player.isGrounded()) {
+                    if (!player.isOnTrampoline() && !didPlayLand) {
+                        landSound.play(SFX_VOLUME);
+                        didPlayLand = true;
+                        didPlayJump = false;
+                    }
                     player.setTexture(playerIdleAnimation);
                 }
             }
@@ -1416,6 +1426,24 @@ public class GameMode extends Mode implements Screen {
                 player.setDidCollect(false);
             }
 
+////            if (player.isOnTrampoline() && !player.isGrounded() && !didPlayJump) {
+////                jumpSound.play(SFX_VOLUME);
+////                didPlayJump = true;
+////            }
+//            if (player.didJump() && !didPlayJump) {
+//                jumpSound.play(SFX_VOLUME);
+//                didPlayJump = true;
+//                didPlayLand = false;
+//            }
+////            else if (!player.isOnTrampoline() && didPlayJump) {
+////
+////            }
+//            else if (!didPlayLand) {
+//                landSound.play(SFX_VOLUME);
+//                didPlayLand = true;
+//                didPlayJump = false;
+////                player.setOnTrampoline(false);
+//            }
 
             // Swinging
             if (player.getTarget() != null && player.isShooting() && !player.isAttached()) {
