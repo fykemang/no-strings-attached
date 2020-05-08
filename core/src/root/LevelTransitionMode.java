@@ -238,7 +238,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void show() {
-
+        music.play();
     }
 
     @Override
@@ -258,16 +258,16 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void hide() {
-
+            music.pause();
     }
 
     @Override
     public void dispose() {
 
-        music.dispose();
-        for (Actor a : stage.getActors()) {
-            a.remove();
-        }
+//        music.dispose();
+//        for (Actor a : stage.getActors()) {
+//            a.remove();
+//        }
         // stage.dispose();
 
 
@@ -378,6 +378,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
 
     public void reset(){
+        music.play();
         Gdx.input.setInputProcessor(stage);
     }
 

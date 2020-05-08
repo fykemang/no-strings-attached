@@ -239,18 +239,17 @@ public class GDXRoot extends Game implements ScreenListener {
             }
         } else if (screen == transitionMode) {
            Gdx.input.setInputProcessor(null);
+           transitionMode.hide();
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
                     Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
-                    transitionMode.dispose();
                     break;
                 case (GameMode.EXIT_INTO_GAME):
                     gameMode.reset();
                     gameMode.resume();
                     setScreen(gameMode);
-                    transitionMode.dispose();
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
