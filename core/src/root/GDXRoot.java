@@ -70,6 +70,8 @@ public class GDXRoot extends Game implements ScreenListener {
     private boolean TransitionLoaded = false;
 
 
+
+
     /**
      * Creates a new game from the configuration settings.
      * <p>
@@ -167,22 +169,28 @@ public class GDXRoot extends Game implements ScreenListener {
     public void exitScreen(Screen screen, int exitCode) {
         // If start is selected from the loading screen
         if (screen == loadingMode) {
+            Gdx.input.setInputProcessor(null);
             switch(exitCode){
                 case CutScene.INTO_CUTSCENE:
                     cutScene.setTheme(CutScene.THEME.OPENING);
                     cutScene.loadContent(manager);
                     cutScene.setScreenListener(this);
-//                    loadingMode.dispose();
-//                    loadingMode = null;
                     setScreen(cutScene);
                     break;
                 case SettingMode.INTO_SETTING:
                     settings.setScreenListener(this);
-
+                    settings.loadContent(manager);
+                    setScreen(settings);
             }
 
             // If level is selected from level selector screen
-        } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR){
+        } else if (screen == settings) {
+            if (exitCode == LoadingMode.INTO_STARTSCREEN){
+                Gdx.input.setInputProcessor(loadingMode);
+                setScreen(loadingMode);
+            }
+        }else
+         if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR){
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);

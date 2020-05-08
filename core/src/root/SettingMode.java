@@ -37,11 +37,12 @@ public class SettingMode  extends Mode implements Screen{
     private static final String SKIP = "cutscenes/PressEnterSkip.png";
     private static final String RIGHT = "cutscenes/skipButton.png";
     private static final String START = "ui/start.png";
-    private static final String BKG = "background/grey.png";
+    private static final String BKG = "background/grey.jpg";
+    private static final String LOGO = "ui/game-logo.png";
     private final ImageButton.ImageButtonStyle skipbuttonStyle = new ImageButton.ImageButtonStyle();
     private ArrayList<TextureRegion> textures = new ArrayList<>();
-    private TextureRegion skiptexture;
-    private TextureRegion nextTexture;
+    private TextureRegion logoTexture;
+    private TextureRegion background;
     private static final String[] city = {};
 
     private final AssetManager manager;
@@ -113,12 +114,16 @@ public class SettingMode  extends Mode implements Screen{
     }
 
     private void update(float dt) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
+        }
 
     }
 
     private void draw() {
         canvas.begin();
-        canvas.drawBackground(new Texture(BKG));
+        canvas.drawBackground(background.getTexture());
+        canvas.drawUI(logoTexture, canvas.getWidth()*0.1f, canvas.getHeight()*0.9f, 0.3f);
         canvas.actStage(stage);
         canvas.end();
     }
@@ -128,9 +133,8 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.EMPTY) {
             return;
         }
-//        for (String s : opening) loadAsset(s, Texture.class, manager);
-//        for (String s : city) loadAsset(s, Texture.class, manager);
-
+        loadAsset(BKG, Texture.class, manager);
+        loadAsset(LOGO, Texture.class, manager);
         selectorAssetState = AssetState.LOADING;
     }
 
@@ -139,8 +143,8 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-//        skiptexture =  createTexture(manager,SKIP, false);
-//        nextTexture = createTexture(manager, RIGHT, false);
+        background =  createTexture(manager,BKG, false);
+        logoTexture = createTexture(manager, LOGO, false);
 
         selectorAssetState = AssetState.COMPLETE;
     }

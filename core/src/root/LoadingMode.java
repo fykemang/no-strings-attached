@@ -122,6 +122,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Standard window height (for scaling)
      */
     private static final int STANDARD_HEIGHT = 700;
+
+    public static int INTO_STARTSCREEN = 18;
     /**
      * Ratio of the bar width to the screen
      */
@@ -516,6 +518,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             } else if (listener != null && pressState == MouseState.START) {
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             }else if (listener != null && pressState == MouseState.SETTINGS){
+                pressState = MouseState.NONE;
                 listener.exitScreen(this, SettingMode.INTO_SETTING);
             }
         }

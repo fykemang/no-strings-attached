@@ -114,7 +114,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("clicked");
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
