@@ -61,6 +61,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private GameCanvas UIcanvas;
 
+    private CutScene cutScene;
+
     private int currentLevel;
 
 
@@ -90,6 +92,10 @@ public class GDXRoot extends Game implements ScreenListener {
     public void create() {
         canvas = new GameCanvas(false);
         UIcanvas = new GameCanvas(true);
+
+        cutScene = new CutScene(manager, UIcanvas);
+        cutScene.preloadContent(manager);
+
         loadingMode = new LoadingMode(UIcanvas, manager, 1);
 
         gameMode = new GameMode();
@@ -154,17 +160,23 @@ public class GDXRoot extends Game implements ScreenListener {
      */
     public void exitScreen(Screen screen, int exitCode) {
         // If start is selected from the loading screen
-        if (screen == loadingMode && exitCode == LevelSelectorMode.INTO_SELECTOR) {
+        if (screen == loadingMode && exitCode == CutScene.INTO_CUTSCENE) {
+            cutScene.setTheme(CutScene.THEME.OPENING);
+            cutScene.loadContent(manager);
+            cutScene.setScreenListener(this);
+            loadingMode.dispose();
+            loadingMode = null;
+            setScreen(cutScene);
+            // If level is selected from level selector screen
+        } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR){
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
             Gdx.input.setInputProcessor(levelSelector);
             levelSelector.reset();
             setScreen(levelSelector);
-            loadingMode.dispose();
-            loadingMode = null;
-            // If level is selected from level selector screen
-        } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
+
+        }else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
             Gdx.input.setInputProcessor(null);
             currentLevel = levelSelector.getLevelIndex();
             gameMode.setLevel(levelSelector.getCurrentLevel());

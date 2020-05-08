@@ -522,7 +522,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             if (listener != null && pressState == MouseState.QUIT) {
                 listener.exitScreen(this, 0);
             } else if (listener != null && pressState == MouseState.START) {
-                listener.exitScreen(this, 4);
+                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             }
         }
     }
