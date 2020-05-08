@@ -1748,7 +1748,7 @@ public class GameMode extends Mode implements Screen {
         scale = null;
         world = null;
         canvas = null;
-        hoverSound.dispose();
+//        hoverSound.dispose();
         landSound.dispose();
         winSound.dispose();
         loseSound.dispose();

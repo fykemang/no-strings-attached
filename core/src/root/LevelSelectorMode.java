@@ -37,11 +37,14 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String LEVEL_METADATA = "levels/levels.json";
     private static final String SELECTOR_FONT = "ui/blackjack.otf";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
+    int lastLevel = 0;
     /**
      * Reference to game.GameCanvas created by the root
      */
     private Music levelSelectorMusic;
     private Sound clickSound;
+    private Sound hoverSound;
     private GameCanvas canvas;
     private Texture background;
     private Texture city;
@@ -94,6 +97,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         loadAsset(CITY_FILE, Texture.class, manager);
         loadAsset(MUSIC_FILE, Music.class, manager);
         loadAsset(MENU_CLICK_FILE, Sound.class, manager);
+        loadAsset(HOVER_FILE, Sound.class, manager);
     }
 
     @Override
@@ -110,6 +114,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
         clickSound = manager.get(MENU_CLICK_FILE, Sound.class);
+        hoverSound = manager.get(HOVER_FILE, Sound.class);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
@@ -279,6 +284,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
         clickSound.dispose();
+        hoverSound.dispose();
     }
 
     @Override
@@ -386,6 +392,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         }
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
+            if (level != lastLevel) {
+                hoverSound.play(6*SFX_VOLUME);
+            }
+            lastLevel = level;
             canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }

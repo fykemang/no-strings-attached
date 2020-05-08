@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 
 public class LevelTransition implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_TRANSITION = 5;
+    public static float MUSIC_VOLUME = 0.5f;
+    public static float SFX_VOLUME = 0.5f;
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
@@ -34,6 +37,8 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private static final String MEAN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
+    private static final String CLICK_FILE = "sounds/click.mp3";
     private final String SELECTOR = "ui/next-select.png";
 
     enum SELECTEDBUTTON {
@@ -58,6 +63,8 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
     private final ImageButton mainMenu;
     private final boolean levelComplete;
     private final Music music;
+    private final Sound hoverSound;
+    private final Sound clickSound;
 
     public LevelTransition(AssetManager manager, GameCanvas canvas, boolean win) {
         this.levelComplete = win;
@@ -66,7 +73,8 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         this.levels = new ArrayList<>();
         this.stage = new Stage();
         this.music = manager.get(TRANSITION_MUSIC_FILE);
-
+        this.hoverSound = manager.get(HOVER_FILE);
+        this.clickSound = manager.get(CLICK_FILE);
 
         Gdx.input.setInputProcessor(stage);
 
@@ -88,6 +96,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(SFX_VOLUME);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -110,6 +119,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         replaybutton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(SFX_VOLUME);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
@@ -131,6 +141,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         mainMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(SFX_VOLUME);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -251,13 +262,10 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     @Override
     public void dispose() {
-
         music.dispose();
         nextButton.setDisabled(true);
         replaybutton.setDisabled(true);
         nextButton.setDisabled(true);
-
-
     }
 
     @Override
@@ -320,6 +328,7 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
 
     }
 
+    private int lastState = 0;
     private void draw() {
         stage.draw();
         canvas.begin();
@@ -337,14 +346,26 @@ public class LevelTransition implements Screen, InputProcessor, ControllerListen
         if (currentSelection != null)
             switch (currentSelection) {
                 case Replay:
+                    if (lastState != 1) {
+                        hoverSound.play(6 * SFX_VOLUME);
+                        lastState = 1;
+                    }
                     canvas.drawUI(selected, canvas.getWidth() / 6 - replaybutton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case Exit:
+                    if (lastState != 2) {
+                        hoverSound.play(6 * SFX_VOLUME);
+                        lastState = 2;
+                    }
                     canvas.drawUI(selected, canvas.getWidth() / 2 - mainMenu.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case Next:
+                    if (lastState != 3) {
+                        hoverSound.play(6 * SFX_VOLUME);
+                        lastState = 3;
+                    }
                     canvas.drawUI(selected, canvas.getWidth() * 5 / 6 - nextButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
