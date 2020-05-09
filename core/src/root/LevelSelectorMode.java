@@ -173,7 +173,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //            }
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
-            clickSound.play(0.5f);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             ready = true;
             levelSelectorMusic.dispose();
         }
@@ -407,7 +407,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f);
+        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
     }
 }

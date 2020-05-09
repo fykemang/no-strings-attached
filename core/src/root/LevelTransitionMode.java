@@ -171,6 +171,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         stage.addActor(mainMenuButton);
 
         music.play();
+        music.setVolume(GDXRoot.musicVol);
         music.setLooping(true);
 
         try {

@@ -672,7 +672,7 @@ public class GameMode extends Mode implements Screen {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
         }
-
+        music.setVolume(1f * GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
     }
@@ -1120,11 +1120,12 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 if (player.won() && !didPlayWin) {
-                    winSound.play();
+                    winSound.play(GDXRoot.soundVol
+                    );
                     didPlayWin = true;
                 }
                 if (!player.isAlive() && !didPlayLose) {
-                    loseSound.play();
+                    loseSound.play(GDXRoot.soundVol);
                     didPlayLose = true;
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
@@ -1164,12 +1165,12 @@ public class GameMode extends Mode implements Screen {
 
     public void updatePaused(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            clickSound.play(0.5f);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             gameState = GameState.PLAYING;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            clickSound.play(0.5f);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             exitToSelector();
         }
     }
@@ -1371,7 +1372,7 @@ public class GameMode extends Mode implements Screen {
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            clickSound.play(0.5f);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             gameState = GameState.PAUSED;
 //            exitToSelector();
         }
@@ -1444,7 +1445,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play();
+                                    snipSound.play(GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
