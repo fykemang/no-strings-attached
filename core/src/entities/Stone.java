@@ -111,11 +111,10 @@ public class Stone extends PolygonObstacle {
 
     public void setRotationData(Vector2 center, Vector2 pos) {
         this.center = center;
-        float rotatedX = 0f, rotatedY = 0f;
         rotX = pos.x;
         rotY = pos.y;
-        rotatedX = (float) Math.cos(degree) * (pos.x - center.x) - (float) Math.sin(degree) * (pos.y - center.y) + center.x;
-        rotatedY = (float) Math.sin(degree) * (pos.x - center.x) + (float) Math.cos(degree) * (pos.y - center.y) + center.y;
+        float rotatedX = (float) Math.cos(degree) * (pos.x - center.x) - (float) Math.sin(degree) * (pos.y - center.y) + center.x;
+        float rotatedY = (float) Math.sin(degree) * (pos.x - center.x) + (float) Math.cos(degree) * (pos.y - center.y) + center.y;
 
         rotBeginLim = new Vector2(rotX, rotY);
         rotEndLim = new Vector2(rotatedX, rotatedY);
@@ -156,11 +155,10 @@ public class Stone extends PolygonObstacle {
             }
             rotDir.set(rotatedX - rotX, rotatedY - rotY);
             rotDir.nor();
-            rotDir.scl(0.6f);
             setLinearVelocity(rotDir);
-            if (getPosition().epsilonEquals(rotEndLim, 0.05f)) {
+            if (rotEndLim.epsilonEquals(rotX, rotY, 0.3f)) {
                 back = true;
-            } else if (getPosition().epsilonEquals(rotBeginLim, 0.05f)) {
+            } else if (rotBeginLim.epsilonEquals(rotX, rotY, 0.3f)) {
                 back = false;
 
             }
@@ -170,9 +168,9 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
 
-        if (type.equals("mountain") || type.equals("forest")|| type.equals("village")) {
+        if (type.equals("mountain") || type.equals("forest") || type.equals("village")) {
 
-            if (height <= 2 && width <= 2 && type.equals("village") ) {
+            if (height <= 2 && width <= 2 && type.equals("village")) {
                 float firstx = getX() * drawScale.x;
                 float firsty = getY() * drawScale.y;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -187,7 +185,7 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
 
-           } else if (height <= 2) {
+            } else if (height <= 2) {
                 this.x = getX();
                 this.y = getY();
                 // scale by y

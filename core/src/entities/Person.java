@@ -40,7 +40,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float PLAYER_DAMPING = 20.0f;
+    private static final float PLAYER_DAMPING = 100.0f;
     /**
      * The dude is not a slippery one
      */
@@ -515,7 +515,7 @@ public class Person extends CapsuleObstacle {
 
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 8f;
+                horizontalMovement = horizontalMovement * 5f;
             } else if (released) {
                 horizontalMovement = getVX() * 15f + getHorizontalMovement();
             }
