@@ -1285,7 +1285,7 @@ public class GameMode extends Mode implements Screen {
     private void setJumpUpAnimationFrame(float dt) {
         if (playerJumpUpAnimation.isRefreshed()) {
             float vy = player.getVY();
-            float yDecel = 9.18f;
+            float yDecel = 9.8f;
             float risingTime = vy / yDecel;
             playerJumpUpAnimation.setFrameDuration(risingTime / (float) playerJumpUpAnimation.getSize());
             playerJumpUpAnimation.setRefreshed(false);
