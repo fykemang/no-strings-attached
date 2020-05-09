@@ -166,7 +166,7 @@ function Home() {
   const [selectedNodeID, setSelectedNode] = useState(null);
   const [selectedNodeType, setSelectedNodeType] = useState("");
   const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
-  const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
+  const [canvasHeight, setCanvasHeight] = useState(800);
   const stageRef = React.useRef();
   useEventListener("keydown", (e) => {
     if (e.keyCode === 8) {
@@ -255,15 +255,17 @@ function Home() {
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: state.player.y / yScale,
+        y: (canvasHeight - state.player.y) / yScale,
       },
       exit: {
         x: state.exit.x / xScale,
-        y: state.exit.y / yScale,
+        y: (canvasHeight - state.exit.y) / yScale,
       },
+      text: [],
+      tutorial: false
     };
 
-    const fileName = "level";
+    const fileName = "test";
     const json = JSON.stringify(data);
     const blob = new Blob([json], { type: "application/json" });
     const href = URL.createObjectURL(blob);
