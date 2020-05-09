@@ -237,6 +237,7 @@ public class SettingMode  extends Mode implements Screen{
         backButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                stage.clear();
                 listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
             }
         });
@@ -311,7 +312,17 @@ public class SettingMode  extends Mode implements Screen{
         Gdx.input.setInputProcessor(stage);
     }
 
+    public float getSoundVol(){
+        return soundVol;
+    }
 
+    public float getMusicVol(){
+        return musicVol;
+    }
+
+    public  boolean isArrow(){
+        return arrow;
+    }
 
 
     public void reset(GameCanvas canvas) {
