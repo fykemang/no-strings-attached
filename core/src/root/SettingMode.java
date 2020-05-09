@@ -13,10 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
-
 public class SettingMode extends Mode implements Screen {
-
-
     public static final int INTO_SETTING = 15;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
             "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
@@ -24,23 +21,23 @@ public class SettingMode extends Mode implements Screen {
     private static final String BKG = "ui/grey.png";
     private static final String LOGO = "ui/game-logo.png";
     private static final String TITLE = "ui/setting.png";
-    private static final String ON = "ui/on.png";
-    private static final String OFF = "ui/off.png";
+    private static final String SLIDERBKG = "ui/on.png";
+    private static final String SLIDERKNOB = "ui/off.png";
     private static final String SOUND = "ui/sound.png";
     private static final String CONTROLS = "ui/controls.png";
     private static final String SETTING_SELECT = "ui/setting-select.png";
     private static final String KEYBOARD_ARROW = "ui/keyboard-arrows.png";
     private static final String KEYBOARD_WASD = "ui/keyboardWasd.png";
     private static final String MUSIC = "ui/music.png";
-    private static final String LEFT = "ui/setting-next.png";
+    private static final String LEFT = "ui/left.png";
     private static final String BACK = "ui/back.png";
 
 
     private TextureRegion logoTexture;
     private TextureRegion background;
     private TextureRegion titleTexture;
-    private TextureRegion onTexture;
-    private TextureRegion offTexture;
+    private TextureRegion SliderBkgTexture;
+    private TextureRegion knobTexture;
     private TextureRegion soundTexture;
     private TextureRegion selectTexture;
     private TextureRegion keyboardArrowTexture;
@@ -48,6 +45,7 @@ public class SettingMode extends Mode implements Screen {
     private TextureRegion controlsTexture;
     private TextureRegion musicTexture;
     private TextureRegion leftTexture;
+    private TextureRegion rightTexture;
     private TextureRegion backTexture;
 
     private final AssetManager manager;
@@ -56,7 +54,9 @@ public class SettingMode extends Mode implements Screen {
     private ScreenListener listener;
     private final boolean active;
     private ImageButton backButtom;
-    private ImageButton nextButtom;
+    private ImageButton leftButtom;
+    private ImageButton rightButtom;
+
     private SettingMode setting;
 
     private boolean musicOn = true;
@@ -144,9 +144,11 @@ public class SettingMode extends Mode implements Screen {
         //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
 
 
-        canvas.drawUI(controlsTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.35f, 1.0f);
-        if (arrow) {
-            canvas.drawUI(keyboardArrowTexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
+        canvas.drawUI(controlsTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.35f, 1.0f);
+        if (arrow){
+            canvas.drawUI(keyboardArrowTexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
+        }else {
+            canvas.drawUI(keyboardWasdtexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
         }
         canvas.actStage(stage);
         canvas.end();
@@ -160,8 +162,8 @@ public class SettingMode extends Mode implements Screen {
         loadAsset(BKG, Texture.class, manager);
         loadAsset(LOGO, Texture.class, manager);
         loadAsset(TITLE, Texture.class, manager);
-        loadAsset(ON, Texture.class, manager);
-        loadAsset(OFF, Texture.class, manager);
+        loadAsset(SLIDERBKG, Texture.class, manager);
+        loadAsset(SLIDERKNOB, Texture.class, manager);
         loadAsset(CONTROLS, Texture.class, manager);
         loadAsset(KEYBOARD_ARROW, Texture.class, manager);
         loadAsset(SOUND, Texture.class, manager);
@@ -169,6 +171,7 @@ public class SettingMode extends Mode implements Screen {
         loadAsset(BACK, Texture.class, manager);
         loadAsset(KEYBOARD_WASD, Texture.class, manager);
         loadAsset(LEFT, Texture.class, manager);
+        loadAsset(RIGHT, Texture.class, manager);
         loadAsset(MUSIC, Texture.class, manager);
         selectorAssetState = AssetState.LOADING;
     }
@@ -181,8 +184,8 @@ public class SettingMode extends Mode implements Screen {
         background = createTexture(manager, BKG, false);
         logoTexture = createTexture(manager, LOGO, false);
         titleTexture = createTexture(manager, TITLE, false);
-        onTexture = createTexture(manager, ON, false);
-        offTexture = createTexture(manager, OFF, false);
+        SliderBkgTexture =  createTexture(manager, SLIDERBKG, false);
+        knobTexture = createTexture(manager, SLIDERKNOB, false);
         selectTexture = createTexture(manager, SETTING_SELECT, false);
         controlsTexture = createTexture(manager, CONTROLS, false);
         soundTexture = createTexture(manager, SOUND, false);
@@ -190,6 +193,8 @@ public class SettingMode extends Mode implements Screen {
         keyboardWasdtexture = createTexture(manager, KEYBOARD_WASD, false);
         musicTexture = createTexture(manager, MUSIC, false);
         backTexture = createTexture(manager, BACK, false);
+        rightTexture = createTexture(manager, RIGHT, false);
+        leftTexture = createTexture(manager, LEFT, false);
         selectorAssetState = AssetState.COMPLETE;
     }
 
@@ -226,10 +231,40 @@ public class SettingMode extends Mode implements Screen {
         });
         stage.addActor(backButtom);
 
+        leftButtom = createButton(leftTexture);
+        leftButtom.setPosition(canvas.getWidth()*0.4f, canvas.getHeight()*0.25f);
+        leftButtom.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                arrow = false;
+            }
+        });
+        stage.addActor(leftButtom);
+
+        rightButtom = createButton(rightTexture);
+        rightButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
+        rightButtom.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
+            }
+        });
+
+
         Gdx.input.setInputProcessor(stage);
 
 
     }
+
+
+    public void showLeftButton(){
+
+    }
+
+    public void showRightButton(){
+
+    }
+
 
     public void reset(GameCanvas canvas) {
         this.canvas = canvas;
