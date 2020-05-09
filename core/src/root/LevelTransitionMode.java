@@ -181,7 +181,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         } catch (Exception e) {
             System.out.println("Error: Game Controllers could not be initialized");
         }
-       Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void exit() {
@@ -258,7 +258,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void hide() {
-            music.pause();
+        music.pause();
     }
 
     @Override
@@ -376,8 +376,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
 
-
-    public void reset(){
+    public void reset() {
         music.play();
         Gdx.input.setInputProcessor(stage);
     }

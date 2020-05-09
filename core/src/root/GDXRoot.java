@@ -70,8 +70,6 @@ public class GDXRoot extends Game implements ScreenListener {
     private boolean TransitionLoaded = false;
 
 
-
-
     /**
      * Creates a new game from the configuration settings.
      * <p>
@@ -170,7 +168,7 @@ public class GDXRoot extends Game implements ScreenListener {
         // If start is selected from the loading screen
         if (screen == loadingMode) {
             Gdx.input.setInputProcessor(null);
-            switch(exitCode){
+            switch (exitCode) {
                 case CutScene.INTO_CUTSCENE:
                     cutScene.setTheme(CutScene.THEME.OPENING);
                     cutScene.loadContent(manager);
@@ -188,14 +186,13 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // If level is selected from level selector screen
         } else if (screen == settings) {
-            if (exitCode == LoadingMode.INTO_STARTSCREEN){
+            if (exitCode == LoadingMode.INTO_STARTSCREEN) {
                 Gdx.input.setInputProcessor(loadingMode);
                 loadingMode.reset();
                 settings.hide();
                 setScreen(loadingMode);
             }
-        }else
-         if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR){
+        } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
@@ -203,7 +200,7 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.reset();
             setScreen(levelSelector);
 
-        }else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
+        } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
             Gdx.input.setInputProcessor(null);
             currentLevel = levelSelector.getLevelIndex();
             gameMode.setLevel(levelSelector.getCurrentLevel());
@@ -216,7 +213,7 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.pause();
             // If level select is selected from in game
         } else if (screen == gameMode) {
-            switch (exitCode){
+            switch (exitCode) {
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.setCanvas(UIcanvas);
                     levelSelector.reset();
@@ -225,9 +222,9 @@ public class GDXRoot extends Game implements ScreenListener {
                     setScreen(levelSelector);
                     gameMode.pause();
                     break;
-                case  LevelTransitionMode.INTO_TRANSITION:
+                case LevelTransitionMode.INTO_TRANSITION:
                     transitionMode.setCanvas(UIcanvas);
-                    if(!TransitionLoaded) {
+                    if (!TransitionLoaded) {
                         transitionMode.loadContent(manager);
                         transitionMode.initializeInterface();
                         TransitionLoaded = true;
@@ -239,8 +236,8 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.pause();
             }
         } else if (screen == transitionMode) {
-           Gdx.input.setInputProcessor(null);
-           transitionMode.hide();
+            Gdx.input.setInputProcessor(null);
+            transitionMode.hide();
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
