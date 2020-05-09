@@ -65,6 +65,12 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private SettingMode settings;
 
+    public static float musicVol = 1f;
+
+    public static float soundVol = 1f;
+
+    public static boolean useArrow = true;
+
     private int currentLevel;
 
     private boolean TransitionLoaded = false;
@@ -186,6 +192,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // If level is selected from level selector screen
         } else if (screen == settings) {
+                useArrow = settings.isArrow();
+                soundVol = settings.getSoundVol();
+                musicVol = settings.getMusicVol();
             if (exitCode == LoadingMode.INTO_STARTSCREEN) {
                 Gdx.input.setInputProcessor(loadingMode);
                 loadingMode.reset();
