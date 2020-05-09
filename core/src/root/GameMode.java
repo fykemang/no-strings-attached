@@ -171,7 +171,8 @@ public class GameMode extends Mode implements Screen {
     private static final String SNIP_FILE = "sounds/snip.mp3";
     private static final String LAND_FILE = "sounds/landing.mp3";
     private static final String HOVER_FILE = "sounds/hover.mp3";
-
+    private static final String TRAMP_LAND_FILE = "sounds/trampoline_jump.mp3";
+    private static final String TRAMP_JUMP_FILE = "sounds/trampoline_jump.mp3";
     /**
      * The folder with all levels
      */
@@ -349,6 +350,8 @@ public class GameMode extends Mode implements Screen {
     private Sound snipSound;
     private Sound hoverSound;
     private Sound landSound;
+    private Sound trampolineLandSound;
+    private Sound trampolineJumpSound;
     private boolean didPlayWin;
     private boolean didPlayLose;
     private boolean didPlayJump;
@@ -614,6 +617,8 @@ public class GameMode extends Mode implements Screen {
         loadAsset(SNIP_FILE, Sound.class, manager);
         loadAsset(HOVER_FILE, Sound.class, manager);
         loadAsset(LAND_FILE, Sound.class, manager);
+        loadAsset(TRAMP_LAND_FILE, Sound.class, manager);
+        loadAsset(TRAMP_JUMP_FILE, Sound.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
@@ -775,6 +780,10 @@ public class GameMode extends Mode implements Screen {
         sounds.allocate(manager, LOSE_FILE);
         sounds.allocate(manager, CLICK_FILE);
         sounds.allocate(manager, SNIP_FILE);
+        sounds.allocate(manager, TRAMP_JUMP_FILE);
+        sounds.allocate(manager, TRAMP_LAND_FILE);
+        trampolineLandSound = manager.get(TRAMP_LAND_FILE);
+        trampolineJumpSound = manager.get(TRAMP_JUMP_FILE);
         landSound = manager.get(LAND_FILE);
         hoverSound = manager.get(HOVER_FILE);
         jumpSound = manager.get(JUMP_FILE);
@@ -1343,8 +1352,14 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isGrounded() && !player.isAttached()) {//rising
-                if (!player.isOnTrampoline() && !didPlayJump) {
-                    jumpSound.play(SFX_VOLUME);
+                if (!didPlayJump) {
+                    if (!player.isOnTrampoline()) {
+                        jumpSound.play(SFX_VOLUME);
+                    }
+                    else {
+                        trampolineJumpSound.play(SFX_VOLUME);
+
+                    }
                     didPlayJump = true;
                     didPlayLand = false;
                 }
@@ -1365,8 +1380,13 @@ public class GameMode extends Mode implements Screen {
                 } else if (player.isWalking()) {
                     player.setTexture(playerWalkingAnimation);
                 } else if (player.isGrounded()) {
-                    if (!player.isOnTrampoline() && !didPlayLand) {
-                        landSound.play(SFX_VOLUME);
+                    if (!didPlayLand) {
+                        if (!player.isOnTrampoline()) {
+                            landSound.play(SFX_VOLUME);
+                        }
+                        else {
+                            trampolineLandSound.play(SFX_VOLUME);
+                        }
                         didPlayLand = true;
                         didPlayJump = false;
                     }
@@ -1776,12 +1796,13 @@ public class GameMode extends Mode implements Screen {
         scale = null;
         world = null;
         canvas = null;
-//        hoverSound.dispose();
         landSound.dispose();
         winSound.dispose();
         loseSound.dispose();
         collectSound.dispose();
         jumpSound.dispose();
+        trampolineLandSound.dispose();
+        trampolineJumpSound.dispose();
     }
 
     /**
