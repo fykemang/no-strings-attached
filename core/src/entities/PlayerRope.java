@@ -79,7 +79,7 @@ public class PlayerRope extends Rope {
     @Override
     protected boolean createJoints(World world) {
         assert segmentLayer.size() > 0;
-        float anc = this.lWidth / 2;
+        float anc = this.lWidth/2;
         Vector2 anchor1 = new Vector2(anc / 2, 0);
         Vector2 anchor2 = new Vector2(-anc / 2, 0);
 

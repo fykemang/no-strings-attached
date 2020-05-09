@@ -39,7 +39,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float PLAYER_DAMPING = 100.0f;
+    private static final float PLAYER_DAMPING = 30f;
     /**
      * The dude is not a slippery one
      */
@@ -171,7 +171,8 @@ public class Person extends CapsuleObstacle {
      * Cache for internal force calculations
      */
     private final Vector2 forceCache = new Vector2();
-    private Joint swingJoint;
+    private Joint swingJoint1;
+    private Joint swingJoint2;
     private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
@@ -500,7 +501,7 @@ public class Person extends CapsuleObstacle {
 
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 5f;
+                horizontalMovement = horizontalMovement * 4f;
             } else if (released) {
                 horizontalMovement = getVX() * 15f + getHorizontalMovement();
             }
@@ -610,12 +611,17 @@ public class Person extends CapsuleObstacle {
         return target;
     }
 
-    public void setSwingJoint(Joint swingJoint) {
-        this.swingJoint = swingJoint;
+    public void setSwingJoints(Joint swingJoint1, Joint swingJoint2) {
+        this.swingJoint1 = swingJoint1;
+        this.swingJoint2 = swingJoint2;
     }
 
-    public Joint getSwingJoint() {
-        return swingJoint;
+    public Joint getSwingJoint1() {
+        return swingJoint1;
+    }
+
+    public Joint getSwingJoint2() {
+        return swingJoint2;
     }
 
     /**

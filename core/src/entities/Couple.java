@@ -62,7 +62,7 @@ public class Couple extends ComplexObstacle {
         NpcPerson avatar = new NpcPerson(x, y, dWidth, dHeight, "npc", "npcSensor", l);
         avatar.setAttached(true);
         avatar.setBodyType(BodyDef.BodyType.KinematicBody);
-        avatar.setFriction(5f);
+        avatar.setFriction(4f);
         avatar.setPosition(x + avatar.getWidth() / 2 + 0.15f, y + avatar.getHeight() / 2);
         avatar.setDrawScale(drawScale);
         avatar.setTexture(t);
