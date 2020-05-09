@@ -67,7 +67,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * How many frames after winning/losing do we continue?
      */
-    public static final int EXIT_COUNT = 120;
+    public static final int EXIT_COUNT = 60;
     /**
      * The amount of time for a physics engine step.
      */
@@ -94,6 +94,9 @@ public class GameMode extends Mode implements Screen {
     private final float period = 2f;
 
     private Vector2 lastpos;
+    private Vector2 lastviewport;
+
+    boolean isZoomed = true;
 
 
     /**
@@ -153,14 +156,6 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_TWO = "ui/basket_3.png";
     private static final String BASKET_THREE = "ui/basket_2.png";
     /**
-     * The texture file for the spinning barrier
-     */
-    private static final String BARRIER_FILE = "entities/barrier.png";
-    /**
-     * The texture file for the bullet
-     */
-    private static final String BULLET_FILE = "entities/bullet.png";
-    /**
      * The sound effects
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
@@ -175,11 +170,6 @@ public class GameMode extends Mode implements Screen {
     private static final String TRAMP_JUMP_FILE = "sounds/trampoline_jump.mp3";
     private static final String SWING_FILE = "sounds/swing.mp3";
 
-    /**
-     * The folder with all levels
-     */
-    private static final String TEST_LEVEL = "levels/level1.json";
-    private static final String CROSSHAIR_FILE = "ui/crosshair.png";
     /**
      * File to texture for walls and platforms
      */
@@ -199,7 +189,6 @@ public class GameMode extends Mode implements Screen {
      * Retro font for displaying messages
      */
     private static final String FONT_FILE = "ui/Pacifico.ttf";
-    private static final String ROPE_SEGMENT = "entities/rope_segment.png";
     private static final int FONT_SIZE = 64;
 
     /**
@@ -394,9 +383,9 @@ public class GameMode extends Mode implements Screen {
     //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
 //    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-layer2.png"};
-    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-layer3.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
+    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
+    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{};
     private final String[] MT_BKG_FILES_LAYER_A = new String[]{"background/sky-1.png"};
     private final String[] MT_BKG_FILES_LAYER_B = new String[]{"background/sky-2.png", "background/sky-3.png", "background/sky-4.png"};
     private final String[] MT_BKG_FILES_LAYER_C = new String[]{};
@@ -445,8 +434,6 @@ public class GameMode extends Mode implements Screen {
         assetState = AssetState.LOADING;
         manager.load(PLAYER_FALL, Texture.class);
         assets.add(PLAYER_FALL);
-        manager.load(BARRIER_FILE, Texture.class);
-        assets.add(BARRIER_FILE);
         manager.load(UI_GreyYarn, Texture.class);
         assets.add(UI_GreyYarn);
         manager.load(UI_RedYarn, Texture.class);
@@ -477,10 +464,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(BASKET_TWO);
         manager.load(BASKET_THREE, Texture.class);
         assets.add(BASKET_THREE);
-        manager.load(BULLET_FILE, Texture.class);
-        assets.add(BULLET_FILE);
-        manager.load(CROSSHAIR_FILE, Texture.class);
-        assets.add(CROSSHAIR_FILE);
         manager.load(CITY_TILE_FILE, Texture.class);
         assets.add(CITY_TILE_FILE);
         manager.load(VILLAGE_TILE_FILE, Texture.class);
@@ -505,8 +488,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
-        manager.load(ROPE_SEGMENT, Texture.class);
-        assets.add(ROPE_SEGMENT);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -952,7 +933,12 @@ public class GameMode extends Mode implements Screen {
         float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
         lastpos = new Vector2(xpos, ypos);
-        canvas.moveCamera(xpos, ypos);
+        lastviewport = new Vector2(canvas.getWidth()*0.6f, canvas.getHeight()*0.6f);
+        canvas.moveCamera(lastpos.x, lastpos.y);
+        canvas.changeViewport(lastviewport.x, lastviewport.y);
+        isZoomed = true;
+        direction = null;
+        targetViewPort = null;
         // Create exit door
         createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
         //add player
@@ -1140,10 +1126,23 @@ public class GameMode extends Mode implements Screen {
      * @return whether to process the update loop
      */
     public boolean preUpdate(float dt) {
+
         boolean result = true;
         InputController input = InputController.getInstance();
         input.readInput(bounds, scale);
         if (listener != null) {// Toggle debug
+            if (input.isCameraZoom()){
+                isZoomed = false;
+                float x = canvas.getWidth()/2, y=canvas.getHeight()/2;
+                if (player.getX()*scale.x > canvas.getWidth()*0.7f){
+                    x = canvas.getWidth();
+                }
+                if (player.getY()*scale.y > canvas.getHeight()*0.7f){
+                    y = canvas.getHeight();
+                }
+                direction = new Vector2(x, y);
+                targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+            }
             if (input.didDebug()) {
                 debug = !debug;
             }// Handle resets
@@ -1199,6 +1198,10 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
+
+
+//        System.out.println(isZoomed);
+
         if (!result) {
             return false;
         }
@@ -1222,6 +1225,113 @@ public class GameMode extends Mode implements Screen {
             exitToSelector();
         }
     }
+
+
+    public void updateZoom(float dt) {
+
+        float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
+        float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)||Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+        || Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            direction = new Vector2(xpos, ypos);
+            targetViewPort = new Vector2(canvas.getWidth()*0.6f, canvas.getHeight()*0.6f);
+            isZoomed = true;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !isZoomed && lastpos.x < canvas.getWidth()/2 + 500){
+            direction = new Vector2(lastpos.x + 20, lastpos.y);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && !isZoomed && lastpos.x > canvas.getWidth()/2 - 300){
+            direction = new Vector2(lastpos.x - 20, lastpos.y);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+    //    System.out.println((stillBackgroundTextures.get(0).getRegionHeight()/ stillBackgroundTextures.get(0).getRegionWidth())
+            //    * canvas.getWidth());
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && !isZoomed && lastpos.y <
+                (((float)stillBackgroundTextures.get(0).getRegionHeight()/ (float)stillBackgroundTextures.get(0).getRegionWidth())
+                * canvas.getWidth() - canvas.getHeight()*0.55f)){
+            direction = new Vector2(lastpos.x, lastpos.y + 20);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && !isZoomed && lastpos.y > canvas.getHeight()/2 - 200){
+            direction = new Vector2(lastpos.x , lastpos.y-20);
+            targetViewPort = new Vector2(canvas.getWidth(), canvas.getHeight());
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            reset();
+        }
+
+        if (targetViewPort.x == lastviewport.x && targetViewPort.y == lastviewport.y
+          && direction.x == lastpos.x && lastpos.y == direction.y){
+            if (isZoomed) gameState = GameState.PLAYING;
+        }
+
+
+       if (direction != null && targetViewPort != null) {
+           float xz = lastviewport.x, yz = lastviewport.y;
+           float xp = lastpos.x, yp = lastpos.y;
+           if (xz >= targetViewPort.x - 10 && xz <= targetViewPort.x + 10
+                   && yz >= targetViewPort.y - 10 && yz <= targetViewPort.y + 10) {
+               xz = targetViewPort.x;
+               yz = targetViewPort.y;
+
+           } else {
+               if (xz < targetViewPort.x) {
+                   xz += 15;
+               }
+               if (xz > targetViewPort.x) {
+                   xz -= 15;
+               }
+               if (yz < targetViewPort.y) {
+                   yz += 10;
+               }
+               if (yz > targetViewPort.y) {
+                   yz -= 10;
+               }
+           }
+               boolean xr = false, yr = false;
+               if(xp >= direction.x - 6 && xp <= direction.x + 6){
+                   xp = direction.x;
+
+               }else
+               if (xp < direction.x) {
+                   xp += 8;
+               }
+               else {
+                   xp -= 8;
+               }
+
+               if(yp >= direction.y - 6 && yp <= direction.y + 6){
+                   yp = direction.y;
+
+               }else if (yp < direction.y) {
+                   yp += 8;
+               }
+               else {
+                   yp -= 8;
+               }
+
+           canvas.moveCamera(xp, yp);
+           canvas.changeViewport(xz, yz);
+
+           lastpos = new Vector2(xp, yp);
+           lastviewport = new Vector2(xz, yz);
+
+       }
+
+
+    }
+
+
+
+
 
     private void destroyPlayerRope() {
         playerRope.markRemoved(true);
@@ -1508,7 +1618,7 @@ public class GameMode extends Mode implements Screen {
                 playerRope.setStart(playerPos, false);
                 playerRope.setEnd(targetPos, false);
             }
-        } else {
+        } else if (!player.isAlive()){
             player.setTexture(playerDeathAnimation);
         }
 
@@ -1537,26 +1647,18 @@ public class GameMode extends Mode implements Screen {
         float camera = player.getX() * scale.x;
         if (level.getType().equals("forest")) {
             for (TextureRegion t : stillBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f,
-                        t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
-            }
-            for (TextureRegion t : slightMoveBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
-            }
-            for (TextureRegion t : movingBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f,
-                        canvas.getWidth() * 1.2f, t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth(),
+                        t.getRegionHeight() * (canvas.getWidth() / t.getRegionWidth()), t.getRegionWidth(), t.getRegionHeight(), 1f);
             }
         } else {
             for (TextureRegion t : stillBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), 0f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
             for (TextureRegion t : slightMoveBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), -.1f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
             for (TextureRegion t : movingBackgroundTextures) {
-                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight());
+                canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
         }
 
@@ -1848,7 +1950,9 @@ public class GameMode extends Mode implements Screen {
      * @param dt Number of seconds since last animation frame
      */
 
-    private final int direction = 0;
+  //  private final int direction = 0;
+    private Vector2 direction = null;
+    private  Vector2 targetViewPort = null;
 
     public void postUpdate(float dt) {
         // Add any objects created by actions
@@ -1880,37 +1984,26 @@ public class GameMode extends Mode implements Screen {
 
 
         //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
-        ypos = ypos > 700 ? 700 : ypos;
-/**
- * code for lazy follow camera
- */
-//        switch (direction){
-//            case 1: if (lastpos.y > ypos -20) {
-//                direction = 0;
-//            }else {
-//                canvas.moveCamera(xpos, lastpos.y +4);
-//                lastpos = new Vector2(xpos, lastpos.y +4 );
-//            }
-//                break;
-//            case -1: if (lastpos.y < ypos + 20) {
-//                direction = 0;
-//            }else {
-//                canvas.moveCamera(xpos, lastpos.y -4);
-//                lastpos = new Vector2(xpos, lastpos.y -4);
-//            }
-//            default: canvas.moveCameraX(xpos);
-//        }
-//
-//        if (ypos >lastpos.y + 120) {
-//            direction = 1;
-////                    canvas.moveCamera(xpos, lastpos.y +2);
-////                    lastpos = new Vector2(xpos, lastpos.y +2 );
-//        }else if (ypos < lastpos.y -80)  {
-//            direction = -1;
-////                    canvas.moveCamera(xpos, lastpos.y-2);
-////                    lastpos = new Vector2(xpos,   lastpos.y - 2 );
-//        }
-        canvas.moveCamera(xpos, ypos);
+        if (isZoomed) {
+            canvas.moveCamera(xpos, ypos);
+            lastpos = new Vector2(xpos, ypos);
+        }else {
+            gameState = GameState.ZOOM;
+        }
+
+    }
+
+
+    public void zoomcleanup(float dt){
+        Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
+        while (iterator.hasNext()) {
+            PooledList<Obstacle>.Entry entry = iterator.next();
+            Obstacle obj = entry.getValue();
+            if (obj.isRemoved()) {
+                obj.deactivatePhysics(world);
+                entry.remove();
+            }
+        }
 
 
     }
@@ -1942,6 +2035,7 @@ public class GameMode extends Mode implements Screen {
      * @param delta Number of seconds since last animation frame
      */
     public void render(float delta) {
+//        System.out.println(delta);
         switch (gameState) {
             case PLAYING:
                 if (preUpdate(delta)) {
@@ -1954,6 +2048,13 @@ public class GameMode extends Mode implements Screen {
                 updatePaused(delta);
                 drawPaused(delta);
                 break;
+            case ZOOM:
+                updateZoom(delta);
+                draw(delta);
+                zoomcleanup(delta);
+
+
+
         }
     }
 
@@ -2011,7 +2112,7 @@ public class GameMode extends Mode implements Screen {
     }
 
     private enum GameState {
-        PLAYING, PAUSED
+        PLAYING, PAUSED, ZOOM
     }
 
 }

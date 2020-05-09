@@ -111,11 +111,10 @@ public class Stone extends PolygonObstacle {
 
     public void setRotationData(Vector2 center, Vector2 pos) {
         this.center = center;
-        float rotatedX = 0f, rotatedY = 0f;
         rotX = pos.x;
         rotY = pos.y;
-        rotatedX = (float) Math.cos(degree) * (pos.x - center.x) - (float) Math.sin(degree) * (pos.y - center.y) + center.x;
-        rotatedY = (float) Math.sin(degree) * (pos.x - center.x) + (float) Math.cos(degree) * (pos.y - center.y) + center.y;
+        float rotatedX = (float) Math.cos(degree) * (pos.x - center.x) - (float) Math.sin(degree) * (pos.y - center.y) + center.x;
+        float rotatedY = (float) Math.sin(degree) * (pos.x - center.x) + (float) Math.cos(degree) * (pos.y - center.y) + center.y;
 
         rotBeginLim = new Vector2(rotX, rotY);
         rotEndLim = new Vector2(rotatedX, rotatedY);
@@ -156,11 +155,10 @@ public class Stone extends PolygonObstacle {
             }
             rotDir.set(rotatedX - rotX, rotatedY - rotY);
             rotDir.nor();
-            rotDir.scl(0.6f);
             setLinearVelocity(rotDir);
-            if (getPosition().epsilonEquals(rotEndLim, 0.05f)) {
+            if (rotEndLim.epsilonEquals(rotX,rotY,0.3f)) {
                 back = true;
-            } else if (getPosition().epsilonEquals(rotBeginLim, 0.05f)) {
+            } else if (rotBeginLim.epsilonEquals(rotX,rotY, 0.3f)) {
                 back = false;
 
             }

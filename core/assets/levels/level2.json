@@ -2,12 +2,12 @@
   "type": "forest",
   "player": {
     "x": 7,
-    "y": 4.0
+    "y": 14.0
   },
   "tiles": [
     {
       "x": 1,
-      "y": 3,
+      "y": 13,
       "width": 7,
       "height": 1,
       "type": "normal",
@@ -24,7 +24,7 @@
     },
     {
       "x": 23,
-      "y": 7.5,
+      "y": 17.5,
       "width": 1,
       "height": 11,
       "type": "spikes",
@@ -41,7 +41,7 @@
     },
     {
       "x": 13,
-      "y": 17.5,
+      "y": 27.5,
       "width": 10,
       "height": 1,
       "type": "spikes",
@@ -60,21 +60,21 @@
   "spikes": [
     {
       "x": 13,
-      "y": 17.5,
+      "y": 27.5,
       "width": 10,
       "height": 1,
       "direction": "up"
     },
     {
       "x": 25,
-      "y": 8,
+      "y": 18,
       "width": 1,
       "height": 9.5,
       "direction": "up"
     },
     {
       "x": 0,
-      "y": 4,
+      "y": 14,
       "width": 0.2,
       "height": 5,
       "direction": "left"
@@ -83,7 +83,7 @@
   "npc": [
     {
       "x": 9.0,
-      "y": 2.0,
+      "y": 12.0,
       "isSliding": false,
       "leftPos": {
         "x": 8.5,
@@ -91,19 +91,19 @@
       },
       "rightPos": {
         "x": 10.5,
-        "y": 1.0
+        "y": 11.0
       },
       "isRotating": false,
       "center": {
         "x": 9.0,
-        "y": 2.0
+        "y":12.0
       },
       "degree": 0,
       "pairIdx": 1
     },
     {
       "x": 14.0,
-      "y": 2.0,
+      "y": 12.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -114,7 +114,7 @@
     },
     {
       "x": 15.0,
-      "y": 7,
+      "y": 17,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -128,7 +128,7 @@
     },
     {
       "x": 20.0,
-      "y": 7,
+      "y": 17,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -139,7 +139,7 @@
     },
     {
       "x": 15.0,
-      "y": 14.0,
+      "y": 24.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -150,7 +150,7 @@
     },
     {
       "x": 20.0,
-      "y": 14.0,
+      "y": 24.0,
       "isSliding": false,
       "leftPos": {},
       "rightPos": {},
@@ -163,16 +163,16 @@
   "items": [
     {
       "x": 12.0,
-      "y": 8.0
+      "y": 18.0
     },
     {
       "x": 17.5,
-      "y": 16.5
+      "y": 26.5
     }
   ],
   "exit": {
     "x": 15,
-    "y": 3
+    "y": 13
   },
   "text": [
   ]

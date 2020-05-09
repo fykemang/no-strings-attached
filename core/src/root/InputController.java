@@ -93,13 +93,8 @@ public class InputController {
      */
     private boolean exitPressed;
     private boolean exitPrevious;
-
-//    private int arrowPressed;
-//    private int arrowPrevious;
-//
-//    public boolean didPressArrow() {
-//        return arrowPressed != arrowPrevious;
-//    }
+    private boolean cameraPrevious;
+    private boolean cameraZoom;
 
     /**
      * How much did we move horizontally?
@@ -186,6 +181,11 @@ public class InputController {
      */
     public boolean didSecondary() {
         return secondPressed && !secondPrevious;
+    }
+
+
+    public boolean isCameraZoom() {
+        return cameraZoom;
     }
 
     /**
@@ -285,7 +285,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         shiftPrevious = shiftPressed;
-//        arrowPrevious = arrowPressed;
+        cameraPrevious = cameraZoom;
 
         // Check to see if a GamePad is connected
         if (xbox.isConnected()) {
@@ -352,6 +352,7 @@ public class InputController {
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed = (secondary && exitPressed);
+        cameraZoom =  (Gdx.input.isKeyJustPressed(Input.Keys.Z));
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);

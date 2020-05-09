@@ -42,7 +42,7 @@
     {
       "x": 18,
       "y": 5,
-      "width": 10,
+      "width":6,
       "height": 1,
       "direction": "up",
       "type": "normal",
@@ -55,23 +55,7 @@
         "x": 10.5,
         "y": 1.0
       }
-    },
-    {
-      "x": 19,
-      "y": 1.5,
-      "width": 4.5,
-      "height": 1,
-      "direction": "up",
-      "type": "normal",
-      "isSliding": false,
-      "leftPos": {
-        "x": 8.5,
-        "y": 0.0
-      },
-      "rightPos": {
-        "x": 10.5,
-        "y": 1.0
-      }
+
     }
   ],
   "npc": [
@@ -92,7 +76,7 @@
         "x": 13.5,
         "y": 6
       },
-      "degree": 30
+      "degree": 90
     },
     {
       "x": 13.0,
