@@ -46,8 +46,6 @@ import java.util.*;
  * place nicely with the static assets.
  */
 public class GameMode extends Mode implements Screen {
-    public static float MUSIC_VOLUME = 0.5f;
-    public static float SFX_VOLUME = 0.5f;
     /**
      * Exit code for quitting the game
      */
@@ -689,7 +687,6 @@ public class GameMode extends Mode implements Screen {
         }
         music.setVolume(1f * GDXRoot.musicVol);
         music.play();
-        music.setVolume(MUSIC_VOLUME);
         music.setLooping(true);
     }
 
@@ -899,7 +896,7 @@ public class GameMode extends Mode implements Screen {
         didPlayLose = false;
         didPlayCollect = false;
         didPlayJump = false;
-        volume = MUSIC_VOLUME;
+        volume = GDXRoot.musicVol;
     }
 
     /**
@@ -1099,16 +1096,16 @@ public class GameMode extends Mode implements Screen {
         return tile;
     }
 
-    float volume = MUSIC_VOLUME;
+    float volume = GDXRoot.musicVol;
     public void fadeInMusic() {
         timeSeconds = 0;
         volume = 0f;
         while ((timeSeconds < period) && (music.isLooping() || music.isPlaying())) {
             timeSeconds += Gdx.graphics.getRawDeltaTime();
-            if(volume < MUSIC_VOLUME)
+            if(volume < GDXRoot.musicVol)
                 volume += 0.0005 * timeSeconds;
             else {
-                volume = MUSIC_VOLUME;
+                volume = GDXRoot.musicVol;
             }
             music.setVolume(volume);
         }
@@ -1462,10 +1459,10 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-                        jumpSound.play(SFX_VOLUME);
+                        jumpSound.play(0.5f*GDXRoot.soundVol);
                     }
                     else {
-                        trampolineJumpSound.play(SFX_VOLUME);
+                        trampolineJumpSound.play(0.5f*GDXRoot.soundVol);
 
                     }
                     didPlayJump = true;
@@ -1483,7 +1480,7 @@ public class GameMode extends Mode implements Screen {
                 playerJumpDownAnimation.refresh();
                 if (player.isAttached()) {
                     swingMusic.play();
-                    swingMusic.setVolume(SFX_VOLUME * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
+                    swingMusic.setVolume(GDXRoot.soundVol * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
                     setSwingingAnimations(dt);
                 }
                 else if (player.isFalling()) {
@@ -1493,10 +1490,10 @@ public class GameMode extends Mode implements Screen {
                 } else if (player.isGrounded()) {
                     if (!didPlayLand) {
                         if (!player.isOnTrampoline()) {
-                            landSound.play(SFX_VOLUME);
+                            landSound.play(0.5f*GDXRoot.soundVol);
                         }
                         else {
-                            trampolineLandSound.play(SFX_VOLUME);
+                            trampolineLandSound.play(0.5f*GDXRoot.soundVol);
                         }
                         didPlayLand = true;
                         didPlayJump = false;
@@ -1551,7 +1548,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isDidCollect() && !didPlayCollect) {
-                collectSound.play(SFX_VOLUME);
+                collectSound.play(0.5f*GDXRoot.soundVol);
                 didPlayCollect = true;
             }
             if (didPlayCollect) {
@@ -2063,7 +2060,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
-        music.setVolume(MUSIC_VOLUME);
+        music.setVolume(GDXRoot.musicVol);
     }
 
     @Override

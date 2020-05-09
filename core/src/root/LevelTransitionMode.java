@@ -25,8 +25,6 @@ import util.ScreenListener;
 
 public class LevelTransitionMode extends Mode implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_TRANSITION = 5;
-    public static float MUSIC_VOLUME = 0.5f;
-    public static float SFX_VOLUME = 0.5f;
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
@@ -119,7 +117,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(SFX_VOLUME);
+                clickSound.play(0.5f*GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -141,7 +139,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         replayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(SFX_VOLUME);
+                clickSound.play(0.5f*GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
@@ -162,7 +160,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(SFX_VOLUME);
+                clickSound.play(GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -179,7 +177,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         stage.addActor(mainMenuButton);
 
         music.play();
-        music.setVolume(GDXRoot.musicVol);
+        music.setVolume(0.5f*GDXRoot.musicVol);
         music.setLooping(true);
 
         try {

@@ -50,8 +50,6 @@ import util.ScreenListener;
  * loading screen.
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
-    public static float MUSIC_VOLUME = 0.5f;
-    public static float SFX_VOLUME = 0.5f;
     // Textures necessary to support the loading screen
     private static final String CHAR_ANIMATION_FILE = "ui/background_sc.png";
     private static final String PROGRESS_FILE = "ui/progressbar.png";
