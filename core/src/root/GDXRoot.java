@@ -192,9 +192,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
             // If level is selected from level selector screen
         } else if (screen == settings) {
-                useArrow = settings.isArrow();
-                soundVol = settings.getSoundVol();
-                musicVol = settings.getMusicVol();
+            useArrow = settings.isArrow();
+            soundVol = settings.getSoundVol();
+            musicVol = settings.getMusicVol();
             if (exitCode == LoadingMode.INTO_STARTSCREEN) {
                 Gdx.input.setInputProcessor(loadingMode);
                 loadingMode.reset();

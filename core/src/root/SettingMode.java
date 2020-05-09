@@ -16,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
 
-public class SettingMode  extends Mode implements Screen{
+public class SettingMode extends Mode implements Screen {
 
 
-    public static final int INTO_SETTING= 15;
+    public static final int INTO_SETTING = 15;
     private static final String RIGHT = "ui/right.png";
     private static final String BKG = "ui/grey.png";
     private static final String LOGO = "ui/game-logo.png";
@@ -131,7 +131,7 @@ public class SettingMode  extends Mode implements Screen{
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
         }
 
@@ -140,22 +140,22 @@ public class SettingMode  extends Mode implements Screen{
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background.getTexture());
-        canvas.drawUI(logoTexture, canvas.getWidth()*0.1f, canvas.getHeight()*0.9f, 0.3f);
-        canvas.drawUI(titleTexture, canvas.getWidth()/2, canvas.getHeight()*0.85f, 1.0f);
-        canvas.drawUI(soundTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.65f, 1.0f);
+        canvas.drawUI(logoTexture, canvas.getWidth() * 0.1f, canvas.getHeight() * 0.9f, 0.3f);
+        canvas.drawUI(titleTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.85f, 1.0f);
+        canvas.drawUI(soundTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.65f, 1.0f);
         //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.65f, 1.0f);
         // canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.65f, 1.0f);
 
-        canvas.drawUI(musicTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.5f, 1.0f);
+        canvas.drawUI(musicTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.5f, 1.0f);
         //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.45f, 1.0f);
         //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
 
 
-        canvas.drawUI(controlsTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.35f, 1.0f);
-        if (arrow){
-            canvas.drawUI(keyboardArrowTexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
-        }else {
-            canvas.drawUI(keyboardWasdtexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
+        canvas.drawUI(controlsTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.35f, 1.0f);
+        if (arrow) {
+            canvas.drawUI(keyboardArrowTexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
+        } else {
+            canvas.drawUI(keyboardWasdtexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
         }
         canvas.actStage(stage);
         canvas.end();
@@ -188,16 +188,16 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-        background =  createTexture(manager,BKG, false);
+        background = createTexture(manager, BKG, false);
         logoTexture = createTexture(manager, LOGO, false);
         titleTexture = createTexture(manager, TITLE, false);
-        SliderBkgTexture =  createTexture(manager, SLIDERBKG, false);
+        SliderBkgTexture = createTexture(manager, SLIDERBKG, false);
         knobTexture = createTexture(manager, SLIDERKNOB, false);
         selectTexture = createTexture(manager, SETTING_SELECT, false);
-        controlsTexture =  createTexture(manager,CONTROLS, false);
+        controlsTexture = createTexture(manager, CONTROLS, false);
         soundTexture = createTexture(manager, SOUND, false);
         keyboardArrowTexture = createTexture(manager, KEYBOARD_ARROW, false);
-        keyboardWasdtexture =  createTexture(manager,KEYBOARD_WASD, false);
+        keyboardWasdtexture = createTexture(manager, KEYBOARD_WASD, false);
         musicTexture = createTexture(manager, MUSIC, false);
         backTexture = createTexture(manager, BACK, false);
         rightTexture = createTexture(manager, RIGHT, false);
@@ -206,14 +206,11 @@ public class SettingMode  extends Mode implements Screen{
     }
 
 
-
     private ImageButton createButton(TextureRegion texture) {
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(texture);
         ImageButton button = new ImageButton(myTexRegionDrawable);
         return button;
     }
-
-
 
 
     private TextureRegion createTexture(AssetManager manager, String file, boolean repeat) {
@@ -229,11 +226,10 @@ public class SettingMode  extends Mode implements Screen{
     }
 
 
-
-    public void initUI(){
+    public void initUI() {
         // final ImageButton.ImageButtonStyle backbuttonStyle = new ImageButton.ImageButtonStyle();
         backButtom = createButton(backTexture);
-        backButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
+        backButtom.setPosition(canvas.getWidth() * 0.05f, canvas.getHeight() * 0.05f);
         backButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -244,7 +240,7 @@ public class SettingMode  extends Mode implements Screen{
         stage.addActor(backButtom);
 
         leftButtom = createButton(leftTexture);
-        leftButtom.setPosition(canvas.getWidth()*0.4f, canvas.getHeight()*0.25f);
+        leftButtom.setPosition(canvas.getWidth() * 0.4f, canvas.getHeight() * 0.25f);
         leftButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -260,7 +256,7 @@ public class SettingMode  extends Mode implements Screen{
         stage.addActor(leftButtom);
 
         rightButtom = createButton(rightTexture);
-        rightButtom.setPosition(canvas.getWidth()*0.8f, canvas.getHeight()*0.25f);
+        rightButtom.setPosition(canvas.getWidth() * 0.8f, canvas.getHeight() * 0.25f);
         rightButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -277,14 +273,14 @@ public class SettingMode  extends Mode implements Screen{
         table1 = new Table();
         table2 = new Table();
 
-        table1.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.65f);
-        table2.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.5f);
+        table1.setPosition(canvas.getWidth() * 0.6f, canvas.getHeight() * 0.65f);
+        table2.setPosition(canvas.getWidth() * 0.6f, canvas.getHeight() * 0.5f);
 
         Slider.SliderStyle soundstyle = new Slider.SliderStyle();
         soundstyle.knob = new TextureRegionDrawable(knobTexture);
         soundstyle.background = new TextureRegionDrawable(SliderBkgTexture);
         soundstyle.knobBefore = new TextureRegionDrawable(SliderBkgTexture);
-        soundSlider = new Slider(0, 1.5f, 0.1f, false,  soundstyle);
+        soundSlider = new Slider(0, 1.5f, 0.1f, false, soundstyle);
         soundSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -298,11 +294,11 @@ public class SettingMode  extends Mode implements Screen{
         stage.addActor(table1);
 
 
-        musicSlider = new Slider(0, 1.5f, 0.1f, false,  soundstyle);
+        musicSlider = new Slider(0, 1.5f, 0.1f, false, soundstyle);
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-               musicVol = musicSlider.getValue();
+                musicVol = musicSlider.getValue();
             }
 
         });
@@ -312,15 +308,15 @@ public class SettingMode  extends Mode implements Screen{
         Gdx.input.setInputProcessor(stage);
     }
 
-    public float getSoundVol(){
+    public float getSoundVol() {
         return soundVol;
     }
 
-    public float getMusicVol(){
+    public float getMusicVol() {
         return musicVol;
     }
 
-    public  boolean isArrow(){
+    public boolean isArrow() {
         return arrow;
     }
 
