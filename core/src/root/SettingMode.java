@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -14,13 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
-import java.util.ArrayList;
+
+public class SettingMode extends Mode implements Screen {
 
 
-public class SettingMode  extends Mode implements Screen{
-
-
-    public static final int INTO_SETTING= 15;
+    public static final int INTO_SETTING = 15;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
             "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
     private static final String RIGHT = "cutscenes/skipButton.png";
@@ -127,7 +124,7 @@ public class SettingMode  extends Mode implements Screen{
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
         }
 
@@ -136,20 +133,20 @@ public class SettingMode  extends Mode implements Screen{
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background.getTexture());
-        canvas.drawUI(logoTexture, canvas.getWidth()*0.1f, canvas.getHeight()*0.9f, 0.3f);
-        canvas.drawUI(titleTexture, canvas.getWidth()/2, canvas.getHeight()*0.85f, 1.0f);
-        canvas.drawUI(soundTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.65f, 1.0f);
-      //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.65f, 1.0f);
-       // canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.65f, 1.0f);
+        canvas.drawUI(logoTexture, canvas.getWidth() * 0.1f, canvas.getHeight() * 0.9f, 0.3f);
+        canvas.drawUI(titleTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.85f, 1.0f);
+        canvas.drawUI(soundTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.65f, 1.0f);
+        //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.65f, 1.0f);
+        // canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.65f, 1.0f);
 
-        canvas.drawUI(musicTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.5f, 1.0f);
-      //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.45f, 1.0f);
-     //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
+        canvas.drawUI(musicTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.5f, 1.0f);
+        //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.45f, 1.0f);
+        //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
 
 
-        canvas.drawUI(controlsTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.35f, 1.0f);
-        if (arrow){
-            canvas.drawUI(keyboardArrowTexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
+        canvas.drawUI(controlsTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.35f, 1.0f);
+        if (arrow) {
+            canvas.drawUI(keyboardArrowTexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
         }
         canvas.actStage(stage);
         canvas.end();
@@ -181,21 +178,20 @@ public class SettingMode  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-        background =  createTexture(manager,BKG, false);
+        background = createTexture(manager, BKG, false);
         logoTexture = createTexture(manager, LOGO, false);
         titleTexture = createTexture(manager, TITLE, false);
-        onTexture =  createTexture(manager,ON, false);
+        onTexture = createTexture(manager, ON, false);
         offTexture = createTexture(manager, OFF, false);
         selectTexture = createTexture(manager, SETTING_SELECT, false);
-        controlsTexture =  createTexture(manager,CONTROLS, false);
+        controlsTexture = createTexture(manager, CONTROLS, false);
         soundTexture = createTexture(manager, SOUND, false);
         keyboardArrowTexture = createTexture(manager, KEYBOARD_ARROW, false);
-        keyboardWasdtexture =  createTexture(manager,KEYBOARD_WASD, false);
+        keyboardWasdtexture = createTexture(manager, KEYBOARD_WASD, false);
         musicTexture = createTexture(manager, MUSIC, false);
         backTexture = createTexture(manager, BACK, false);
         selectorAssetState = AssetState.COMPLETE;
     }
-
 
 
     private ImageButton createButton(TextureRegion texture) {
@@ -203,8 +199,6 @@ public class SettingMode  extends Mode implements Screen{
         ImageButton button = new ImageButton(myTexRegionDrawable);
         return button;
     }
-
-
 
 
     private TextureRegion createTexture(AssetManager manager, String file, boolean repeat) {
@@ -220,18 +214,17 @@ public class SettingMode  extends Mode implements Screen{
     }
 
 
-
-    public void initUI(){
+    public void initUI() {
         // final ImageButton.ImageButtonStyle backbuttonStyle = new ImageButton.ImageButtonStyle();
-         backButtom = createButton(backTexture);
-         backButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
-         backButtom.addListener(new ClickListener() {
+        backButtom = createButton(backTexture);
+        backButtom.setPosition(canvas.getWidth() * 0.05f, canvas.getHeight() * 0.05f);
+        backButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
             }
-          });
-         stage.addActor(backButtom);
+        });
+        stage.addActor(backButtom);
 
         Gdx.input.setInputProcessor(stage);
 

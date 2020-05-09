@@ -515,10 +515,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
             // We are are ready, notify our listener
             if (listener != null && pressState == MouseState.QUIT) {
-               System.exit(0);
+                System.exit(0);
             } else if (listener != null && pressState == MouseState.START) {
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
-            }else if (listener != null && pressState == MouseState.SETTINGS){
+            } else if (listener != null && pressState == MouseState.SETTINGS) {
                 pressState = MouseState.NONE;
                 listener.exitScreen(this, SettingMode.INTO_SETTING);
             }
@@ -591,7 +591,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         music.pause();
     }
 
-    public void reset(){
+    public void reset() {
         music.play();
     }
 

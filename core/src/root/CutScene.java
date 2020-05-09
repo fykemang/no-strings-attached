@@ -2,42 +2,33 @@ package root;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import entities.LevelMetadata;
 import util.ScreenListener;
 
 import java.util.ArrayList;
 
 
-public class CutScene  extends Mode implements Screen{
+public class CutScene extends Mode implements Screen {
     public static enum THEME {
         OPENING,
         CITY,
         FOREST,
         MOUNTAIN,
         END
-    };
+    }
+
+    ;
     private THEME theme;
-    public static final int INTO_CUTSCENE= 8;
+    public static final int INTO_CUTSCENE = 8;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
             "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
     private static final String SKIP = "cutscenes/PressEnterSkip.png";
@@ -49,7 +40,7 @@ public class CutScene  extends Mode implements Screen{
     private TextureRegion nextTexture;
     private static final String[] city = {};
     private boolean slideMode;
-    private int currentSlide =  0;
+    private int currentSlide = 0;
 
     private final AssetManager manager;
     private GameCanvas canvas;
@@ -157,17 +148,17 @@ public class CutScene  extends Mode implements Screen{
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-        skiptexture =  createTexture(manager,SKIP, false);
+        skiptexture = createTexture(manager, SKIP, false);
         nextTexture = createTexture(manager, RIGHT, false);
-        switch(theme){
+        switch (theme) {
             case OPENING:
-                for (String file: opening) {
+                for (String file : opening) {
                     textures.add(createTexture(manager, file, false));
                 }
                 slideMode = true;
             default:
         }
-        if (slideMode){
+        if (slideMode) {
 
 //            skipbuttonStyle.up = new TextureRegionDrawable(skiptexture);
 //            skipButtom = new ImageButton(skipbuttonStyle);
@@ -182,19 +173,19 @@ public class CutScene  extends Mode implements Screen{
 //            });
 
             nextButtom = createButton(nextTexture);
-            nextButtom.setPosition(canvas.getWidth()*0.9f - nextButtom.getWidth()/2,
-                    canvas.getHeight()*0.5f);
+            nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
+                    canvas.getHeight() * 0.5f);
             nextButtom.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (currentSlide<textures.size()-2)
-                         currentSlide++;
-                    else if (currentSlide==textures.size()-2) {
+                    if (currentSlide < textures.size() - 2)
+                        currentSlide++;
+                    else if (currentSlide == textures.size() - 2) {
                         currentSlide++;
                         stage.clear();
                         addStart();
                     }
-                 }
+                }
 
             });
             stage.addActor(nextButtom);
@@ -203,7 +194,7 @@ public class CutScene  extends Mode implements Screen{
 
             Gdx.input.setInputProcessor(stage);
 
-        }else {
+        } else {
             //set up the buttoms
             // deal with animations
 
@@ -212,15 +203,15 @@ public class CutScene  extends Mode implements Screen{
         selectorAssetState = AssetState.COMPLETE;
     }
 
-    private void addStart(){
+    private void addStart() {
         TextureRegion startTexture = createTexture(manager, START, false);
         ImageButton start = createButton(startTexture);
-        start.setPosition(canvas.getWidth()*0.7f - start.getWidth()/2,
-                canvas.getHeight()*0.1f);
+        start.setPosition(canvas.getWidth() * 0.7f - start.getWidth() / 2,
+                canvas.getHeight() * 0.1f);
         start.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                listener.exitScreen( cutScene, LevelSelectorMode.INTO_SELECTOR);
+                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
 
         });
@@ -235,8 +226,8 @@ public class CutScene  extends Mode implements Screen{
     }
 
 
-    public void setTheme(THEME t){
-           theme = t;
+    public void setTheme(THEME t) {
+        theme = t;
     }
 
 
