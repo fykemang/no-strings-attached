@@ -1,54 +1,66 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
-
-public class CutScene extends Mode implements Screen, InputProcessor, ControllerListener {
-    public static final int INTO_TRANSITION = 5;
-    private static final String[] OPENING = {"cutscenes/opening-1.png", "cutscenes/opening-2.png"};
-    private static final String[] CITY = {};
+import java.util.ArrayList;
 
 
-    Texture background;
-    Texture yarnie;
-    TextureRegion pc;
-    Texture winMessage;
-    TextureRegion buttonNextDown;
+public class CutScene extends Mode implements Screen {
+    public static enum THEME {
+        OPENING,
+        CITY,
+        FOREST,
+        MOUNTAIN,
+        END
+    }
+
+    ;
+    private THEME theme;
+    public static final int INTO_CUTSCENE = 8;
+    private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
+            "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
+    private static final String SKIP = "cutscenes/PressEnterSkip.png";
+    private static final String RIGHT = "cutscenes/skipButton.png";
+    private static final String START = "ui/start.png";
+    private final ImageButton.ImageButtonStyle skipbuttonStyle = new ImageButton.ImageButtonStyle();
+    private ArrayList<TextureRegion> textures = new ArrayList<>();
+    private TextureRegion skiptexture;
+    private TextureRegion nextTexture;
+    private static final String[] city = {};
+    private boolean slideMode;
+    private int currentSlide = 0;
+
     private final AssetManager manager;
     private GameCanvas canvas;
     private final Stage stage;
-    //private final ImageButton nextButton;;
+    private ScreenListener listener;
+    private final boolean active;
+    private ImageButton skipButtom;
+    private ImageButton nextButtom;
+    private CutScene cutScene;
 
     private AssetState selectorAssetState = AssetState.EMPTY;
 
-    public CutScene(AssetManager manager, GameCanvas canvas, boolean win) {
+    public CutScene(AssetManager manager, GameCanvas canvas) {
         this.manager = manager;
         this.canvas = canvas;
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        try {
-            // Let ANY connected controller start the game.
-            for (Controller controller : Controllers.getControllers()) {
-                controller.addListener(this);
-            }
-        } catch (Exception e) {
-            System.out.println("Error: Game Controllers could not be initialized");
-        }
+        cutScene = this;
+
         active = true;
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -56,61 +68,6 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
     }
 
     public void exit() {
-
-    }
-
-    /**
-     * Listener that will update the player mode when we are done
-     */
-    private ScreenListener listener;
-
-    private final int level = -1;
-    private final boolean active;
-
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return true;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
-    @Override
-    public void show() {
 
     }
 
@@ -139,49 +96,10 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
 
     }
 
-    @Override
-    public void connected(Controller controller) {
-
-    }
 
     @Override
-    public void disconnected(Controller controller) {
+    public void show() {
 
-    }
-
-    @Override
-    public boolean buttonDown(Controller controller, int buttonCode) {
-        return false;
-    }
-
-    @Override
-    public boolean buttonUp(Controller controller, int buttonCode) {
-        return false;
-    }
-
-    @Override
-    public boolean axisMoved(Controller controller, int axisCode, float value) {
-        return false;
-    }
-
-    @Override
-    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
-        return false;
-    }
-
-    @Override
-    public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
-        return false;
-    }
-
-    @Override
-    public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
-        return false;
-    }
-
-    @Override
-    public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
-        return false;
     }
 
     @Override
@@ -189,9 +107,6 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
         if (active) {
             update(delta);
             draw();
-
-            // We are are ready, notify our listener
-
         }
     }
 
@@ -200,7 +115,18 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
     }
 
     private void draw() {
-        stage.draw();
+        canvas.begin();
+        if (slideMode) {
+            canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
+                    canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+            }
+            if (currentSlide < textures.size() - 1) {
+                canvas.drawUI(skiptexture, canvas.getWidth() * 0.9f - skiptexture.getRegionWidth() / 2, canvas.getHeight() * 0.1f, 1f);
+            }
+        }
+        canvas.actStage(stage);
         canvas.end();
     }
 
@@ -209,8 +135,12 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
         if (selectorAssetState != AssetState.EMPTY) {
             return;
         }
+        for (String s : opening) loadAsset(s, Texture.class, manager);
+        for (String s : city) loadAsset(s, Texture.class, manager);
+        loadAsset(RIGHT, Texture.class, manager);
+        loadAsset(SKIP, Texture.class, manager);
+        loadAsset(START, Texture.class, manager);
         selectorAssetState = AssetState.LOADING;
-//        loadAsset(LEVEL_METADATA, LevelMetadata.class, manager);
     }
 
     @Override
@@ -218,31 +148,100 @@ public class CutScene extends Mode implements Screen, InputProcessor, Controller
         if (selectorAssetState != AssetState.LOADING) {
             return;
         }
-        //   background = manager.get(BACKGROUND_FILE, Texture.class);
-//        city = manager.get(CITY_FILE, Texture.class);
-//        suburb = manager.get(SUBURB_FILE, Texture.class);
-//        forest = manager.get(FOREST_FILE, Texture.class);
-//        mountain = manager.get(MOUNTAIN_FILE, Texture.class);
-//        selector = manager.get(SELECT_FILE, Texture.class);
-//        levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
-//        levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
-//        clickSound = manager.get(MENU_CLICK_FILE, Sound.class);
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
-//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-//        parameter.size = 50;
-//        selectorFont = generator.generateFont(parameter);
+        skiptexture = createTexture(manager, SKIP, false);
+        nextTexture = createTexture(manager, RIGHT, false);
+        switch (theme) {
+            case OPENING:
+                for (String file : opening) {
+                    textures.add(createTexture(manager, file, false));
+                }
+                slideMode = true;
+            default:
+        }
+        if (slideMode) {
+
+//            skipbuttonStyle.up = new TextureRegionDrawable(skiptexture);
+//            skipButtom = new ImageButton(skipbuttonStyle);
+//            skipButtom.setPosition(canvas.getWidth()*0.9f - skipButtom.getWidth()/2,
+//                    canvas.getHeight()*0.01f);
+//            skipButtom.addListener(new ClickListener() {
+//                @Override
+//                public void clicked(InputEvent event, float x, float y) {
+//                    listener.exitScreen( cutScene, LevelSelectorMode.INTO_SELECTOR);
+//                }
+//
+//            });
+
+            nextButtom = createButton(nextTexture);
+            nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
+                    canvas.getHeight() * 0.5f);
+            nextButtom.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (currentSlide < textures.size() - 2)
+                        currentSlide++;
+                    else if (currentSlide == textures.size() - 2) {
+                        currentSlide++;
+                        stage.clear();
+                        addStart();
+                    }
+                }
+
+            });
+            stage.addActor(nextButtom);
+//            stage.addActor(skipButtom);
+
+
+            Gdx.input.setInputProcessor(stage);
+
+        } else {
+            //set up the buttoms
+            // deal with animations
+
+
+        }
         selectorAssetState = AssetState.COMPLETE;
     }
 
+    private void addStart() {
+        TextureRegion startTexture = createTexture(manager, START, false);
+        ImageButton start = createButton(startTexture);
+        start.setPosition(canvas.getWidth() * 0.7f - start.getWidth() / 2,
+                canvas.getHeight() * 0.1f);
+        start.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+            }
 
-    private ImageButton createButton(Texture texture) {
-        TextureRegion buttonRegion = new TextureRegion(texture);
-        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(buttonRegion);
+        });
+        stage.addActor(start);
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    private ImageButton createButton(TextureRegion texture) {
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(texture);
         ImageButton button = new ImageButton(myTexRegionDrawable);
-
         return button;
     }
 
+
+    public void setTheme(THEME t) {
+        theme = t;
+    }
+
+
+    private TextureRegion createTexture(AssetManager manager, String file, boolean repeat) {
+        if (manager.isLoaded(file)) {
+            TextureRegion region = new TextureRegion(manager.get(file, Texture.class));
+            region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            if (repeat) {
+                region.getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            }
+            return region;
+        }
+        return null;
+    }
 
     public void reset(GameCanvas canvas) {
         this.canvas = canvas;

@@ -122,6 +122,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Standard window height (for scaling)
      */
     private static final int STANDARD_HEIGHT = 700;
+
+    public static int INTO_STARTSCREEN = 18;
     /**
      * Ratio of the bar width to the screen
      */
@@ -340,6 +342,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         active = true;
     }
 
+
     /**
      * Called when this screen should release all resources.
      */
@@ -459,7 +462,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                     buttonX3, buttonY3, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
         if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
-
             float y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
             Color tint = Color.WHITE;
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
@@ -513,9 +515,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
             // We are are ready, notify our listener
             if (listener != null && pressState == MouseState.QUIT) {
-                listener.exitScreen(this, 0);
+                System.exit(0);
             } else if (listener != null && pressState == MouseState.START) {
-                listener.exitScreen(this, 4);
+                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
+            } else if (listener != null && pressState == MouseState.SETTINGS) {
+                pressState = MouseState.NONE;
+                listener.exitScreen(this, SettingMode.INTO_SETTING);
             }
         }
     }
@@ -583,6 +588,11 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
+        music.pause();
+    }
+
+    public void reset() {
+        music.play();
     }
 
     /**
