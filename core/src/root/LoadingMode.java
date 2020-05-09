@@ -66,7 +66,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     /**
      * Background texture for start-up
      */
-    private Texture logo;
+    private final Texture logo;
     private FilmStrip animatedBkg;
 
     private final Music music;
@@ -124,6 +124,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Standard window height (for scaling)
      */
     private static final int STANDARD_HEIGHT = 700;
+
+    public static int INTO_STARTSCREEN = 18;
     /**
      * Ratio of the bar width to the screen
      */
@@ -334,13 +336,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         }
 
         music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
-        music.play();
-        music.setVolume(MUSIC_VOLUME);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
-
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
         active = true;
     }
+
 
     /**
      * Called when this screen should release all resources.
@@ -461,7 +462,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                     buttonX3, buttonY3, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
         if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
-
             float y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
             Color tint = Color.WHITE;
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
@@ -515,9 +515,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
             // We are are ready, notify our listener
             if (listener != null && pressState == MouseState.QUIT) {
-                listener.exitScreen(this, 0);
+                System.exit(0);
             } else if (listener != null && pressState == MouseState.START) {
-                listener.exitScreen(this, 4);
+                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
+            } else if (listener != null && pressState == MouseState.SETTINGS) {
+                pressState = MouseState.NONE;
+                listener.exitScreen(this, SettingMode.INTO_SETTING);
             }
         }
     }
@@ -576,6 +579,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public void show() {
         // Useless if called in outside animation loop
+        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.play();
+        music.setLooping(true);
         active = true;
     }
 
@@ -585,6 +591,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
+        music.pause();
+    }
+
+    public void reset() {
+        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.play();
     }
 
     /**
@@ -622,21 +634,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
-            clickSound.play(SFX_VOLUME);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             pressState = MouseState.START;
         }
 
         float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
         float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
-            clickSound.play(SFX_VOLUME);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             pressState = MouseState.SETTINGS;
         }
 
         float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
         float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
-            clickSound.play(SFX_VOLUME);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             pressState = MouseState.QUIT;
         }
 

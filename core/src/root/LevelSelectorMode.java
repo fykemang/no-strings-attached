@@ -25,8 +25,6 @@ import java.util.ArrayList;
 
 public class LevelSelectorMode extends Mode implements Screen, InputProcessor, ControllerListener {
     public static final int INTO_SELECTOR = 4;
-    public static float MUSIC_VOLUME = 0.5f;
-    public static float SFX_VOLUME = 0.5f;
     private static final String BACKGROUND_FILE = "ui/select_bg.png";
     private static final String CITY_FILE = "ui/city.png";
     private static final String SUBURB_FILE = "ui/suburbs.png";
@@ -123,11 +121,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
 
-    public void setCanvas(GameCanvas canvas) {
-        this.canvas = canvas;
-    }
-
-
     public LevelSelectorMode() {
         this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));
@@ -186,7 +179,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //            }
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
-            clickSound.play(SFX_VOLUME);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             ready = true;
             levelSelectorMusic.dispose();
         }
@@ -266,7 +259,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void pause() {
-
+        levelSelectorMusic.pause();
     }
 
     @Override
@@ -393,7 +386,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
             if (level != lastLevel) {
-                hoverSound.play(6*SFX_VOLUME);
+                hoverSound.play(6*GDXRoot.soundVol);
             }
             lastLevel = level;
             canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
@@ -426,7 +419,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(MUSIC_VOLUME);
+        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
     }
 }
