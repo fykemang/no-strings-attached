@@ -144,11 +144,11 @@ public class SettingMode extends Mode implements Screen {
         //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
 
 
-        canvas.drawUI(controlsTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.35f, 1.0f);
-        if (arrow){
-            canvas.drawUI(keyboardArrowTexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
-        }else {
-            canvas.drawUI(keyboardWasdtexture, canvas.getWidth()*0.6f, canvas.getHeight()*0.25f, 0.5f);
+        canvas.drawUI(controlsTexture, canvas.getWidth() * 0.25f, canvas.getHeight() * 0.35f, 1.0f);
+        if (arrow) {
+            canvas.drawUI(keyboardArrowTexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
+        } else {
+            canvas.drawUI(keyboardWasdtexture, canvas.getWidth() * 0.6f, canvas.getHeight() * 0.25f, 0.5f);
         }
         canvas.actStage(stage);
         canvas.end();
@@ -184,7 +184,7 @@ public class SettingMode extends Mode implements Screen {
         background = createTexture(manager, BKG, false);
         logoTexture = createTexture(manager, LOGO, false);
         titleTexture = createTexture(manager, TITLE, false);
-        SliderBkgTexture =  createTexture(manager, SLIDERBKG, false);
+        SliderBkgTexture = createTexture(manager, SLIDERBKG, false);
         knobTexture = createTexture(manager, SLIDERKNOB, false);
         selectTexture = createTexture(manager, SETTING_SELECT, false);
         controlsTexture = createTexture(manager, CONTROLS, false);
@@ -232,7 +232,7 @@ public class SettingMode extends Mode implements Screen {
         stage.addActor(backButtom);
 
         leftButtom = createButton(leftTexture);
-        leftButtom.setPosition(canvas.getWidth()*0.4f, canvas.getHeight()*0.25f);
+        leftButtom.setPosition(canvas.getWidth() * 0.4f, canvas.getHeight() * 0.25f);
         leftButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -242,7 +242,7 @@ public class SettingMode extends Mode implements Screen {
         stage.addActor(leftButtom);
 
         rightButtom = createButton(rightTexture);
-        rightButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
+        rightButtom.setPosition(canvas.getWidth() * 0.05f, canvas.getHeight() * 0.05f);
         rightButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -257,11 +257,11 @@ public class SettingMode extends Mode implements Screen {
     }
 
 
-    public void showLeftButton(){
+    public void showLeftButton() {
 
     }
 
-    public void showRightButton(){
+    public void showRightButton() {
 
     }
 
