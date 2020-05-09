@@ -181,6 +181,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 case SettingMode.INTO_SETTING:
                     settings.setScreenListener(this);
                     settings.loadContent(manager);
+                    settings.initUI();
                     setScreen(settings);
                     loadingMode.hide();
             }
@@ -212,7 +213,6 @@ public class GDXRoot extends Game implements ScreenListener {
             gameMode.reset();
             setScreen(gameMode);
             levelSelector.pause();
-            levelSelector.hide();
             // If level select is selected from in game
         } else if (screen == gameMode) {
             switch (exitCode){
