@@ -80,7 +80,7 @@ public class InputController {
     private boolean secondPressed;
     private boolean secondPrevious;
     /**
-     * Whether the teritiary action button was pressed.
+     * Whether the tertiary action button was pressed.
      */
     private boolean tertiaryPressed;
     /**
@@ -93,6 +93,13 @@ public class InputController {
      */
     private boolean exitPressed;
     private boolean exitPrevious;
+
+//    private int arrowPressed;
+//    private int arrowPrevious;
+//
+//    public boolean didPressArrow() {
+//        return arrowPressed != arrowPrevious;
+//    }
 
     /**
      * How much did we move horizontally?
@@ -278,6 +285,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
         shiftPrevious = shiftPressed;
+//        arrowPrevious = arrowPressed;
 
         // Check to see if a GamePad is connected
         if (xbox.isConnected()) {
@@ -349,17 +357,21 @@ public class InputController {
         horizontal = (secondary ? horizontal : 0.0f);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             horizontal += 1.0f;
+//            arrowPressed = 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             horizontal -= 1.0f;
+//            arrowPressed = 2;
         }
 
         vertical = (secondary ? vertical : 0.0f);
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             vertical += 1.0f;
+//            arrowPressed = 3;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             vertical -= 1.0f;
+//            arrowPressed = 4;
         }
 
         shiftPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);

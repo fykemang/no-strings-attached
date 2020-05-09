@@ -212,6 +212,10 @@ public class Person extends CapsuleObstacle {
         return horizontalMovement;
     }
 
+    public float getVerticalMovement() {
+        return verticalMovement;
+    }
+
     /**
      * Sets left/right movement of this character.
      * <p>
