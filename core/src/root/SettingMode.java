@@ -6,9 +6,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
@@ -22,8 +24,8 @@ public class SettingMode  extends Mode implements Screen{
     private static final String BKG = "ui/grey.png";
     private static final String LOGO = "ui/game-logo.png";
     private static final String TITLE = "ui/setting.png";
-    private static final String SLIDERBKG = "ui/on.png";
-    private static final String SLIDERKNOB = "ui/off.png";
+    private static final String SLIDERBKG = "ui/slider-bkg.png";
+    private static final String SLIDERKNOB = "ui/knob.png";
     private static final String SOUND = "ui/sound.png";
     private static final String CONTROLS = "ui/controls.png";
     private static final String SETTING_SELECT = "ui/setting-select.png";
@@ -57,8 +59,12 @@ public class SettingMode  extends Mode implements Screen{
     private ImageButton backButtom;
     private ImageButton leftButtom;
     private ImageButton rightButtom;
-
+    private Slider soundSlider;
+    private Slider musicSlider;
     private SettingMode setting;
+
+    private Table table1;
+    private Table table2;
 
     private boolean musicOn = true;
     private boolean soundOn = true;
@@ -102,7 +108,7 @@ public class SettingMode  extends Mode implements Screen{
 
     @Override
     public void hide() {
-
+        stage.clear();
     }
 
     @Override
@@ -137,12 +143,12 @@ public class SettingMode  extends Mode implements Screen{
         canvas.drawUI(logoTexture, canvas.getWidth()*0.1f, canvas.getHeight()*0.9f, 0.3f);
         canvas.drawUI(titleTexture, canvas.getWidth()/2, canvas.getHeight()*0.85f, 1.0f);
         canvas.drawUI(soundTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.65f, 1.0f);
-      //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.65f, 1.0f);
-       // canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.65f, 1.0f);
+        //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.65f, 1.0f);
+        // canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.65f, 1.0f);
 
         canvas.drawUI(musicTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.5f, 1.0f);
-      //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.45f, 1.0f);
-     //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
+        //  canvas.drawUI(onTexture, canvas.getWidth()*0.55f, canvas.getHeight()*0.45f, 1.0f);
+        //   canvas.drawUI(offTexture, canvas.getWidth()*0.65f, canvas.getHeight()*0.45f, 1.0f);
 
 
         canvas.drawUI(controlsTexture, canvas.getWidth()*0.25f, canvas.getHeight()*0.35f, 1.0f);
@@ -226,15 +232,15 @@ public class SettingMode  extends Mode implements Screen{
 
     public void initUI(){
         // final ImageButton.ImageButtonStyle backbuttonStyle = new ImageButton.ImageButtonStyle();
-         backButtom = createButton(backTexture);
-         backButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
-         backButtom.addListener(new ClickListener() {
+        backButtom = createButton(backTexture);
+        backButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
+        backButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
             }
-          });
-         stage.addActor(backButtom);
+        });
+        stage.addActor(backButtom);
 
         leftButtom = createButton(leftTexture);
         leftButtom.setPosition(canvas.getWidth()*0.4f, canvas.getHeight()*0.25f);
@@ -242,19 +248,68 @@ public class SettingMode  extends Mode implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 arrow = false;
+                stage.clear();
+                stage.addActor(rightButtom);
+                stage.addActor(backButtom);
+                stage.addActor(table1);
+                stage.addActor(table2);
+                Gdx.input.setInputProcessor(stage);
             }
         });
         stage.addActor(leftButtom);
 
         rightButtom = createButton(rightTexture);
-        rightButtom.setPosition(canvas.getWidth()*0.05f, canvas.getHeight()*0.05f);
+        rightButtom.setPosition(canvas.getWidth()*0.8f, canvas.getHeight()*0.25f);
         rightButtom.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                listener.exitScreen(setting, LoadingMode.INTO_STARTSCREEN);
+                arrow = true;
+                stage.clear();
+                stage.addActor(leftButtom);
+                stage.addActor(backButtom);
+                stage.addActor(table1);
+                stage.addActor(table2);
+                Gdx.input.setInputProcessor(stage);
             }
         });
 
+        table1 = new Table();
+        table2 = new Table();
+
+        table1.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.65f);
+        table2.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.5f);
+
+
+        Slider.SliderStyle soundstyle = new Slider.SliderStyle();
+        soundstyle.knob = new TextureRegionDrawable(knobTexture);
+        soundstyle.background = new TextureRegionDrawable(SliderBkgTexture);
+        soundstyle.knobBefore = new TextureRegionDrawable(SliderBkgTexture);
+        soundSlider = new Slider(0, 1000, 0.1f, false,  soundstyle);
+        soundSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+            }
+
+        });
+//        slider.getStyle().knob.setMinWidth(100);
+//        soundSlider.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.65f
+//                - SliderBkgTexture.getRegionHeight()/2);
+        table1.add(soundSlider).width(300);
+        stage.addActor(table1);
+
+
+        musicSlider = new Slider(0, 1000, 0.1f, false,  soundstyle);
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+            }
+
+        });
+
+        table2.add(musicSlider).width(300);
+        stage.addActor(table2);
 
         Gdx.input.setInputProcessor(stage);
 
@@ -262,13 +317,6 @@ public class SettingMode  extends Mode implements Screen{
     }
 
 
-    public void showLeftButton(){
-
-    }
-
-    public void showRightButton(){
-
-    }
 
 
     public void reset(GameCanvas canvas) {
