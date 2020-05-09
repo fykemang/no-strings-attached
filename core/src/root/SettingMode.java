@@ -66,8 +66,8 @@ public class SettingMode  extends Mode implements Screen{
     private Table table1;
     private Table table2;
 
-    private boolean musicOn = true;
-    private boolean soundOn = true;
+    private float soundVol = 1.0f;
+    private float musicVol = 1.0f;
     private boolean arrow = true;
 
 
@@ -279,41 +279,36 @@ public class SettingMode  extends Mode implements Screen{
         table1.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.65f);
         table2.setPosition(canvas.getWidth()*0.6f, canvas.getHeight()*0.5f);
 
-
         Slider.SliderStyle soundstyle = new Slider.SliderStyle();
         soundstyle.knob = new TextureRegionDrawable(knobTexture);
         soundstyle.background = new TextureRegionDrawable(SliderBkgTexture);
         soundstyle.knobBefore = new TextureRegionDrawable(SliderBkgTexture);
-        soundSlider = new Slider(0, 1000, 0.1f, false,  soundstyle);
+        soundSlider = new Slider(0, 1.5f, 0.1f, false,  soundstyle);
         soundSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                soundVol = soundSlider.getValue();
             }
 
         });
-//        slider.getStyle().knob.setMinWidth(100);
-//        soundSlider.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.65f
-//                - SliderBkgTexture.getRegionHeight()/2);
+        soundSlider.setValue(soundVol);
+
         table1.add(soundSlider).width(300);
         stage.addActor(table1);
 
 
-        musicSlider = new Slider(0, 1000, 0.1f, false,  soundstyle);
+        musicSlider = new Slider(0, 1.5f, 0.1f, false,  soundstyle);
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+               musicVol = musicSlider.getValue();
             }
 
         });
-
+        musicSlider.setValue(musicVol);
         table2.add(musicSlider).width(300);
         stage.addActor(table2);
-
         Gdx.input.setInputProcessor(stage);
-
-
     }
 
 
