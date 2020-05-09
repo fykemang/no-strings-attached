@@ -119,11 +119,11 @@ public class InputController {
     private float momentum;
 
 
-    private int LEFT = GDXRoot.useArrow? Input.Keys.LEFT: Input.Keys.A;
-    private int RIGHT = GDXRoot.useArrow? Input.Keys.RIGHT: Input.Keys.D;
-    private int DOWN = GDXRoot.useArrow? Input.Keys.DOWN: Input.Keys.S;
-    private int UP = GDXRoot.useArrow? Input.Keys.UP: Input.Keys.W;
-    private int SHIFT = GDXRoot.useArrow? Input.Keys.SHIFT_LEFT: Input.Keys.SHIFT_RIGHT;
+    private int LEFT = GDXRoot.useArrow ? Input.Keys.LEFT : Input.Keys.A;
+    private int RIGHT = GDXRoot.useArrow ? Input.Keys.RIGHT : Input.Keys.D;
+    private int DOWN = GDXRoot.useArrow ? Input.Keys.DOWN : Input.Keys.S;
+    private int UP = GDXRoot.useArrow ? Input.Keys.UP : Input.Keys.W;
+    private int SHIFT = GDXRoot.useArrow ? Input.Keys.SHIFT_LEFT : Input.Keys.SHIFT_RIGHT;
 
     /**
      * An X-Box controller (if it is connected)
