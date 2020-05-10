@@ -13,15 +13,7 @@
       "height": 1,
       "type": "normal",
       "direction": "up",
-      "isSliding": false,
-      "leftPos": {
-        "x": 8.5,
-        "y": 0.0
-      },
-      "rightPos": {
-        "x": 10.5,
-        "y": 1.0
-      }
+      "isSliding": false
     },
     {
       "x": 20,
@@ -30,15 +22,16 @@
       "height": 1,
       "type": "normal",
       "direction": "up",
-      "isSliding": false,
-      "leftPos": {
-        "x": 8.5,
-        "y": 0.0
-      },
-      "rightPos": {
-        "x": 10.5,
-        "y": 1.0
-      }
+      "isSliding": false
+    },
+    {
+      "x": 34,
+      "y": 1,
+      "width": 2,
+      "height": 1,
+      "type": "normal",
+      "direction": "up",
+      "isSliding": false
     },
     {
       "x": 10,
@@ -47,15 +40,7 @@
       "height": 0.7,
       "type": "spikes",
       "direction": "up",
-      "isSliding": false,
-      "leftPos": {
-        "x": 8.5,
-        "y": 0.0
-      },
-      "rightPos": {
-        "x": 10.5,
-        "y": 1.0
-      }
+      "isSliding": false
     }
   ],
   "npc": [
@@ -119,7 +104,7 @@
     },
     {
       "x": 32.5,
-      "y": 13
+      "y": 12
     }
   ],
   "exit": {

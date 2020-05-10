@@ -17,7 +17,7 @@ import entities.LevelMetadata;
  */
 public class LevelLoader extends AsynchronousAssetLoader<LevelMetadata, LevelLoader.LevelLoaderParameters> {
     private final Json json;
-    private LevelMetadata level;
+    private LevelMetadata levelData;
 
     public LevelLoader(FileHandleResolver resolver) {
         super(resolver);
@@ -25,18 +25,18 @@ public class LevelLoader extends AsynchronousAssetLoader<LevelMetadata, LevelLoa
     }
 
     public LevelMetadata getLoadedLevel() {
-        return level;
+        return levelData;
     }
 
     @Override
     public void loadAsync(AssetManager manager, String fileName, FileHandle file, LevelLoaderParameters parameter) {
-        level = json.fromJson(LevelMetadata.class, file);
+        levelData = json.fromJson(LevelMetadata.class, file);
     }
 
     @Override
     public LevelMetadata loadSync(AssetManager manager, String fileName, FileHandle file, LevelLoaderParameters parameter) {
-        LevelMetadata level = this.level;
-        this.level = null;
+        LevelMetadata level = this.levelData;
+        this.levelData = null;
         return level;
     }
 

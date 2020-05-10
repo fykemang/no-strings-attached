@@ -81,7 +81,7 @@ public class InputController {
     private boolean secondPressed;
     private boolean secondPrevious;
     /**
-     * Whether the teritiary action button was pressed.
+     * Whether the tertiary action button was pressed.
      */
     private boolean tertiaryPressed;
     /**
@@ -366,17 +366,21 @@ public class InputController {
         horizontal = (secondary ? horizontal : 0.0f);
         if (Gdx.input.isKeyPressed(RIGHT)) {
             horizontal += 1.0f;
+//            arrowPressed = 1;
         }
         if (Gdx.input.isKeyPressed(LEFT)) {
             horizontal -= 1.0f;
+//            arrowPressed = 2;
         }
 
         vertical = (secondary ? vertical : 0.0f);
         if (Gdx.input.isKeyPressed(UP)) {
             vertical += 1.0f;
+//            arrowPressed = 3;
         }
         if (Gdx.input.isKeyPressed(DOWN)) {
             vertical -= 1.0f;
+//            arrowPressed = 4;
         }
 
         shiftPressed = Gdx.input.isKeyPressed(SHIFT);

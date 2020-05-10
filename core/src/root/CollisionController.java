@@ -16,7 +16,6 @@ public class CollisionController implements ContactListener {
     private final ObjectSet<Fixture> sensorFixtures;
     private final Person player;
     private final Vector2 trampolineForce;
-    private final String COLLECT_FILE = "sounds/itemcollect.mp3";
 
     public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
@@ -82,7 +81,7 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2 == player && bd1.getName().equals(Blob.BLOB_NAME)) {
-                Vector2 norm = ((Blob) bd2).getNorm();
+                Vector2 norm = ((Blob) bd1).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
             }
@@ -91,11 +90,12 @@ public class CollisionController implements ContactListener {
                 player.addItem(bd2.getName());
                 ((Item) bd2).setState(true);
                 bd2.markRemoved(true);
-            }
-            if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
+                player.setDidCollect(true);
+            } else if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
                 player.addItem(bd1.getName());
                 ((Item) bd1).setState(true);
                 bd1.markRemoved(true);
+                player.setDidCollect(true);
             }
 
             if ((bd1 == player && bd2.getName().equals("spike")) || (bd2 == player && bd1.getName().equals("spike"))) {

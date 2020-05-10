@@ -335,7 +335,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
         music.setVolume(0.5f * GDXRoot.musicVol);
-        music.play();
         music.setLooping(true);
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
         active = true;
@@ -596,7 +595,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void reset() {
         music.setVolume(0.5f * GDXRoot.musicVol);
         music.play();
-
     }
 
     /**
