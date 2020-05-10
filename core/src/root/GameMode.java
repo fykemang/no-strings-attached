@@ -1459,7 +1459,7 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-                        jumpSound.play(0.5f*GDXRoot.soundVol);
+//                        jumpSound.play(0.5f*GDXRoot.soundVol);
                     }
                     else {
                         trampolineJumpSound.play(0.5f*GDXRoot.soundVol);
@@ -1490,7 +1490,7 @@ public class GameMode extends Mode implements Screen {
                 } else if (player.isGrounded()) {
                     if (!didPlayLand) {
                         if (!player.isOnTrampoline()) {
-                            landSound.play(0.5f*GDXRoot.soundVol);
+//                            landSound.play(0.5f*GDXRoot.soundVol);
                         }
                         else {
                             trampolineLandSound.play(0.5f*GDXRoot.soundVol);
@@ -1520,7 +1520,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play(GDXRoot.soundVol);
+                                    snipSound.play(0.5f*GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
