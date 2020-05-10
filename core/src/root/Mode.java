@@ -8,7 +8,7 @@ public abstract class Mode {
      * Track all loaded assets (for unloading purposes)
      */
     Array<String> assets = new Array<>();
-
+    GameCanvas canvas;
     AssetState assetState = AssetState.EMPTY;
 
     /**
@@ -55,4 +55,24 @@ public abstract class Mode {
             }
         }
     }
+
+    public void setCanvas(GameCanvas canvas) {
+        this.canvas = canvas;
+    }
+
+    enum AssetState {
+        /**
+         * No assets loaded
+         */
+        EMPTY,
+        /**
+         * Still loading assets
+         */
+        LOADING,
+        /**
+         * Assets are complete
+         */
+        COMPLETE
+    }
+
 }

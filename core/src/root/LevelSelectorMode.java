@@ -40,7 +40,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
      */
     private Music levelSelectorMusic;
     private Sound clickSound;
-    private GameCanvas canvas;
     private Texture background;
     private Texture city;
     private Texture suburb;
@@ -116,11 +115,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
 
-    public void setCanvas(GameCanvas canvas) {
-        this.canvas = canvas;
-    }
-
-
     public LevelSelectorMode() {
         this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));
@@ -179,7 +173,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //            }
 //        }
         if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
-            clickSound.play(0.5f);
+            clickSound.play(0.5f * GDXRoot.soundVol);
             ready = true;
             levelSelectorMusic.dispose();
         }
@@ -259,7 +253,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     @Override
     public void pause() {
-
+        levelSelectorMusic.pause();
     }
 
     @Override
@@ -413,7 +407,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f);
+        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
     }
 }

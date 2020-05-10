@@ -156,9 +156,9 @@ public class Stone extends PolygonObstacle {
             rotDir.set(rotatedX - rotX, rotatedY - rotY);
             rotDir.nor();
             setLinearVelocity(rotDir);
-            if (rotEndLim.epsilonEquals(rotX,rotY,0.3f)) {
+            if (rotEndLim.epsilonEquals(rotX, rotY, 0.3f)) {
                 back = true;
-            } else if (rotBeginLim.epsilonEquals(rotX,rotY, 0.3f)) {
+            } else if (rotBeginLim.epsilonEquals(rotX, rotY, 0.3f)) {
                 back = false;
 
             }
@@ -168,9 +168,9 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
 
-        if (type.equals("mountain") || type.equals("forest")|| type.equals("village")) {
+        if (type.equals("mountain") || type.equals("forest") || type.equals("village")) {
 
-            if (height <= 2 && width <= 2 && type.equals("village") ) {
+            if (height <= 2 && width <= 2 && type.equals("village")) {
                 float firstx = getX() * drawScale.x;
                 float firsty = getY() * drawScale.y;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -185,7 +185,7 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
 
-           } else if (height <= 2) {
+            } else if (height <= 2) {
                 this.x = getX();
                 this.y = getY();
                 // scale by y
