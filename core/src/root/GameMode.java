@@ -1100,12 +1100,13 @@ public class GameMode extends Mode implements Screen {
     }
 
     float volume = 0.5f * GDXRoot.musicVol;
+
     public void fadeInMusic() {
         timeSeconds = 0;
         volume = 0f;
         while ((timeSeconds < period) && (music.isLooping() || music.isPlaying())) {
             timeSeconds += Gdx.graphics.getRawDeltaTime();
-            if(volume < 0.5f * GDXRoot.musicVol)
+            if (volume < 0.5f * GDXRoot.musicVol)
                 volume += 0.0005 * timeSeconds;
             else {
                 volume = 0.5f * GDXRoot.musicVol;
@@ -1163,8 +1164,7 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 if (player.won() && !didPlayWin) {
-                    winSound.play(GDXRoot.soundVol
-                    );
+                    winSound.play(GDXRoot.soundVol);
                     didPlayWin = true;
                 }
                 if (!player.isAlive() && !didPlayLose) {
@@ -1206,6 +1206,7 @@ public class GameMode extends Mode implements Screen {
         }
 
         if (!isFailure() && player.getY() < -1) {
+            loseSound.play(GDXRoot.soundVol);
             setFailure(true);
             return false;
         }
@@ -1407,8 +1408,6 @@ public class GameMode extends Mode implements Screen {
         }
     }
 
-    Vector2 keyboardInput = null;
-    Vector2 lastkeyboardInput = null;
     /**
      * The core gameplay loop of this world.
      * <p>
@@ -1462,11 +1461,9 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-//                        jumpSound.play(0.5f*GDXRoot.soundVol);
-                    }
-                    else {
-                        trampolineJumpSound.play(0.5f*GDXRoot.soundVol);
-
+                        jumpSound.play(0.5f * GDXRoot.soundVol);
+                    } else {
+                        trampolineJumpSound.play(0.5f * GDXRoot.soundVol);
                     }
                     didPlayJump = true;
                     didPlayLand = false;
@@ -1490,8 +1487,7 @@ public class GameMode extends Mode implements Screen {
 //                    swingMusic.play();
 //                    swingMusic.setVolume(GDXRoot.soundVol * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
                     setSwingingAnimations(dt);
-                }
-                else if (player.isFalling()) {
+                } else if (player.isFalling()) {
                     player.setTexture(playerFallTexture);
                 } else if (player.isWalking()) {
                     player.setTexture(playerWalkingAnimation);
@@ -1499,8 +1495,7 @@ public class GameMode extends Mode implements Screen {
                     if (!didPlayLand) {
                         if (!player.isOnTrampoline()) {
 //                            landSound.play(0.5f*GDXRoot.soundVol);
-                        }
-                        else {
+                        } else {
 //                            trampolineLandSound.play(0.5f*GDXRoot.soundVol);
                         }
                         didPlayLand = true;
@@ -1528,7 +1523,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play(0.5f*GDXRoot.soundVol);
+                                    snipSound.play(0.5f * GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
@@ -1553,15 +1548,15 @@ public class GameMode extends Mode implements Screen {
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
                 swingSound.stop();
                 didPlaySwing = false;
-//                swingMusic.stop();
                 destroyPlayerRope();
             }
 
             if (player.isDidCollect() && !didPlayCollect) {
-                collectSound.play(0.5f*GDXRoot.soundVol);
+                collectSound.play(0.5f * GDXRoot.soundVol);
                 player.setDidCollect(false);
                 didPlayCollect = true;
             }
+
             if (didPlayCollect) {
                 player.setDidCollect(false);
                 didPlayCollect = false;

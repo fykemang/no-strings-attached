@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import entities.*;
 import obstacle.Obstacle;
-import sun.jvm.hotspot.ui.EditableAtEndDocument;
 
 /**
  * ContactListener that detects and handles collisions in the Box2D World
@@ -17,7 +16,6 @@ public class CollisionController implements ContactListener {
     private final ObjectSet<Fixture> sensorFixtures;
     private final Person player;
     private final Vector2 trampolineForce;
-    private final String COLLECT_FILE = "sounds/itemcollect.mp3";
 
     public CollisionController(Person player) {
         this.sensorFixtures = new ObjectSet<>();
@@ -93,8 +91,7 @@ public class CollisionController implements ContactListener {
                 ((Item) bd2).setState(true);
                 bd2.markRemoved(true);
                 player.setDidCollect(true);
-            }
-            else if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
+            } else if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
                 player.addItem(bd1.getName());
                 ((Item) bd1).setState(true);
                 bd1.markRemoved(true);

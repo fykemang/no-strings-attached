@@ -383,7 +383,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
             if (level != lastLevel) {
-                hoverSound.play(6*GDXRoot.soundVol);
+                hoverSound.play(6 * GDXRoot.soundVol);
             }
             lastLevel = level;
             canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,

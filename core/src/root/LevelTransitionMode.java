@@ -119,7 +119,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f*GDXRoot.soundVol);
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -141,7 +141,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         replayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f*GDXRoot.soundVol);
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
@@ -162,7 +162,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f*GDXRoot.soundVol);
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -179,7 +179,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         stage.addActor(mainMenuButton);
 
         music.play();
-        music.setVolume(0.5f*GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
 
         try {
@@ -336,6 +336,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
     private int lastState = 0;
+
     private void draw() {
         stage.draw();
         canvas.begin();
