@@ -133,7 +133,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Texture file for the exit door
      */
-    private static final String CITYGATE = "entities/citydoor1.png";
+    private static final String GATE = "entities/door.png";
     /**
      * Texture files for items
      */
@@ -192,7 +192,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion spikeVertTile;
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
-    protected TextureRegion citydoor;
+    protected FilmStrip door;
     /**
      * The font for giving messages to the player
      */
@@ -426,8 +426,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(UI_GreyYarn);
         manager.load(UI_RedYarn, Texture.class);
         assets.add(UI_RedYarn);
-        manager.load(CITYGATE, Texture.class);
-        assets.add(CITYGATE);
+        manager.load(GATE, Texture.class);
+        assets.add(GATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
         manager.load(BUTTON, Texture.class);
@@ -737,7 +737,7 @@ public class GameMode extends Mode implements Screen {
         basketOneTexture = createTexture(manager, BASKET_ONE, false);
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
-        citydoor = createTexture(manager, CITYGATE, false);
+        door = createFilmStrip(manager,GATE,1,11,11,false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -869,6 +869,7 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation.refresh();
         playerJumpUpAnimation.refresh();
         playerJumpDownAnimation.refresh();
+        door.refresh();
         didPlayWin = false;
         didPlayLose = false;
         didPlayCollect = false;
@@ -899,9 +900,7 @@ public class GameMode extends Mode implements Screen {
         player.setFilterData(playerFilter);
         player.setDrawScale(scale);
         player.setTexture(playerIdleAnimation);
-        float[] points = new float[]{0f, 0f, 0f, citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
-                citydoor.getRegionHeight() / 3 / scale.y, citydoor.getRegionWidth() / scale.x,
-                0f};
+        float[] points = new float[]{0f, 0f, 0f, 0.01f, 0.01f, 0.01f, 0.01f, 0f};
 
         float xpos = player.getX() * scale.x > 350 ? player.getX() * scale.x : 350;
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
@@ -913,7 +912,7 @@ public class GameMode extends Mode implements Screen {
         direction = null;
         targetViewPort = null;
         // Create exit door
-        createGate(points, level.getExitPos().x, level.getExitPos().y, citydoor);
+        createGate(points, level.getExitPos().x, level.getExitPos().y, door);
         //add player
         addObject(player);
         // Create NPCs
@@ -938,6 +937,7 @@ public class GameMode extends Mode implements Screen {
                 createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f);
             }
         }
+
 
         if (level.getType().contains("forest")) {
             for (Tile spike : spikes) {
@@ -971,8 +971,9 @@ public class GameMode extends Mode implements Screen {
     }
 
 
-    public void createGate(float[] points, float x, float y, TextureRegion texture) {
-        Gate gate = new Gate(texture, points, x, y);
+    public void createGate(float[] points, float x, float y, FilmStrip texture) {
+        Gate gate = new Gate(texture, points,x, y);
+        door.setFrameDuration(0.035f);
         gate.setBodyType(BodyDef.BodyType.StaticBody);
         gate.setFriction(0f);
         gate.setRestitution(BASIC_RESTITUTION);
@@ -1393,6 +1394,8 @@ public class GameMode extends Mode implements Screen {
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.won()) {
             player.setTexture(playerExitAnimation);
+            door.setElapsedTime(dt);
+            door.updateFrame();
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setVerticalMovement(InputController.getInstance().getVertical() * player.getForce());

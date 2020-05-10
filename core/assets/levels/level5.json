@@ -24,7 +24,7 @@
       "isSliding": false
     },
     {
-      "x": 19,
+      "x": 18,
       "y": 7.0,
       "width": 0.6,
       "height": 9.9,
@@ -46,6 +46,16 @@
     {
       "x": 20,
       "y": 7,
+      "width": 1.5,
+      "height": 10,
+      "type": "normal",
+      "id": 3,
+      "direction": "up",
+      "isSliding": false
+    },
+    {
+      "x": 19,
+      "y": 3,
       "width": 1.5,
       "height": 10,
       "type": "normal",
