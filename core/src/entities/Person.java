@@ -32,7 +32,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.5f;
+    private static final float PLAYER_DENSITY = 1.6f;
     /**
      * The factor to multiply by the input
      */
@@ -505,8 +505,6 @@ public class Person extends CapsuleObstacle {
                 setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
             }
 
-            float vertical = PLAYER_JUMP;
-
             if (isTrampolining) {
                 calculateTrampolineForce();
                 forceCache.set(trampolineForce.x, trampolineForce.y);
@@ -514,11 +512,10 @@ public class Person extends CapsuleObstacle {
                 isTrampolining = false;
             }
 
-
             if (isAttached) {
                 horizontalMovement = horizontalMovement * 4.5f;
             } else if (released) {
-                horizontalMovement = getVX() * 15f + getHorizontalMovement();
+                horizontalMovement = getVX() * 20f + getHorizontalMovement();
             }
 
             forceCache.set(horizontalMovement, 0);
@@ -526,7 +523,7 @@ public class Person extends CapsuleObstacle {
 
             // Jump!
             if (isJumping()) {
-                forceCache.set(0, vertical);
+                forceCache.set(0, PLAYER_JUMP);
                 body.applyLinearImpulse(forceCache, getPosition(), true);
             }
             released = false;
