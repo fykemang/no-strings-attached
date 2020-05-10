@@ -166,8 +166,13 @@ function Home() {
   const [selectedNodeID, setSelectedNode] = useState(null);
   const [selectedNodeType, setSelectedNodeType] = useState("");
   const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
-  const [canvasHeight, setCanvasHeight] = useState(800);
   const stageRef = React.useRef();
+  const canvasHeight = 800;
+
+  const scaleHeight = (oldY) => {
+    return (canvasHeight - oldY) / 44.4
+  }
+
   useEventListener("keydown", (e) => {
     if (e.keyCode === 8) {
       dispatch({
@@ -220,19 +225,21 @@ function Home() {
     const xScale = 37.5;
     const yScale = 44.4;
     const data = {
+      text: [],
+      tutorial: false,
       type: "city",
       items: state.items.map((item) => {
         return {
           ...item,
           x: item.x / xScale,
-          y: item.y / yScale,
+          y: scaleHeight(item.y),
         };
       }),
       tiles: state.tiles.map((tile) => {
         return {
           ...tile,
           x: tile.x / xScale,
-          y: tile.y / yScale,
+          y: scaleHeight(tile.y),
           height: tile.height / yScale,
           width: tile.width / xScale,
           direction: "up"
@@ -242,12 +249,12 @@ function Home() {
         const leftNpc = {
           ...couple.leftNpc,
           x: couple.leftNpc.x / xScale,
-          y: couple.leftNpc.y / yScale,
+          y: scaleHeight(couple.leftNpc.y)
         };
         const rightNpc = {
           ...couple.rightNpc,
           x: couple.rightNpc.x / xScale,
-          y: couple.rightNpc.y / yScale,
+          y: scaleHeight(couple.rightNpc.y)
         };
         acc.push(leftNpc);
         acc.push(rightNpc);
@@ -255,14 +262,12 @@ function Home() {
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: (canvasHeight - state.player.y) / yScale,
+        y: scaleHeight(state.player.y)
       },
       exit: {
         x: state.exit.x / xScale,
-        y: (canvasHeight - state.exit.y) / yScale,
-      },
-      text: [],
-      tutorial: false
+        y: scaleHeight(state.player.y),
+      }
     };
 
     const fileName = "test";
