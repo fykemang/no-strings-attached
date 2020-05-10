@@ -1564,6 +1564,7 @@ public class GameMode extends Mode implements Screen {
             }
             if (didPlayCollect) {
                 player.setDidCollect(false);
+                didPlayCollect = false;
             }
 
             // Swinging
