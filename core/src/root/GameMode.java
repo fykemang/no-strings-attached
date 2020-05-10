@@ -1460,7 +1460,7 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-//                        jumpSound.play(0.5f*GDXRoot.soundVol);
+                        jumpSound.play(GDXRoot.soundVol);
                     }
                     else {
                         trampolineJumpSound.play(0.5f*GDXRoot.soundVol);
