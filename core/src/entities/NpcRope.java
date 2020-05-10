@@ -284,14 +284,12 @@ public class NpcRope extends Rope {
         int endIndex = contPoints.length - 1;
 
         for (int i = startIndex; i < endIndex; i++) {
-//            int cur = state == RopeState.RIGHT_BROKEN ? i : i - 1;
             Vector2 pos = upperLayer.get(i - 1).getPosition();
             contPoints[i].set(pos.x * drawScale.x, pos.y * drawScale.y);
         }
 
 
         contPoints[0] = contPoints[1];
-
         contPoints[contPoints.length - 1] = contPoints[contPoints.length - 2];
     }
 
@@ -316,9 +314,7 @@ public class NpcRope extends Rope {
             }
         }
 
-        if (index < 2 || index > upperLayer.size() - 2) {
-            return null;
-        }
+        index = index < 2 ? 2 : index > upperLayer.size() - 2 ? upperLayer.size() - 2 : index;
 
         int lowIdx = index >= lowerLayer.size() ? lowerLayer.size() - 1 : index;
 

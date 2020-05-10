@@ -11,6 +11,7 @@
 package entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
@@ -31,7 +32,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The density of the character
      */
-    private static final float PLAYER_DENSITY = 1.5f;
+    private static final float PLAYER_DENSITY = 1.6f;
     /**
      * The factor to multiply by the input
      */
@@ -39,7 +40,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float PLAYER_DAMPING = 100.0f;
+    private static final float PLAYER_DAMPING = 30f;
     /**
      * The dude is not a slippery one
      */
@@ -159,6 +160,9 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
     private Color tint = new Color(Color.WHITE);
+    private Color lastTint = new Color(Color.WHITE);
+    private TextureRegion lastTexture; //fade out of
+
     private boolean fallingBack;
 
     /**
@@ -171,11 +175,36 @@ public class Person extends CapsuleObstacle {
      * Cache for internal force calculations
      */
     private final Vector2 forceCache = new Vector2();
-    private Joint swingJoint;
+    private Joint swingJoint1;
+    private Joint swingJoint2;
     private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
     private boolean turned = false;
+
+    private boolean didCollect = false;
+
+    private boolean onTrampoline = false;
+
+    public boolean didJump() {
+        return this.isJumping;
+    }
+
+    public boolean isOnTrampoline() {
+        return this.onTrampoline;
+    }
+
+    public void setOnTrampoline(boolean onTrampoline) {
+        this.onTrampoline = onTrampoline;
+    }
+
+    public boolean isDidCollect() {
+        return this.didCollect;
+    }
+
+    public void setDidCollect(boolean didCollect) {
+        this.didCollect = didCollect;
+    }
 
     /**
      * Returns left/right movement of this character.
@@ -186,6 +215,10 @@ public class Person extends CapsuleObstacle {
      */
     public float getHorizontalMovement() {
         return horizontalMovement;
+    }
+
+    public float getVerticalMovement() {
+        return verticalMovement;
     }
 
     /**
@@ -266,6 +299,17 @@ public class Person extends CapsuleObstacle {
         this.isCutting = isCutting;
     }
 
+    @Override
+    public void setTexture(TextureRegion t){
+        if(texture!=t && !won) {
+            lastTexture = texture;
+            lastTint.set(1, 1, 1, 1);
+            tint.set(1, 1, 1, 0);
+        }else if (texture!=t){
+            tint.set(Color.WHITE);
+        }
+        super.setTexture(t);
+    }
     /**
      * Returns true if this character is facing right
      *
@@ -324,6 +368,7 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setIsTrampolining(boolean isTrampolining) {
+        setOnTrampoline(true);
         this.isTrampolining = isTrampolining;
     }
 
@@ -489,8 +534,6 @@ public class Person extends CapsuleObstacle {
                 setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
             }
 
-            float vertical = PLAYER_JUMP;
-
             if (isTrampolining) {
                 calculateTrampolineForce();
                 forceCache.set(trampolineForce.x, trampolineForce.y);
@@ -498,11 +541,10 @@ public class Person extends CapsuleObstacle {
                 isTrampolining = false;
             }
 
-
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 5f;
+                horizontalMovement = horizontalMovement * 4.5f;
             } else if (released) {
-                horizontalMovement = getVX() * 15f + getHorizontalMovement();
+                horizontalMovement = getVX() * 20f + getHorizontalMovement();
             }
 
             forceCache.set(horizontalMovement, 0);
@@ -510,7 +552,7 @@ public class Person extends CapsuleObstacle {
 
             // Jump!
             if (isJumping()) {
-                forceCache.set(0, vertical);
+                forceCache.set(0, PLAYER_JUMP);
                 body.applyLinearImpulse(forceCache, getPosition(), true);
             }
             released = false;
@@ -528,7 +570,7 @@ public class Person extends CapsuleObstacle {
      */
     public void update(float dt) {
         frameCount++;
-        int frameRate = 4;
+        int frameRate = 3;
         if (horizontalMovement != 0) {
             int temp = Math.abs(((int) (frameRate * 0.16f / horizontalMovement)));
         }
@@ -610,14 +652,22 @@ public class Person extends CapsuleObstacle {
         return target;
     }
 
-    public void setSwingJoint(Joint swingJoint) {
-        this.swingJoint = swingJoint;
+    public void setSwingJoints(Joint swingJoint1, Joint swingJoint2) {
+        this.swingJoint1 = swingJoint1;
+        this.swingJoint2 = swingJoint2;
     }
 
-    public Joint getSwingJoint() {
-        return swingJoint;
+    public Joint getSwingJoint1() {
+        return swingJoint1;
     }
 
+    public Joint getSwingJoint2() {
+        return swingJoint2;
+    }
+
+    public boolean isFading(){
+        return lastTint.a > 0.3f;
+    }
     /**
      * Draws the physics object.
      *
@@ -626,8 +676,16 @@ public class Person extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         if (won()) {
             tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
-        } else {
+        } else if (isFading()){
+            lastTint.set(1,1,1,lastTint.a * 0.6f);//cross fade
+            tint.set(1,1,1,1f - lastTint.a);
+        }else {
+            lastTint.set(1,1,1,0);
             tint.set(Color.WHITE);
+        }
+        if(!won()&&lastTexture!=null) {
+            canvas.draw(lastTexture, lastTint, origin.x, origin.y, getX() * drawScale.x,
+                    getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
         }
         canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
