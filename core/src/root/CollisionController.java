@@ -81,7 +81,7 @@ public class CollisionController implements ContactListener {
             }
 
             if (bd2 == player && bd1.getName().equals(Blob.BLOB_NAME)) {
-                Vector2 norm = ((Blob) bd2).getNorm();
+                Vector2 norm = ((Blob) bd1).getNorm();
                 player.setTrampolineDir(norm);
                 player.setOnString(true);
             }
