@@ -28,7 +28,7 @@ public class SettingMode extends Mode implements Screen {
     private static final String SLIDERKNOB = "ui/knob.png";
     private static final String SOUND = "ui/sound.png";
     private static final String CONTROLS = "ui/controls.png";
-    private static final String SETTING_SELECT = "ui/setting-select.png";
+    private static final String SETTING_SELECT = "ui/select.png";
     private static final String KEYBOARD_ARROW = "ui/keyboard-arrows.png";
     private static final String KEYBOARD_WASD = "ui/keyboardWasd.png";
     private static final String MUSIC = "ui/music.png";
