@@ -167,7 +167,7 @@ public class GameMode extends Mode implements Screen {
     private static final String TRAMP_LAND_FILE = "sounds/trampoline_jump.mp3";
     private static final String TRAMP_JUMP_FILE = "sounds/trampoline_jump.mp3";
     private static final String SWING_FILE = "sounds/swing.mp3";
-    private static final String HANG_FILE = "sounds/hang.mp3";
+    private static final String HANG_FILE = "sounds/swing.mp3";
 
     /**
      * File to texture for walls and platforms
@@ -329,7 +329,7 @@ public class GameMode extends Mode implements Screen {
      * Music object played in the game
      */
     private Music music;
-    private Music swingMusic;
+//    private Music swingMusic;
     /**
      * Sound objects played in the game
      */
@@ -603,7 +603,7 @@ public class GameMode extends Mode implements Screen {
         loadAsset(TRAMP_LAND_FILE, Sound.class, manager);
         loadAsset(TRAMP_JUMP_FILE, Sound.class, manager);
         loadAsset(HANG_FILE, Sound.class, manager);
-        loadAsset(SWING_FILE, Music.class, manager);
+//        loadAsset(SWING_FILE, Music.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
@@ -771,7 +771,7 @@ public class GameMode extends Mode implements Screen {
         trampolineJumpSound = manager.get(TRAMP_JUMP_FILE);
         landSound = manager.get(LAND_FILE);
         swingSound = manager.get(HANG_FILE);
-        swingMusic = manager.get(SWING_FILE);
+//        swingMusic = manager.get(SWING_FILE);
         jumpSound = manager.get(JUMP_FILE);
         collectSound = manager.get(COLLECT_FILE);
         winSound = manager.get(WIN_FILE);
@@ -1481,7 +1481,7 @@ public class GameMode extends Mode implements Screen {
                 playerJumpDownAnimation.refresh();
                 if (player.isAttached()) {
                     if (!didPlaySwing) {
-                        swingSound.play();
+                        swingSound.play(GDXRoot.soundVol * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
                         swingSound.loop();
                         didPlaySwing = true;
                     }
@@ -1548,8 +1548,6 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
-                swingSound.stop();
-                didPlaySwing = false;
                 destroyPlayerRope();
             }
 
@@ -1618,6 +1616,11 @@ public class GameMode extends Mode implements Screen {
                 Vector2 targetPos = player.getTarget().getPosition();
                 playerRope.setStart(playerPos, false);
                 playerRope.setEnd(targetPos, false);
+            }
+
+            if (!player.isAttached()) {
+                swingSound.stop();
+                didPlaySwing = false;
             }
         } else if (!player.isAlive()) {
             player.setTexture(playerDeathAnimation);
