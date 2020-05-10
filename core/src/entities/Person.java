@@ -11,6 +11,7 @@
 package entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
@@ -159,6 +160,9 @@ public class Person extends CapsuleObstacle {
     private boolean isAttached;
     private boolean released;
     private Color tint = new Color(Color.WHITE);
+    private Color lastTint = new Color(Color.WHITE);
+    private TextureRegion lastTexture; //fade out of
+
     private boolean fallingBack;
 
     /**
@@ -294,6 +298,17 @@ public class Person extends CapsuleObstacle {
         this.isCutting = isCutting;
     }
 
+    @Override
+    public void setTexture(TextureRegion t){
+        if(texture!=t && !won) {
+            lastTexture = texture;
+            lastTint.set(1, 1, 1, 1);
+            tint.set(1, 1, 1, 0);
+        }else if (texture!=t){
+            tint.set(Color.WHITE);
+        }
+        super.setTexture(t);
+    }
     /**
      * Returns true if this character is facing right
      *
@@ -647,6 +662,9 @@ public class Person extends CapsuleObstacle {
         return swingJoint;
     }
 
+    public boolean isFading(){
+        return lastTint.a > 0.3f;
+    }
     /**
      * Draws the physics object.
      *
@@ -655,8 +673,16 @@ public class Person extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         if (won()) {
             tint.set(tint.r, tint.g, tint.b, tint.a * 0.97f);
-        } else {
+        } else if (isFading()){
+            lastTint.set(1,1,1,lastTint.a * 0.6f);//cross fade
+            tint.set(1,1,1,1f - lastTint.a);
+        }else {
+            lastTint.set(1,1,1,0);
             tint.set(Color.WHITE);
+        }
+        if(!won()&&lastTexture!=null) {
+            canvas.draw(lastTexture, lastTint, origin.x, origin.y, getX() * drawScale.x,
+                    getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
         }
         canvas.draw(texture, tint, origin.x, origin.y, getX() * drawScale.x,
                 getY() * drawScale.y, getAngle(), (isFacingRight ? 1 : -1) * HSHRINK, VSHRINK);
