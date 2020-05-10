@@ -158,7 +158,7 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
     private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
-    private static final String WIN_FILE = "sounds/door.mp3";
+    private static final String WIN_FILE = "sounds/door_open.mp3";
     private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String SNIP_FILE = "sounds/snip.mp3";
@@ -322,7 +322,7 @@ public class GameMode extends Mode implements Screen {
     private final String VILLAGE_MUSIC_FILE = "music/capstone.mp3";
     private final String FOREST_MUSIC_FILE = "music/harp.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
-    private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/icefishing.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
     /**
@@ -1887,14 +1887,16 @@ public class GameMode extends Mode implements Screen {
         scale = null;
         world = null;
         canvas = null;
-//        swingMusic.dispose();
-        landSound.dispose();
-        winSound.dispose();
-        loseSound.dispose();
-        collectSound.dispose();
-        jumpSound.dispose();
-        trampolineLandSound.dispose();
-        trampolineJumpSound.dispose();
+        if (swingSound != null) {
+            swingSound.dispose();
+            landSound.dispose();
+            winSound.dispose();
+            loseSound.dispose();
+            collectSound.dispose();
+            jumpSound.dispose();
+            trampolineLandSound.dispose();
+            trampolineJumpSound.dispose();
+        }
     }
 
     /**
