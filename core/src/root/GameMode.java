@@ -1493,7 +1493,7 @@ public class GameMode extends Mode implements Screen {
 //                            landSound.play(0.5f*GDXRoot.soundVol);
                         }
                         else {
-                            trampolineLandSound.play(0.5f*GDXRoot.soundVol);
+//                            trampolineLandSound.play(0.5f*GDXRoot.soundVol);
                         }
                         didPlayLand = true;
                         didPlayJump = false;
