@@ -14,8 +14,8 @@ import root.GameCanvas;
 import java.util.ArrayList;
 
 public class PlayerRope extends Rope {
-    private static final float PLAYER_ROPE_DENSITY = 0.5f;
-    private static final float SEGMENT_LENGTH = 0.2f;
+    private static final float PLAYER_ROPE_DENSITY = 0.6f;
+    private static final float SEGMENT_LENGTH = 0.21f;
     private ArrayList<BoxObstacle> segmentLayer;
 
     public PlayerRope(float x0, float y0, float x1, float y1, float ropeLength) {
@@ -79,7 +79,7 @@ public class PlayerRope extends Rope {
     @Override
     protected boolean createJoints(World world) {
         assert segmentLayer.size() > 0;
-        float anc = this.lWidth / 2;
+        float anc = this.lWidth/2;
         Vector2 anchor1 = new Vector2(anc / 2, 0);
         Vector2 anchor2 = new Vector2(-anc / 2, 0);
 
