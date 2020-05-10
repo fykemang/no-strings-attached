@@ -176,7 +176,6 @@ public class Person extends CapsuleObstacle {
      */
     private final Vector2 forceCache = new Vector2();
     private Joint swingJoint1;
-    private Joint swingJoint2;
     private final Vector2 temp = new Vector2();
 
     private boolean onString = false;
@@ -542,9 +541,9 @@ public class Person extends CapsuleObstacle {
             }
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 4.5f;
+                horizontalMovement = horizontalMovement * 6f;
             } else if (released) {
-                horizontalMovement = getVX() * 20f + getHorizontalMovement();
+                horizontalMovement = getVX() * 10f + getHorizontalMovement();
             }
 
             forceCache.set(horizontalMovement, 0);
@@ -652,17 +651,12 @@ public class Person extends CapsuleObstacle {
         return target;
     }
 
-    public void setSwingJoints(Joint swingJoint1, Joint swingJoint2) {
+    public void setSwingJoint(Joint swingJoint1) {
         this.swingJoint1 = swingJoint1;
-        this.swingJoint2 = swingJoint2;
     }
 
     public Joint getSwingJoint1() {
         return swingJoint1;
-    }
-
-    public Joint getSwingJoint2() {
-        return swingJoint2;
     }
 
     public boolean isFading(){
