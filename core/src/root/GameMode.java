@@ -1091,7 +1091,6 @@ public class GameMode extends Mode implements Screen {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
-        tile.setFriction(200f);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
         tile.setTexture(tileTexture);
@@ -1328,9 +1327,10 @@ public class GameMode extends Mode implements Screen {
         playerRope.markRemoved(true);
         player.setTarget(null);
         playerRope = null;
-        world.destroyJoint(player.getSwingJoint());
+        world.destroyJoint(player.getSwingJoint1());
+        world.destroyJoint(player.getSwingJoint2());
         player.setAttached(false);
-        player.setSwingJoint(null);
+        player.setSwingJoints(null,null);
         player.resetShootCooldown();
     }
 
@@ -1598,8 +1598,14 @@ public class GameMode extends Mode implements Screen {
                 ropeJointDef.bodyB = player.getTarget().getBody();
                 ropeJointDef.maxLength = playerRope.getLength();
                 ropeJointDef.collideConnected = true;
-                Joint swingJoint = world.createJoint(ropeJointDef);
-                player.setSwingJoint(swingJoint);
+                Joint swingJoint1 = world.createJoint(ropeJointDef);
+
+                ropeJointDef.bodyB = player.getBody();
+                ropeJointDef.bodyA = player.getTarget().getBody();
+                ropeJointDef.maxLength = playerRope.getLength();
+                ropeJointDef.collideConnected = true;
+                Joint swingJoint2 = world.createJoint(ropeJointDef);
+                player.setSwingJoints(swingJoint1,swingJoint2);
                 player.setAttached(true);
             }
 
