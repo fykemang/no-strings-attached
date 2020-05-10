@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -33,6 +34,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String WIN_TEXT = "ui/excellent.png";
     private static final String BUTTON_PRESSED = "ui/next-down.png";
     private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
+    private static final String CLICK_FILE = "sounds/click.mp3";
     private final String SELECTOR = "ui/next-select.png";
 
     private Texture background;
@@ -80,6 +83,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(nextButtonTexture));
         buttonStyle.over = new TextureRegionDrawable(nextButtonPressed);
         music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
+        clickSound = manager.get(CLICK_FILE, Sound.class);
+        hoverSound = manager.get(HOVER_FILE, Sound.class);
         assetState = AssetState.COMPLETE;
     }
 
@@ -90,13 +95,13 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
     private SelectedButton currentSelection;
-
-
     private final Stage stage;
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
     private boolean isLevelComplete;
     private Music music;
+    private Sound hoverSound;
+    private Sound clickSound;
 
     public LevelTransitionMode() {
         this.stage = new Stage();
@@ -114,6 +119,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -135,6 +141,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         replayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
@@ -155,6 +162,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -171,7 +179,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         stage.addActor(mainMenuButton);
 
         music.play();
-        music.setVolume(GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
 
         try {
@@ -264,14 +272,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void dispose() {
-
-//        music.dispose();
-//        for (Actor a : stage.getActors()) {
-//            a.remove();
-//        }
-        // stage.dispose();
-
-
+        music.dispose();
     }
 
     @Override
@@ -334,6 +335,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     }
 
+    private int lastState = 0;
+
     private void draw() {
         stage.draw();
         canvas.begin();
@@ -351,14 +354,26 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         if (currentSelection != null)
             switch (currentSelection) {
                 case REPLAY:
+                    if (lastState != 1) {
+                        hoverSound.play(3 * GDXRoot.soundVol);
+                    }
+                    lastState = 1;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 6 - replayButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case EXIT:
+                    if (lastState != 2) {
+                        hoverSound.play(3 * GDXRoot.soundVol);
+                    }
+                    lastState = 2;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 2 - mainMenuButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case NEXT:
+                    if (lastState != 3) {
+                        hoverSound.play(3 * GDXRoot.soundVol);
+                    }
+                    lastState = 3;
                     canvas.drawUI(selectTexture, canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
@@ -379,6 +394,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     public void reset() {
         music.play();
+        music.setVolume(0.5f * GDXRoot.musicVol);
         Gdx.input.setInputProcessor(stage);
     }
 

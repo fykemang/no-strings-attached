@@ -157,13 +157,18 @@ public class GameMode extends Mode implements Screen {
      * The sound effects
      */
     private static final String JUMP_FILE = "sounds/jump.mp3";
-    private static final String PEW_FILE = "sounds/pew.mp3";
-    private static final String POP_FILE = "sounds/plop.mp3";
     private static final String COLLECT_FILE = "sounds/itemcollect.mp3";
-    private static final String WIN_FILE = "sounds/win.mp3";
+    private static final String WIN_FILE = "sounds/door.mp3";
     private static final String LOSE_FILE = "sounds/win-reverse.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String SNIP_FILE = "sounds/snip.mp3";
+    private static final String LAND_FILE = "sounds/landing.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
+    private static final String TRAMP_LAND_FILE = "sounds/trampoline_jump.mp3";
+    private static final String TRAMP_JUMP_FILE = "sounds/trampoline_jump.mp3";
+    private static final String SWING_FILE = "sounds/swing.mp3";
+    private static final String HANG_FILE = "sounds/hang.mp3";
+
     /**
      * File to texture for walls and platforms
      */
@@ -313,10 +318,10 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for music assets
      */
-    private final String CITY_MUSIC_FILE = "music/flight.mp3";
-    private final String VILLAGE_MUSIC_FILE = "music/icefishing.mp3";
-    private final String FOREST_MUSIC_FILE = "music/forest_theme.mp3";
-    private final String MOUNTAIN_MUSIC_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String CITY_MUSIC_FILE = "music/donewithwork.mp3";
+    private final String VILLAGE_MUSIC_FILE = "music/capstone.mp3";
+    private final String FOREST_MUSIC_FILE = "music/harp.mp3";
+    private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
     private final String OPENING_CUTSCENE_FILE = "music/ineedasweater.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
@@ -324,6 +329,7 @@ public class GameMode extends Mode implements Screen {
      * Music object played in the game
      */
     private Music music;
+    private Music swingMusic;
     /**
      * Sound objects played in the game
      */
@@ -333,10 +339,16 @@ public class GameMode extends Mode implements Screen {
     private Sound clickSound;
     private Sound winSound;
     private Sound snipSound;
+    private Sound landSound;
+    private Sound trampolineLandSound;
+    private Sound trampolineJumpSound;
+    private Sound swingSound;
     private boolean didPlayWin;
     private boolean didPlayLose;
     private boolean didPlayJump;
     private boolean didPlayCollect;
+    private boolean didPlayLand;
+    private boolean didPlaySwing;
 
 
     /**
@@ -581,13 +593,17 @@ public class GameMode extends Mode implements Screen {
 
         // Load Sound Assets
         loadAsset(JUMP_FILE, Sound.class, manager);
-        loadAsset(PEW_FILE, Sound.class, manager);
-        loadAsset(POP_FILE, Sound.class, manager);
         loadAsset(COLLECT_FILE, Sound.class, manager);
         loadAsset(WIN_FILE, Sound.class, manager);
         loadAsset(LOSE_FILE, Sound.class, manager);
         loadAsset(CLICK_FILE, Sound.class, manager);
         loadAsset(SNIP_FILE, Sound.class, manager);
+        loadAsset(HOVER_FILE, Sound.class, manager);
+        loadAsset(LAND_FILE, Sound.class, manager);
+        loadAsset(TRAMP_LAND_FILE, Sound.class, manager);
+        loadAsset(TRAMP_JUMP_FILE, Sound.class, manager);
+        loadAsset(HANG_FILE, Sound.class, manager);
+        loadAsset(SWING_FILE, Music.class, manager);
 
         // Load Music
         manager.load(CITY_MUSIC_FILE, Music.class);
@@ -672,7 +688,7 @@ public class GameMode extends Mode implements Screen {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
         }
-        music.setVolume(1f * GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
     }
@@ -741,13 +757,21 @@ public class GameMode extends Mode implements Screen {
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
-        sounds.allocate(manager, PEW_FILE);
-        sounds.allocate(manager, POP_FILE);
+        sounds.allocate(manager, LAND_FILE);
+        sounds.allocate(manager, HOVER_FILE);
         sounds.allocate(manager, COLLECT_FILE);
         sounds.allocate(manager, WIN_FILE);
         sounds.allocate(manager, LOSE_FILE);
         sounds.allocate(manager, CLICK_FILE);
         sounds.allocate(manager, SNIP_FILE);
+        sounds.allocate(manager, TRAMP_JUMP_FILE);
+        sounds.allocate(manager, TRAMP_LAND_FILE);
+        sounds.allocate(manager, HANG_FILE);
+        trampolineLandSound = manager.get(TRAMP_LAND_FILE);
+        trampolineJumpSound = manager.get(TRAMP_JUMP_FILE);
+        landSound = manager.get(LAND_FILE);
+        swingSound = manager.get(HANG_FILE);
+        swingMusic = manager.get(SWING_FILE);
         jumpSound = manager.get(JUMP_FILE);
         collectSound = manager.get(COLLECT_FILE);
         winSound = manager.get(WIN_FILE);
@@ -869,11 +893,14 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation.refresh();
         playerJumpUpAnimation.refresh();
         playerJumpDownAnimation.refresh();
+        didPlaySwing = false;
+        didPlayLand = false;
         door.refresh();
         didPlayWin = false;
         didPlayLose = false;
         didPlayCollect = false;
         didPlayJump = false;
+        volume = 0.5f * GDXRoot.musicVol;
     }
 
     /**
@@ -1073,6 +1100,23 @@ public class GameMode extends Mode implements Screen {
         return tile;
     }
 
+    float volume = 0.5f * GDXRoot.musicVol;
+
+    public void fadeInMusic() {
+        timeSeconds = 0;
+        volume = 0f;
+        while ((timeSeconds < period) && (music.isLooping() || music.isPlaying())) {
+            timeSeconds += Gdx.graphics.getRawDeltaTime();
+            if (volume < 0.5f * GDXRoot.musicVol)
+                volume += 0.0005 * timeSeconds;
+            else {
+                volume = 0.5f * GDXRoot.musicVol;
+            }
+            music.setVolume(volume);
+        }
+    }
+
+
     /**
      * Returns whether to process the update loop
      * <p>
@@ -1121,8 +1165,7 @@ public class GameMode extends Mode implements Screen {
                     destroyPlayerRope();
                 }
                 if (player.won() && !didPlayWin) {
-                    winSound.play(GDXRoot.soundVol
-                    );
+                    winSound.play(GDXRoot.soundVol);
                     didPlayWin = true;
                 }
                 if (!player.isAlive() && !didPlayLose) {
@@ -1130,6 +1173,13 @@ public class GameMode extends Mode implements Screen {
                     didPlayLose = true;
                 }
                 timeSeconds += Gdx.graphics.getRawDeltaTime();
+                if (player.won()) {
+                    if (volume > 0.00f)
+                        volume -= timeSeconds * 0.005f;
+                    else
+                        volume = 0.0f;
+                    music.setVolume(Math.abs(volume));
+                }
                 if (timeSeconds > period) {
                     timeSeconds = 0;
                     if (player.won())
@@ -1157,6 +1207,7 @@ public class GameMode extends Mode implements Screen {
         }
 
         if (!isFailure() && player.getY() < -1) {
+            loseSound.play(GDXRoot.soundVol);
             setFailure(true);
             return false;
         }
@@ -1409,6 +1460,15 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isGrounded() && !player.isAttached()) {//rising
+                if (!didPlayJump) {
+                    if (!player.isOnTrampoline()) {
+                        jumpSound.play(0.5f * GDXRoot.soundVol);
+                    } else {
+                        trampolineJumpSound.play(0.5f * GDXRoot.soundVol);
+                    }
+                    didPlayJump = true;
+                    didPlayLand = false;
+                }
                 if (player.getVY() > 0) {
                     setJumpUpAnimationFrame(dt);
                     player.setTexture(playerJumpUpAnimation);
@@ -1420,12 +1480,29 @@ public class GameMode extends Mode implements Screen {
                 playerJumpUpAnimation.refresh();
                 playerJumpDownAnimation.refresh();
                 if (player.isAttached()) {
+                    if (!didPlaySwing) {
+                        swingSound.play();
+                        swingSound.loop();
+                        didPlaySwing = true;
+                    }
+//                    swingMusic.play();
+//                    swingMusic.setVolume(GDXRoot.soundVol * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
                     setSwingingAnimations(dt);
                 } else if (player.isFalling()) {
                     player.setTexture(playerFallTexture);
                 } else if (player.isWalking()) {
                     player.setTexture(playerWalkingAnimation);
                 } else if (player.isGrounded()) {
+                    if (!didPlayLand) {
+                        if (!player.isOnTrampoline()) {
+//                            landSound.play(0.5f*GDXRoot.soundVol);
+                        } else {
+//                            trampolineLandSound.play(0.5f*GDXRoot.soundVol);
+                        }
+                        didPlayLand = true;
+                        didPlayJump = false;
+                        player.setOnTrampoline(false);
+                    }
                     player.setTexture(playerIdleAnimation);
                 }
             }
@@ -1448,7 +1525,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play(GDXRoot.soundVol);
+                                    snipSound.play(0.5f * GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
@@ -1471,7 +1548,20 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
+                swingSound.stop();
+                didPlaySwing = false;
                 destroyPlayerRope();
+            }
+
+            if (player.isDidCollect() && !didPlayCollect) {
+                collectSound.play(0.5f * GDXRoot.soundVol);
+                player.setDidCollect(false);
+                didPlayCollect = true;
+            }
+
+            if (didPlayCollect) {
+                player.setDidCollect(false);
+                didPlayCollect = false;
             }
 
             // Swinging
@@ -1797,6 +1887,14 @@ public class GameMode extends Mode implements Screen {
         scale = null;
         world = null;
         canvas = null;
+        swingMusic.dispose();
+        landSound.dispose();
+        winSound.dispose();
+        loseSound.dispose();
+        collectSound.dispose();
+        jumpSound.dispose();
+        trampolineLandSound.dispose();
+        trampolineJumpSound.dispose();
     }
 
     /**
@@ -1971,6 +2069,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
+        music.setVolume(0.5f * GDXRoot.musicVol);
     }
 
     @Override
