@@ -182,6 +182,30 @@ public class Person extends CapsuleObstacle {
     private boolean onString = false;
     private boolean turned = false;
 
+    private boolean didCollect = false;
+
+    private boolean onTrampoline = false;
+
+    public boolean didJump() {
+        return this.isJumping;
+    }
+
+    public boolean isOnTrampoline() {
+        return this.onTrampoline;
+    }
+
+    public void setOnTrampoline(boolean onTrampoline) {
+        this.onTrampoline = onTrampoline;
+    }
+
+    public boolean isDidCollect() {
+        return this.didCollect;
+    }
+
+    public void setDidCollect(boolean didCollect) {
+        this.didCollect = didCollect;
+    }
+
     /**
      * Returns left/right movement of this character.
      * <p>
@@ -191,6 +215,10 @@ public class Person extends CapsuleObstacle {
      */
     public float getHorizontalMovement() {
         return horizontalMovement;
+    }
+
+    public float getVerticalMovement() {
+        return verticalMovement;
     }
 
     /**
@@ -340,6 +368,7 @@ public class Person extends CapsuleObstacle {
     }
 
     public void setIsTrampolining(boolean isTrampolining) {
+        setOnTrampoline(true);
         this.isTrampolining = isTrampolining;
     }
 
