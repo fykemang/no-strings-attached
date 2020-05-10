@@ -1452,8 +1452,6 @@ public class GameMode extends Mode implements Screen {
             player.setCutting(InputController.getInstance().didSecondary());
             player.applyForce();
 
-//            keyboardInput = new Vector2(player.getHorizontalMovement(), player.getVerticalMovement());
-
             if (!player.isAttached()) {
                 playerSwingForwardAnimation.refresh();
             }
@@ -1500,6 +1498,7 @@ public class GameMode extends Mode implements Screen {
                         }
                         didPlayLand = true;
                         didPlayJump = false;
+                        player.setOnTrampoline(false);
                     }
                     player.setTexture(playerIdleAnimation);
                 }
