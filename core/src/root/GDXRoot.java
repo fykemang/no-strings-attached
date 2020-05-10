@@ -52,6 +52,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private LevelSelectorMode levelSelector;
 
+    private PauseMode pauseScreen;
+
     /**
      * The controller for the game mode
      */
@@ -107,6 +109,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
         cutScene = new CutScene(manager, UIcanvas);
         cutScene.preloadContent(manager);
+
+        pauseScreen = new PauseMode(manager, UIcanvas);
+        pauseScreen.preloadContent(manager);
 
         settings = new SettingMode(manager, UIcanvas);
         settings.preloadContent(manager);
@@ -243,6 +248,11 @@ public class GDXRoot extends Game implements ScreenListener {
                     transitionMode.setScreenListener(this);
                     setScreen(transitionMode);
                     gameMode.pause();
+                    break;
+                case PauseMode.INTO_PAUSE:
+                    pauseScreen.setScreenListener(this);
+                    pauseScreen.loadContent(manager);
+                    setScreen(pauseScreen);
             }
         } else if (screen == transitionMode) {
             Gdx.input.setInputProcessor(null);

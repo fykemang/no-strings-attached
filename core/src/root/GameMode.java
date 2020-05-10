@@ -1373,7 +1373,8 @@ public class GameMode extends Mode implements Screen {
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             clickSound.play(0.5f * GDXRoot.soundVol);
-            gameState = GameState.PAUSED;
+            System.out.println("exit");
+            listener.exitScreen(this, PauseMode.INTO_PAUSE);
 //            exitToSelector();
         }
 
