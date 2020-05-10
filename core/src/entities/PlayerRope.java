@@ -14,8 +14,8 @@ import root.GameCanvas;
 import java.util.ArrayList;
 
 public class PlayerRope extends Rope {
-    private static final float PLAYER_ROPE_DENSITY = 0.5f;
-    private static final float SEGMENT_LENGTH = 0.2f;
+    private static final float PLAYER_ROPE_DENSITY = 0.6f;
+    private static final float SEGMENT_LENGTH = 0.21f;
     private ArrayList<BoxObstacle> segmentLayer;
 
     public PlayerRope(float x0, float y0, float x1, float y1, float ropeLength) {
