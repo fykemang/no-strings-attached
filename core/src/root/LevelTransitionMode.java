@@ -83,6 +83,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(nextButtonTexture));
         buttonStyle.over = new TextureRegionDrawable(nextButtonPressed);
         music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
+        clickSound = manager.get(CLICK_FILE, Sound.class);
+        hoverSound = manager.get(HOVER_FILE, Sound.class);
         assetState = AssetState.COMPLETE;
     }
 
@@ -160,7 +162,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(GDXRoot.soundVol);
+                clickSound.play(0.5f*GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -351,14 +353,26 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         if (currentSelection != null)
             switch (currentSelection) {
                 case REPLAY:
+                    if (lastState != 1) {
+                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                    }
+                    lastState = 1;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 6 - replayButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case EXIT:
+                    if (lastState != 2) {
+                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                    }
+                    lastState = 2;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 2 - mainMenuButton.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;
                 case NEXT:
+                    if (lastState != 3) {
+                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                    }
+                    lastState = 3;
                     canvas.drawUI(selectTexture, canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 4,
                             canvas.getHeight() / 6, 1.1f);
                     break;

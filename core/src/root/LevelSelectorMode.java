@@ -43,7 +43,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Music levelSelectorMusic;
     private Sound clickSound;
     private Sound hoverSound;
-    private GameCanvas canvas;
     private Texture background;
     private Texture city;
     private Texture suburb;
@@ -276,8 +275,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     public void dispose() {
         if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
-        clickSound.dispose();
-        hoverSound.dispose();
     }
 
     @Override

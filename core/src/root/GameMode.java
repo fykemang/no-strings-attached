@@ -685,7 +685,7 @@ public class GameMode extends Mode implements Screen {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
         }
-        music.setVolume(1f * GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
     }
@@ -896,7 +896,7 @@ public class GameMode extends Mode implements Screen {
         didPlayLose = false;
         didPlayCollect = false;
         didPlayJump = false;
-        volume = GDXRoot.musicVol;
+        volume = 0.5f * GDXRoot.musicVol;
     }
 
     /**
@@ -1096,16 +1096,16 @@ public class GameMode extends Mode implements Screen {
         return tile;
     }
 
-    float volume = GDXRoot.musicVol;
+    float volume = 0.5f * GDXRoot.musicVol;
     public void fadeInMusic() {
         timeSeconds = 0;
         volume = 0f;
         while ((timeSeconds < period) && (music.isLooping() || music.isPlaying())) {
             timeSeconds += Gdx.graphics.getRawDeltaTime();
-            if(volume < GDXRoot.musicVol)
+            if(volume < 0.5f * GDXRoot.musicVol)
                 volume += 0.0005 * timeSeconds;
             else {
-                volume = GDXRoot.musicVol;
+                volume = 0.5f * GDXRoot.musicVol;
             }
             music.setVolume(volume);
         }
@@ -2060,7 +2060,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
-        music.setVolume(GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
     }
 
     @Override
