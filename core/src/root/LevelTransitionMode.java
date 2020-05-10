@@ -354,7 +354,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             switch (currentSelection) {
                 case REPLAY:
                     if (lastState != 1) {
-                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                        hoverSound.play(3 * GDXRoot.soundVol);
                     }
                     lastState = 1;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 6 - replayButton.getWidth() / 4,
@@ -362,7 +362,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
                     break;
                 case EXIT:
                     if (lastState != 2) {
-                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                        hoverSound.play(3 * GDXRoot.soundVol);
                     }
                     lastState = 2;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 2 - mainMenuButton.getWidth() / 4,
@@ -370,7 +370,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
                     break;
                 case NEXT:
                     if (lastState != 3) {
-                        hoverSound.play(0.5f * GDXRoot.soundVol);
+                        hoverSound.play(3 * GDXRoot.soundVol);
                     }
                     lastState = 3;
                     canvas.drawUI(selectTexture, canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 4,
