@@ -689,7 +689,7 @@ public class GameMode extends Mode implements Screen {
                 }
         }
         music.setVolume(0.5f * GDXRoot.musicVol);
-        music.play();
+//        music.play();
         music.setLooping(true);
     }
 

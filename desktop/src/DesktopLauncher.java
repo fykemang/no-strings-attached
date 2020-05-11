@@ -11,6 +11,7 @@
  * LibGDX version, 2/2/2015
  */
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import root.GDXRoot;
@@ -37,6 +38,8 @@ public class DesktopLauncher {
 		config.height = 800;
 		config.samples = 5; // number of sample to take
 		config.resizable = false;
+		config.title = "No Strings Attached";
+
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }
