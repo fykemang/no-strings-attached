@@ -777,7 +777,7 @@ public class GameMode extends Mode implements Screen {
         basketOneTexture = createTexture(manager, BASKET_ONE, false);
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
-        door = createFilmStrip(manager,GATE,1,11,11,false);
+        door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
@@ -1024,7 +1024,7 @@ public class GameMode extends Mode implements Screen {
 
 
     public void createGate(float[] points, float x, float y, FilmStrip texture) {
-        Gate gate = new Gate(texture, points,x, y);
+        Gate gate = new Gate(texture, points, x, y);
         door.setFrameDuration(0.035f);
         gate.setBodyType(BodyDef.BodyType.StaticBody);
         gate.setFriction(0f);
@@ -1582,14 +1582,12 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
-                            }
-                            else {
+                            } else {
                                 player.setCanCut(null);
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     player.setCanCut(null);
                 }
                 cuttingCallback.reset();
@@ -1673,8 +1671,7 @@ public class GameMode extends Mode implements Screen {
                     walkingMusic.setLooping(true);
                     didPlayWalk = true;
                 }
-            }
-            else {
+            } else {
                 if (didPlayWalk) {
                     walkingMusic.stop();
                     didPlayWalk = false;
@@ -1704,7 +1701,7 @@ public class GameMode extends Mode implements Screen {
 
     NpcPerson target;
     Couple c;
-//    NpcRope r;
+    //    NpcRope r;
     NpcPerson l;
     NpcPerson r;
 
@@ -1755,7 +1752,7 @@ public class GameMode extends Mode implements Screen {
 //            r = c.getRope();
             l = c.getL();
             r = c.getR();
-            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX()+r.getX())/2 * scale.x, (r.getY()+l.getY())/2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
 
 

@@ -1,19 +1,11 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -24,6 +16,7 @@ import util.ScreenListener;
 
 public class PauseMode extends Mode implements Screen {
     public static final int INTO_PAUSE = 15;
+
     enum SelectedButton {
         restart,
         main_menu,
@@ -106,10 +99,12 @@ public class PauseMode extends Mode implements Screen {
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
+
     final PauseMode pause = this;
+
     public void initialize() {
         continueButton = createButton(continueTexture);
-        continueButton.setPosition(canvas.getWidth()/2- continueButton.getWidth()/2, canvas.getHeight()*0.5f);
+        continueButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.5f);
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -119,7 +114,7 @@ public class PauseMode extends Mode implements Screen {
         });
         stage.addActor(continueButton);
         reStartButton = createButton(restartTexture);
-        reStartButton.setPosition(canvas.getWidth()/2- reStartButton.getWidth()/2, canvas.getHeight()*0.4f);
+        reStartButton.setPosition(canvas.getWidth() / 2 - reStartButton.getWidth() / 2, canvas.getHeight() * 0.4f);
         reStartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -130,7 +125,7 @@ public class PauseMode extends Mode implements Screen {
         stage.addActor(reStartButton);
 
         levelSelectButton = createButton(levelselectTexture);
-        levelSelectButton.setPosition(canvas.getWidth()/2- levelSelectButton.getWidth()/2, canvas.getHeight()*0.3f);
+        levelSelectButton.setPosition(canvas.getWidth() / 2 - levelSelectButton.getWidth() / 2, canvas.getHeight() * 0.3f);
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -141,9 +136,8 @@ public class PauseMode extends Mode implements Screen {
         stage.addActor(levelSelectButton);
 
 
-
         settingsButton = createButton(settingsTexture);
-        settingsButton.setPosition(canvas.getWidth()/2- settingsButton.getWidth()/2, canvas.getHeight()*0.2f);
+        settingsButton.setPosition(canvas.getWidth() / 2 - settingsButton.getWidth() / 2, canvas.getHeight() * 0.2f);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -155,7 +149,7 @@ public class PauseMode extends Mode implements Screen {
 
 
         mainButton = createButton(mainTexture);
-        mainButton.setPosition(canvas.getWidth()/2- mainButton.getWidth()/2, canvas.getHeight()*0.1f);
+        mainButton.setPosition(canvas.getWidth() / 2 - mainButton.getWidth() / 2, canvas.getHeight() * 0.1f);
         mainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -164,7 +158,6 @@ public class PauseMode extends Mode implements Screen {
 
         });
         stage.addActor(mainButton);
-
 
 
         Gdx.input.setInputProcessor(stage);
@@ -229,7 +222,7 @@ public class PauseMode extends Mode implements Screen {
         canvas.begin();
         canvas.drawBackground(bkgTexture.getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
-        canvas.drawUI(logoTexture, canvas.getWidth()/2, canvas.getHeight()*0.75f, 1f);
+        canvas.drawUI(logoTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.75f, 1f);
         canvas.actStage(stage);
         canvas.end();
     }

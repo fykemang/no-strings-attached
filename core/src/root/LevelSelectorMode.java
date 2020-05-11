@@ -79,7 +79,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private AssetState selectorAssetState = AssetState.EMPTY;
     private LevelMetadata levelMetadata;
 
-    private final int NONE= 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
+    private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
     private boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
@@ -130,8 +130,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         selectorAssetState = AssetState.COMPLETE;
     }
 
-    private int themeFromType(String type){
-        switch (type){
+    private int themeFromType(String type) {
+        switch (type) {
             case "city":
                 return CITY;
             case "mountain":
@@ -145,8 +145,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         }
     }
 
-    public void unlockLevel(int index){
-        if (getLevel(index)!=null){
+    public void unlockLevel(int index) {
+        if (getLevel(index) != null) {
             levelMetadata.unlockLevel(index);
             String type = levelMetadata.getLevel(index).getType();
             themeUnlocked[themeFromType(type)] = true;
@@ -374,7 +374,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     }
 
-    private Texture getTextureFromTheme(int t){
+    private Texture getTextureFromTheme(int t) {
         switch (t) {
             case CITY:
                 return city;
