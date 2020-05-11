@@ -139,7 +139,7 @@ public class Person extends CapsuleObstacle {
      */
     private int shootCooldown;
     private PolygonShape sensorShape;
-    private boolean canCut;
+    private Couple canCut;
 
     public boolean isFallingBack() {
         return fallingBack;
@@ -609,11 +609,11 @@ public class Person extends CapsuleObstacle {
     /**
      * @param canCut whether the character can cut a trampoline rope
      */
-    public void setCanCut(boolean canCut) {
+    public void setCanCut(Couple canCut) {
         this.canCut = canCut;
     }
 
-    public boolean canCut() {
+    public Couple canCut() {
         return canCut;
     }
 
