@@ -22,7 +22,7 @@
     },
     {
       "id": 5,
-      "unlocked": false,
+      "unlocked": true,
       "path": "levels/level3.json"
     },
     {
