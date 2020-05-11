@@ -52,6 +52,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private LevelSelectorMode levelSelector;
 
+    private PauseMode pauseScreen;
+
     /**
      * The controller for the game mode
      */
@@ -74,6 +76,10 @@ public class GDXRoot extends Game implements ScreenListener {
     private int currentLevel;
 
     private boolean TransitionLoaded = false;
+
+    private Screen LastScreen;
+
+    private boolean isOpenningPlayed = false;
 
 
     /**
@@ -107,6 +113,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
         cutScene = new CutScene(manager, UIcanvas);
         cutScene.preloadContent(manager);
+
+        pauseScreen = new PauseMode(manager, UIcanvas);
+        pauseScreen.preloadContent(manager);
 
         settings = new SettingMode(manager, UIcanvas);
         settings.preloadContent(manager);
@@ -176,13 +185,24 @@ public class GDXRoot extends Game implements ScreenListener {
             Gdx.input.setInputProcessor(null);
             switch (exitCode) {
                 case CutScene.INTO_CUTSCENE:
-                    cutScene.setTheme(CutScene.THEME.OPENING);
-                    cutScene.loadContent(manager);
-                    cutScene.setScreenListener(this);
-                    setScreen(cutScene);
-                    loadingMode.hide();
+                    if (!isOpenningPlayed) {
+                        cutScene.setTheme(CutScene.THEME.OPENING);
+                        cutScene.loadContent(manager);
+                        cutScene.setScreenListener(this);
+                        setScreen(cutScene);
+                        loadingMode.hide();
+                        isOpenningPlayed = true;
+                    }else {
+                        levelSelector.loadContent(manager);
+                        levelSelector.setScreenListener(this);
+                        levelSelector.setCanvas(UIcanvas);
+                        Gdx.input.setInputProcessor(levelSelector);
+                        levelSelector.reset();
+                        setScreen(levelSelector);
+                    }
                     break;
                 case SettingMode.INTO_SETTING:
+                    LastScreen = loadingMode;
                     settings.setScreenListener(this);
                     settings.loadContent(manager);
                     settings.initUI();
@@ -196,10 +216,13 @@ public class GDXRoot extends Game implements ScreenListener {
             soundVol = settings.getSoundVol();
             musicVol = settings.getMusicVol();
             if (exitCode == LoadingMode.INTO_STARTSCREEN) {
-                Gdx.input.setInputProcessor(loadingMode);
-                loadingMode.reset();
-                settings.hide();
-                setScreen(loadingMode);
+                if (LastScreen == loadingMode) {
+                    Gdx.input.setInputProcessor(loadingMode);
+                    loadingMode.reset();
+                    settings.hide();
+                    setScreen(loadingMode);
+                }else {
+                   pauseScreen.initialize(); setScreen(pauseScreen);}
             }
         } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             levelSelector.loadContent(manager);
@@ -221,7 +244,39 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(gameMode);
             levelSelector.pause();
             // If level select is selected from in game
-        } else if (screen == gameMode) {
+        } else if (screen == pauseScreen){
+            switch (exitCode){
+                case GameMode.EXIT_INTO_GAME:
+                    gameMode.resume();
+                    setScreen(gameMode);
+                    break;
+                case GameMode.EXIT_RESET:
+                    gameMode.resume();
+                    gameMode.reset();
+                    setScreen(gameMode);
+                    break;
+                case LevelSelectorMode.INTO_SELECTOR:
+                    gameMode.pause();
+                    levelSelector.reset();
+                    Gdx.input.setInputProcessor(levelSelector);
+                    setScreen(levelSelector);
+                    break;
+                case SettingMode.INTO_SETTING:
+                    LastScreen = pauseScreen;
+                    gameMode.pause();
+                    settings.setScreenListener(this);
+                    settings.loadContent(manager);
+                    settings.initUI();
+                    setScreen(settings);
+                    break;
+                case LoadingMode.INTO_STARTSCREEN:
+                    gameMode.pause();
+                    Gdx.input.setInputProcessor(loadingMode);
+                    loadingMode.reset();
+                    setScreen(loadingMode);
+            }
+
+        }else if (screen == gameMode) {
             switch (exitCode) {
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.setCanvas(UIcanvas);
@@ -243,6 +298,12 @@ public class GDXRoot extends Game implements ScreenListener {
                     transitionMode.setScreenListener(this);
                     setScreen(transitionMode);
                     gameMode.pause();
+                    break;
+                case PauseMode.INTO_PAUSE:
+                    pauseScreen.setScreenListener(this);
+                    pauseScreen.loadContent(manager);
+                    pauseScreen.initialize();
+                    setScreen(pauseScreen);
             }
         } else if (screen == transitionMode) {
             Gdx.input.setInputProcessor(null);

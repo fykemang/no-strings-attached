@@ -59,6 +59,8 @@ public class GameMode extends Mode implements Screen {
      */
     public static final int EXIT_PREV = 2;
 
+    public static final int EXIT_RESET = 12;
+
     public static final int EXIT_INTO_GAME = 3;
 
     public static final int EXIT_INTO_NEXT = 6;
@@ -1425,7 +1427,8 @@ public class GameMode extends Mode implements Screen {
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             clickSound.play(0.5f * GDXRoot.soundVol);
-            gameState = GameState.PAUSED;
+            System.out.println("exit");
+            listener.exitScreen(this, PauseMode.INTO_PAUSE);
 //            exitToSelector();
         }
 
