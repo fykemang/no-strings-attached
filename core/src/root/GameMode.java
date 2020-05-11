@@ -171,6 +171,7 @@ public class GameMode extends Mode implements Screen {
     private static final String WALKING_VILLAGE_FILE = "sounds/walking_village.mp3";
     private static final String WALKING_FOREST_FILE = "sounds/walking_forest.mp3";
     private static final String WALKING_MT_FILE = "sounds/walking_mountain.mp3";
+    private static final String AMBIENCE_CITY_FILE = "music/ambience_city.mp3";
 
     /**
      * File to texture for walls and platforms
