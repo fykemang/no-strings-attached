@@ -1,72 +1,106 @@
 {
+  "text": [],
+  "tutorial": false,
   "type": "city",
-  "player": {
-    "x": 8,
-    "y": 11.0
-  },
+  "items": [
+    {
+      "x": 16.48,
+      "y": 11.23873873873874,
+      "id": 0
+    }
+  ],
   "tiles": [
     {
-      "x": 4,
-      "y": 9,
-      "width": 6,
-      "height": 1,
+      "x": 0,
+      "y": 4.054054054054054,
+      "width": 6.946666666666666,
+      "height": 0.9234234234234234,
       "type": "normal",
-      "direction": "up",
-      "isSliding": false
+      "id": 0,
+      "isSliding": false,
+      "direction": "up"
     },
-
     {
-      "x": 18,
-      "y": 12.5,
-      "width": 2,
-      "height": 1,
+      "x": 15.466666666666667,
+      "y": 9.45945945945946,
+      "width": 2.6399999999999997,
+      "height": 0.7882882882882878,
       "type": "normal",
-      "direction": "up",
-      "isSliding": false
+      "id": 1,
+      "isSliding": false,
+      "direction": "up"
+    },
+    {
+      "x": 25.6,
+      "y": 14.864864864864865,
+      "width": 4.639999999999999,
+      "height": 0.6981981981981978,
+      "type": "normal",
+      "id": 2,
+      "isSliding": false,
+      "direction": "up"
     }
   ],
   "npc": [
     {
-      "x": 12,
-      "y": 9,
+      "x": 9.413333333333334,
+      "y": 5.0225225225225225,
       "isSliding": false,
-      "leftPos": {},
-      "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
     },
     {
-      "x": 17.0,
-      "y": 9,
+      "x": 13.973333333333333,
+      "y": 5.045045045045045,
       "isSliding": false,
-      "leftPos": {},
-      "rightPos": {},
       "isRotating": false,
       "center": {},
-      "degree": 0
-    }
-  ],
-  "items": [
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    },
     {
-      "x": 17.5,
-      "y": 15.5
+      "x": 19.253333333333334,
+      "y": 10.54054054054054,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 24,
+      "y": 10.54054054054054,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {}
     }
   ],
-  "exit": {
-    "x": 19,
-    "y": 12.5
+  "player": {
+    "x": 2.933333333333333,
+    "y": 5.9009009009009015
   },
-  "text": [
-    {
-      "x": 8,
-      "y": 12,
-      "text": "Use arrow keys to move the character and jump"
-    },
-    {
-      "x": 17,
-      "y": 18,
-      "text": "Collect the item and proceed to the exit"
-    }
-  ]
+  "exit": {
+    "x": 27.75,
+    "y": 14.527027027027028
+  }
 }

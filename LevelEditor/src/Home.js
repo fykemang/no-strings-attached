@@ -8,6 +8,7 @@ import Couple from "./Couple";
 import ItemTexture from "./assets/skein.png";
 import ExitTexture from "./assets/exit.png";
 import useEventListener from "./util/UseEventListener";
+import { round2 } from "./util/Helper";
 
 const initialState = {
   tiles: [],
@@ -40,6 +41,7 @@ function reducer(state, action) {
         height: 100,
         type: action["tile-type"],
         id: state.tiles.length,
+        isSliding: false,
       };
       const newTiles = state.tiles.slice();
       newTiles.push(tile);
@@ -120,7 +122,7 @@ function reducer(state, action) {
 
       const rightNpc = {
         ...leftNpc,
-        x: 600,
+        x: 650,
       };
 
       const newCouples = state.couples.slice();
@@ -165,13 +167,17 @@ function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [selectedNodeID, setSelectedNode] = useState(null);
   const [selectedNodeType, setSelectedNodeType] = useState("");
-  const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
   const stageRef = React.useRef();
   const canvasHeight = 800;
+  const canvasWidth = 1200;
 
   const scaleHeight = (oldY) => {
-    return (canvasHeight - oldY) / 44.4
-  }
+    return round2((canvasHeight - oldY) / 44.4);
+  };
+
+  const scaleWidth = (oldX) => {
+    return round2(canvasWidth / 37.5);
+  };
 
   useEventListener("keydown", (e) => {
     if (e.keyCode === 8) {
@@ -242,19 +248,19 @@ function Home() {
           y: scaleHeight(tile.y),
           height: tile.height / yScale,
           width: tile.width / xScale,
-          direction: "up"
+          direction: "up",
         };
       }),
       npc: state.couples.reduce((acc, couple) => {
         const leftNpc = {
           ...couple.leftNpc,
           x: couple.leftNpc.x / xScale,
-          y: scaleHeight(couple.leftNpc.y)
+          y: scaleHeight(couple.leftNpc.y),
         };
         const rightNpc = {
           ...couple.rightNpc,
           x: couple.rightNpc.x / xScale,
-          y: scaleHeight(couple.rightNpc.y)
+          y: scaleHeight(couple.rightNpc.y),
         };
         acc.push(leftNpc);
         acc.push(rightNpc);
@@ -262,12 +268,12 @@ function Home() {
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: scaleHeight(state.player.y)
+        y: scaleHeight(state.player.y),
       },
       exit: {
         x: state.exit.x / xScale,
-        y: scaleHeight(state.player.y),
-      }
+        y: scaleHeight(state.exit.y),
+      },
     };
 
     const fileName = "test";
@@ -282,14 +288,17 @@ function Home() {
     document.body.removeChild(link);
   };
 
-  const dragBoundFunc = useCallback((pos) => {
-    const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
-    const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
-    return {
-      x: newX,
-      y: newY,
-    };
-  }, [canvasHeight, canvasWidth]);
+  const dragBoundFunc = useCallback(
+    (pos) => {
+      const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
+      const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
+      return {
+        x: newX,
+        y: newY,
+      };
+    },
+    [canvasHeight, canvasWidth]
+  );
 
   return (
     <div className="home-wrapper">
