@@ -36,6 +36,7 @@
       * The given screen has made a request to exit its player mode.
       * <p>
       * The value exitCode can be used to implement menu options.
+      * The value exitCode can be used to implement menu options.
       *
       * @param screen   The screen requesting to exit
       * @param exitCode The state of the screen upon exit

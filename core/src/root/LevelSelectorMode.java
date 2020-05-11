@@ -30,6 +30,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String SUBURB_FILE = "ui/suburbs.png";
     private static final String FOREST_FILE = "ui/forest.png";
     private static final String MOUNTAIN_FILE = "ui/mountains.png";
+    private static final String LOCKED_VILLAGE_FILE = "ui/locked_village.png";
+    private static final String LOCKED_FOREST_FILE = "ui/locked_forest.png";
+    private static final String LOCKED_MOUNTAIN_FILE = "ui/locked_mountains.png";
     private static final String SELECT_FILE = "ui/selector.png";
     private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
     private static final String LEVEL_METADATA = "levels/levels.json";
@@ -49,8 +52,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Texture forest;
     private Texture mountain;
     private Texture selector;
+    private Texture lockedVillage;
+    private Texture lockedForest;
+    private Texture lockedMountain;
     private BitmapFont selectorFont;
-    private themes theme = themes.none;
     private final int city_level = 4;
     private final int suburb_level = 9;
     private boolean ready = false;
@@ -74,10 +79,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private AssetState selectorAssetState = AssetState.EMPTY;
     private LevelMetadata levelMetadata;
 
-    private enum themes {
-        city, none, suburb, forest, mountain
-    }
+    private final int NONE= 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
+    private boolean[] themeUnlocked = new boolean[5];
 
+    private int theme = NONE;
 
     @Override
     public void preloadContent(AssetManager manager) {
@@ -90,6 +95,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         loadAsset(SUBURB_FILE, Texture.class, manager);
         loadAsset(FOREST_FILE, Texture.class, manager);
         loadAsset(MOUNTAIN_FILE, Texture.class, manager);
+        loadAsset(LOCKED_FOREST_FILE, Texture.class, manager);
+        loadAsset(LOCKED_MOUNTAIN_FILE, Texture.class, manager);
+        loadAsset(LOCKED_VILLAGE_FILE, Texture.class, manager);
         loadAsset(SELECT_FILE, Texture.class, manager);
         loadAsset(CITY_FILE, Texture.class, manager);
         loadAsset(MUSIC_FILE, Music.class, manager);
@@ -108,6 +116,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         forest = manager.get(FOREST_FILE, Texture.class);
         mountain = manager.get(MOUNTAIN_FILE, Texture.class);
         selector = manager.get(SELECT_FILE, Texture.class);
+        lockedForest = manager.get(LOCKED_FOREST_FILE, Texture.class);
+        lockedMountain = manager.get(LOCKED_MOUNTAIN_FILE, Texture.class);
+        lockedVillage = manager.get(LOCKED_VILLAGE_FILE, Texture.class);
         levelSelectorMusic = manager.get(MUSIC_FILE, Music.class);
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
         clickSound = manager.get(MENU_CLICK_FILE, Sound.class);
@@ -119,6 +130,28 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         selectorAssetState = AssetState.COMPLETE;
     }
 
+    private int themeFromType(String type){
+        switch (type){
+            case "city":
+                return CITY;
+            case "mountain":
+                return MOUNTAIN;
+            case "village":
+                return VILLAGE;
+            case "forest":
+                return FOREST;
+            default:
+                return NONE;
+        }
+    }
+
+    public void unlockLevel(int index){
+        if (getLevel(index)!=null){
+            levelMetadata.unlockLevel(index);
+            String type = levelMetadata.getLevel(index).getType();
+            themeUnlocked[themeFromType(type)] = true;
+        }
+    }
 
     public LevelSelectorMode() {
         this.assets = new Array<>();
@@ -129,6 +162,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         buttonPos.add(new Vector2(600, 680));
         buttonPos.add(new Vector2(680, 680));
 
+        themeUnlocked[CITY] = true;
         try {
             // Let ANY connected controller start the game.
             for (Controller controller : Controllers.getControllers()) {
@@ -177,7 +211,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 //                level = i+1;
 //            }
 //        }
-        if (level != -1 && level < levelMetadata.getLevelCount() + 1) {
+
+        if (level != -1 && level < levelMetadata.getLevelCount() + 1 && levelMetadata.getLevel(level).isUnlocked()) {
             clickSound.play(0.5f * GDXRoot.soundVol);
             ready = true;
             levelSelectorMusic.dispose();
@@ -207,23 +242,23 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         int start = 0;
         int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
-            theme = themes.city;
+            theme = CITY;
             start = 0;
             end = city_level;
         } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
-            theme = themes.suburb;
+            theme = VILLAGE;
             start = city_level;
             end = suburb_level;
         } else if (screenX > for_l && screenX < for_r && screen > for_d && screen < for_u) {
-            theme = themes.forest;
+            theme = FOREST;
             start = suburb_level;
             end = 14;
         } else if (screenX > mon_l && screenX < mon_r && screen > mon_d && screen < mon_u) {
             start = 15;
             end = 21;
-            theme = themes.mountain;
+            theme = MOUNTAIN;
         } else {
-            theme = themes.none;
+            theme = NONE;
         }
 
         select = false;
@@ -339,39 +374,57 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     }
 
+    private Texture getTextureFromTheme(int t){
+        switch (t) {
+            case CITY:
+                return city;
+            case VILLAGE:
+                return themeUnlocked[VILLAGE] ? suburb : lockedVillage;
+            case MOUNTAIN:
+                return themeUnlocked[MOUNTAIN] ? mountain : lockedMountain;
+            case FOREST:
+                return themeUnlocked[FOREST] ? forest : lockedForest;
+            default:
+                return null;
+        }
+    }
+
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background);
+        theme = themeUnlocked[theme] ? theme : NONE;
+        Texture cityBkg = getTextureFromTheme(CITY), villageBkg = getTextureFromTheme(VILLAGE),
+                mountainBkg = getTextureFromTheme(MOUNTAIN), forestBkg = getTextureFromTheme(FOREST);
         switch (theme) {
-            case city:
-                canvas.drawBackground(mountain);
-                canvas.drawBackground(suburb);
-                canvas.drawBackground(forest);
-                canvas.drawBackground(city, 426, 646, Color.WHITE, 1.3f);
+            case CITY:
+                canvas.drawBackground(mountainBkg);
+                canvas.drawBackground(villageBkg);
+                canvas.drawBackground(forestBkg);
+                canvas.drawBackground(cityBkg, 426, 646, Color.WHITE, 1.3f);
                 break;
-            case suburb:
-                canvas.drawBackground(city);
-                canvas.drawBackground(mountain);
-                canvas.drawBackground(suburb, 868, 669, Color.WHITE, 1.2f);
-                canvas.drawBackground(forest);
+            case VILLAGE:
+                canvas.drawBackground(cityBkg);
+                canvas.drawBackground(mountainBkg);
+                canvas.drawBackground(villageBkg, 868, 669, Color.WHITE, 1.2f);
+                canvas.drawBackground(forestBkg);
                 break;
-            case forest:
-                canvas.drawBackground(city);
-                canvas.drawBackground(mountain);
-                canvas.drawBackground(suburb);
-                canvas.drawBackground(forest, 960, 450, Color.WHITE, 1.2f);
+            case FOREST:
+                canvas.drawBackground(cityBkg);
+                canvas.drawBackground(mountainBkg);
+                canvas.drawBackground(villageBkg);
+                canvas.drawBackground(forestBkg, 960, 450, Color.WHITE, 1.2f);
                 break;
-            case mountain:
-                canvas.drawBackground(mountain, 330, 230, Color.WHITE, 1.2f);
-                canvas.drawBackground(city);
-                canvas.drawBackground(suburb);
-                canvas.drawBackground(forest);
+            case MOUNTAIN:
+                canvas.drawBackground(mountainBkg, 330, 230, Color.WHITE, 1.2f);
+                canvas.drawBackground(cityBkg);
+                canvas.drawBackground(villageBkg);
+                canvas.drawBackground(forestBkg);
                 break;
-            case none:
-                canvas.drawBackground(mountain);
-                canvas.drawBackground(city);
-                canvas.drawBackground(suburb);
-                canvas.drawBackground(forest);
+            case NONE:
+                canvas.drawBackground(mountainBkg);
+                canvas.drawBackground(cityBkg);
+                canvas.drawBackground(villageBkg);
+                canvas.drawBackground(forestBkg);
                 break;
         }
 

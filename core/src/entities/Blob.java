@@ -26,7 +26,7 @@ public class Blob extends WheelObstacle {
         fixture.shape = shape;
         fixture.density = 2f;
         fixture.restitution = 0.4f;
-        fixture.friction = 1f;
+        fixture.friction = 1.5f;
         body.setFixedRotation(true);
         geometry = body.createFixture(fixture);
         markDirty(false);

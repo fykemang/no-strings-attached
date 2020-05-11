@@ -59,6 +59,8 @@ public class GameMode extends Mode implements Screen {
      */
     public static final int EXIT_PREV = 2;
 
+    public static final int EXIT_RESET = 12;
+
     public static final int EXIT_INTO_GAME = 3;
 
     public static final int EXIT_INTO_NEXT = 6;
@@ -1351,9 +1353,8 @@ public class GameMode extends Mode implements Screen {
         player.setTarget(null);
         playerRope = null;
         world.destroyJoint(player.getSwingJoint1());
-        world.destroyJoint(player.getSwingJoint2());
         player.setAttached(false);
-        player.setSwingJoints(null,null);
+        player.setSwingJoint(null);
         player.resetShootCooldown();
     }
 
@@ -1448,7 +1449,8 @@ public class GameMode extends Mode implements Screen {
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             clickSound.play(0.5f * GDXRoot.soundVol);
-            gameState = GameState.PAUSED;
+            System.out.println("exit");
+            listener.exitScreen(this, PauseMode.INTO_PAUSE);
 //            exitToSelector();
         }
 
@@ -1470,6 +1472,7 @@ public class GameMode extends Mode implements Screen {
             player.setTexture(playerExitAnimation);
             door.setElapsedTime(dt);
             door.updateFrame();
+
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
             player.setVerticalMovement(InputController.getInstance().getVertical() * player.getForce());
@@ -1641,14 +1644,8 @@ public class GameMode extends Mode implements Screen {
                 ropeJointDef.bodyB = player.getTarget().getBody();
                 ropeJointDef.maxLength = playerRope.getLength();
                 ropeJointDef.collideConnected = true;
-                Joint swingJoint1 = world.createJoint(ropeJointDef);
-
-                ropeJointDef.bodyB = player.getBody();
-                ropeJointDef.bodyA = player.getTarget().getBody();
-                ropeJointDef.maxLength = playerRope.getLength();
-                ropeJointDef.collideConnected = true;
-                Joint swingJoint2 = world.createJoint(ropeJointDef);
-                player.setSwingJoints(swingJoint1,swingJoint2);
+                Joint swingJoint = world.createJoint(ropeJointDef);
+                player.setSwingJoint(swingJoint);
                 player.setAttached(true);
             }
 
