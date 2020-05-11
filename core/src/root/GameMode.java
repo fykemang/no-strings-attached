@@ -153,6 +153,8 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_ONE = "ui/basket_1.png";
     private static final String BASKET_TWO = "ui/basket_3.png";
     private static final String BASKET_THREE = "ui/basket_2.png";
+
+    private static final String CUT_INDICATOR_FILE = "entities/scissor.png";
     /**
      * The sound effects
      */
@@ -269,6 +271,8 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion basketOneTexture;
     private TextureRegion basketTwoTexture;
     private TextureRegion basketThreeTexture;
+
+    private TextureRegion cutIndicatorTexture;
     /**
      * List of all unique NPC textures
      */
@@ -540,6 +544,8 @@ public class GameMode extends Mode implements Screen {
             assets.add(s);
             manager.load(s, Texture.class);
         }
+        manager.load(CUT_INDICATOR_FILE, Texture.class);
+        assets.add(CUT_INDICATOR_FILE);
 
         // Load Player Animations
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
@@ -770,6 +776,7 @@ public class GameMode extends Mode implements Screen {
         basketTwoTexture = createTexture(manager, BASKET_TWO, false);
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         door = createFilmStrip(manager,GATE,1,11,11,false);
+        cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -1561,6 +1568,28 @@ public class GameMode extends Mode implements Screen {
                 ropeQueryCallback.reset();
             }
 
+            if (!player.isAttached()) {
+                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
+                int id = cuttingCallback.getClosestBlobID();
+                if (id != -1) {
+                    for (Obstacle obs : objects) {
+                        if (obs.getName().equals("couples" + id)) {
+                            NpcRope r = ((Couple) obs).getRope();
+                            if (r != null) {
+                                player.setCanCut((Couple) obs);
+                            }
+                            else {
+                                player.setCanCut(null);
+                            }
+                        }
+                    }
+                }
+                else {
+                    player.setCanCut(null);
+                }
+                cuttingCallback.reset();
+            }
+
             if (!player.isShooting() && player.isAttached() && playerRope != null) {
                 destroyPlayerRope();
             }
@@ -1675,6 +1704,10 @@ public class GameMode extends Mode implements Screen {
     }
 
     NpcPerson target;
+    Couple c;
+    NpcRope r;
+//    NpcPerson l;
+//    NpcPerson r;
 
     public void draw(float dt) {
         canvas.begin();
@@ -1717,6 +1750,15 @@ public class GameMode extends Mode implements Screen {
                     target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
 //            ((FilmStrip) exclamationTexture).setNextFrame();
         }
+
+        c = player.canCut();
+        if (c != null) {
+            r = c.getRope();
+//            l = c.getL();
+//            r = c.getR();
+            canvas.draw(cutIndicatorTexture, Color.WHITE, (r.getX()+(r.getLength()/2)) * scale.x, r.getY() * scale.y, cutIndicatorTexture.getRegionWidth() * 3f / scale.x, cutIndicatorTexture.getRegionHeight() * 3f / scale.y);
+        }
+
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
