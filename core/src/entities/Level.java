@@ -28,6 +28,15 @@ public class Level implements Json.Serializable {
     private final List<float[]> couples;
     private final List<TextBox> text;
     private final List<float[]> items;
+    private boolean unlocked;
+
+    public boolean isUnlocked() {
+        return unlocked;
+    }
+
+    public void setUnlocked(boolean unlocked) {
+        this.unlocked = unlocked;
+    }
 
     public Level() {
         tiles = new ArrayList<>();
