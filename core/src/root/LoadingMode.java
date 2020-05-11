@@ -123,7 +123,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private static final int STANDARD_HEIGHT = 700;
 
-    public static int INTO_STARTSCREEN = 18;
+    public static final int INTO_STARTSCREEN = 18;
     /**
      * Ratio of the bar width to the screen
      */
@@ -590,6 +590,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         // Useless if called in outside animation loop
         active = false;
         music.pause();
+        pressState = MouseState.NONE;
     }
 
     public void reset() {

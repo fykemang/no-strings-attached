@@ -37,7 +37,7 @@ public class PauseMode extends Mode implements Screen {
     private static final String CONTINUE = "ui/continue.png";
     private static final String LEVEL_SELECT = "ui/level-select.png";
     private static final String MAIN_MENU = "ui/main-menu.png";
-    private static final String RESTART = "ui/restart.png";
+    private static final String RESTART = "ui/restart-level.png";
     private static final String TITLE = "ui/pause-logo.png";
     private static final String SETTINGS = "ui/settings.png";
     private static final String BKG = "ui/sky.png";
@@ -106,19 +106,64 @@ public class PauseMode extends Mode implements Screen {
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
-
-    public void initializeInterface() {
+    final PauseMode pause = this;
+    public void initialize() {
         continueButton = createButton(continueTexture);
-        continueButton.setPosition(canvas.getWidth() * 5 / 6 - continueButton.getWidth() / 2, canvas.getHeight() / 6);
-        final PauseMode pause = this;
+        continueButton.setPosition(canvas.getWidth()/2- continueButton.getWidth()/2, canvas.getHeight()*0.5f);
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                listener.exitScreen(pause, GameMode.EXIT_INTO_NEXT);
+                listener.exitScreen(pause, GameMode.EXIT_INTO_GAME);
             }
 
         });
         stage.addActor(continueButton);
+        reStartButton = createButton(restartTexture);
+        reStartButton.setPosition(canvas.getWidth()/2- reStartButton.getWidth()/2, canvas.getHeight()*0.4f);
+        reStartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(pause, GameMode.EXIT_RESET);
+            }
+
+        });
+        stage.addActor(reStartButton);
+
+        levelSelectButton = createButton(levelselectTexture);
+        levelSelectButton.setPosition(canvas.getWidth()/2- levelSelectButton.getWidth()/2, canvas.getHeight()*0.3f);
+        levelSelectButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(pause, LevelSelectorMode.INTO_SELECTOR);
+            }
+
+        });
+        stage.addActor(levelSelectButton);
+
+
+
+        settingsButton = createButton(settingsTexture);
+        settingsButton.setPosition(canvas.getWidth()/2- settingsButton.getWidth()/2, canvas.getHeight()*0.2f);
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(pause, SettingMode.INTO_SETTING);
+            }
+
+        });
+        stage.addActor(settingsButton);
+
+
+        mainButton = createButton(mainTexture);
+        mainButton.setPosition(canvas.getWidth()/2- mainButton.getWidth()/2, canvas.getHeight()*0.1f);
+        mainButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(pause, LoadingMode.INTO_STARTSCREEN);
+            }
+
+        });
+        stage.addActor(mainButton);
 
 
 
@@ -185,6 +230,7 @@ public class PauseMode extends Mode implements Screen {
         canvas.drawBackground(bkgTexture.getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
         canvas.drawUI(logoTexture, canvas.getWidth()/2, canvas.getHeight()*0.75f, 1f);
+        canvas.actStage(stage);
         canvas.end();
     }
 

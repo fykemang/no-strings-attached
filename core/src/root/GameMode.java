@@ -59,6 +59,8 @@ public class GameMode extends Mode implements Screen {
      */
     public static final int EXIT_PREV = 2;
 
+    public static final int EXIT_RESET = 12;
+
     public static final int EXIT_INTO_GAME = 3;
 
     public static final int EXIT_INTO_NEXT = 6;
