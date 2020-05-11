@@ -38,25 +38,6 @@ public class Level implements Json.Serializable {
         this.unlocked = unlocked;
     }
 
-    public List<TextureRegion> getStillBackgroundTexture() {
-        return still;
-    }
-
-    public List<TextureRegion> getSlightBackgroundTexture() {
-        return slight;
-    }
-
-    public List<TextureRegion> getMovingBackgroundTexture() {
-        return moving;
-    }
-
-
-    public void setBackgroundTexture(List<TextureRegion> still, List<TextureRegion> slight, List<TextureRegion> moving) {
-        this.still = still;
-        this.slight = slight;
-        this.moving = moving;
-    }
-
     public Level() {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
