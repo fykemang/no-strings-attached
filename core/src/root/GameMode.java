@@ -1504,9 +1504,11 @@ public class GameMode extends Mode implements Screen {
                 playerJumpDownAnimation.refresh();
                 if (player.isAttached()) {
                     if (!didPlaySwing) {
-                        swingSound.play(GDXRoot.soundVol * Math.abs(player.getVX() / player.getMaxHorizontalSpeed()));
-                        swingSound.loop();
-                        didPlaySwing = true;
+                        if (GDXRoot.soundVol != 0) {
+                            swingSound.play(GDXRoot.soundVol * (Math.abs(player.getVX() / player.getMaxHorizontalSpeed())));
+                            swingSound.loop();
+                            didPlaySwing = true;
+                        }
                     }
                     setSwingingAnimations(dt);
                 } else if (player.isFalling()) {
