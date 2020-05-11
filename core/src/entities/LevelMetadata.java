@@ -24,13 +24,20 @@ public class LevelMetadata implements Json.Serializable {
         for (JsonValue jsonLevel : levels) {
             String levelPath = jsonLevel.getString("path");
             int levelID = jsonLevel.getInt("id");
+            boolean levelUnlocked = jsonLevel.getBoolean("unlocked");
             Level level = json.fromJson(Level.class, Gdx.files.internal(levelPath));
+            level.setUnlocked(levelUnlocked);
             levelMap.put(levelID, level);
         }
     }
 
     public Level getLevel(int index) {
         return levelMap.get(index);
+    }
+
+    public void unlockLevel(int index) {
+        Level l = getLevel(index);
+        l.setUnlocked(true);
     }
 
     public int getLevelCount() {

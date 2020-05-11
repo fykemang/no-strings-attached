@@ -43,9 +43,9 @@ public class Couple extends ComplexObstacle {
         trampolineFilter.categoryBits = CollisionFilterConstants.CATEGORY_NPC_ROPE.getID();
         trampolineFilter.maskBits = CollisionFilterConstants.MASK_NPC_ROPE.getID();
         trampoline.setFilterDataAll(trampolineFilter);
-        this.bodies.add(trampoline);
         this.bodies.add(l);
         this.bodies.add(r);
+        this.bodies.add(trampoline);
         this.leftTile = leftTile;
         this.rightTile = rightTile;
         setName("couples" + id);
@@ -81,7 +81,9 @@ public class Couple extends ComplexObstacle {
 
         jointDef.bodyA = l.getBody();
         jointDef.bodyB = trampoline.getBody();
-        anchor1.x = l.getWidth() / 2;
+
+        anchor1.x = l.getAnchorX();
+        anchor1.y = l.getAnchorY();
         anchor2.x = -trampoline.lWidth / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
@@ -89,7 +91,8 @@ public class Couple extends ComplexObstacle {
 
         jointDef.bodyA = trampoline.getLastLink();
         jointDef.bodyB = r.getBody();
-        anchor1.x = r.getWidth() / 2;
+        anchor1.x = r.getAnchorX();
+        anchor1.y = r.getAnchorY();
         anchor2.x = -trampoline.lWidth / 2;
         jointDef.localAnchorA.set(anchor1);
         jointDef.localAnchorB.set(anchor2);
@@ -104,23 +107,8 @@ public class Couple extends ComplexObstacle {
         r.setLinearVelocity(rightTile.getLinearVelocity());
         if (leftTile.isRotating) {
             leftTile.setPosData(l.getPosition());
-            if (l.left) {
-                trampoline.moveStart(l.getCloserAttachPoint(), false);
-                trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else {
-                trampoline.moveStart(r.getCloserAttachPoint(), false);
-                trampoline.moveEnd(l.getCloserAttachPoint(), false);
-            }
         } else if (rightTile.isRotating) {
             rightTile.setPosData(r.getPosition());
-            if (l.left) {
-                trampoline.moveStart(l.getCloserAttachPoint(), false);
-                trampoline.moveEnd(r.getCloserAttachPoint(), false);
-            } else {
-                trampoline.moveStart(r.getCloserAttachPoint(), false);
-                trampoline.moveEnd(l.getCloserAttachPoint(), false);
-            }
-
         }
     }
 

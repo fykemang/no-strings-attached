@@ -39,7 +39,6 @@ public class DesktopLauncher {
 		config.samples = 5; // number of sample to take
 		config.resizable = false;
 		config.title = "No Strings Attached";
-
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

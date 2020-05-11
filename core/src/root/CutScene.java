@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,7 +27,9 @@ public class CutScene extends Mode implements Screen {
         END
     }
 
-    ;
+    private final String OPENING_CUTSCENE_FILE = "music/icefishing.mp3";
+    private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
+    private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
     private THEME theme;
     public static final int INTO_CUTSCENE = 8;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
@@ -50,6 +53,7 @@ public class CutScene extends Mode implements Screen {
     private ImageButton skipButtom;
     private ImageButton nextButtom;
     private CutScene cutScene;
+    private Music music;
 
     private AssetState selectorAssetState = AssetState.EMPTY;
 
@@ -110,6 +114,14 @@ public class CutScene extends Mode implements Screen {
         }
     }
 
+    public void stopMusic() {
+        music.dispose();
+    }
+
+    public void startMusic() {
+
+    }
+
     private void update(float dt) {
 
     }
@@ -140,6 +152,9 @@ public class CutScene extends Mode implements Screen {
         loadAsset(RIGHT, Texture.class, manager);
         loadAsset(SKIP, Texture.class, manager);
         loadAsset(START, Texture.class, manager);
+        loadAsset(OPENING_CUTSCENE_FILE, Music.class, manager);
+        loadAsset(ENDING_CUTSCENE_FILE, Music.class, manager);
+        loadAsset(TRANSITION_CUTSCENE_FILE, Music.class, manager);
         selectorAssetState = AssetState.LOADING;
     }
 
@@ -154,10 +169,14 @@ public class CutScene extends Mode implements Screen {
             case OPENING:
                 for (String file : opening) {
                     textures.add(createTexture(manager, file, false));
+                    music = manager.get(OPENING_CUTSCENE_FILE);
                 }
                 slideMode = true;
             default:
         }
+        music.play();
+        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setLooping(true);
         if (slideMode) {
 
 //            skipbuttonStyle.up = new TextureRegionDrawable(skiptexture);

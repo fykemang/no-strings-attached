@@ -1,15 +1,21 @@
 package entities;
 
-import com.badlogic.gdx.math.Vector2;
-
 public class NpcPerson extends Person {
-
-    private final Vector2 leftAttachPt;
-    private final Vector2 rightAttachPt;
     private String type;
     private NpcPerson couple;
     public boolean left;
     public boolean flip;
+    private float anchorX;
+
+    public float getAnchorX() {
+        return anchorX;
+    }
+
+    public float getAnchorY() {
+        return anchorY;
+    }
+
+    private float anchorY;
 
     public NpcPerson getCouple() {
         return couple;
@@ -31,16 +37,37 @@ public class NpcPerson extends Person {
      */
     public NpcPerson(float x, float y, float width, float height, String name, String sensorName, boolean left) {
         super(x, y, width, height, name, sensorName);
-        this.leftAttachPt = new Vector2(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
-        this.rightAttachPt = new Vector2(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
         this.left = left;
         this.type = "";
         flip = false;
         this.setName("npc");
     }
 
+    private void setAnchors() {
+        switch (type) {
+            case "welcome":
+                anchorX = getWidth() / 2;
+                anchorY = left ? -0.1f : 0.1f;
+                break;
+            case "cozy":
+                anchorX = getWidth() / 2 - 0.45f;
+                anchorY = left ? -0.29f : 0.29f;
+                break;
+            case "cheese":
+                anchorX = getWidth() / 2 - 0.45f;
+                anchorY = left ? -0.05f : 0.05f;
+                break;
+
+            default:
+                anchorX = getWidth() / 2 - 0.45f;
+                anchorY = left ? -0.12f : 0.12f;
+                break;
+        }
+    }
+
     public void setType(String type) {
         this.type = type;
+        setAnchors();
     }
 
     public String getType() {
@@ -51,22 +78,4 @@ public class NpcPerson extends Person {
         this.couple = couple;
     }
 
-    @Override
-    public void update(float dt) {
-        super.update(dt);
-        Vector2 cpPos = couple.getPosition();
-        leftAttachPt.set(getX() + getWidth() / 1.5f - 0.2f, getY() + 0.1f);
-        rightAttachPt.set(getX() - getWidth() / 1.5f + 0.2f, getY() + 0.1f);
-        boolean temp = leftAttachPt.dst2(cpPos) <= rightAttachPt.dst2(cpPos);
-        flip = temp != left;
-        left = temp;
-    }
-
-    public Vector2 getCloserAttachPoint() {
-        if (left) {
-            return leftAttachPt;
-        } else {
-            return rightAttachPt;
-        }
-    }
 }
