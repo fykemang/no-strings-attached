@@ -1705,9 +1705,9 @@ public class GameMode extends Mode implements Screen {
 
     NpcPerson target;
     Couple c;
-    NpcRope r;
-//    NpcPerson l;
-//    NpcPerson r;
+//    NpcRope r;
+    NpcPerson l;
+    NpcPerson r;
 
     public void draw(float dt) {
         canvas.begin();
@@ -1753,10 +1753,10 @@ public class GameMode extends Mode implements Screen {
 
         c = player.canCut();
         if (c != null) {
-            r = c.getRope();
-//            l = c.getL();
-//            r = c.getR();
-            canvas.draw(cutIndicatorTexture, Color.WHITE, (r.getX()+(r.getLength()/2)) * scale.x, r.getY() * scale.y, cutIndicatorTexture.getRegionWidth() * 3f / scale.x, cutIndicatorTexture.getRegionHeight() * 3f / scale.y);
+//            r = c.getRope();
+            l = c.getL();
+            r = c.getR();
+            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX()+r.getX())/2 * scale.x, (r.getY()+l.getY())/2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
 
 
