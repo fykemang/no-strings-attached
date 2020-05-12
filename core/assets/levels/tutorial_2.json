@@ -59,7 +59,7 @@
   ],
   "npc": [
     {
-      "x": 9.413333333333334,
+      "x": 9,
       "y": 5.0225225225225225,
       "isSliding": false,
       "isRotating": false,
@@ -72,7 +72,7 @@
       "rightPos": {}
     },
     {
-      "x": 13.973333333333333,
+      "x": 14,
       "y": 5.045045045045045,
       "isSliding": false,
       "isRotating": false,
@@ -85,7 +85,7 @@
       "rightPos": {}
     },
     {
-      "x": 19.253333333333334,
+      "x": 19,
       "y": 10.54054054054054,
       "isSliding": false,
       "isRotating": false,

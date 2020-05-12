@@ -235,10 +235,10 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(levelSelector);
             cutScene.stopMusic();
         } else if (screen == levelSelector) {
-            switch(exitCode) {
+            switch (exitCode) {
                 case GameMode.EXIT_INTO_GAME:
                     currentLevel = levelSelector.getLevelIndex();
-                    if ( (!isCityPlayed && currentLevel== 6) || currentLevel== 10 || currentLevel== 14){
+                    if ((!isCityPlayed && currentLevel == 6) || currentLevel == 10 || currentLevel == 14) {
                         setCutScene(levelSelector.getLevelIndex());
                     } else {
                         Gdx.input.setInputProcessor(null);
@@ -252,7 +252,7 @@ public class GDXRoot extends Game implements ScreenListener {
                         setScreen(gameMode);
                         levelSelector.pause();
                     }
-                break;
+                    break;
 
             }
             // If level select is selected from in game
@@ -357,8 +357,10 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
 
+
     public void setCutScene(int level){
         switch (level){
+
             case 6:
                 cutScene.setTheme(CutScene.THEME.CITY);
                 cutScene.loadContent(manager);
