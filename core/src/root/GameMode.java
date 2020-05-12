@@ -295,7 +295,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion fabric2Texture;
     private TextureRegion spoolTexture;
     private TextureRegion stuffingTexture;
-//    private TextureRegion basketEmptyTexture;
+    //    private TextureRegion basketEmptyTexture;
 //    private TextureRegion basketOneTexture;
 //    private TextureRegion basketTwoTexture;
 //    private TextureRegion basketThreeTexture;
@@ -2286,7 +2286,6 @@ public class GameMode extends Mode implements Screen {
      * @param delta Number of seconds since last animation frame
      */
     public void render(float delta) {
-//        System.out.println(delta);
         switch (gameState) {
             case PLAYING:
                 if (preUpdate(delta)) {

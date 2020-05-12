@@ -27,7 +27,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
-//    private static final String WIN = "ui/basket_3.png";
+    //    private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
@@ -141,9 +141,9 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         hoverSound = manager.get(HOVER_FILE, Sound.class);
 //        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
         basketCity1Texture = new TextureRegion(manager.get(BASKET_CITY1, Texture.class));
-        basketCity2Texture =  new TextureRegion(manager.get(BASKET_CITY2, Texture.class));
-        basketCity3Texture =  new TextureRegion(manager.get(BASKET_CITY3, Texture.class));
-        basketVillage1Texture =  new TextureRegion(manager.get(BASKET_VILLAGE1, Texture.class));
+        basketCity2Texture = new TextureRegion(manager.get(BASKET_CITY2, Texture.class));
+        basketCity3Texture = new TextureRegion(manager.get(BASKET_CITY3, Texture.class));
+        basketVillage1Texture = new TextureRegion(manager.get(BASKET_VILLAGE1, Texture.class));
         basketVillage2Texture = new TextureRegion(manager.get(BASKET_VILLAGE2, Texture.class));
         basketVillage3Texture = new TextureRegion(manager.get(BASKET_VILLAGE3, Texture.class));
         basketForest1Texture = new TextureRegion(manager.get(BASKET_FOREST1, Texture.class));
@@ -174,12 +174,12 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private Sound victorySound;
     private Sound hoverSound;
     private Sound clickSound;
-    private int level;
+    private int currentLevel;
 
     public LevelTransitionMode() {
         this.stage = new Stage();
         active = true;
-        this.level = GDXRoot.currentLevel;
+        this.currentLevel = GDXRoot.currentLevel;
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -257,22 +257,19 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 //        music.setVolume(0.5f * GDXRoot.musicVol);
 //        music.setLooping(true);
 
-        if (level < 5) {
+        if (currentLevel < 5) {
             basketOneTexture = basketCity1Texture;
             basketTwoTexture = basketCity2Texture;
             basketThreeTexture = basketCity3Texture;
-        }
-        else if (level < 9) {
+        } else if (currentLevel < 9) {
             basketOneTexture = basketVillage1Texture;
             basketTwoTexture = basketVillage2Texture;
             basketThreeTexture = basketVillage3Texture;
-        }
-        else if (level < 13) {
+        } else if (currentLevel < 13) {
             basketOneTexture = basketForest1Texture;
             basketTwoTexture = basketForest2Texture;
             basketThreeTexture = basketForest3Texture;
-        }
-        else {
+        } else {
             basketOneTexture = basketMt1Texture;
             basketTwoTexture = basketMt2Texture;
             basketThreeTexture = basketMt3Texture;
