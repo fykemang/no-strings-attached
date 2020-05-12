@@ -4,103 +4,50 @@
   "type": "city",
   "items": [
     {
-      "x": 16.48,
-      "y": 11.23873873873874,
-      "id": 0
+      "id": 0,
+      "x": 14.5,
+      "y": 9.60
     }
   ],
   "tiles": [
     {
-      "x": 0,
-      "y": 4.054054054054054,
-      "width": 6.946666666666666,
-      "height": 0.9234234234234234,
       "type": "normal",
       "id": 0,
       "isSliding": false,
+      "y": 8.11,
+      "width": 5.56,
+      "height": 0.4729729729729726,
+      "x": 5.866666666666666,
       "direction": "up"
     },
     {
-      "x": 15.466666666666667,
-      "y": 9.45945945945946,
-      "width": 2.6399999999999997,
-      "height": 0.7882882882882878,
+      "width": 2.6666666666666665,
       "type": "normal",
       "id": 1,
       "isSliding": false,
+      "height": 0.45045045045045023,
+      "y": 8.11,
+      "x": 13.333333333333334,
       "direction": "up"
     },
     {
-      "x": 25.6,
-      "y": 14.864864864864865,
-      "width": 4.639999999999999,
-      "height": 0.6981981981981978,
       "type": "normal",
       "id": 2,
       "isSliding": false,
+      "y": 8.11,
+      "height": 0.4279279279279281,
+      "width": 4.253333333333335,
+      "x": 18.133333333333333,
       "direction": "up"
     }
   ],
-  "npc": [
-    {
-      "x": 9.413333333333334,
-      "y": 5.0225225225225225,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 0,
-      "leftPos": {},
-      "rightPos": {}
-    },
-    {
-      "x": 13.973333333333333,
-      "y": 5.045045045045045,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 0,
-      "leftPos": {},
-      "rightPos": {}
-    },
-    {
-      "x": 19.253333333333334,
-      "y": 10.54054054054054,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 1,
-      "leftPos": {},
-      "rightPos": {}
-    },
-    {
-      "x": 24,
-      "y": 10.54054054054054,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 1,
-      "leftPos": {},
-      "rightPos": {}
-    }
-  ],
+  "npc": [],
   "player": {
-    "x": 2.933333333333333,
-    "y": 5.9009009009009015
+    "x": 7.92,
+    "y": 9.86
   },
   "exit": {
-    "x": 27.75,
-    "y": 14.527027027027028
+    "x": 20,
+    "y": 7.5
   }
 }
