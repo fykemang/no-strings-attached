@@ -157,6 +157,10 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_THREE = "ui/basket_2.png";
 
     private static final String CUT_INDICATOR_FILE = "entities/scissor.png";
+    private static final String JUMPCHARGE_0_FILE = "entities/jumpcharge_0.png";
+    private static final String JUMPCHARGE_1_FILE = "entities/jumpcharge_1.png";
+    private static final String JUMPCHARGE_2_FILE = "entities/jumpcharge_2.png";
+    private static final String JUMPCHARGE_3_FILE = "entities/jumpcharge_3.png";
     /**
      * The sound effects
      */
@@ -276,6 +280,10 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
+    private TextureRegion jumpCharge0Texture;
+    private TextureRegion jumpCharge1Texture;
+    private TextureRegion jumpCharge2Texture;
+    private TextureRegion jumpCharge3Texture;
     /**
      * List of all unique NPC textures
      */
@@ -574,6 +582,14 @@ public class GameMode extends Mode implements Screen {
         }
         manager.load(CUT_INDICATOR_FILE, Texture.class);
         assets.add(CUT_INDICATOR_FILE);
+        manager.load(JUMPCHARGE_0_FILE, Texture.class);
+        assets.add(JUMPCHARGE_0_FILE);
+        manager.load(JUMPCHARGE_1_FILE, Texture.class);
+        assets.add(JUMPCHARGE_1_FILE);
+        manager.load(JUMPCHARGE_2_FILE, Texture.class);
+        assets.add(JUMPCHARGE_2_FILE);
+        manager.load(JUMPCHARGE_3_FILE, Texture.class);
+        assets.add(JUMPCHARGE_3_FILE);
 
         // Load Player Animations
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
@@ -833,6 +849,10 @@ public class GameMode extends Mode implements Screen {
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
+        jumpCharge0Texture = createTexture(manager, JUMPCHARGE_0_FILE, false);
+        jumpCharge1Texture = createTexture(manager, JUMPCHARGE_1_FILE, false);
+        jumpCharge2Texture = createTexture(manager, JUMPCHARGE_2_FILE, false);
+        jumpCharge3Texture = createTexture(manager, JUMPCHARGE_3_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -1636,13 +1656,21 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
+                                if (player.getY() > r.getY()) {
+                                    player.setCanJumpIndicator(true);
+                                }
+                                else {
+                                    player.setCanJumpIndicator(false);
+                                }
                             } else {
                                 player.setCanCut(null);
+                                player.setCanJumpIndicator(false);
                             }
                         }
                     }
                 } else {
                     player.setCanCut(null);
+                    player.setCanJumpIndicator(false);
                 }
                 cuttingCallback.reset();
             }
@@ -1806,6 +1834,10 @@ public class GameMode extends Mode implements Screen {
             l = c.getL();
             r = c.getR();
             canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+        }
+
+        if (player.getCanJumpIndicator()) {
+            canvas.draw(jumpCharge0Texture, Color.WHITE, (player.getX() + player.getWidth()/2) * scale.x, (player.getY() + player.getHeight()/2) * scale.y - 1, jumpCharge0Texture.getRegionWidth() * 10f / scale.x, jumpCharge0Texture.getRegionHeight() * 10f / scale.y);
         }
 
 
