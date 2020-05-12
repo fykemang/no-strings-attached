@@ -1505,9 +1505,7 @@ public class GameMode extends Mode implements Screen {
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             clickSound.play(0.5f * GDXRoot.soundVol);
-            System.out.println("exit");
             listener.exitScreen(this, PauseMode.INTO_PAUSE);
-//            exitToSelector();
         }
 
         boolean isGodModeKeyPressed = Gdx.input.isKeyPressed(Input.Keys.G);
@@ -2118,7 +2116,6 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
 
-        //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
         if (isZoomed) {
             canvas.moveCamera(xpos, ypos);
             lastpos = new Vector2(xpos, ypos);
