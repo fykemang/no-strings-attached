@@ -26,7 +26,7 @@ public class Gate extends PolygonObstacle {
         if (!super.activatePhysics(world)) {
             return false;
         }
-        Vector2 sensorCenter = new Vector2(getWidth() / 2, 1f);
+        Vector2 sensorCenter = new Vector2(getWidth() / 2, 0f);
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = 0f;
         sensorDef.isSensor = true;
@@ -42,7 +42,7 @@ public class Gate extends PolygonObstacle {
 
     public void draw(GameCanvas canvas) {
         canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x - texture.getRegionWidth() * 0.7f / 2f,
-                getY() * drawScale.y + texture.getRegionHeight() * 0.17f, getAngle(), 0.7f, 0.7f);
+                getY() * drawScale.y - 20f, getAngle(), 0.7f, 0.7f);
     }
 
 
