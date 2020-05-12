@@ -30,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import entities.*;
 import obstacle.Obstacle;
 import org.w3c.dom.Text;
@@ -207,6 +208,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
     protected FilmStrip door;
+    private Stage stage;
     /**
      * The font for giving messages to the player
      */
