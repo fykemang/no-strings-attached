@@ -379,7 +379,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion forestSpikeVertTile;
     protected TextureRegion villageSpikeTile;
     protected TextureRegion villageSpikeVertTile;
-    private ArrayList<TextureRegion>  billboards = new ArrayList<>();
+    private ArrayList<TextureRegion>  billboards;
 
     /**
      * Tile texture used in the game
@@ -413,7 +413,9 @@ public class GameMode extends Mode implements Screen {
     private List<TextBox> textBoxes;
 
     private final String[] LEVEL1_T = new String[]{"billboard/level1-jump.png", "billboard/level1-move.png", "billboard/level1- collectibles.png", "billboard/level1-door.png"};
-
+    private final String[] LEVEL2_T = new String[]{"billboard/level2-Z.png", "billboard/level2-trampoline.png", "billboard/level2-extra.png"};
+    final String[] LEVEL3_T = new String[]{"billboard/level3-extra.png"};
+    final String[] LEVEL4_T = new String[]{"billboard/level4-space.png", "billboard/level4-shift.png", "billboard/level4-extra.png"};
     /**
      * Creates a new game world
      * <p>
@@ -519,6 +521,18 @@ public class GameMode extends Mode implements Screen {
             manager.load(s, Texture.class);
         }
         for (String s : LEVEL1_T) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : LEVEL2_T) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : LEVEL3_T) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : LEVEL4_T) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
@@ -662,6 +676,7 @@ public class GameMode extends Mode implements Screen {
     }
 
     public void initializeContent(AssetManager manager) {
+        billboards = new ArrayList<>();
         String type = level.getType();
         stillBackgroundTextures.clear();
         slightMoveBackgroundTextures.clear();
@@ -673,7 +688,21 @@ public class GameMode extends Mode implements Screen {
                 billboards.add(createTexture(manager, s, false));
             };
             break;
-
+            case 2:
+                for (String s : LEVEL2_T) {
+                    billboards.add(createTexture(manager, s, false));
+                };
+                break;
+            case 3:
+                for (String s : LEVEL3_T) {
+                    billboards.add(createTexture(manager, s, false));
+                };
+                break;
+            case 4:
+                for (String s : LEVEL3_T) {
+                    billboards.add(createTexture(manager, s, false));
+                };
+                break;
         }
 
         switch (type) {
@@ -956,7 +985,6 @@ public class GameMode extends Mode implements Screen {
     private void populateLevel() {
         currentlevel = level;
         Vector2 playerPos = level.getPlayerPos();
-
         List<Tile> tiles = level.getTiles();
         List<Tile> spikes = level.getSpikes();
         items = (ArrayList<float[]>) level.getItems();
