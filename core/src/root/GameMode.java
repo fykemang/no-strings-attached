@@ -33,7 +33,6 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import entities.*;
 import obstacle.Obstacle;
-import org.w3c.dom.Text;
 import util.*;
 
 import java.util.*;
@@ -159,6 +158,10 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_THREE = "ui/basket_2.png";
 
     private static final String CUT_INDICATOR_FILE = "entities/scissor.png";
+    private static final String JUMPCHARGE_0_FILE = "entities/jumpcharge_0.png";
+    private static final String JUMPCHARGE_1_FILE = "entities/jumpcharge_1.png";
+    private static final String JUMPCHARGE_2_FILE = "entities/jumpcharge_2.png";
+    private static final String JUMPCHARGE_3_FILE = "entities/jumpcharge_3.png";
     /**
      * The sound effects
      */
@@ -279,6 +282,10 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
+    private TextureRegion jumpCharge0Texture;
+    private TextureRegion jumpCharge1Texture;
+    private TextureRegion jumpCharge2Texture;
+    private TextureRegion jumpCharge3Texture;
     /**
      * List of all unique NPC textures
      */
@@ -381,7 +388,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion forestSpikeVertTile;
     protected TextureRegion villageSpikeTile;
     protected TextureRegion villageSpikeVertTile;
-    private ArrayList<TextureRegion>  billboards;
+    private ArrayList<TextureRegion> billboards;
 
     /**
      * Tile texture used in the game
@@ -418,6 +425,7 @@ public class GameMode extends Mode implements Screen {
     private final String[] LEVEL2_T = new String[]{"billboard/level2-Z.png", "billboard/level2-trampoline.png", "billboard/level2-extra.png"};
     final String[] LEVEL3_T = new String[]{"billboard/level3-extra.png"};
     final String[] LEVEL4_T = new String[]{"billboard/level4-space.png", "billboard/level4-shift.png", "billboard/level4-extra.png"};
+
     /**
      * Creates a new game world
      * <p>
@@ -576,6 +584,14 @@ public class GameMode extends Mode implements Screen {
         }
         manager.load(CUT_INDICATOR_FILE, Texture.class);
         assets.add(CUT_INDICATOR_FILE);
+        manager.load(JUMPCHARGE_0_FILE, Texture.class);
+        assets.add(JUMPCHARGE_0_FILE);
+        manager.load(JUMPCHARGE_1_FILE, Texture.class);
+        assets.add(JUMPCHARGE_1_FILE);
+        manager.load(JUMPCHARGE_2_FILE, Texture.class);
+        assets.add(JUMPCHARGE_2_FILE);
+        manager.load(JUMPCHARGE_3_FILE, Texture.class);
+        assets.add(JUMPCHARGE_3_FILE);
 
         // Load Player Animations
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
@@ -684,26 +700,30 @@ public class GameMode extends Mode implements Screen {
         slightMoveBackgroundTextures.clear();
         movingBackgroundTextures.clear();
 
-        switch (level.getLevel()){
-           case 1:
-            for (String s : LEVEL1_T) {
-                billboards.add(createTexture(manager, s, false));
-            };
-            break;
+        switch (level.getLevel()) {
+            case 1:
+                for (String s : LEVEL1_T) {
+                    billboards.add(createTexture(manager, s, false));
+                }
+                ;
+                break;
             case 2:
                 for (String s : LEVEL2_T) {
                     billboards.add(createTexture(manager, s, false));
-                };
+                }
+                ;
                 break;
             case 3:
                 for (String s : LEVEL3_T) {
                     billboards.add(createTexture(manager, s, false));
-                };
+                }
+                ;
                 break;
             case 4:
                 for (String s : LEVEL4_T) {
                     billboards.add(createTexture(manager, s, false));
-                };
+                }
+                ;
                 break;
         }
 
@@ -831,6 +851,10 @@ public class GameMode extends Mode implements Screen {
         basketThreeTexture = createTexture(manager, BASKET_THREE, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
+        jumpCharge0Texture = createTexture(manager, JUMPCHARGE_0_FILE, false);
+        jumpCharge1Texture = createTexture(manager, JUMPCHARGE_1_FILE, false);
+        jumpCharge2Texture = createTexture(manager, JUMPCHARGE_2_FILE, false);
+        jumpCharge3Texture = createTexture(manager, JUMPCHARGE_3_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -1178,9 +1202,6 @@ public class GameMode extends Mode implements Screen {
     }
 
 
-
-
-
     float volume = 0.5f * GDXRoot.musicVol;
 
     public void fadeInMusic() {
@@ -1506,9 +1527,7 @@ public class GameMode extends Mode implements Screen {
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             clickSound.play(0.5f * GDXRoot.soundVol);
-            System.out.println("exit");
             listener.exitScreen(this, PauseMode.INTO_PAUSE);
-//            exitToSelector();
         }
 
         boolean isGodModeKeyPressed = Gdx.input.isKeyPressed(Input.Keys.G);
@@ -1639,13 +1658,20 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
+                                if (player.getY() > r.getY()) {
+                                    player.setCanJumpIndicator(true);
+                                } else {
+                                    player.setCanJumpIndicator(false);
+                                }
                             } else {
                                 player.setCanCut(null);
+                                player.setCanJumpIndicator(false);
                             }
                         }
                     }
                 } else {
                     player.setCanCut(null);
+                    player.setCanJumpIndicator(false);
                 }
                 cuttingCallback.reset();
             }
@@ -1809,6 +1835,10 @@ public class GameMode extends Mode implements Screen {
             l = c.getL();
             r = c.getR();
             canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+        }
+
+        if (player.getCanJumpIndicator()) {
+            canvas.draw(jumpCharge0Texture, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY() + player.getHeight() / 2) * scale.y - 1, jumpCharge0Texture.getRegionWidth() * 10f / scale.x, jumpCharge0Texture.getRegionHeight() * 10f / scale.y);
         }
 
 
@@ -2119,7 +2149,6 @@ public class GameMode extends Mode implements Screen {
         float ypos = player.getY() * scale.y > 240 ? player.getY() * scale.y : 240;
 
 
-        //    System.out.println("ypos" + ypos + "current camera" + lastpos.y);
         if (isZoomed) {
             canvas.moveCamera(xpos, ypos);
             lastpos = new Vector2(xpos, ypos);
