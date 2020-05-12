@@ -128,7 +128,6 @@ public class Stone extends PolygonObstacle {
     public void update(float dt) {
         super.update(dt);
         if (isSliding) {
-
             if (getPosition().epsilonEquals(leftSlideLim, 0.05f) ||
                     getPosition().epsilonEquals(rightSlideLim, 0.05f)) {
 
@@ -176,8 +175,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             } else if (height <= 2 && width <= 2) {
-                firstx = x * drawScale.x;
-                firsty = y * drawScale.y;
+                firstx = getX() * drawScale.x;
+                firsty = getY() * drawScale.y;
                 this.x = getX() - 0.3f;
                 this.y = getY() - 0.3f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -185,8 +184,11 @@ public class Stone extends PolygonObstacle {
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
 
             } else if (height <= 2) {
+//                if (isSliding) System.out.println("here");
                 this.x = getX();
                 this.y = getY();
+                firstx = getX() * drawScale.x;
+                firsty = getY() * drawScale.y;
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
