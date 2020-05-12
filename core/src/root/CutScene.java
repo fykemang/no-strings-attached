@@ -170,6 +170,7 @@ public class CutScene extends Mode implements Screen {
 
     @Override
     public void loadContent(AssetManager manager) {
+        currentSlide = 0;
         stage.clear();
         textures = new ArrayList<>();
         skiptexture = createTexture(manager, SKIP, false);
@@ -244,7 +245,7 @@ public class CutScene extends Mode implements Screen {
         TextureRegion startTexture = createTexture(manager, START, false);
         ImageButton start = createButton(startTexture);
         start.setPosition(canvas.getWidth() * 0.7f - start.getWidth() / 2,
-                canvas.getHeight() * 0.4f);
+               canvas.getHeight() * 0.4f);
         start.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
