@@ -1,6 +1,6 @@
 {
   "tutorial": true,
-  "type": "village",
+  "type": "city",
   "player": {
     "x": 8,
     "y": 11.0
