@@ -1847,9 +1847,8 @@ public class GameMode extends Mode implements Screen {
         if (player.getCanJumpIndicator()) {
             int charge = player.getJumpChargeState();
             TextureRegion t = charge == 0 ? jumpCharge0Texture : charge == 1 ? jumpCharge1Texture : charge == 2 ? jumpCharge2Texture : jumpCharge3Texture;
-            canvas.draw(t, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY()) * scale.y , jumpCharge0Texture.getRegionWidth() * 20f / scale.x, jumpCharge0Texture.getRegionHeight() * 20f / scale.y);
+            canvas.draw(t, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY()) * scale.y, jumpCharge0Texture.getRegionWidth() * 20f / scale.x, jumpCharge0Texture.getRegionHeight() * 20f / scale.y);
         }
-
 
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),

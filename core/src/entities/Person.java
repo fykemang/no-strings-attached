@@ -665,7 +665,7 @@ public class Person extends CapsuleObstacle {
         this.swingJoint1 = swingJoint1;
     }
 
-    public int getJumpChargeState(){
+    public int getJumpChargeState() {
         float vy = Math.abs(getVY());
         if (vy < 4f)
             return 3;

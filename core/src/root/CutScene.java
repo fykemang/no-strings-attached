@@ -225,8 +225,7 @@ public class CutScene extends Mode implements Screen {
             });
             if (textures.size() > 1) {
                 stage.addActor(nextButtom);
-            }
-            else addStart();
+            } else addStart();
 
 
             Gdx.input.setInputProcessor(stage);
