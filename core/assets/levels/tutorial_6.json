@@ -24,20 +24,20 @@
       "type": "spikes",
       "id": 1,
       "isSliding": false,
-      "width": 5.864377345267675,
-      "y": 10.81,
-      "height": 1.1081813840992343,
-      "x": 9.066666666666666,
+      "width": 1,
+      "y": 11,
+      "height": 6,
+      "x": 9,
       "direction": "left"
     },
     {
       "type": "spikes",
       "id": 2,
       "isSliding": false,
-      "y": 15.77,
-      "width": 5.887435492355984,
-      "height": 1.1640103354628681,
-      "x": 11.733333333333333,
+      "y": 11,
+      "width": 1,
+      "height":  6,
+      "x": 10,
       "direction": "right"
     },
     {
@@ -53,30 +53,42 @@
   ],
   "npc": [
     {
-      "isSliding": false,
+      "isSliding": true,
       "isRotating": false,
       "center": {},
       "width": 40,
       "height": 80,
       "degree": 0,
       "id": 0,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 3.2,
-      "y": 8.18
+      "leftPos": {
+        "x": 3.0,
+        "y": 7.5
+      },
+      "rightPos": {
+        "x": 13.3,
+        "y": 7.5
+      },
+      "x": 3.1,
+      "y": 7.5
     },
     {
-      "isSliding": false,
+      "isSliding": true,
       "isRotating": false,
       "center": {},
       "width": 40,
       "height": 80,
       "degree": 0,
       "id": 0,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 8.4,
-      "y": 8.15
+      "leftPos": {
+        "x": 8.0,
+        "y": 7.5
+      },
+      "rightPos": {
+        "x": 18.3,
+        "y": 7.5
+      },
+      "x": 8.1,
+      "y": 7.5
     },
     {
       "isSliding": false,
@@ -110,7 +122,7 @@
     "y": 16.22
   },
   "exit": {
-    "x": 24,
-    "y": 9.23
+    "x": 25,
+    "y": 7.5
   }
 }

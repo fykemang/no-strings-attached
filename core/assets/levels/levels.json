@@ -7,28 +7,28 @@
     },
     {
       "id": 2,
-      "unlocked": false,
+      "unlocked": true,
       "path": "levels/tutorial_2.json"
     },
     {
       "id": 3,
-      "unlocked": false,
+      "unlocked": true,
       "path": "levels/level1.json"
     },
     {
       "id": 4,
-      "unlocked": false,
-      "path": "levels/level2.json"
+      "unlocked": true,
+      "path": "levels/tutorial_7.json"
     },
     {
       "id": 5,
       "unlocked": true,
-      "path": "levels/level3.json"
+      "path": "levels/tutorial_3.json"
     },
     {
       "id": 6,
       "unlocked": true,
-      "path": "levels/test.json"
+      "path": "levels/tutorial_9.json"
     }
   ]
 }
