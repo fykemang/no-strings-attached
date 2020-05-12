@@ -1658,7 +1658,7 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
-                                if (player.getY() > r.getY()) {
+                                if (player.getY() >= r.getY()) {
                                     player.setCanJumpIndicator(true);
                                 } else {
                                     player.setCanJumpIndicator(false);

@@ -22,8 +22,8 @@ public class CutScene extends Mode implements Screen {
     public static enum THEME {
         OPENING,
         CITY,
+        VILLAGE,
         FOREST,
-        MOUNTAIN,
         END
     }
 
@@ -34,6 +34,12 @@ public class CutScene extends Mode implements Screen {
     public static final int INTO_CUTSCENE = 8;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
             "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
+    private static final String city = "cutscenes/city_edit.png";
+    private static final String village = "cutscenes/village_edit.png";
+    private static final String forest = "cutscenes/forest_edit.png";
+    private static final String[] ending = {"cutscenes/end_01.png", "cutscenes/end_02.png", "cutscenes/end_03.png",
+            "cutscenes/end_04.png", "cutscenes/end_05.png", "cutscenes/end_06.png", "cutscenes/end_07.png",
+            "cutscenes/end_08.png", "cutscenes/end_09.png", "cutscenes/end_10.png", "cutscenes/end_11.png"};
     private static final String SKIP = "cutscenes/PressEnterSkip.png";
     private static final String RIGHT = "cutscenes/skipButton.png";
     private static final String START = "ui/start.png";
@@ -41,7 +47,7 @@ public class CutScene extends Mode implements Screen {
     private ArrayList<TextureRegion> textures = new ArrayList<>();
     private TextureRegion skiptexture;
     private TextureRegion nextTexture;
-    private static final String[] city = {};
+//    private static final String[] city = {};
     private boolean slideMode;
     private int currentSlide = 0;
 
@@ -148,10 +154,14 @@ public class CutScene extends Mode implements Screen {
             return;
         }
         for (String s : opening) loadAsset(s, Texture.class, manager);
-        for (String s : city) loadAsset(s, Texture.class, manager);
+//        for (String s : city) loadAsset(s, Texture.class, manager);
+        for (String s : ending) loadAsset(s, Texture.class, manager);
         loadAsset(RIGHT, Texture.class, manager);
         loadAsset(SKIP, Texture.class, manager);
         loadAsset(START, Texture.class, manager);
+        loadAsset(city, Texture.class, manager);
+        loadAsset(village, Texture.class, manager);
+        loadAsset(forest, Texture.class, manager);
         loadAsset(OPENING_CUTSCENE_FILE, Music.class, manager);
         loadAsset(ENDING_CUTSCENE_FILE, Music.class, manager);
         loadAsset(TRANSITION_CUTSCENE_FILE, Music.class, manager);
@@ -172,6 +182,26 @@ public class CutScene extends Mode implements Screen {
                     music = manager.get(OPENING_CUTSCENE_FILE);
                 }
                 slideMode = true;
+                break;
+            case CITY:
+                textures.add(createTexture(manager, city, false));
+                music = manager.get(TRANSITION_CUTSCENE_FILE);
+                break;
+            case VILLAGE:
+                textures.add(createTexture(manager, village, false));
+                music = manager.get(TRANSITION_CUTSCENE_FILE);
+                break;
+            case FOREST:
+                textures.add(createTexture(manager, forest, false));
+                music = manager.get(TRANSITION_CUTSCENE_FILE);
+                break;
+            case END:
+                for (String file : ending) {
+                    textures.add(createTexture(manager, file, false));
+                    music = manager.get(ENDING_CUTSCENE_FILE);
+                }
+                slideMode = true;
+                break;
             default:
         }
         music.play();
