@@ -27,7 +27,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
-    private static final String WIN = "ui/basket_3.png";
+//    private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
@@ -37,7 +37,34 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String VICTORY_FILE = "sounds/victorymarimba.mp3";
     private final String SELECTOR = "ui/next-select.png";
-
+    private static final String BASKET_CITY1 = "ui/city_basket1.png";
+    private static final String BASKET_CITY2 = "ui/city_basket2.png";
+    private static final String BASKET_CITY3 = "ui/city_basket3.png";
+    private static final String BASKET_VILLAGE1 = "ui/village_basket1.png";
+    private static final String BASKET_VILLAGE2 = "ui/village_basket2.png";
+    private static final String BASKET_VILLAGE3 = "ui/village_basket3.png";
+    private static final String BASKET_FOREST1 = "ui/forest_basket1.png";
+    private static final String BASKET_FOREST2 = "ui/forest_basket2.png";
+    private static final String BASKET_FOREST3 = "ui/forest_basket3.png";
+    private static final String BASKET_MT1 = "ui/mt_basket1.png";
+    private static final String BASKET_MT2 = "ui/mt_basket2.png";
+    private static final String BASKET_MT3 = "ui/mt_basket3.png";
+    private TextureRegion basketEmptyTexture;
+    private TextureRegion basketOneTexture;
+    private TextureRegion basketTwoTexture;
+    private TextureRegion basketThreeTexture;
+    private TextureRegion basketCity1Texture;
+    private TextureRegion basketCity2Texture;
+    private TextureRegion basketCity3Texture;
+    private TextureRegion basketVillage1Texture;
+    private TextureRegion basketVillage2Texture;
+    private TextureRegion basketVillage3Texture;
+    private TextureRegion basketForest1Texture;
+    private TextureRegion basketForest2Texture;
+    private TextureRegion basketForest3Texture;
+    private TextureRegion basketMt1Texture;
+    private TextureRegion basketMt2Texture;
+    private TextureRegion basketMt3Texture;
     private Texture background;
     private Texture yarnie;
     private TextureRegion pc;
@@ -57,7 +84,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         loadAsset(BK_FILE, Texture.class, manager);
         loadAsset(BUTTON, Texture.class, manager);
         loadAsset(PC, Texture.class, manager);
-        loadAsset(WIN, Texture.class, manager);
+//        loadAsset(WIN, Texture.class, manager);
         loadAsset(REPLAY, Texture.class, manager);
         loadAsset(MAIN_MENU, Texture.class, manager);
         loadAsset(WIN_TEXT, Texture.class, manager);
@@ -65,6 +92,30 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         loadAsset(VICTORY_FILE, Sound.class, manager);
         loadAsset(SELECTOR, Texture.class, manager);
         loadAsset(BUTTON_PRESSED, Texture.class, manager);
+        manager.load(BASKET_CITY1, Texture.class);
+        assets.add(BASKET_CITY1);
+        manager.load(BASKET_CITY2, Texture.class);
+        assets.add(BASKET_CITY2);
+        manager.load(BASKET_CITY3, Texture.class);
+        assets.add(BASKET_CITY3);
+        manager.load(BASKET_VILLAGE1, Texture.class);
+        assets.add(BASKET_VILLAGE1);
+        manager.load(BASKET_VILLAGE2, Texture.class);
+        assets.add(BASKET_VILLAGE2);
+        manager.load(BASKET_VILLAGE3, Texture.class);
+        assets.add(BASKET_VILLAGE3);
+        manager.load(BASKET_FOREST1, Texture.class);
+        assets.add(BASKET_FOREST1);
+        manager.load(BASKET_FOREST2, Texture.class);
+        assets.add(BASKET_FOREST2);
+        manager.load(BASKET_FOREST3, Texture.class);
+        assets.add(BASKET_FOREST3);
+        manager.load(BASKET_MT1, Texture.class);
+        assets.add(BASKET_MT1);
+        manager.load(BASKET_MT2, Texture.class);
+        assets.add(BASKET_MT2);
+        manager.load(BASKET_MT3, Texture.class);
+        assets.add(BASKET_MT3);
     }
 
     @Override
@@ -73,7 +124,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             return;
         }
         background = manager.get(BK_FILE, Texture.class);
-        yarnie = manager.get(WIN, Texture.class);
+//        yarnie = manager.get(WIN, Texture.class);
+//        yarnie = basketThreeTexture;
         winMessage = manager.get(WIN_TEXT, Texture.class);
         pc = new TextureRegion(manager.get(PC, Texture.class));
         TextureRegion nextButtonPressed = new TextureRegion(manager.get(BUTTON_PRESSED, Texture.class));
@@ -87,6 +139,19 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         victorySound = manager.get(VICTORY_FILE, Sound.class);
         clickSound = manager.get(CLICK_FILE, Sound.class);
         hoverSound = manager.get(HOVER_FILE, Sound.class);
+//        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
+        basketCity1Texture = new TextureRegion(manager.get(BASKET_CITY1, Texture.class));
+        basketCity2Texture =  new TextureRegion(manager.get(BASKET_CITY2, Texture.class));
+        basketCity3Texture =  new TextureRegion(manager.get(BASKET_CITY3, Texture.class));
+        basketVillage1Texture =  new TextureRegion(manager.get(BASKET_VILLAGE1, Texture.class));
+        basketVillage2Texture = new TextureRegion(manager.get(BASKET_VILLAGE2, Texture.class));
+        basketVillage3Texture = new TextureRegion(manager.get(BASKET_VILLAGE3, Texture.class));
+        basketForest1Texture = new TextureRegion(manager.get(BASKET_FOREST1, Texture.class));
+        basketForest2Texture = new TextureRegion(manager.get(BASKET_FOREST2, Texture.class));
+        basketForest3Texture = new TextureRegion(manager.get(BASKET_FOREST3, Texture.class));
+        basketMt1Texture = new TextureRegion(manager.get(BASKET_MT1, Texture.class));
+        basketMt2Texture = new TextureRegion(manager.get(BASKET_MT2, Texture.class));
+        basketMt3Texture = new TextureRegion(manager.get(BASKET_MT3, Texture.class));
         assetState = AssetState.COMPLETE;
     }
 
@@ -94,6 +159,10 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         REPLAY,
         EXIT,
         NEXT
+    }
+
+    enum basketType {
+        C1, C2, C3, V1, V2, V3, F1, F2, F3, M1, M2, M3
     }
 
     private SelectedButton currentSelection;
@@ -105,10 +174,12 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private Sound victorySound;
     private Sound hoverSound;
     private Sound clickSound;
+    private int level;
 
     public LevelTransitionMode() {
         this.stage = new Stage();
         active = true;
+        this.level = GDXRoot.currentLevel;
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -185,6 +256,27 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 //        music.play();
 //        music.setVolume(0.5f * GDXRoot.musicVol);
 //        music.setLooping(true);
+
+        if (level < 5) {
+            basketOneTexture = basketCity1Texture;
+            basketTwoTexture = basketCity2Texture;
+            basketThreeTexture = basketCity3Texture;
+        }
+        else if (level < 9) {
+            basketOneTexture = basketVillage1Texture;
+            basketTwoTexture = basketVillage2Texture;
+            basketThreeTexture = basketVillage3Texture;
+        }
+        else if (level < 13) {
+            basketOneTexture = basketForest1Texture;
+            basketTwoTexture = basketForest2Texture;
+            basketThreeTexture = basketForest3Texture;
+        }
+        else {
+            basketOneTexture = basketMt1Texture;
+            basketTwoTexture = basketMt2Texture;
+            basketThreeTexture = basketMt3Texture;
+        }
 
         try {
             // Let ANY connected controller start the game.
@@ -349,8 +441,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         canvas.begin();
         canvas.drawBackground(background, canvas.getWidth() / 2, canvas.getHeight() / 2,
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
-        canvas.draw(yarnie, canvas.getWidth() * 2.2f / 5 - yarnie.getWidth() / 2,
-                canvas.getHeight() / 2 - yarnie.getHeight() / 2 - pc.getRegionHeight() / 5);
+        canvas.draw(basketThreeTexture, canvas.getWidth() * 2.2f / 5 - basketThreeTexture.getRegionWidth() / 2,
+                canvas.getHeight() / 2 - basketThreeTexture.getRegionHeight() / 2 - pc.getRegionHeight() / 5);
         canvas.drawUI(pc, canvas.getWidth() * 3 / 5,
                 canvas.getHeight() / 2, 0.5f);
         if (isLevelComplete) {

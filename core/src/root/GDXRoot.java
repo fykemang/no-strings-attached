@@ -73,7 +73,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     public static boolean useArrow = true;
 
-    private int currentLevel;
+    public static int currentLevel;
 
     private boolean TransitionLoaded = false;
 
