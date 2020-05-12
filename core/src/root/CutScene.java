@@ -175,7 +175,7 @@ public class CutScene extends Mode implements Screen {
             default:
         }
         music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(0.25f * GDXRoot.musicVol);
         music.setLooping(true);
         if (slideMode) {
 

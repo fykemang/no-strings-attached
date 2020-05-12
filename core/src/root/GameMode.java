@@ -1749,10 +1749,9 @@ public class GameMode extends Mode implements Screen {
 
         c = player.canCut();
         if (c != null) {
-//            r = c.getRope();
             l = c.getL();
             r = c.getR();
-            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
 
 
