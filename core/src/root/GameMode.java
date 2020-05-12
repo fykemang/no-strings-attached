@@ -151,10 +151,19 @@ public class GameMode extends Mode implements Screen {
     /**
      * Texture files for baskets (progress bar)
      */
-    private static final String BASKET_EMPTY = "ui/basket_0.png";
-    private static final String BASKET_ONE = "ui/basket_1.png";
-    private static final String BASKET_TWO = "ui/basket_3.png";
-    private static final String BASKET_THREE = "ui/basket_2.png";
+//    private static final String BASKET_EMPTY = "ui/basket_0.png";
+//    private static final String BASKET_CITY1 = "ui/city_basket1.png";
+//    private static final String BASKET_CITY2 = "ui/city_basket2.png";
+//    private static final String BASKET_CITY3 = "ui/city_basket3.png";
+//    private static final String BASKET_VILLAGE1 = "ui/village_basket1.png";
+//    private static final String BASKET_VILLAGE2 = "ui/village_basket2.png";
+//    private static final String BASKET_VILLAGE3 = "ui/village_basket3.png";
+//    private static final String BASKET_FOREST1 = "ui/forest_basket1.png";
+//    private static final String BASKET_FOREST2 = "ui/forest_basket2.png";
+//    private static final String BASKET_FOREST3 = "ui/forest_basket3.png";
+//    private static final String BASKET_MT1 = "ui/mt_basket1.png";
+//    private static final String BASKET_MT2 = "ui/mt_basket2.png";
+//    private static final String BASKET_MT3 = "ui/mt_basket3.png";
 
     private static final String CUT_INDICATOR_FILE = "entities/scissor.png";
     private static final String JUMPCHARGE_0_FILE = "entities/jumpcharge_0.png";
@@ -273,10 +282,22 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion fabric2Texture;
     private TextureRegion spoolTexture;
     private TextureRegion stuffingTexture;
-    private TextureRegion basketEmptyTexture;
-    private TextureRegion basketOneTexture;
-    private TextureRegion basketTwoTexture;
-    private TextureRegion basketThreeTexture;
+//    private TextureRegion basketEmptyTexture;
+//    private TextureRegion basketOneTexture;
+//    private TextureRegion basketTwoTexture;
+//    private TextureRegion basketThreeTexture;
+//    private TextureRegion basketCity1Texture;
+//    private TextureRegion basketCity2Texture;
+//    private TextureRegion basketCity3Texture;
+//    private TextureRegion basketVillage1Texture;
+//    private TextureRegion basketVillage2Texture;
+//    private TextureRegion basketVillage3Texture;
+//    private TextureRegion basketForest1Texture;
+//    private TextureRegion basketForest2Texture;
+//    private TextureRegion basketForest3Texture;
+//    private TextureRegion basketMt1Texture;
+//    private TextureRegion basketMt2Texture;
+//    private TextureRegion basketMt3Texture;
     private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
@@ -482,14 +503,32 @@ public class GameMode extends Mode implements Screen {
         assets.add(SPOOL);
         manager.load(STUFFING, Texture.class);
         assets.add(STUFFING);
-        manager.load(BASKET_EMPTY, Texture.class);
-        assets.add(BASKET_EMPTY);
-        manager.load(BASKET_ONE, Texture.class);
-        assets.add(BASKET_ONE);
-        manager.load(BASKET_TWO, Texture.class);
-        assets.add(BASKET_TWO);
-        manager.load(BASKET_THREE, Texture.class);
-        assets.add(BASKET_THREE);
+//        manager.load(BASKET_EMPTY, Texture.class);
+//        assets.add(BASKET_EMPTY);
+//        manager.load(BASKET_CITY1, Texture.class);
+//        assets.add(BASKET_CITY1);
+//        manager.load(BASKET_CITY2, Texture.class);
+//        assets.add(BASKET_CITY2);
+//        manager.load(BASKET_CITY3, Texture.class);
+//        assets.add(BASKET_CITY3);
+//        manager.load(BASKET_VILLAGE1, Texture.class);
+//        assets.add(BASKET_VILLAGE1);
+//        manager.load(BASKET_VILLAGE2, Texture.class);
+//        assets.add(BASKET_VILLAGE2);
+//        manager.load(BASKET_VILLAGE3, Texture.class);
+//        assets.add(BASKET_VILLAGE3);
+//        manager.load(BASKET_FOREST1, Texture.class);
+//        assets.add(BASKET_FOREST1);
+//        manager.load(BASKET_FOREST2, Texture.class);
+//        assets.add(BASKET_FOREST2);
+//        manager.load(BASKET_FOREST3, Texture.class);
+//        assets.add(BASKET_FOREST3);
+//        manager.load(BASKET_MT1, Texture.class);
+//        assets.add(BASKET_MT1);
+//        manager.load(BASKET_MT2, Texture.class);
+//        assets.add(BASKET_MT2);
+//        manager.load(BASKET_MT3, Texture.class);
+//        assets.add(BASKET_MT3);
         manager.load(CITY_TILE_FILE, Texture.class);
         assets.add(CITY_TILE_FILE);
         manager.load(VILLAGE_TILE_FILE, Texture.class);
@@ -738,6 +777,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : CITY_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+//                basketOneTexture = basketCity1Texture;
+//                basketTwoTexture = basketCity2Texture;
+//                basketThreeTexture = basketCity3Texture;
                 walkingMusic = manager.get(WALKING_CITY_FILE, Music.class);
                 break;
             case "village":
@@ -752,6 +794,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : VILLAGE_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+//                basketOneTexture = basketVillage1Texture;
+//                basketTwoTexture = basketVillage2Texture;
+//                basketThreeTexture = basketVillage3Texture;
                 walkingMusic = manager.get(WALKING_VILLAGE_FILE, Music.class);
                 break;
             case "forest":
@@ -766,6 +811,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : FOREST_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+//                basketOneTexture = basketForest1Texture;
+//                basketTwoTexture = basketForest2Texture;
+//                basketThreeTexture = basketForest3Texture;
                 walkingMusic = manager.get(WALKING_FOREST_FILE, Music.class);
                 break;
             case "mountain":
@@ -780,6 +828,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : MT_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+//                basketOneTexture = basketMt1Texture;
+//                basketTwoTexture = basketMt2Texture;
+//                basketThreeTexture = basketMt3Texture;
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
         }
         music.setVolume(0.5f * GDXRoot.musicVol);
@@ -843,10 +894,19 @@ public class GameMode extends Mode implements Screen {
         itemTexture.add(fabric2Texture);
         itemTexture.add(spoolTexture);
         itemTexture.add(stuffingTexture);
-        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
-        basketOneTexture = createTexture(manager, BASKET_ONE, false);
-        basketTwoTexture = createTexture(manager, BASKET_TWO, false);
-        basketThreeTexture = createTexture(manager, BASKET_THREE, false);
+//        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
+//        basketCity1Texture = createTexture(manager, BASKET_CITY1, false);
+//        basketCity2Texture = createTexture(manager, BASKET_CITY2, false);
+//        basketCity3Texture = createTexture(manager, BASKET_CITY3, false);
+//        basketVillage1Texture = createTexture(manager, BASKET_VILLAGE1, false);
+//        basketVillage2Texture = createTexture(manager, BASKET_VILLAGE2, false);
+//        basketVillage3Texture = createTexture(manager, BASKET_VILLAGE3, false);
+//        basketForest1Texture = createTexture(manager, BASKET_FOREST1, false);
+//        basketForest2Texture = createTexture(manager, BASKET_FOREST2, false);
+//        basketForest3Texture = createTexture(manager, BASKET_FOREST3, false);
+//        basketMt1Texture = createTexture(manager, BASKET_MT1, false);
+//        basketMt2Texture = createTexture(manager, BASKET_MT2, false);
+//        basketMt3Texture = createTexture(manager, BASKET_MT3, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
         jumpCharge0Texture = createTexture(manager, JUMPCHARGE_0_FILE, false);
