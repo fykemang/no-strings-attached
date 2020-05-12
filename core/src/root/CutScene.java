@@ -47,7 +47,7 @@ public class CutScene extends Mode implements Screen {
     private ArrayList<TextureRegion> textures = new ArrayList<>();
     private TextureRegion skiptexture;
     private TextureRegion nextTexture;
-//    private static final String[] city = {};
+    //    private static final String[] city = {};
     private boolean slideMode;
     private int currentSlide = 0;
 
