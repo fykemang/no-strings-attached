@@ -34,7 +34,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String LOCKED_FOREST_FILE = "ui/locked_forest.png";
     private static final String LOCKED_MOUNTAIN_FILE = "ui/locked_mountains.png";
     private static final String SELECT_FILE = "ui/selector.png";
-    private static final String MUSIC_FILE = "music/themoreyouknow.mp3";
+    private static final String MUSIC_FILE = "music/screen.mp3";
     private static final String LEVEL_METADATA = "levels/levels.json";
     private static final String SELECTOR_FONT = "ui/blackjack.otf";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
@@ -160,7 +160,13 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         buttonPos.add(new Vector2(440, 630));
         buttonPos.add(new Vector2(520, 650));
         buttonPos.add(new Vector2(600, 680));
-        buttonPos.add(new Vector2(680, 680));
+        buttonPos.add(new Vector2(690, 710));
+        buttonPos.add(new Vector2(780, 760));
+        buttonPos.add(new Vector2(840, 660));
+        buttonPos.add(new Vector2(860, 540));
+        buttonPos.add(new Vector2(920, 460));
+        buttonPos.add(new Vector2(820, 380));
+        buttonPos.add(new Vector2(720, 340));
 
         themeUnlocked[CITY] = true;
         try {

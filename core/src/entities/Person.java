@@ -452,7 +452,7 @@ public class Person extends CapsuleObstacle {
         if (magnitude < 3.2f)
             return;
 
-        this.trampolineForce.set(magnitude * trampolineDir.x , magnitude * trampolineDir.y );
+        this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
             trampolineForce.scl(MAX_TRAMPOLINE / len);
