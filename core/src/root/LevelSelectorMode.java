@@ -480,4 +480,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
     }
+
+    public void unlock(int theme){
+        themeUnlocked[theme] = true;
+    }
 }
