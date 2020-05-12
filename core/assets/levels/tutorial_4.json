@@ -1,216 +1,111 @@
 {
-  "text": [],
-  "tutorial": false,
-  "type": "city",
-  "items": [
-    {
-      "id": 0,
-      "x": 2.1066666666666665,
-      "y": 16
-    },
-    {
-      "id": 1,
-      "x": 15,
-      "y": 11.5
-    },
-    {
-      "id": 2,
-      "x": 29,
-      "y": 12
-    }
-  ],
+  "type": "village",
+  "player": {
+    "x": 2,
+    "y": 14
+  },
   "tiles": [
     {
+      "x": 0,
+      "y": 13,
+      "width": 5,
+      "height": 1,
       "type": "normal",
       "id": 0,
-      "isSliding": false,
-      "height": 0.50,
-      "x": 0,
-      "y": 17.75,
-      "width": 3.25,
-      "direction": "up"
-    },
-    {
-      "width": 8,
-      "type": "spikes",
-      "id": 1,
-      "isSliding": false,
-      "height": 0.75,
-      "x": 10,
-      "y": 8.5,
-      "direction": "up"
-    },
-    {
-      "width": 8,
-      "type": "spikes",
-      "id": 1,
-      "isSliding": false,
-      "height": 0.75,
-      "x": 10,
-      "y": 7.75,
-      "direction": "down"
-    },
-    {
-      "type": "normal",
-      "id": 3,
-      "isSliding": true,
-      "width": 2.5,
-      "x": 20.5,
-      "y": 12.5,
-      "height": 0.5,
       "direction": "up",
-      "leftPos": {
-        "x": 20.5,
-        "y": 12
-      },
-      "rightPos": {
-        "x": 20.5,
-        "y": 18
-      }
+      "isSliding": false
     },
+
     {
-      "type": "normal",
-      "id": 4,
-      "isSliding": false,
-      "width": 9,
-      "y": 6.7,
-      "height": 0.6,
       "x": 25,
-      "direction": "up"
-    },
-    {
-      "width": 2.5,
-      "type": "spikes",
-      "id": 5,
-      "isSliding": false,
-      "height": 0.9684684684684683,
-      "x": 25,
-      "y": 0,
-      "direction": "up"
-    },
-    {
+      "y": 1,
+      "width": 2,
+      "height": 1,
       "type": "normal",
-      "id": 6,
-      "isSliding": false,
-      "x": 27.5,
-      "width": 4,
-      "height": 0.5,
-      "y": 0,
-      "direction": "up"
+      "id": 0,
+      "direction": "up",
+      "isSliding": false
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "width": 7,
+      "height": 1,
+      "type": "normal",
+      "direction": "up",
+      "isSliding": false
     }
   ],
   "npc": [
     {
+      "x": 8,
+      "y": 9,
       "isSliding": false,
       "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
+      "center": {
+      },
+      "degree": 90,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 13,
+      "y": 9,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
       "degree": 0,
       "id": 0,
       "leftPos": {},
-      "rightPos": {},
-      "x": 4,
-      "y": 17.75
+      "rightPos": {}
     },
     {
+      "x": 15,
+      "y": 4,
       "isSliding": false,
       "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 0,
+      "center": {
+      },
+      "degree": 90,
+      "id": 1,
       "leftPos": {},
-      "rightPos": {},
-      "x": 9,
-      "y": 17.75
+      "rightPos": {}
     },
     {
+      "x": 20,
+      "y": 4,
       "isSliding": false,
       "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
+      "center": {
+      },
       "degree": 0,
       "id": 1,
       "leftPos": {},
-      "rightPos": {},
-      "x": 11,
-      "y": 14
-    },
-    {
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 1,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 16,
-      "y": 13.5
-    },
-    {
-      "y": 13,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 2,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 26
-    },
-    {
-      "y": 13,
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 2,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 31.5
-    },
-    {
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 3,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 16.5,
-      "y": 3.5
-    },
-    {
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 3,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 21.5,
-      "y": 3.5
+      "rightPos": {}
     }
   ],
-  "player": {
-    "x": 1,
-    "y": 20
-  },
+  "items": [
+    {
+      "x": 5,
+      "y": 9.5
+    }
+  ],
   "exit": {
-    "x": 30.5,
-    "y": -0.6
-  }
+    "x": 26,
+    "y": 0.75
+  },
+  "text": [
+    {
+      "x": 11,
+      "y": 14,
+      "text": "Press space to cut the string"
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "text": "Hold left shift to swing"
+    }
+  ]
 }

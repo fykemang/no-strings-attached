@@ -176,7 +176,7 @@ function Home() {
   };
 
   const scaleWidth = (oldX) => {
-    return round2(canvasWidth / 37.5);
+    return round2(oldX / 37.5);
   };
 
   useEventListener("keydown", (e) => {
@@ -237,7 +237,7 @@ function Home() {
       items: state.items.map((item) => {
         return {
           ...item,
-          x: item.x / xScale,
+          x: scaleWidth(item.x),
           y: scaleHeight(item.y),
         };
       }),
@@ -353,10 +353,6 @@ function Home() {
               setSelectedNode(null);
             }
           }}
-          onDragEnd={(x, y) => {
-            console.log(x);
-            console.log(x + " " + y);
-          }}
           ref={stageRef}
         >
           <Layer>
@@ -422,14 +418,14 @@ function Home() {
                   leftNpc={couple.leftNpc}
                   rightNpc={couple.rightNpc}
                   dragBoundFunc={dragBoundFunc}
-                  onChange={(attrs, choice) =>
+                  onChange={(attrs, choice) => {
                     dispatch({
                       type: "modify-couple",
                       index: couple.id,
                       attrs: attrs,
                       choice: choice,
-                    })
-                  }
+                    });
+                  }}
                 />
               );
             })}
