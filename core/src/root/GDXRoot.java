@@ -199,6 +199,7 @@ public class GDXRoot extends Game implements ScreenListener {
                         levelSelector.setCanvas(UIcanvas);
                         Gdx.input.setInputProcessor(levelSelector);
                         levelSelector.reset();
+                        levelSelector.initUI();
                         setScreen(levelSelector);
                     }
                     break;
@@ -206,7 +207,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     LastScreen = loadingMode;
                     settings.setScreenListener(this);
                     settings.loadContent(manager);
-                    settings.initUI();
                     setScreen(settings);
                     loadingMode.hide();
             }
@@ -232,6 +232,7 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
             Gdx.input.setInputProcessor(levelSelector);
+            levelSelector.initUI();
             levelSelector.reset();
             setScreen(levelSelector);
             cutScene.stopMusic();
@@ -268,7 +269,6 @@ public class GDXRoot extends Game implements ScreenListener {
                 case LevelSelectorMode.INTO_SELECTOR:
                     gameMode.pause();
                     levelSelector.reset();
-                    Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
                     break;
                 case SettingMode.INTO_SETTING:
