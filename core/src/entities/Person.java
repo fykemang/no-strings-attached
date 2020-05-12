@@ -140,6 +140,14 @@ public class Person extends CapsuleObstacle {
     private int shootCooldown;
     private PolygonShape sensorShape;
     private Couple canCut;
+    private boolean canJumpIndicator;
+
+    public boolean getCanJumpIndicator() {
+        return this.canJumpIndicator;
+    }
+    public void setCanJumpIndicator(boolean canJumpIndicator) {
+        this.canJumpIndicator = canJumpIndicator;
+    }
 
     public boolean isFallingBack() {
         return fallingBack;

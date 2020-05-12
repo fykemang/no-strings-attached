@@ -1602,13 +1602,21 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
+                                if (player.getX() > r.getX()) {
+                                    player.setCanJumpIndicator(true);
+                                }
+                                else {
+                                    player.setCanJumpIndicator(false);
+                                }
                             } else {
                                 player.setCanCut(null);
+                                player.setCanJumpIndicator(false);
                             }
                         }
                     }
                 } else {
                     player.setCanCut(null);
+                    player.setCanJumpIndicator(false);
                 }
                 cuttingCallback.reset();
             }
@@ -1772,6 +1780,10 @@ public class GameMode extends Mode implements Screen {
             l = c.getL();
             r = c.getR();
             canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+        }
+
+        if (player.getCanJumpIndicator()) {
+            canvas.draw(jumpCharge0Texture, Color.WHITE, (player.getX() + player.getWidth()/2) * scale.x, (player.getY() + player.getHeight()/2) * scale.y - 1, jumpCharge0Texture.getRegionWidth() * 10f / scale.x, jumpCharge0Texture.getRegionHeight() * 10f / scale.y);
         }
 
 
