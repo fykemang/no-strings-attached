@@ -273,6 +273,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion basketOneTexture;
     private TextureRegion basketTwoTexture;
     private TextureRegion basketThreeTexture;
+    private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
     /**
@@ -366,7 +367,8 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
-    private static final String FOREST_TILE_FILE = "entities/forest-mushroom.png";
+    private static final String FOREST_TILE_FILE = "entities/forest-leaves.png";
+    private static final String FOREST_MUSHROOM_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
     private static final String FOREST_SPIKES_VERT_FILE = "entities/forest-spikes-vert.png";
     private static final String VILLAGE_SPIKES_FILE = "entities/village-obstacle.png";
@@ -498,6 +500,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
+        manager.load(FOREST_MUSHROOM_FILE, Texture.class);
+        assets.add(FOREST_MUSHROOM_FILE);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -803,6 +807,7 @@ public class GameMode extends Mode implements Screen {
         clickSound = manager.get(CLICK_FILE);
         snipSound = manager.get(SNIP_FILE);
         forestSpikeTile = createTexture(manager, FOREST_SPIKES_FILE, false);
+        forestMushroom = createTexture(manager, FOREST_MUSHROOM_FILE, false);
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
         villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
         villageSpikeVertTile = createTexture(manager, VILLAGE_SPIKES_VERT_FILE, false);
@@ -1111,7 +1116,8 @@ public class GameMode extends Mode implements Screen {
         return tile;
     }
 
-    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc,
+    public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type,
+                                   String name, float sc,
                                    float[] leftPos, float[] rightPos) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
@@ -1123,6 +1129,10 @@ public class GameMode extends Mode implements Screen {
         addObject(tile);
         return tile;
     }
+
+
+
+
 
     float volume = 0.5f * GDXRoot.musicVol;
 
@@ -2192,6 +2202,7 @@ public class GameMode extends Mode implements Screen {
     private enum GameState {
         PLAYING, PAUSED, ZOOM
     }
+
 
 }
 
