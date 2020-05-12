@@ -27,7 +27,7 @@ public class CutScene extends Mode implements Screen {
         END
     }
 
-    private final String OPENING_CUTSCENE_FILE = "music/icefishing.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/cutscene.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
     private THEME theme;
@@ -175,7 +175,7 @@ public class CutScene extends Mode implements Screen {
             default:
         }
         music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(0.25f * GDXRoot.musicVol);
         music.setLooping(true);
         if (slideMode) {
 
