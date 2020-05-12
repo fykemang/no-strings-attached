@@ -123,9 +123,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelMetadata = manager.get(LEVEL_METADATA, LevelMetadata.class);
         clickSound = manager.get(MENU_CLICK_FILE, Sound.class);
         hoverSound = manager.get(HOVER_FILE, Sound.class);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/BalooThambi.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
+        parameter.size = 30;
         selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
     }
