@@ -12,8 +12,6 @@ import util.FilmStrip;
 
 public class Gate extends PolygonObstacle {
     private final FilmStrip texture;
-    private float x;
-    private float y;
     private PolygonShape sensorShape;
     private Fixture sensorFixture;
 
