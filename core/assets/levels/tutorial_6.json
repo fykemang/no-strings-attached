@@ -24,7 +24,7 @@
       "type": "spikes",
       "id": 1,
       "isSliding": false,
-      "width": 1.15,
+      "width": 1,
       "y": 11,
       "height": 6,
       "x": 9,
@@ -35,7 +35,7 @@
       "id": 2,
       "isSliding": false,
       "y": 11,
-      "width": 1.15,
+      "width": 1,
       "height":  6,
       "x": 10,
       "direction": "right"
