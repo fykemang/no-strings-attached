@@ -11,7 +11,6 @@
  * LibGDX version, 2/2/2015
  */
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import root.GDXRoot;
