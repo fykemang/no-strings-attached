@@ -33,9 +33,10 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private static final String BUTTON_PRESSED = "ui/next-down.png";
-    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
+//    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
     private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
+    private static final String VICTORY_FILE = "sounds/victorymarimba.mp3";
     private final String SELECTOR = "ui/next-select.png";
 
     private Texture background;
@@ -61,7 +62,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         loadAsset(REPLAY, Texture.class, manager);
         loadAsset(MAIN_MENU, Texture.class, manager);
         loadAsset(WIN_TEXT, Texture.class, manager);
-        loadAsset(TRANSITION_MUSIC_FILE, Music.class, manager);
+//        loadAsset(TRANSITION_MUSIC_FILE, Music.class, manager);
+        loadAsset(VICTORY_FILE, Sound.class, manager);
         loadAsset(SELECTOR, Texture.class, manager);
         loadAsset(BUTTON_PRESSED, Texture.class, manager);
     }
@@ -82,7 +84,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButtonTexture = manager.get(BUTTON, Texture.class);
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(nextButtonTexture));
         buttonStyle.over = new TextureRegionDrawable(nextButtonPressed);
-        music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
+//        music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
+        victorySound = manager.get(VICTORY_FILE, Sound.class);
         clickSound = manager.get(CLICK_FILE, Sound.class);
         hoverSound = manager.get(HOVER_FILE, Sound.class);
         assetState = AssetState.COMPLETE;
@@ -99,7 +102,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
     private boolean isLevelComplete;
-    private Music music;
+//    private Music music;
+    private Sound victorySound;
     private Sound hoverSound;
     private Sound clickSound;
 
@@ -178,9 +182,10 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         });
         stage.addActor(mainMenuButton);
 
-        music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
-        music.setLooping(true);
+        victorySound.play(0.2f * GDXRoot.soundVol);
+//        music.play();
+//        music.setVolume(0.5f * GDXRoot.musicVol);
+//        music.setLooping(true);
 
         try {
             // Let ANY connected controller start the game.
@@ -247,7 +252,8 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void show() {
-        music.play();
+//        music.play();
+        victorySound.play(0.2f * GDXRoot.soundVol);
     }
 
     @Override
@@ -267,12 +273,12 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void hide() {
-        music.pause();
+//        music.pause();
     }
 
     @Override
     public void dispose() {
-        music.dispose();
+//        music.dispose();
     }
 
     @Override
@@ -393,8 +399,9 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
 
     public void reset() {
-        music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        victorySound.play(0.2f * GDXRoot.soundVol);
+//        music.play();
+//        music.setVolume(0.5f * GDXRoot.musicVol);
         Gdx.input.setInputProcessor(stage);
     }
 
