@@ -130,7 +130,7 @@ public class CutScene extends Mode implements Screen {
         canvas.begin();
         if (slideMode) {
             canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
-                    canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
+                    canvas.getWidth() / 2, canvas.getHeight() / 2, Color.WHITE);
             if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
@@ -178,19 +178,6 @@ public class CutScene extends Mode implements Screen {
         music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
         if (slideMode) {
-
-//            skipbuttonStyle.up = new TextureRegionDrawable(skiptexture);
-//            skipButtom = new ImageButton(skipbuttonStyle);
-//            skipButtom.setPosition(canvas.getWidth()*0.9f - skipButtom.getWidth()/2,
-//                    canvas.getHeight()*0.01f);
-//            skipButtom.addListener(new ClickListener() {
-//                @Override
-//                public void clicked(InputEvent event, float x, float y) {
-//                    listener.exitScreen( cutScene, LevelSelectorMode.INTO_SELECTOR);
-//                }
-//
-//            });
-
             nextButtom = createButton(nextTexture);
             nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
                     canvas.getHeight() * 0.5f);
