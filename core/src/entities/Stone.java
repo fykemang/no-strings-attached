@@ -266,7 +266,7 @@ public class Stone extends PolygonObstacle {
 
 
                 float scy = height * drawScale.y / texture.getRegionHeight();
-                float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy-5));
+                float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy - 5));
                 float dist = width * drawScale.x / num;
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;
