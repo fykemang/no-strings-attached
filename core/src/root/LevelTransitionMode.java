@@ -273,11 +273,13 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void hide() {
+        victorySound.pause();
 //        music.pause();
     }
 
     @Override
     public void dispose() {
+        victorySound.dispose();
 //        music.dispose();
     }
 
