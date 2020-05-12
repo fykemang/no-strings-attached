@@ -58,7 +58,7 @@
     },
     {
       "x": 17,
-      "y": 12,
+      "y": 12.5,
       "width": 6,
       "height": 1,
       "type": "spikes",
@@ -131,7 +131,7 @@
       "rightPos": {}
     },
     {
-      "x": 15.293333333333333,
+      "x": 15,
       "y": 4.09,
       "isSliding": false,
       "isRotating": false,
@@ -144,7 +144,7 @@
       "rightPos": {}
     },
     {
-      "x": 20.92,
+      "x": 20,
       "y": 4.05,
       "isSliding": false,
       "isRotating": false,
@@ -157,7 +157,7 @@
       "rightPos": {}
     },
     {
-      "x": 24.333333333333334,
+      "x": 24,
       "y": 8,
       "isSliding": false,
       "isRotating": false,
@@ -170,7 +170,7 @@
       "rightPos": {}
     },
     {
-      "x": 29.04,
+      "x": 29,
       "y": 8,
       "isSliding": false,
       "isRotating": false,
