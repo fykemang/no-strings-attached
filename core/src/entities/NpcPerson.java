@@ -43,8 +43,8 @@ public class NpcPerson extends Person {
         this.setName("npc");
     }
 
-    private void setAnchors(){
-        switch (type){
+    private void setAnchors() {
+        switch (type) {
             case "welcome":
                 anchorX = getWidth() / 2;
                 anchorY = left ? -0.1f : 0.1f;

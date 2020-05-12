@@ -1,72 +1,53 @@
 {
+  "text": [],
+  "tutorial": false,
   "type": "city",
-  "player": {
-    "x": 8,
-    "y": 11.0
-  },
-  "tiles": [
-    {
-      "x": 4,
-      "y": 9,
-      "width": 6,
-      "height": 1,
-      "type": "normal",
-      "direction": "up",
-      "isSliding": false
-    },
-
-    {
-      "x": 18,
-      "y": 12.5,
-      "width": 2,
-      "height": 1,
-      "type": "normal",
-      "direction": "up",
-      "isSliding": false
-    }
-  ],
-  "npc": [
-    {
-      "x": 12,
-      "y": 9,
-      "isSliding": false,
-      "leftPos": {},
-      "rightPos": {},
-      "isRotating": false,
-      "center": {},
-      "degree": 0
-    },
-    {
-      "x": 17.0,
-      "y": 9,
-      "isSliding": false,
-      "leftPos": {},
-      "rightPos": {},
-      "isRotating": false,
-      "center": {},
-      "degree": 0
-    }
-  ],
   "items": [
     {
-      "x": 17.5,
-      "y": 15.5
+      "id": 0,
+      "x": 14.5,
+      "y": 9.60
     }
   ],
-  "exit": {
-    "x": 19,
-    "y": 12.5
-  },
-  "text": [
+  "tiles": [
     {
-      "x": 8,
-      "y": 12,
-      "text": "Use arrow keys to move the character and jump"
+      "type": "normal",
+      "id": 0,
+      "isSliding": false,
+      "y": 8.11,
+      "width": 5.56,
+      "height": 0.4729729729729726,
+      "x": 5.866666666666666,
+      "direction": "up"
     },
     {
-      "x": 17,
-      "y": 18,
-      "text": "Collect the item and proceed to the exit"
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 1,
+      "isSliding": false,
+      "height": 0.45045045045045023,
+      "y": 8.11,
+      "x": 13.333333333333334,
+      "direction": "up"
+    },
+    {
+      "type": "normal",
+      "id": 2,
+      "isSliding": false,
+      "y": 8.11,
+      "height": 0.4279279279279281,
+      "width": 4.253333333333335,
+      "x": 18.133333333333333,
+      "direction": "up"
     }
-  ]
+  ],
+  "npc": [],
+  "player": {
+    "x": 7.92,
+    "y": 9.86
+  },
+  "exit": {
+    "x": 20,
+    "y": 7.5
+  }
 }

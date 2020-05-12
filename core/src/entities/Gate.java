@@ -1,7 +1,6 @@
 package entities;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -44,8 +43,8 @@ public class Gate extends PolygonObstacle {
     }
 
     public void draw(GameCanvas canvas) {
-        canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x- texture.getRegionWidth()*0.7f/2f,
-                getY() * drawScale.y + texture.getRegionHeight()*0.17f, getAngle(), 0.7f, 0.7f);
+        canvas.draw(texture, Color.WHITE, 0, 0, getX() * drawScale.x - texture.getRegionWidth() * 0.7f / 2f,
+                getY() * drawScale.y + texture.getRegionHeight() * 0.17f, getAngle(), 0.7f, 0.7f);
     }
 
 

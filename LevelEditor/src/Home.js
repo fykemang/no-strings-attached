@@ -8,6 +8,7 @@ import Couple from "./Couple";
 import ItemTexture from "./assets/skein.png";
 import ExitTexture from "./assets/exit.png";
 import useEventListener from "./util/UseEventListener";
+import { round2 } from "./util/Helper";
 
 const initialState = {
   tiles: [],
@@ -40,6 +41,7 @@ function reducer(state, action) {
         height: 100,
         type: action["tile-type"],
         id: state.tiles.length,
+        isSliding: false,
       };
       const newTiles = state.tiles.slice();
       newTiles.push(tile);
@@ -120,7 +122,7 @@ function reducer(state, action) {
 
       const rightNpc = {
         ...leftNpc,
-        x: 600,
+        x: 650,
       };
 
       const newCouples = state.couples.slice();
@@ -165,9 +167,18 @@ function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [selectedNodeID, setSelectedNode] = useState(null);
   const [selectedNodeType, setSelectedNodeType] = useState("");
-  const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
-  const [canvasHeight, setCanvasHeight] = useState(window.innerHeight);
   const stageRef = React.useRef();
+  const canvasHeight = 800;
+  const canvasWidth = 1200;
+
+  const scaleHeight = (oldY) => {
+    return round2((canvasHeight - oldY) / 44.4);
+  };
+
+  const scaleWidth = (oldX) => {
+    return round2(oldX / 37.5);
+  };
+
   useEventListener("keydown", (e) => {
     if (e.keyCode === 8) {
       dispatch({
@@ -220,34 +231,36 @@ function Home() {
     const xScale = 37.5;
     const yScale = 44.4;
     const data = {
+      text: [],
+      tutorial: false,
       type: "city",
       items: state.items.map((item) => {
         return {
           ...item,
-          x: item.x / xScale,
-          y: item.y / yScale,
+          x: scaleWidth(item.x),
+          y: scaleHeight(item.y),
         };
       }),
       tiles: state.tiles.map((tile) => {
         return {
           ...tile,
           x: tile.x / xScale,
-          y: tile.y / yScale,
+          y: scaleHeight(tile.y),
           height: tile.height / yScale,
           width: tile.width / xScale,
-          direction: "up"
+          direction: "up",
         };
       }),
       npc: state.couples.reduce((acc, couple) => {
         const leftNpc = {
           ...couple.leftNpc,
           x: couple.leftNpc.x / xScale,
-          y: couple.leftNpc.y / yScale,
+          y: scaleHeight(couple.leftNpc.y),
         };
         const rightNpc = {
           ...couple.rightNpc,
           x: couple.rightNpc.x / xScale,
-          y: couple.rightNpc.y / yScale,
+          y: scaleHeight(couple.rightNpc.y),
         };
         acc.push(leftNpc);
         acc.push(rightNpc);
@@ -255,15 +268,15 @@ function Home() {
       }, []),
       player: {
         x: state.player.x / xScale,
-        y: state.player.y / yScale,
+        y: scaleHeight(state.player.y),
       },
       exit: {
         x: state.exit.x / xScale,
-        y: state.exit.y / yScale,
+        y: scaleHeight(state.exit.y),
       },
     };
 
-    const fileName = "level";
+    const fileName = "test";
     const json = JSON.stringify(data);
     const blob = new Blob([json], { type: "application/json" });
     const href = URL.createObjectURL(blob);
@@ -275,14 +288,17 @@ function Home() {
     document.body.removeChild(link);
   };
 
-  const dragBoundFunc = useCallback((pos) => {
-    const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
-    const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
-    return {
-      x: newX,
-      y: newY,
-    };
-  }, [canvasHeight, canvasWidth]);
+  const dragBoundFunc = useCallback(
+    (pos) => {
+      const newY = pos.y < 0 ? 0 : pos.y > canvasHeight ? canvasHeight : pos.y;
+      const newX = pos.x < 0 ? 0 : pos.x > canvasWidth ? canvasWidth : pos.x;
+      return {
+        x: newX,
+        y: newY,
+      };
+    },
+    [canvasHeight, canvasWidth]
+  );
 
   return (
     <div className="home-wrapper">
@@ -336,10 +352,6 @@ function Home() {
             if (clickedOnEmpty) {
               setSelectedNode(null);
             }
-          }}
-          onDragEnd={(x, y) => {
-            console.log(x);
-            console.log(x + " " + y);
           }}
           ref={stageRef}
         >
@@ -406,14 +418,14 @@ function Home() {
                   leftNpc={couple.leftNpc}
                   rightNpc={couple.rightNpc}
                   dragBoundFunc={dragBoundFunc}
-                  onChange={(attrs, choice) =>
+                  onChange={(attrs, choice) => {
                     dispatch({
                       type: "modify-couple",
                       index: couple.id,
                       attrs: attrs,
                       choice: choice,
-                    })
-                  }
+                    });
+                  }}
                 />
               );
             })}

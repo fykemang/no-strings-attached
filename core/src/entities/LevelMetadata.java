@@ -35,7 +35,7 @@ public class LevelMetadata implements Json.Serializable {
         return levelMap.get(index);
     }
 
-    public void unlockLevel(int index){
+    public void unlockLevel(int index) {
         Level l = getLevel(index);
         l.setUnlocked(true);
     }

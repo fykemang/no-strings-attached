@@ -192,7 +192,7 @@ public class GDXRoot extends Game implements ScreenListener {
                         setScreen(cutScene);
                         loadingMode.hide();
                         isOpenningPlayed = true;
-                    }else {
+                    } else {
                         levelSelector.loadContent(manager);
                         levelSelector.setScreenListener(this);
                         levelSelector.setCanvas(UIcanvas);
@@ -221,8 +221,10 @@ public class GDXRoot extends Game implements ScreenListener {
                     loadingMode.reset();
                     settings.hide();
                     setScreen(loadingMode);
-                }else {
-                   pauseScreen.initialize(); setScreen(pauseScreen);}
+                } else {
+                    pauseScreen.initialize();
+                    setScreen(pauseScreen);
+                }
             }
         } else if (screen == cutScene && exitCode == LevelSelectorMode.INTO_SELECTOR) {
             levelSelector.loadContent(manager);
@@ -244,8 +246,8 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(gameMode);
             levelSelector.pause();
             // If level select is selected from in game
-        } else if (screen == pauseScreen){
-            switch (exitCode){
+        } else if (screen == pauseScreen) {
+            switch (exitCode) {
                 case GameMode.EXIT_INTO_GAME:
                     gameMode.resume();
                     setScreen(gameMode);
@@ -276,7 +278,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     setScreen(loadingMode);
             }
 
-        }else if (screen == gameMode) {
+        } else if (screen == gameMode) {
             switch (exitCode) {
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.setCanvas(UIcanvas);

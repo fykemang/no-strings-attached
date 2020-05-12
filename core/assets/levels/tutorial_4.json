@@ -1,0 +1,111 @@
+{
+  "type": "village",
+  "player": {
+    "x": 2,
+    "y": 14
+  },
+  "tiles": [
+    {
+      "x": 0,
+      "y": 13,
+      "width": 5,
+      "height": 1,
+      "type": "normal",
+      "id": 0,
+      "direction": "up",
+      "isSliding": false
+    },
+
+    {
+      "x": 25,
+      "y": 1,
+      "width": 2,
+      "height": 1,
+      "type": "normal",
+      "id": 0,
+      "direction": "up",
+      "isSliding": false
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "width": 7,
+      "height": 1,
+      "type": "normal",
+      "direction": "up",
+      "isSliding": false
+    }
+  ],
+  "npc": [
+    {
+      "x": 8,
+      "y": 9,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 90,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 13,
+      "y": 9,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 15,
+      "y": 4,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 90,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {}
+    },
+    {
+      "x": 20,
+      "y": 4,
+      "isSliding": false,
+      "isRotating": false,
+      "center": {
+      },
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {}
+    }
+  ],
+  "items": [
+    {
+      "x": 5,
+      "y": 9.5
+    }
+  ],
+  "exit": {
+    "x": 26,
+    "y": 0.75
+  },
+  "text": [
+    {
+      "x": 11,
+      "y": 14,
+      "text": "Press space to cut the string"
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "text": "Hold left shift to swing"
+    }
+  ]
+}
