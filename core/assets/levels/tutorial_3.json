@@ -30,7 +30,7 @@
       "x": 0,
       "y": 3.15,
       "width": 2.6933333333333334,
-      "height": 0.794043532348639,
+      "height": 1,
       "type": "normal",
       "id": 0,
       "isSliding": false,
@@ -92,7 +92,7 @@
       "rightPos": {}
     },
     {
-      "x": 9.653333333333334,
+      "x": 9.53333333333334,
       "y": 4.08,
       "isSliding": false,
       "isRotating": false,
@@ -118,7 +118,7 @@
       "rightPos": {}
     },
     {
-      "x": 15.08,
+      "x": 15,
       "y": 8.71,
       "isSliding": false,
       "isRotating": false,
