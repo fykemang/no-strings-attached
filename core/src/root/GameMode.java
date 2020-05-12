@@ -32,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import entities.*;
 import obstacle.Obstacle;
+import org.w3c.dom.Text;
 import util.*;
 
 import java.util.*;
@@ -378,6 +379,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion forestSpikeVertTile;
     protected TextureRegion villageSpikeTile;
     protected TextureRegion villageSpikeVertTile;
+    private ArrayList<TextureRegion>  billboards = new ArrayList<>();
 
     /**
      * Tile texture used in the game
@@ -409,6 +411,8 @@ public class GameMode extends Mode implements Screen {
     private final List<TextureRegion> movingBackgroundTextures;
     private Level level;
     private List<TextBox> textBoxes;
+
+    private final String[] LEVEL1_T = new String[]{"billboard/level1-jump.png", "billboard/level1-move.png", "billboard/level1- collectibles.png", "billboard/level1-door.png"};
 
     /**
      * Creates a new game world
@@ -511,6 +515,10 @@ public class GameMode extends Mode implements Screen {
             manager.load(s, Texture.class);
         }
         for (String s : CITY_BKG_FILES_LAYER_C) {
+            assets.add(s);
+            manager.load(s, Texture.class);
+        }
+        for (String s : LEVEL1_T) {
             assets.add(s);
             manager.load(s, Texture.class);
         }
@@ -658,6 +666,15 @@ public class GameMode extends Mode implements Screen {
         stillBackgroundTextures.clear();
         slightMoveBackgroundTextures.clear();
         movingBackgroundTextures.clear();
+
+        switch (level.getLevel()){
+           case 1:
+            for (String s : LEVEL1_T) {
+                billboards.add(createTexture(manager, s, false));
+            };
+            break;
+
+        }
 
         switch (type) {
             case "city":
@@ -1782,10 +1799,12 @@ public class GameMode extends Mode implements Screen {
 ////        } else {
 ////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
 ////        }
-        for (TextBox text : textBoxes) {
-//            displayFont
-            canvas.drawTextCenter(text.getText(), displayFont, text.getX() * this.scale.x, text.getY() * this.scale.y);
-        }
+        for (int i = 0; i< level.getText().size(); i++) {
+            TextBox text = level.getText().get(i);
+            TextureRegion tex = billboards.get(i);
+            canvas.draw(tex,
+                    text.getX() * this.scale.x - tex.getRegionWidth()/2, text.getY() * this.scale.y- tex.getRegionHeight()/2 );
+          }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
