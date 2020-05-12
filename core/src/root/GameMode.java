@@ -147,6 +147,10 @@ public class GameMode extends Mode implements Screen {
     private static final String FABRIC_2 = "entities/fabric2.png";
     private static final String SPOOL = "entities/spool.png";
     private static final String STUFFING = "entities/stuffing.png";
+    private static final String[] cityItems = {"entities/needles.png", "entities/yarn.png"};
+    private static final String[] villageItems = {"entities/spool.png", "entities/yarn.png"};
+    private static final String[] forestItems = {"entities/fabric1.png", "entities/fabric2.png", "entities/buttons.png"};
+    private static final String[] mountainItems = {"entities/stuffing.png"};
 
     /**
      * Texture files for baskets (progress bar)
@@ -736,6 +740,7 @@ public class GameMode extends Mode implements Screen {
         stillBackgroundTextures.clear();
         slightMoveBackgroundTextures.clear();
         movingBackgroundTextures.clear();
+        itemTexture.clear();
 
         switch (level.getLevel()) {
             case 1:
@@ -777,6 +782,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : CITY_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+                for (String s : cityItems) {
+                    itemTexture.add(createTexture(manager, s, false));
+                }
 //                basketOneTexture = basketCity1Texture;
 //                basketTwoTexture = basketCity2Texture;
 //                basketThreeTexture = basketCity3Texture;
@@ -793,6 +801,9 @@ public class GameMode extends Mode implements Screen {
                 }
                 for (String s : VILLAGE_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
+                }
+                for (String s : villageItems) {
+                    itemTexture.add(createTexture(manager, s, false));
                 }
 //                basketOneTexture = basketVillage1Texture;
 //                basketTwoTexture = basketVillage2Texture;
@@ -811,6 +822,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : FOREST_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+                for (String s : forestItems) {
+                    itemTexture.add(createTexture(manager, s, false));
+                }
 //                basketOneTexture = basketForest1Texture;
 //                basketTwoTexture = basketForest2Texture;
 //                basketThreeTexture = basketForest3Texture;
@@ -828,6 +842,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : MT_BKG_FILES_LAYER_C) {
                     movingBackgroundTextures.add(createTexture(manager, s, false));
                 }
+                for (String s : mountainItems) {
+                    itemTexture.add(createTexture(manager, s, false));
+                }
 //                basketOneTexture = basketMt1Texture;
 //                basketTwoTexture = basketMt2Texture;
 //                basketThreeTexture = basketMt3Texture;
@@ -843,7 +860,7 @@ public class GameMode extends Mode implements Screen {
         if (assetState != AssetState.LOADING) {
             return;
         }
-        itemTexture = new ArrayList<>();
+//        itemTexture = new ArrayList<>();
         playerSwingForwardAnimation = createFilmStrip(manager, PLAYER_SWING_FORWARD, 1, 7, 7, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24, true);
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21, true);
@@ -879,21 +896,21 @@ public class GameMode extends Mode implements Screen {
         npcShock.put("heyo", npcHeyoShockTexture);
         npcShock.put("spiky", npcSpikyShockTexture);
         npcShock.put("welcome", npcWelcomeShockTexture);
-        buttonTexture = createTexture(manager, BUTTON, false);
-        needleTexture = createTexture(manager, NEEDLE, false);
+//        buttonTexture = createTexture(manager, BUTTON, false);
+//        needleTexture = createTexture(manager, NEEDLE, false);
         yarnTexture = createTexture(manager, YARN, false);
         greyYarnTexture = createTexture(manager, GREY_YARN, false);
-        fabric1Texture = createTexture(manager, FABRIC_1, false);
-        fabric2Texture = createTexture(manager, FABRIC_2, false);
-        spoolTexture = createTexture(manager, SPOOL, false);
-        stuffingTexture = createTexture(manager, STUFFING, false);
-        itemTexture.add(buttonTexture);
-        itemTexture.add(needleTexture);
-        itemTexture.add(yarnTexture);
-        itemTexture.add(fabric1Texture);
-        itemTexture.add(fabric2Texture);
-        itemTexture.add(spoolTexture);
-        itemTexture.add(stuffingTexture);
+//        fabric1Texture = createTexture(manager, FABRIC_1, false);
+//        fabric2Texture = createTexture(manager, FABRIC_2, false);
+//        spoolTexture = createTexture(manager, SPOOL, false);
+//        stuffingTexture = createTexture(manager, STUFFING, false);
+//        itemTexture.add(buttonTexture);
+//        itemTexture.add(needleTexture);
+//        itemTexture.add(yarnTexture);
+//        itemTexture.add(fabric1Texture);
+//        itemTexture.add(fabric2Texture);
+//        itemTexture.add(spoolTexture);
+//        itemTexture.add(stuffingTexture);
 //        basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
 //        basketCity1Texture = createTexture(manager, BASKET_CITY1, false);
 //        basketCity2Texture = createTexture(manager, BASKET_CITY2, false);
