@@ -27,8 +27,8 @@
     },
     {
       "id": 6,
-      "unlocked": false,
-      "path": "levels/level5.json"
+      "unlocked": true,
+      "path": "levels/test.json"
     }
   ]
 }
