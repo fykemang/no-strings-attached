@@ -80,7 +80,7 @@ public class GDXRoot extends Game implements ScreenListener {
     private Screen LastScreen;
 
     private boolean isOpenningPlayed = false;
-
+    private boolean isCityPlayed = false;
 
     /**
      * Creates a new game from the configuration settings.
@@ -234,17 +234,27 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.reset();
             setScreen(levelSelector);
             cutScene.stopMusic();
-        } else if (screen == levelSelector && exitCode == GameMode.EXIT_INTO_GAME) {
-            Gdx.input.setInputProcessor(null);
-            currentLevel = levelSelector.getLevelIndex();
-            gameMode.setLevel(levelSelector.getCurrentLevel());
-            gameMode.loadContent(manager);
-            gameMode.initializeContent(manager);
-            gameMode.setScreenListener(this);
-            gameMode.setCanvas(canvas);
-            gameMode.reset();
-            setScreen(gameMode);
-            levelSelector.pause();
+        } else if (screen == levelSelector) {
+            switch(exitCode) {
+                case GameMode.EXIT_INTO_GAME:
+                    currentLevel = levelSelector.getLevelIndex();
+                    if ( (!isCityPlayed && currentLevel== 6) || currentLevel== 10 || currentLevel== 14){
+                        setCutScene(levelSelector.getLevelIndex());
+                    } else {
+                        Gdx.input.setInputProcessor(null);
+                        currentLevel = levelSelector.getLevelIndex();
+                        gameMode.setLevel(levelSelector.getCurrentLevel());
+                        gameMode.loadContent(manager);
+                        gameMode.initializeContent(manager);
+                        gameMode.setScreenListener(this);
+                        gameMode.setCanvas(canvas);
+                        gameMode.reset();
+                        setScreen(gameMode);
+                        levelSelector.pause();
+                    }
+                break;
+
+            }
             // If level select is selected from in game
         } else if (screen == pauseScreen) {
             switch (exitCode) {
@@ -339,6 +349,26 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (exitCode == GameMode.EXIT_QUIT) {
             Gdx.app.exit();
         }
+    }
+
+
+    public void setCutScene(int level){
+        switch (levelSelector.getLevelIndex()){
+            case 6:
+                cutScene.setTheme(CutScene.THEME.CITY);
+                cutScene.loadContent(manager);
+                cutScene.setScreenListener(this);
+                setScreen(cutScene);
+                isCityPlayed = true;
+                break;
+            case 10:
+                cutScene.setTheme(CutScene.THEME.VILLAGE);
+                cutScene.loadContent(manager);
+                cutScene.setScreenListener(this);
+                setScreen(cutScene);
+
+        }
+
     }
 
 }
