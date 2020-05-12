@@ -185,6 +185,13 @@ public class GameMode extends Mode implements Screen {
     private static final String UI_GreyYarn = "ui/ui_uncollected_item.png";
     private static final String UI_RedYarn = "ui/ui_collected_item.png";
     /**
+     * Files for jumping charges
+     */
+    private static final String UI_JUMP_FULL = "ui/full_charge.png";
+    private static final String UI_JUMP_EMPTY = "ui/empty_charge.png";
+    private static final String UI_JUMP_ONE = "ui/1charge.png";
+    private static final String UI_JUMP_TWO = "ui/2charge.png";
+    /**
      * File to texture for restarting button
      */
     private static final String RESTART_FILE = "ui/restart.png";
@@ -273,6 +280,11 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion basketOneTexture;
     private TextureRegion basketTwoTexture;
     private TextureRegion basketThreeTexture;
+    private TextureRegion charge1;
+    private TextureRegion charge2;
+    private TextureRegion chargeEmpty;
+    private TextureRegion chargeFull;
+
 
     private TextureRegion cutIndicatorTexture;
     /**
@@ -498,6 +510,14 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
+        manager.load(UI_JUMP_EMPTY, Texture.class);
+        assets.add(UI_JUMP_EMPTY);
+        manager.load(UI_JUMP_FULL, Texture.class);
+        assets.add(UI_JUMP_FULL);
+        manager.load(UI_JUMP_TWO, Texture.class);
+        assets.add(UI_JUMP_TWO);
+        manager.load(UI_JUMP_ONE, Texture.class);
+        assets.add(UI_JUMP_ONE);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -746,6 +766,10 @@ public class GameMode extends Mode implements Screen {
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         targetTexture = createTexture(manager, TARGET, false);
+        charge1 = createTexture(manager, UI_JUMP_ONE, false);
+        charge2 = createTexture(manager, UI_JUMP_TWO, false);
+        chargeEmpty = createTexture(manager, UI_JUMP_EMPTY, false);
+        chargeFull = createTexture(manager, UI_JUMP_FULL, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -1754,6 +1778,7 @@ public class GameMode extends Mode implements Screen {
             r = c.getR();
             canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
+
 
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
