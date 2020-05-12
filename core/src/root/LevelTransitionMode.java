@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
@@ -33,7 +32,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private static final String BUTTON_PRESSED = "ui/next-down.png";
-//    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
+    //    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
     private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String VICTORY_FILE = "sounds/victorymarimba.mp3";
@@ -102,7 +101,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
     private boolean isLevelComplete;
-//    private Music music;
+    //    private Music music;
     private Sound victorySound;
     private Sound hoverSound;
     private Sound clickSound;

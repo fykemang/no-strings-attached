@@ -145,6 +145,7 @@ public class Person extends CapsuleObstacle {
     public boolean getCanJumpIndicator() {
         return this.canJumpIndicator;
     }
+
     public void setCanJumpIndicator(boolean canJumpIndicator) {
         this.canJumpIndicator = canJumpIndicator;
     }
