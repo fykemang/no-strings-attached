@@ -284,15 +284,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion basketOneTexture;
     private TextureRegion basketTwoTexture;
     private TextureRegion basketThreeTexture;
-<<<<<<< HEAD
-    private TextureRegion charge1;
-    private TextureRegion charge2;
-    private TextureRegion chargeEmpty;
-    private TextureRegion chargeFull;
-
-=======
     private TextureRegion forestMushroom;
->>>>>>> 737f325270b773a0ed6098a23ad5d3a388b38a92
 
     private TextureRegion cutIndicatorTexture;
     private TextureRegion jumpCharge0Texture;
@@ -529,19 +521,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(RESTART_FILE);
         manager.load(ESC_FILE, Texture.class);
         assets.add(ESC_FILE);
-<<<<<<< HEAD
-        manager.load(UI_JUMP_EMPTY, Texture.class);
-        assets.add(UI_JUMP_EMPTY);
-        manager.load(UI_JUMP_FULL, Texture.class);
-        assets.add(UI_JUMP_FULL);
-        manager.load(UI_JUMP_TWO, Texture.class);
-        assets.add(UI_JUMP_TWO);
-        manager.load(UI_JUMP_ONE, Texture.class);
-        assets.add(UI_JUMP_ONE);
-=======
         manager.load(FOREST_MUSHROOM_FILE, Texture.class);
         assets.add(FOREST_MUSHROOM_FILE);
->>>>>>> 737f325270b773a0ed6098a23ad5d3a388b38a92
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -842,10 +823,6 @@ public class GameMode extends Mode implements Screen {
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         targetTexture = createTexture(manager, TARGET, false);
-        charge1 = createTexture(manager, UI_JUMP_ONE, false);
-        charge2 = createTexture(manager, UI_JUMP_TWO, false);
-        chargeEmpty = createTexture(manager, UI_JUMP_EMPTY, false);
-        chargeFull = createTexture(manager, UI_JUMP_FULL, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
         npcs.put("nervy", npcNervyTexture);
@@ -1866,7 +1843,9 @@ public class GameMode extends Mode implements Screen {
         }
 
         if (player.getCanJumpIndicator()) {
-            canvas.draw(jumpCharge0Texture, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY() + player.getHeight() / 2) * scale.y - 1, jumpCharge0Texture.getRegionWidth() * 10f / scale.x, jumpCharge0Texture.getRegionHeight() * 10f / scale.y);
+            int charge = player.getJumpChargeState();
+            TextureRegion t = charge == 0 ? jumpCharge0Texture : charge == 1 ? jumpCharge1Texture : charge == 2 ? jumpCharge2Texture : jumpCharge3Texture;
+            canvas.draw(t, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY()) * scale.y , jumpCharge0Texture.getRegionWidth() * 20f / scale.x, jumpCharge0Texture.getRegionHeight() * 20f / scale.y);
         }
 
 
