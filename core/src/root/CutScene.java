@@ -33,7 +33,7 @@ public class CutScene extends Mode implements Screen {
     private THEME theme;
     public static final int INTO_CUTSCENE = 8;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
-            "cutscenes/opening-3.png", "cutscenes/opening-4.png", "cutscenes/opening-5.png"};
+            "cutscenes/opening-3.png"};
     private static final String city = "cutscenes/city_edit.png";
     private static final String village = "cutscenes/village_edit.png";
     private static final String forest = "cutscenes/forest_edit.png";
@@ -47,7 +47,7 @@ public class CutScene extends Mode implements Screen {
     private ArrayList<TextureRegion> textures = new ArrayList<>();
     private TextureRegion skiptexture;
     private TextureRegion nextTexture;
-//    private static final String[] city = {};
+    //    private static final String[] city = {};
     private boolean slideMode;
     private int currentSlide = 0;
 
@@ -141,7 +141,7 @@ public class CutScene extends Mode implements Screen {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
             if (currentSlide < textures.size() - 1) {
-                canvas.drawUI(skiptexture, canvas.getWidth() * 0.9f - skiptexture.getRegionWidth() / 2, canvas.getHeight() * 0.1f, 1f);
+                canvas.drawUI(skiptexture, canvas.getWidth() * 0.9f - skiptexture.getRegionWidth() / 2, canvas.getHeight() * 0.9f, 1f);
             }
         }
         canvas.actStage(stage);
@@ -170,9 +170,9 @@ public class CutScene extends Mode implements Screen {
 
     @Override
     public void loadContent(AssetManager manager) {
-        if (selectorAssetState != AssetState.LOADING) {
-            return;
-        }
+        currentSlide = 0;
+        stage.clear();
+        textures = new ArrayList<>();
         skiptexture = createTexture(manager, SKIP, false);
         nextTexture = createTexture(manager, RIGHT, false);
         switch (theme) {
@@ -224,8 +224,9 @@ public class CutScene extends Mode implements Screen {
                 }
 
             });
-            stage.addActor(nextButtom);
-//            stage.addActor(skipButtom);
+            if (textures.size() > 1) {
+                stage.addActor(nextButtom);
+            } else addStart();
 
 
             Gdx.input.setInputProcessor(stage);
@@ -243,7 +244,7 @@ public class CutScene extends Mode implements Screen {
         TextureRegion startTexture = createTexture(manager, START, false);
         ImageButton start = createButton(startTexture);
         start.setPosition(canvas.getWidth() * 0.7f - start.getWidth() / 2,
-                canvas.getHeight() * 0.1f);
+                canvas.getHeight() * 0.4f);
         start.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

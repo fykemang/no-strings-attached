@@ -23,7 +23,7 @@
     {
       "id": 5,
       "unlocked": true,
-      "path": "levels/tutorial_5.json"
+      "path": "levels/tutorial_8.json"
     },
     {
       "id": 6,
@@ -38,12 +38,22 @@
     {
       "id": 8,
       "unlocked": true,
-      "path": "levels/tutorial_8.json"
+      "path": "levels/tutorial_5.json"
     },
     {
       "id": 9,
       "unlocked": true,
+      "path": "levels/level3.json"
+    },
+    {
+      "id": 11,
+      "unlocked": true,
       "path": "levels/tutorial_9.json"
+    },
+    {
+      "id": 12,
+      "unlocked": true,
+      "path": "levels/level5.json"
     }
   ]
 }

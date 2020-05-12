@@ -30,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import entities.*;
 import obstacle.Obstacle;
 import util.*;
@@ -202,6 +203,13 @@ public class GameMode extends Mode implements Screen {
     private static final String UI_GreyYarn = "ui/ui_uncollected_item.png";
     private static final String UI_RedYarn = "ui/ui_collected_item.png";
     /**
+     * Files for jumping charges
+     */
+    private static final String UI_JUMP_FULL = "ui/full_charge.png";
+    private static final String UI_JUMP_EMPTY = "ui/empty_charge.png";
+    private static final String UI_JUMP_ONE = "ui/1charge.png";
+    private static final String UI_JUMP_TWO = "ui/2charge.png";
+    /**
      * File to texture for restarting button
      */
     private static final String RESTART_FILE = "ui/restart.png";
@@ -223,6 +231,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
     protected FilmStrip door;
+    private Stage stage;
     /**
      * The font for giving messages to the player
      */
@@ -1693,7 +1702,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isCutting()) {
-                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2);
+                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2 - 0.3f, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2 + 0.3f);
                 int id = cuttingCallback.getClosestBlobID();
                 if (id != -1) {
                     for (Obstacle obs : objects) {
@@ -1913,7 +1922,9 @@ public class GameMode extends Mode implements Screen {
         }
 
         if (player.getCanJumpIndicator()) {
-            canvas.draw(jumpCharge0Texture, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY() + player.getHeight() / 2) * scale.y - 1, jumpCharge0Texture.getRegionWidth() * 10f / scale.x, jumpCharge0Texture.getRegionHeight() * 10f / scale.y);
+            int charge = player.getJumpChargeState();
+            TextureRegion t = charge == 0 ? jumpCharge0Texture : charge == 1 ? jumpCharge1Texture : charge == 2 ? jumpCharge2Texture : jumpCharge3Texture;
+            canvas.draw(t, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY()) * scale.y, jumpCharge0Texture.getRegionWidth() * 20f / scale.x, jumpCharge0Texture.getRegionHeight() * 20f / scale.y);
         }
 
 
