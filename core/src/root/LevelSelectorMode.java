@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import entities.Level;
 import entities.LevelMetadata;
@@ -59,6 +60,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private final int city_level = 4;
     private final int suburb_level = 9;
     private boolean ready = false;
+    Stage stage;
     int city_l = 200;
     int city_r = 600;
     int city_d = 563;
@@ -154,6 +156,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     }
 
     public LevelSelectorMode() {
+        stage = new Stage();
         this.assets = new Array<>();
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
@@ -434,12 +437,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 break;
         }
 
-
-        for (int i = 0; i < buttonPos.size(); i++) {
-            Vector2 button = buttonPos.get(i);
-            canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
-        }
-
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
             if (level != lastLevel) {
                 hoverSound.play(6 * GDXRoot.soundVol);
@@ -448,6 +445,18 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
             canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }
+
+
+        for (int i = 0; i < buttonPos.size(); i++) {
+            Vector2 button = buttonPos.get(i);
+            if ( levelMetadata.getLevelCount() >= (i+1) && (levelMetadata.getLevel(i+1).isUnlocked())){
+                selectorFont.setColor(Color.WHITE);
+            }else {
+                selectorFont.setColor(Color.GRAY);
+            }
+            canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+        }
+
 
         canvas.end();
     }
