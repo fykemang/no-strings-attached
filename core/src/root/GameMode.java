@@ -332,7 +332,7 @@ public class GameMode extends Mode implements Screen {
     private final String VILLAGE_MUSIC_FILE = "music/capstone.mp3";
     private final String FOREST_MUSIC_FILE = "music/harp.mp3";
     private final String MOUNTAIN_MUSIC_FILE = "music/mountain_theme.mp3";
-    private final String OPENING_CUTSCENE_FILE = "music/icefishing.mp3";
+    private final String OPENING_CUTSCENE_FILE = "music/cutscene.mp3";
     private final String ENDING_CUTSCENE_FILE = "music/youshoulddosomereflecting.mp3";
     private final String TRANSITION_CUTSCENE_FILE = "music/goodnight.mp3";
     /**
@@ -713,7 +713,7 @@ public class GameMode extends Mode implements Screen {
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
         }
         music.setVolume(0.5f * GDXRoot.musicVol);
-//        music.play();
+        music.play();
         music.setLooping(true);
     }
 
@@ -1749,10 +1749,9 @@ public class GameMode extends Mode implements Screen {
 
         c = player.canCut();
         if (c != null) {
-//            r = c.getRope();
             l = c.getL();
             r = c.getR();
-            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
+            canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
 
 
