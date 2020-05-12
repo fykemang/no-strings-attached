@@ -1623,7 +1623,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isCutting()) {
-                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2 - 0.2f, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2 + 0.2f);
+                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2 - 0.3f, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2 + 0.3f);
                 int id = cuttingCallback.getClosestBlobID();
                 if (id != -1) {
                     for (Obstacle obs : objects) {
