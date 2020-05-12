@@ -29,6 +29,7 @@ public class Level implements Json.Serializable {
     private final List<TextBox> text;
     private final List<float[]> items;
     private boolean unlocked;
+    private int level;
 
     public boolean isUnlocked() {
         return unlocked;
@@ -36,6 +37,15 @@ public class Level implements Json.Serializable {
 
     public void setUnlocked(boolean unlocked) {
         this.unlocked = unlocked;
+    }
+
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public Level() {
@@ -99,6 +109,7 @@ public class Level implements Json.Serializable {
             coordinate[1] = itemData.getFloat("y");
             items.add(coordinate);
         }
+
 
         JsonValue textBoxData = jsonData.get("text");
         for (JsonValue textData : textBoxData) {
