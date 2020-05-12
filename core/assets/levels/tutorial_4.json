@@ -96,16 +96,20 @@
     "x": 26,
     "y": 1.75
   },
-  "text": [
-    {
-      "x": 11,
-      "y": 14,
-      "text": "Press space to cut the string"
-    },
-    {
-      "x": 11,
-      "y": 13,
-      "text": "Hold left shift to swing"
-    }
-  ]
+  "text": [{
+  "x": 15,
+  "y":12,
+  "text": ""
+},
+  {
+    "x": 20,
+    "y":7.3,
+    "text": ""
+  },
+  {
+    "x": 33,
+    "y": 8,
+    "text": ""
+  }
+]
 }

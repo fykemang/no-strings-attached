@@ -1,5 +1,11 @@
 {
-  "text": [],
+  "text": [
+    {
+      "x": 18,
+      "y":  11,
+      "text": ""
+    }
+  ],
   "tutorial": false,
   "type": "city",
   "items": [
