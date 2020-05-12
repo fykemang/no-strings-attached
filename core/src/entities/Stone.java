@@ -62,7 +62,6 @@ public class Stone extends PolygonObstacle {
         this.scale = scale;
         this.type = type;
         switch (type) {
-            case "forest":
             case "mountain":
                 this.height = height + 0.6f;
                 this.width = width + 0.6f;
@@ -168,7 +167,7 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
 
-        if (type.equals("mountain") || type.equals("forest") || type.equals("village")) {
+        if (type.equals("mountain") || type.equals("village")) {
 
             if (height <= 2 && width <= 2 && type.equals("village")) {
                 float firstx = getX() * drawScale.x;
@@ -216,6 +215,7 @@ public class Stone extends PolygonObstacle {
                             y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
 
             } else {
+
                 this.x = getX();
                 this.y = getY();
                 float sca = 1.1f;
@@ -263,8 +263,10 @@ public class Stone extends PolygonObstacle {
             } else {
                 this.x = getX();
                 this.y = getY();
+
+
                 float scy = height * drawScale.y / texture.getRegionHeight();
-                float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy));
+                float num = (int) (width * drawScale.x / (texture.getRegionWidth() * scy - 5));
                 float dist = width * drawScale.x / num;
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;

@@ -1,5 +1,21 @@
 {
-  "text": [],
+  "text": [
+    {
+      "x": 3,
+      "y": 8,
+      "text": ""
+    },
+    {
+      "x": 12,
+      "y": 7.5,
+      "text": ""
+    },
+    {
+      "x": 22,
+      "y": 13,
+      "text": ""
+    }
+  ],
   "tutorial": false,
   "type": "city",
   "items": [
