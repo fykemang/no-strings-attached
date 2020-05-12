@@ -81,6 +81,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private boolean isOpenningPlayed = false;
     private boolean isCityPlayed = false;
+    private boolean isVillagePlayed = false;
 
     /**
      * Creates a new game from the configuration settings.
@@ -237,7 +238,7 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == levelSelector) {
             if (exitCode == GameMode.EXIT_INTO_GAME) {
                 currentLevel = levelSelector.getLevelIndex();
-                if ((!isCityPlayed && currentLevel == 6) || currentLevel == 10 || currentLevel == 14) {
+                if ((!isCityPlayed && currentLevel == 6) || ( !isVillagePlayed && currentLevel == 10 ) || currentLevel == 14) {
                     setCutScene(levelSelector.getLevelIndex());
                 } else {
                     Gdx.input.setInputProcessor(null);
@@ -331,7 +332,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
-                    if ((!isCityPlayed && currentLevel == 6) || currentLevel == 10 || currentLevel == 14) {
+                    if ((!isCityPlayed && currentLevel == 6) ||( !isVillagePlayed && currentLevel == 10 )|| currentLevel == 14) {
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
@@ -369,6 +370,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 cutScene.loadContent(manager);
                 cutScene.setScreenListener(this);
                 setScreen(cutScene);
+                isVillagePlayed = true;
                 levelSelector.unlock(3);
 
         }
