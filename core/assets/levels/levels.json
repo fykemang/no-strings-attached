@@ -44,6 +44,21 @@
       "id": 9,
       "unlocked": true,
       "path": "levels/tutorial_9.json"
+    },
+    {
+      "id": 10,
+      "unlocked": true,
+      "path": "levels/level1.json"
+    },
+    {
+      "id": 11,
+      "unlocked": true,
+      "path": "levels/level3.json"
+    },
+    {
+      "id": 12,
+      "unlocked": true,
+      "path": "levels/level5.json"
     }
   ]
 }
