@@ -12,23 +12,23 @@
     },
     {
       "id": 3,
-      "unlocked": false,
-      "path": "levels/level1.json"
+      "unlocked": true,
+      "path": "levels/tutorial_3.json"
     },
     {
       "id": 4,
       "unlocked": true,
-      "path": "levels/level2.json"
+      "path": "levels/level1.json"
     },
     {
       "id": 5,
       "unlocked": true,
-      "path": "levels/level3.json"
+      "path": "levels/level2.json"
     },
     {
       "id": 6,
       "unlocked": true,
-      "path": "levels/test.json"
+      "path": "levels/level3.json"
     }
   ]
 }

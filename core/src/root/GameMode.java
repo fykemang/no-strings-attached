@@ -699,7 +699,7 @@ public class GameMode extends Mode implements Screen {
                 };
                 break;
             case 4:
-                for (String s : LEVEL3_T) {
+                for (String s : LEVEL4_T) {
                     billboards.add(createTexture(manager, s, false));
                 };
                 break;
@@ -1827,12 +1827,14 @@ public class GameMode extends Mode implements Screen {
 ////        } else {
 ////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
 ////        }
-        for (int i = 0; i< level.getText().size(); i++) {
-            TextBox text = level.getText().get(i);
-            TextureRegion tex = billboards.get(i);
-            canvas.draw(tex,
-                    text.getX() * this.scale.x - tex.getRegionWidth()/2, text.getY() * this.scale.y- tex.getRegionHeight()/2 );
-          }
+        if (billboards.size() >= level.getText().size()) {
+            for (int i = 0; i < level.getText().size(); i++) {
+                TextBox text = level.getText().get(i);
+                TextureRegion tex = billboards.get(i);
+                canvas.draw(tex,
+                        text.getX() * this.scale.x - tex.getRegionWidth() / 2, text.getY() * this.scale.y - tex.getRegionHeight() / 2);
+            }
+        }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
