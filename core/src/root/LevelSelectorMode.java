@@ -100,6 +100,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
+    private ScrollPane levelView;
+    private float currentScroll = 0;
 
     @Override
     public void preloadContent(AssetManager manager) {
@@ -270,7 +272,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = CITY;
-            start = 0;
             end = city_level;
         } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
             theme = VILLAGE;
@@ -502,6 +503,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     public void reset() {
         stage.addActor(container);
+        levelView.setScrollX(currentScroll);
         Gdx.input.setInputProcessor(stage);
         level = -1;
         ready = false;
@@ -517,7 +519,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
-        final ScrollPane levelView = new ScrollPane(levelTable);
+        levelView = new ScrollPane(levelTable);
         final LevelSelectorMode select = this;
         final ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
         style.up = new TextureRegionDrawable(citycard);
@@ -529,6 +531,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     level = finalI + 1;
+                    currentScroll = levelView.getScrollX();
                     listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                 }
 
