@@ -911,23 +911,6 @@ public class GameMode extends Mode implements Screen {
      * The restitution for all physics objects
      */
     private static final float BASIC_RESTITUTION = 0.1f;
-    /**
-     * The volume for sound effects
-     */
-    private static final float EFFECT_VOLUME = 0.8f;
-    /**
-     * Offset for bullet when firing
-     */
-    private static final float BULLET_OFFSET = 0.2f;
-    /**
-     * The speed of the bullet after firing
-     */
-    private static final float BULLET_SPEED = 40.0f;
-    /**
-     * The maximum y-axis offset from which a bullet
-     * can appear from the person's body
-     */
-    private static final float MAX_BULLET_OFFSET_Y = 0.8f;
 
     /**
      * References to physics objects for the game
@@ -1614,7 +1597,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isCutting()) {
-                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2 - 0.3f, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2 + 0.3f);
+                world.QueryAABB(cuttingCallback, playerPosition.x - player.getWidth() / 2, playerPosition.y - player.getHeight() / 2 - 0.1f, playerPosition.x + player.getWidth() / 2, playerPosition.y + player.getHeight() / 2 + 0.1f);
                 int id = cuttingCallback.getClosestBlobID();
                 if (id != -1) {
                     for (Obstacle obs : objects) {
