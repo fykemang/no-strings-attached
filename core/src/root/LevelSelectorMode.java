@@ -33,7 +33,7 @@ import util.ScreenListener;
 
 import java.util.ArrayList;
 
-public class LevelSelectorMode extends Mode implements Screen, InputProcessor, ControllerListener {
+public class LevelSelectorMode extends Mode implements Screen {
     public static final int INTO_SELECTOR = 4;
     private static final String BACKGROUND_FILE = "ui/select_bg.png";
     private static final String CITY_FILE = "ui/city.png";
@@ -51,6 +51,12 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String BACK_FILE = "ui/backToMenu.png";
     private static final String CITY_CARD = "ui/city_card.png";
+    private static final String FOREST_CARD = "ui/forest_card.png";
+    private static final String MOUNTAIN_CARD = "ui/mountain_card.png";
+    private static final String VILLAGE_CARD = "ui/village_card.png";
+    private static final String LOCKED_CARD = "ui/locked.png";
+    private static final String ENTER_START = "ui/press-space.png";
+    private static final String MAP_LOCK = "ui/map-lock.png";
     int lastLevel = 0;
     Table container;
     /**
@@ -68,9 +74,14 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Texture lockedVillage;
     private Texture lockedForest;
     private Texture lockedMountain;
-
-
     private TextureRegion citycard;
+    private TextureRegion mountaincard;
+    private TextureRegion villagecard;
+    private TextureRegion  skycard;
+    private TextureRegion backTexture;
+    private TextureRegion MapLockTexture;
+    private TextureRegion enterTexture;
+    private TextureRegion lockedcard;
     private BitmapFont selectorFont;
     private final int city_level = 4;
     private final int suburb_level = 9;
@@ -124,6 +135,13 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         loadAsset(HOVER_FILE, Sound.class, manager);
         loadAsset(CITY_CARD, Texture.class, manager);
         loadAsset(BACK_FILE, Texture.class, manager);
+        loadAsset(MOUNTAIN_CARD, Texture.class, manager);
+        loadAsset(FOREST_CARD, Texture.class, manager);
+        loadAsset(VILLAGE_CARD, Texture.class, manager);
+        loadAsset(MAP_LOCK, Texture.class, manager);
+        loadAsset(LOCKED_CARD, Texture.class, manager);
+        loadAsset(VILLAGE_CARD, Texture.class, manager);
+        loadAsset(ENTER_START, Texture.class, manager);
     }
 
     @Override
@@ -150,6 +168,14 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
         citycard = createTexture(manager, CITY_CARD, false);
+        villagecard = createTexture(manager, VILLAGE_CARD, false);
+        skycard = createTexture(manager, FOREST_CARD, false);
+        mountaincard = createTexture(manager, MOUNTAIN_CARD, false);
+        backTexture = createTexture(manager, BACK_FILE, false);
+        lockedcard = createTexture(manager, LOCKED_CARD, false);
+        MapLockTexture =  createTexture(manager, MAP_LOCK, false);
+        enterTexture = createTexture(manager, BACK_FILE, false);
+
     }
 
     private int themeFromType(String type) {
@@ -192,14 +218,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         buttonPos.add(new Vector2(720, 340));
 
         themeUnlocked[CITY] = true;
-        try {
-            // Let ANY connected controller start the game.
-            for (Controller controller : Controllers.getControllers()) {
-                controller.addListener(this);
-            }
-        } catch (Exception e) {
-            System.out.println("Error: Game Controllers could not be initialized");
-        }
         active = true;
     }
 
@@ -216,98 +234,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
     private final boolean active;
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-//        for (int i = 0; i < buttonPos.size(); i++){
-//            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
-//            System.out.println(screenP.dst(buttonPos.get(0)));
-//            if (screenP.dst(buttonPos.get(i)) < 50) {
-//                level = i+1;
-//            }
-//        }
-
-        if (level != -1 && level < levelMetadata.getLevelCount() + 1 && levelMetadata.getLevel(level).isUnlocked()) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
-            ready = true;
-            levelSelectorMusic.dispose();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    int screen;
-    int start;
-    int end;
-    boolean select;
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-
-        int screen = canvas.getHeight() - screenY;
-        int start = 0;
-        int end = 0;
-        if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
-            theme = CITY;
-            end = city_level;
-        } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
-            theme = VILLAGE;
-            start = city_level;
-            end = suburb_level;
-        } else if (screenX > for_l && screenX < for_r && screen > for_d && screen < for_u) {
-            theme = FOREST;
-            start = suburb_level;
-            end = 14;
-        } else if (screenX > mon_l && screenX < mon_r && screen > mon_d && screen < mon_u) {
-            start = 15;
-            end = 21;
-            theme = MOUNTAIN;
-        } else {
-            theme = NONE;
-        }
-
-        select = false;
-        for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
-            Vector2 screenP = new Vector2(screenX, canvas.getHeight() - screenY);
-            if (screenP.dst(buttonPos.get(i)) < 50) {
-                select = true;
-                level = i + 1;
-            }
-        }
-
-        if (!select) {
-            level = -1;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 
     @Override
     public void show() {
@@ -340,50 +268,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
             levelSelectorMusic.dispose();
     }
 
-    @Override
-    public void connected(Controller controller) {
 
-    }
-
-    @Override
-    public void disconnected(Controller controller) {
-
-    }
-
-    @Override
-    public boolean buttonDown(Controller controller, int buttonCode) {
-        return false;
-    }
-
-    @Override
-    public boolean buttonUp(Controller controller, int buttonCode) {
-        return false;
-    }
-
-    @Override
-    public boolean axisMoved(Controller controller, int axisCode, float value) {
-        return false;
-    }
-
-    @Override
-    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
-        return false;
-    }
-
-    @Override
-    public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
-        return false;
-    }
-
-    @Override
-    public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
-        return false;
-    }
-
-    @Override
-    public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
-        return false;
-    }
 
     @Override
     public void render(float delta) {
@@ -423,38 +308,11 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         theme = themeUnlocked[theme] ? theme : NONE;
         Texture cityBkg = getTextureFromTheme(CITY), villageBkg = getTextureFromTheme(VILLAGE),
                 mountainBkg = getTextureFromTheme(MOUNTAIN), forestBkg = getTextureFromTheme(FOREST);
-        switch (theme) {
-            case CITY:
+
                 canvas.drawBackground(mountainBkg);
                 canvas.drawBackground(villageBkg);
                 canvas.drawBackground(forestBkg);
-                canvas.drawBackground(cityBkg, 426, 646, Color.WHITE, 1.3f);
-                break;
-            case VILLAGE:
                 canvas.drawBackground(cityBkg);
-                canvas.drawBackground(mountainBkg);
-                canvas.drawBackground(villageBkg, 868, 669, Color.WHITE, 1.2f);
-                canvas.drawBackground(forestBkg);
-                break;
-            case FOREST:
-                canvas.drawBackground(cityBkg);
-                canvas.drawBackground(mountainBkg);
-                canvas.drawBackground(villageBkg);
-                canvas.drawBackground(forestBkg, 960, 450, Color.WHITE, 1.2f);
-                break;
-            case MOUNTAIN:
-                canvas.drawBackground(mountainBkg, 330, 230, Color.WHITE, 1.2f);
-                canvas.drawBackground(cityBkg);
-                canvas.drawBackground(villageBkg);
-                canvas.drawBackground(forestBkg);
-                break;
-            case NONE:
-                canvas.drawBackground(mountainBkg);
-                canvas.drawBackground(cityBkg);
-                canvas.drawBackground(villageBkg);
-                canvas.drawBackground(forestBkg);
-                break;
-        }
 
 
 
@@ -551,7 +409,22 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
 
 
+
+        ImageButton BackButton = createButton(backTexture);
+        BackButton.setPosition(canvas.getWidth()*0.03f, canvas.getHeight()*0.03f);
+        BackButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listener.exitScreen(select, LoadingMode.INTO_STARTSCREEN);
+            }
+
+        });
+       stage.addActor(BackButton);
+
     }
+
+
+
 
 
     private ImageButton createButton(TextureRegion texture) {
