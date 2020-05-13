@@ -441,7 +441,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.drawAnimatedBkg(animatedBkg);
         }
         if (startGameButton == null) {
-            canvas.drawUIText("LOADING...", canvas.getWidth() * 3 / 5, (int) buttonY2);
+            canvas.drawItemCount("LOADING..." + ((int) (progress*100)) + "%", canvas.getWidth() * 3 / 5 - 30, (int) buttonY2 + 80);
         }
 
         if (startGameButton != null) {
@@ -472,15 +472,15 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         canvas.end();
     }
 
-//    /**
-//     * Updates the progress bar according to loading progress
-//     * <p>
-//     * The progress bar is composed of parts: two rounded caps on the end,
-//     * and a rectangle in a middle.  We adjust the size of the rectangle in
-//     * the middle to represent the amount of progress.
-//     *
-//     * @param canvas The drawing context
-//     */
+    /**
+     * Updates the progress bar according to loading progress
+     * <p>
+     * The progress bar is composed of parts: two rounded caps on the end,
+     * and a rectangle in a middle.  We adjust the size of the rectangle in
+     * the middle to represent the amount of progress.
+     *
+     * @param canvas The drawing context
+     */
 //    private void drawProgress(GameCanvas canvas) {
 //        canvas.draw(statusBkgLeft, Color.WHITE, centerX - width / 2, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
 //        canvas.draw(statusBkgRight, Color.WHITE, centerX + width / 2 - scale * PROGRESS_CAP, centerY, scale * PROGRESS_CAP, scale * PROGRESS_HEIGHT);
