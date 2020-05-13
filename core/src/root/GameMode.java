@@ -454,9 +454,9 @@ public class GameMode extends Mode implements Screen {
     private List<TextBox> textBoxes;
 
     private final String[] LEVEL1_T = new String[]{"billboard/level1-jump.png", "billboard/level1-move.png", "billboard/level1-collectibles.png", "billboard/level1-door.png"};
-    private final String[] LEVEL2_T = new String[]{"billboard/level2-Z.png", "billboard/level2-trampoline.png", "billboard/level2-extra.png"};
-    final String[] LEVEL3_T = new String[]{"billboard/level3-extra.png"};
-    final String[] LEVEL4_T = new String[]{"billboard/level4-space.png", "billboard/level4-shift.png", "billboard/level4-extra.png"};
+    private final String[] LEVEL2_T = new String[]{"billboard/level2-Z.png", "billboard/level2-trampoline.png", "billboard/Level2-extra.png"};
+    final String[] LEVEL3_T = new String[]{"billboard/Level3-extra.png"};
+    final String[] LEVEL4_T = new String[]{"billboard/Level4-space.png", "billboard/Level4-shift.png", "billboard/Level4-extra.png"};
 
     /**
      * Creates a new game world
@@ -1742,11 +1742,7 @@ public class GameMode extends Mode implements Screen {
                             NpcRope r = ((Couple) obs).getRope();
                             if (r != null) {
                                 player.setCanCut((Couple) obs);
-                                if (player.getY() >= r.getY()) {
-                                    player.setCanJumpIndicator(true);
-                                } else {
-                                    player.setCanJumpIndicator(false);
-                                }
+                                player.setCanJumpIndicator(player.getY() >= r.getY());
                             } else {
                                 player.setCanCut(null);
                                 player.setCanJumpIndicator(false);

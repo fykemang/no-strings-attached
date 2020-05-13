@@ -40,7 +40,7 @@ public class CutScene extends Mode implements Screen {
     private static final String[] ending = {"cutscenes/end_01.png", "cutscenes/end_02.png", "cutscenes/end_03.png",
             "cutscenes/end_04.png", "cutscenes/end_05.png", "cutscenes/end_06.png", "cutscenes/end_07.png",
             "cutscenes/end_08.png", "cutscenes/end_09.png", "cutscenes/end_10.png", "cutscenes/end_11.png"};
-    private static final String SKIP = "cutscenes/PressEnterSkip.png";
+    private static final String SKIP = "cutscenes/press-enter-skip.png";
     private static final String RIGHT = "cutscenes/skipButton.png";
     private static final String START = "ui/start.png";
     private final ImageButton.ImageButtonStyle skipbuttonStyle = new ImageButton.ImageButtonStyle();
