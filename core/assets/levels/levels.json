@@ -43,7 +43,7 @@
     {
       "id": 9,
       "unlocked": true,
-      "path": "levels/level3.json"
+      "path": "levels/level2.json"
     },
     {
       "id": 10,
@@ -53,7 +53,37 @@
     {
       "id": 11,
       "unlocked": true,
+      "path": "levels/level3.json"
+    },
+    {
+      "id": 12,
+      "unlocked": true,
       "path": "levels/level5.json"
+    },
+    {
+      "id": 13,
+      "unlocked": true,
+      "path": "levels/tutorial_1.json"
+    },
+    {
+      "id": 14,
+      "unlocked": true,
+      "path": "levels/tutorial_1.json"
+    },
+    {
+      "id": 15,
+      "unlocked": true,
+      "path": "levels/tutorial_1.json"
+    },
+    {
+      "id": 16,
+      "unlocked": true,
+      "path": "levels/tutorial_1.json"
+    },
+    {
+      "id": 17,
+      "unlocked": true,
+      "path": "levels/tutorial_1.json"
     }
   ]
 }
