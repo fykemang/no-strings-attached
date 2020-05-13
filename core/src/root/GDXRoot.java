@@ -82,6 +82,7 @@ public class GDXRoot extends Game implements ScreenListener {
     private boolean isOpenningPlayed = false;
     private boolean isCityPlayed = false;
     private boolean isVillagePlayed = false;
+    private boolean isForestPlayed = false;
 
     /**
      * Creates a new game from the configuration settings.
@@ -239,7 +240,8 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.pause();
             if (exitCode == GameMode.EXIT_INTO_GAME) {
                 currentLevel = levelSelector.getLevelIndex();
-                if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) || currentLevel == 14) {
+                if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
+                        (currentLevel == 14 && !isForestPlayed)) {
                     setCutScene(levelSelector.getLevelIndex());
                 } else {
                     Gdx.input.setInputProcessor(null);
@@ -341,7 +343,8 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
-                    if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) || currentLevel == 14) {
+                    if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
+                            (!isForestPlayed &&currentLevel == 14)) {
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
@@ -380,6 +383,14 @@ public class GDXRoot extends Game implements ScreenListener {
                 setScreen(cutScene);
                 isVillagePlayed = true;
                 levelSelector.unlock(3);
+                break;
+            case 14:
+                cutScene.setTheme(CutScene.THEME.FOREST);
+                cutScene.loadContent(manager);
+                cutScene.setScreenListener(this);
+                setScreen(cutScene);
+                isForestPlayed = true;
+                levelSelector.unlock(4);
                 break;
             case 17:
                 cutScene.setTheme(CutScene.THEME.END);
