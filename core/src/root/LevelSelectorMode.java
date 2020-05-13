@@ -416,9 +416,6 @@ public class LevelSelectorMode extends Mode implements Screen {
     private boolean isDown = true;
 
     public void initUI() {
-        for (boolean b: themeUnlocked){
-            b= true;
-        }
         stage.clear();
         container = new Table();
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
@@ -481,7 +478,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
                 }
             });
-            levelTable.add(Button).pad(5);
+            levelTable.add(Button).pad(10);
         }
         levelView.setFlickScroll(true);
         stage.setScrollFocus(levelView);
