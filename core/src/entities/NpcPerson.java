@@ -49,15 +49,10 @@ public class NpcPerson extends Person {
                 anchorX = getWidth() / 2;
                 anchorY = left ? -0.1f : 0.1f;
                 break;
-            case "cozy":
-                anchorX = getWidth() / 2 - 0.45f;
-                anchorY = left ? -0.29f : 0.29f;
-                break;
             case "cheese":
                 anchorX = getWidth() / 2 - 0.45f;
                 anchorY = left ? -0.05f : 0.05f;
                 break;
-
             default:
                 anchorX = getWidth() / 2 - 0.45f;
                 anchorY = left ? -0.12f : 0.12f;
