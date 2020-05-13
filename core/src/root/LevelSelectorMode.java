@@ -456,14 +456,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 break;
         }
 
-        if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
-            if (level != lastLevel) {
-                hoverSound.play(6 * GDXRoot.soundVol);
-            }
-            lastLevel = level;
-            canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
-                    buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
-        }
 
 
         for (int i = 0; i < buttonPos.size(); i++) {
@@ -474,6 +466,15 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 selectorFont.setColor(Color.GRAY);
             }
             canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+        }
+
+        if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
+            if (level != lastLevel) {
+                hoverSound.play(6 * GDXRoot.soundVol);
+            }
+            lastLevel = level;
+            canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
+                    buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }
 
         canvas.actStage(stage);
@@ -540,15 +541,14 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
                 }
             });
-            levelTable.add(Button);
+            levelTable.add(Button).pad(5);
         }
-
         levelView.setFlickScroll(true);
         stage.setScrollFocus(levelView);
         levelView.setScrollingDisabled(false, true);
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
-        container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.2f);
+        container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
 
 
     }
