@@ -179,7 +179,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     public LevelTransitionMode() {
         this.stage = new Stage();
         active = true;
-        this.currentLevel = GDXRoot.currentLevel;
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -257,6 +256,23 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 //        music.setVolume(0.5f * GDXRoot.musicVol);
 //        music.setLooping(true);
 
+        try {
+            // Let ANY connected controller start the game.
+            for (Controller controller : Controllers.getControllers()) {
+                controller.addListener(this);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: Game Controllers could not be initialized");
+        }
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    public void exit() {
+
+    }
+
+    public void setBaskets() {
+        this.currentLevel = GDXRoot.currentLevel;
         if (currentLevel < 5) {
             basketOneTexture = basketCity1Texture;
             basketTwoTexture = basketCity2Texture;
@@ -274,20 +290,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             basketTwoTexture = basketMt2Texture;
             basketThreeTexture = basketMt3Texture;
         }
-
-        try {
-            // Let ANY connected controller start the game.
-            for (Controller controller : Controllers.getControllers()) {
-                controller.addListener(this);
-            }
-        } catch (Exception e) {
-            System.out.println("Error: Game Controllers could not be initialized");
-        }
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    public void exit() {
-
     }
 
     /**
@@ -434,6 +436,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private int lastState = 0;
 
     private void draw() {
+        setBaskets();
         stage.draw();
         canvas.begin();
         canvas.drawBackground(background, canvas.getWidth() / 2, canvas.getHeight() / 2,
