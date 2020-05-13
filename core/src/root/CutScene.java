@@ -103,7 +103,7 @@ public class CutScene extends Mode implements Screen {
 
     @Override
     public void dispose() {
-
+        music.dispose();
     }
 
 
@@ -248,6 +248,7 @@ public class CutScene extends Mode implements Screen {
         start.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                stopMusic();
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -281,6 +282,7 @@ public class CutScene extends Mode implements Screen {
     }
 
     public void reset(GameCanvas canvas) {
+
         this.canvas = canvas;
     }
 
