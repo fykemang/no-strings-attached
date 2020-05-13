@@ -317,7 +317,8 @@ public class GDXRoot extends Game implements ScreenListener {
                         setScreen(transitionMode);
                         gameMode.pause();
                     } else {
-                        setCutScene(17);
+                        setCutScene(18);
+                        gameMode.pause();
                     }
                     break;
                 case PauseMode.INTO_PAUSE:
@@ -345,7 +346,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     currentLevel++;
                     if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
                             (!isForestPlayed &&currentLevel == 14)|| currentLevel == 18) {
-
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
@@ -393,7 +393,6 @@ public class GDXRoot extends Game implements ScreenListener {
                 isForestPlayed = true;
                 levelSelector.unlock(4);
                 break;
-            case 17:
             case 18:
                 cutScene.setTheme(CutScene.THEME.END);
                 cutScene.loadContent(manager);
