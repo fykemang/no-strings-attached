@@ -154,6 +154,8 @@ public class GameCanvas {
 
     private final BitmapFont font;
 
+    private final BitmapFont selectorFont;
+
     /**
      * Creates a new game.GameCanvas determined by the application configuration.
      * <p>
@@ -195,6 +197,10 @@ public class GameCanvas {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         font = generator.generateFont(parameter);
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/BalooThambi.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 30;
+        selectorFont = generator.generateFont(parameter);
 //        GlyphLayout layout = new GlyphLayout(font, text);
     }
 
@@ -1361,6 +1367,14 @@ public class GameCanvas {
         spriteBatch.end();
         UIBatch.begin();
         font.draw(UIBatch, text, x, y);
+        UIBatch.end();
+        spriteBatch.begin();
+    }
+
+    public void drawItemCount(String text, int x, int y) {
+        spriteBatch.end();
+        UIBatch.begin();
+        selectorFont.draw(UIBatch, text, x, y);
         UIBatch.end();
         spriteBatch.begin();
     }

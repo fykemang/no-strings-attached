@@ -309,6 +309,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     }
                     transitionMode.reset();
                     transitionMode.setLevelComplete(gameMode.levelComplete());
+                    transitionMode.setLastLevel(levelSelector.getLevel(this.currentLevel));
                     transitionMode.setScreenListener(this);
                     setScreen(transitionMode);
                     gameMode.pause();
