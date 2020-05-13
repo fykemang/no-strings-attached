@@ -57,16 +57,6 @@
       "direction": "left"
     },
     {
-      "x": 17,
-      "y": 12.5,
-      "width": 6,
-      "height": 1,
-      "type": "spikes",
-      "id": 2,
-      "isSliding": false,
-      "direction": "down"
-    },
-    {
       "x": 23,
       "y": 3,
       "width": 1,
