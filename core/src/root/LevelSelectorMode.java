@@ -17,7 +17,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -147,7 +149,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         parameter.size = 30;
         selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
-        citycard = createTexture(manager,CITY_CARD, false);
+        citycard = createTexture(manager, CITY_CARD, false);
     }
 
     private int themeFromType(String type) {
@@ -270,7 +272,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = CITY;
-            start = 0;
             end = city_level;
         } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
             theme = VILLAGE;
@@ -459,9 +460,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
         for (int i = 0; i < buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
-            if ( levelMetadata.getLevelCount() >= (i+1) && (levelMetadata.getLevel(i+1).isUnlocked())){
+            if (levelMetadata.getLevelCount() >= (i + 1) && (levelMetadata.getLevel(i + 1).isUnlocked())) {
                 selectorFont.setColor(Color.WHITE);
-            }else {
+            } else {
                 selectorFont.setColor(Color.GRAY);
             }
             canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
@@ -525,17 +526,18 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         style.up = new TextureRegionDrawable(citycard);
         style.font = selectorFont;
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
-            ImageTextButton Button = new ImageTextButton("The City: \nLEVEL "+ (i+1), style);
+            ImageTextButton Button = new ImageTextButton("The City: \nLEVEL " + (i + 1), style);
             final int finalI = i;
             Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                   level = finalI+1;
-                   currentScroll = levelView.getScrollX();
-                   listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
+                    level = finalI + 1;
+                    currentScroll = levelView.getScrollX();
+                    listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                 }
+
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                  level = finalI+1;
+                    level = finalI + 1;
 
                 }
             });
@@ -547,7 +549,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
         container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
-
 
 
     }
@@ -570,7 +571,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         return null;
     }
 
-    public void unlock(int theme){
+    public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
 }
