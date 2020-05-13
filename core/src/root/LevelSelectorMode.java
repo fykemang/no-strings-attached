@@ -32,6 +32,7 @@ import entities.LevelMetadata;
 import util.ScreenListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LevelSelectorMode extends Mode implements Screen {
     public static final int INTO_SELECTOR = 4;
@@ -204,9 +205,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     public LevelSelectorMode() {
         stage = new Stage();
         this.assets = new Array<>();
-        for (int i = 0; i< themeUnlocked.length;i++){
-            themeUnlocked[i] = true;
-        }
+        Arrays.fill(themeUnlocked, true);
         buttonPos.add(new Vector2(280, 610));
         buttonPos.add(new Vector2(350, 650));
         buttonPos.add(new Vector2(440, 630));
