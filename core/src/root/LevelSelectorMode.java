@@ -355,7 +355,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(MapLockTexture,
                     960 - MapLockTexture.getRegionWidth() / 2, 450 - MapLockTexture.getRegionHeight() / 2);
         } else {
-            for (int i = 9; i < 12; i++) {
+            for (int i = 9; i < 13; i++) {
                 Vector2 button = buttonPos.get(i);
                 Level l = (levelMetadata.getLevel(i + 1));
                 if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
@@ -372,6 +372,19 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(MapLockTexture,
                     330 - MapLockTexture.getRegionWidth() / 2, 230 - MapLockTexture.getRegionHeight() / 2);
         } else {
+
+            for (int i = 13; i < 17; i++) {
+                Vector2 button = buttonPos.get(i);
+                Level l = (levelMetadata.getLevel(i + 1));
+                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                    selectorFont.setColor(Color.WHITE);
+                } else {
+                    selectorFont.setColor(Color.GRAY);
+                }
+                canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+            }
+
+
         }
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
@@ -421,9 +434,6 @@ public class LevelSelectorMode extends Mode implements Screen {
     private boolean isDown = true;
 
     public void initUI() {
-        for (boolean b: themeUnlocked){
-            b= true;
-        }
         stage.clear();
         container = new Table();
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
@@ -486,7 +496,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
                 }
             });
-            levelTable.add(Button).pad(5);
+            levelTable.add(Button).pad(10);
         }
         levelView.setFlickScroll(true);
         stage.setScrollFocus(levelView);
