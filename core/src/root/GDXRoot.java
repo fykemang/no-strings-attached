@@ -207,6 +207,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     LastScreen = loadingMode;
                     settings.setScreenListener(this);
                     settings.loadContent(manager);
+                    settings.initUI();
                     setScreen(settings);
                     loadingMode.hide();
             }
