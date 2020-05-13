@@ -63,27 +63,27 @@
     {
       "id": 13,
       "unlocked": true,
-      "path": "levels/tutorial_1.json"
+      "path": "levels/dummy_forest.json"
     },
     {
       "id": 14,
       "unlocked": true,
-      "path": "levels/tutorial_1.json"
+      "path": "levels/dummy_mountain.json"
     },
     {
       "id": 15,
       "unlocked": true,
-      "path": "levels/tutorial_1.json"
+      "path": "levels/dummy_mountain.json"
     },
     {
       "id": 16,
       "unlocked": true,
-      "path": "levels/tutorial_1.json"
+      "path": "levels/dummy_mountain.json"
     },
     {
       "id": 17,
       "unlocked": true,
-      "path": "levels/tutorial_1.json"
+      "path": "levels/dummy_mountain.json"
     }
   ]
 }

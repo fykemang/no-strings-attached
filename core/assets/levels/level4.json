@@ -1,7 +1,7 @@
 {
   "text": [],
   "tutorial": false,
-  "type": "city",
+  "type": "forest",
   "items": [
     {
       "id": 0,
@@ -20,24 +20,6 @@
     }
   ],
   "tiles": [
-    {
-      "width": 2.7,
-      "type": "normal",
-      "id": 0,
-      "isSliding": true,
-      "height": 0.5,
-      "x": 3.2,
-      "y": 8.5,
-      "direction": "up",
-      "leftPos": {
-        "x": 3,
-        "y": 8.5
-      },
-      "rightPos": {
-        "x": 16,
-        "y": 8.5
-      }
-    },
     {
       "type": "normal",
       "id": 1,
