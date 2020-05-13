@@ -457,7 +457,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         }
 
 
-
         for (int i = 0; i < buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
             if (levelMetadata.getLevelCount() >= (i + 1) && (levelMetadata.getLevel(i + 1).isUnlocked())) {
@@ -548,7 +547,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelView.setScrollingDisabled(false, true);
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
-        container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
+        container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
 
 
     }
