@@ -189,6 +189,7 @@ public class Stone extends PolygonObstacle {
                 this.x = getX() - 0.3f;
                 if (type.equals("mountain"))
                     this.y = getY() - 0.3f;
+                else this.y = getY();
                 firstx = x * drawScale.x;
                 firsty = y * drawScale.y;
                 // scale by y
