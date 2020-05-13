@@ -103,7 +103,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private LevelMetadata levelMetadata;
 
     private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
-    private boolean[] themeUnlocked = new boolean[5];
+    private final boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
     private ScrollPane levelView;
