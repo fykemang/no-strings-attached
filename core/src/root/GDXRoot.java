@@ -381,6 +381,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 setScreen(cutScene);
                 isVillagePlayed = true;
                 levelSelector.unlock(3);
+                break;
             case 17:
                 cutScene.setTheme(CutScene.THEME.END);
                 cutScene.loadContent(manager);
