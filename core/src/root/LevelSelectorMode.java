@@ -13,10 +13,19 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import entities.Level;
 import entities.LevelMetadata;
@@ -40,7 +49,10 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private static final String SELECTOR_FONT = "ui/blackjack.otf";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
     private static final String HOVER_FILE = "sounds/hover.mp3";
+    private static final String BACK_FILE = "ui/backToMenu.png";
+    private static final String CITY_CARD = "ui/city_card.png";
     int lastLevel = 0;
+    Table container;
     /**
      * Reference to game.GameCanvas created by the root
      */
@@ -56,6 +68,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private Texture lockedVillage;
     private Texture lockedForest;
     private Texture lockedMountain;
+
+
+    private TextureRegion citycard;
     private BitmapFont selectorFont;
     private final int city_level = 4;
     private final int suburb_level = 9;
@@ -85,6 +100,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
     private boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
+    private ScrollPane levelView;
+    private float currentScroll = 0;
 
     @Override
     public void preloadContent(AssetManager manager) {
@@ -105,6 +122,8 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         loadAsset(MUSIC_FILE, Music.class, manager);
         loadAsset(MENU_CLICK_FILE, Sound.class, manager);
         loadAsset(HOVER_FILE, Sound.class, manager);
+        loadAsset(CITY_CARD, Texture.class, manager);
+        loadAsset(BACK_FILE, Texture.class, manager);
     }
 
     @Override
@@ -130,6 +149,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         parameter.size = 30;
         selectorFont = generator.generateFont(parameter);
         selectorAssetState = AssetState.COMPLETE;
+        citycard = createTexture(manager, CITY_CARD, false);
     }
 
     private int themeFromType(String type) {
@@ -252,7 +272,6 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         int end = 0;
         if (screenX > city_l && screenX < city_r && screen > city_d && screen < city_u) {
             theme = CITY;
-            start = 0;
             end = city_level;
         } else if (screenX > sub_l && screenX < sub_r && screen > sub_d && screen < sub_u) {
             theme = VILLAGE;
@@ -437,6 +456,18 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                 break;
         }
 
+
+
+        for (int i = 0; i < buttonPos.size(); i++) {
+            Vector2 button = buttonPos.get(i);
+            if (levelMetadata.getLevelCount() >= (i + 1) && (levelMetadata.getLevel(i + 1).isUnlocked())) {
+                selectorFont.setColor(Color.WHITE);
+            } else {
+                selectorFont.setColor(Color.GRAY);
+            }
+            canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+        }
+
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
             if (level != lastLevel) {
                 hoverSound.play(6 * GDXRoot.soundVol);
@@ -446,18 +477,7 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
                     buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
         }
 
-
-        for (int i = 0; i < buttonPos.size(); i++) {
-            Vector2 button = buttonPos.get(i);
-            if ( levelMetadata.getLevelCount() >= (i+1) && (levelMetadata.getLevel(i+1).isUnlocked())){
-                selectorFont.setColor(Color.WHITE);
-            }else {
-                selectorFont.setColor(Color.GRAY);
-            }
-            canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
-        }
-
-
+        canvas.actStage(stage);
         canvas.end();
     }
 
@@ -483,6 +503,9 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
 
 
     public void reset() {
+        stage.addActor(container);
+        levelView.setScrollX(currentScroll);
+        Gdx.input.setInputProcessor(stage);
         level = -1;
         ready = false;
         levelSelectorMusic.play();
@@ -490,7 +513,65 @@ public class LevelSelectorMode extends Mode implements Screen, InputProcessor, C
         levelSelectorMusic.setLooping(true);
     }
 
-    public void unlock(int theme){
+    private float lastScrollX;
+
+    public void initUI() {
+        container = new Table();
+        ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
+        Table levelTable = new Table();
+
+        levelView = new ScrollPane(levelTable);
+        final LevelSelectorMode select = this;
+        final ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
+        style.up = new TextureRegionDrawable(citycard);
+        style.font = selectorFont;
+        for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
+            ImageTextButton Button = new ImageTextButton("The City: \nLEVEL " + (i + 1), style);
+            final int finalI = i;
+            Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    level = finalI + 1;
+                    currentScroll = levelView.getScrollX();
+                    listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
+                }
+
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    level = finalI + 1;
+
+                }
+            });
+            levelTable.add(Button).pad(5);
+        }
+        levelView.setFlickScroll(true);
+        stage.setScrollFocus(levelView);
+        levelView.setScrollingDisabled(false, true);
+        levelView.setOverscroll(true, true);
+        container.add(levelView).width(canvas.getWidth()).height(300);
+        container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
+
+
+    }
+
+
+    private ImageButton createButton(TextureRegion texture) {
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(texture);
+        return new ImageButton(myTexRegionDrawable);
+    }
+
+    private TextureRegion createTexture(AssetManager manager, String file, boolean repeat) {
+        if (manager.isLoaded(file)) {
+            TextureRegion region = new TextureRegion(manager.get(file, Texture.class));
+            region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            if (repeat) {
+                region.getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            }
+            return region;
+        }
+        return null;
+    }
+
+    public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
 }
