@@ -236,6 +236,7 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(levelSelector);
             cutScene.stopMusic();
         } else if (screen == levelSelector) {
+            levelSelector.pause();
             if (exitCode == GameMode.EXIT_INTO_GAME) {
                 currentLevel = levelSelector.getLevelIndex();
                 if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) || currentLevel == 14) {
@@ -250,8 +251,11 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.setCanvas(canvas);
                     gameMode.reset();
                     setScreen(gameMode);
-                    levelSelector.pause();
                 }
+            }else if (exitCode == LoadingMode.INTO_STARTSCREEN){
+                loadingMode.reset();
+                Gdx.input.setInputProcessor(loadingMode);
+                setScreen(loadingMode);
             }
             // If level select is selected from in game
         } else if (screen == pauseScreen) {
@@ -268,6 +272,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 case LevelSelectorMode.INTO_SELECTOR:
                     gameMode.pause();
                     levelSelector.reset();
+                    levelSelector.initUI();
                     setScreen(levelSelector);
                     break;
                 case SettingMode.INTO_SETTING:
@@ -290,6 +295,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.setCanvas(UIcanvas);
                     levelSelector.reset();
+                    levelSelector.initUI();
                     levelSelector.setScreenListener(this);
                     setScreen(levelSelector);
                     gameMode.pause();
@@ -320,6 +326,7 @@ public class GDXRoot extends Game implements ScreenListener {
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
+                    levelSelector.initUI();
                     setScreen(levelSelector);
                     break;
                 case (GameMode.EXIT_INTO_GAME):
@@ -334,6 +341,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
                             levelSelector.reset();
+                            levelSelector.initUI();
                             setScreen(levelSelector);
                             return;
                         }

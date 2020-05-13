@@ -77,7 +77,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private TextureRegion citycard;
     private TextureRegion mountaincard;
     private TextureRegion villagecard;
-    private TextureRegion  skycard;
+    private TextureRegion  forestcard;
     private TextureRegion backTexture;
     private TextureRegion MapLockTexture;
     private TextureRegion enterTexture;
@@ -169,7 +169,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         selectorAssetState = AssetState.COMPLETE;
         citycard = createTexture(manager, CITY_CARD, false);
         villagecard = createTexture(manager, VILLAGE_CARD, false);
-        skycard = createTexture(manager, FOREST_CARD, false);
+        forestcard = createTexture(manager, FOREST_CARD, false);
         mountaincard = createTexture(manager, MOUNTAIN_CARD, false);
         backTexture = createTexture(manager, BACK_FILE, false);
         lockedcard = createTexture(manager, LOCKED_CARD, false);
@@ -314,16 +314,58 @@ public class LevelSelectorMode extends Mode implements Screen {
                 canvas.drawBackground(forestBkg);
                 canvas.drawBackground(cityBkg);
 
-
-
-        for (int i = 0; i < buttonPos.size(); i++) {
+        for (int i = 0; i < 5; i++) {
             Vector2 button = buttonPos.get(i);
-            if (levelMetadata.getLevelCount() >= (i + 1) && (levelMetadata.getLevel(i + 1).isUnlocked())) {
+            Level l = (levelMetadata.getLevel(i + 1));
+            if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
                 selectorFont.setColor(Color.WHITE);
             } else {
                 selectorFont.setColor(Color.GRAY);
             }
             canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+
+        }
+
+        if (!themeUnlocked[VILLAGE]){
+            canvas.draw(MapLockTexture,
+                    868-MapLockTexture.getRegionWidth()/2, 669-MapLockTexture.getRegionHeight()/2);
+
+        }else {
+            for (int i = 5; i < 9; i++) {
+                Vector2 button = buttonPos.get(i);
+                Level l = (levelMetadata.getLevel(i + 1));
+                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                    selectorFont.setColor(Color.WHITE);
+                } else {
+                    selectorFont.setColor(Color.GRAY);
+                }
+                canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+
+            }
+        }
+
+
+        if (!themeUnlocked[FOREST]){
+            canvas.draw(MapLockTexture,
+                    960-MapLockTexture.getRegionWidth()/2, 450-MapLockTexture.getRegionHeight()/2);
+        }else {
+            for (int i = 9; i < levelMetadata.getLevelCount(); i++) {
+                Vector2 button = buttonPos.get(i);
+                Level l = (levelMetadata.getLevel(i + 1));
+                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                    selectorFont.setColor(Color.WHITE);
+                } else {
+                    selectorFont.setColor(Color.GRAY);
+                }
+                canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
+
+            }
+        }
+
+        if (!themeUnlocked[MOUNTAIN]){
+            canvas.draw(MapLockTexture,
+                    330-MapLockTexture.getRegionWidth()/2, 230-MapLockTexture.getRegionHeight()/2);
+        }else {
         }
 
         if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
@@ -361,9 +403,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
-        stage.addActor(container);
-        levelView.setScrollX(currentScroll);
-        Gdx.input.setInputProcessor(stage);
+
         level = -1;
         ready = false;
         levelSelectorMusic.play();
@@ -371,31 +411,69 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelSelectorMusic.setLooping(true);
     }
 
-    private float lastScrollX;
+
+    private boolean isDown = true;
 
     public void initUI() {
+        stage.clear();
         container = new Table();
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
         levelView = new ScrollPane(levelTable);
         final LevelSelectorMode select = this;
-        final ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
-        style.up = new TextureRegionDrawable(citycard);
-        style.font = selectorFont;
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
-            ImageTextButton Button = new ImageTextButton("The City: \nLEVEL " + (i + 1), style);
+            ImageTextButton Button = null;
+            Level l = levelMetadata.getLevel(i+1);
+            ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
+            style.font = selectorFont;
+            if (l.isUnlocked()){
+                switch(l.getType()) {
+                    case "city":
+                        style.up = new TextureRegionDrawable(citycard);
+                        Button = new ImageTextButton("The City: \nLEVEL " + (i + 1), style);
+                        break;
+                    case "village":
+                        style.up = new TextureRegionDrawable(villagecard);
+                        Button = new ImageTextButton("The Village: \nLEVEL " + (i + 1), style);
+                        break;
+                    case "mountain":
+                        style.up = new TextureRegionDrawable(mountaincard);
+                        Button = new ImageTextButton("The Mountain: \nLEVEL " + (i + 1), style);
+                        break;
+                    case "forest":
+                        style.up = new TextureRegionDrawable(forestcard);
+                        Button = new ImageTextButton("The Forest: \nLEVEL " + (i + 1), style);
+                        break;
+                }
+            }else {
+                style.up = new TextureRegionDrawable(lockedcard);
+                Button = new ImageTextButton("", style);
+
+            }
+
             final int finalI = i;
             Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    level = finalI + 1;
-                    currentScroll = levelView.getScrollX();
-                    listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
+                    if (levelMetadata.getLevel(finalI + 1).isUnlocked()) {
+                        level = finalI + 1;
+                        currentScroll = levelView.getScrollX();
+                        listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
+                    }else level = -1;
                 }
 
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    level = finalI + 1;
+                    if (levelMetadata.getLevel(finalI + 1).isUnlocked())
+                           level = finalI + 1;
+                    else level = -1;
+                    if (finalI + 1 > 10 && isDown){
+                        container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.85f);
+                        isDown = false;
+                    }else if (finalI + 1 < 8 && !isDown){
+                        container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
+                        isDown = true;
+                    }
 
                 }
             });
@@ -407,7 +485,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
         container.setPosition(canvas.getWidth()/2, canvas.getHeight()*0.25f);
-
+        levelView.setScrollX(currentScroll);
 
 
         ImageButton BackButton = createButton(backTexture);
@@ -420,6 +498,8 @@ public class LevelSelectorMode extends Mode implements Screen {
 
         });
        stage.addActor(BackButton);
+       stage.addActor(container);
+       Gdx.input.setInputProcessor(stage);
 
     }
 
