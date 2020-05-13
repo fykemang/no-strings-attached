@@ -187,6 +187,8 @@ public class Stone extends PolygonObstacle {
             } else if (height <= 2) {
                 this.x = getX() - 0.3f;
                 this.y = getY() - 0.3f;
+                firstx = getX() * drawScale.x;
+                firsty = getY() * drawScale.y;
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -216,14 +218,14 @@ public class Stone extends PolygonObstacle {
 
             } else {
 
-                this.x = getX();
-                this.y = getY();
+                this.x = getX() - 0.3f;
+                this.y = getY() - 0.3f;
                 float sca = 1.1f;
                 approxDist = 0.6f;
-                float startX = x * drawScale.x + texture.getRegionWidth() / 2 * sca;
-                float startY = y * drawScale.y + texture.getRegionHeight() / 2 * sca;
-                float endX = (x + width) * drawScale.x - texture.getRegionWidth() * sca / 2;
-                float endY = (y + height) * drawScale.y - texture.getRegionHeight() * sca / 2;
+                float startX = getX() * drawScale.x + texture.getRegionWidth() / 2 * sca;
+                float startY = getY() * drawScale.y + texture.getRegionHeight() / 2 * sca;
+                float endX = (getX() + width) * drawScale.x - texture.getRegionWidth() * sca / 2;
+                float endY = (getY() + height) * drawScale.y - texture.getRegionHeight() * sca / 2;
                 float numX = (int) Math.ceil((endX - startX) / (texture.getRegionWidth() * sca * approxDist));
                 float numY = (int) Math.ceil((endY - startY) / (texture.getRegionHeight() * sca * approxDist));
                 float distX = (endX - startX) / numX;
