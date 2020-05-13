@@ -60,6 +60,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
+    private static final String LOADING_FILE = "ui/loading.png";
+
+    private TextureRegion loadingTexture;
+    private FilmStrip loadingStrip;
 
     /**
      * Background texture for start-up
@@ -312,6 +316,9 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         selectState = MouseState.OTHER;
         active = false;
 
+        loadingStrip = createFilmStrip(manager, LOADING_FILE, 71, 1, 71);
+//        loadingTexture = new TextureRegion()
+
         // Break up the status bar texture into regions
         statusBkgLeft = new TextureRegion(statusBar, 0, 0, PROGRESS_CAP, PROGRESS_HEIGHT);
         statusBkgRight = new TextureRegion(statusBar, statusBar.getWidth() - PROGRESS_CAP, 0, PROGRESS_CAP, PROGRESS_HEIGHT);
@@ -441,6 +448,10 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.drawAnimatedBkg(animatedBkg);
         }
         if (startGameButton == null) {
+//            canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
+//                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
+//        ((FilmStrip) exclamationTexture).setNextFrame();
+//            canvas.drawUI();
             canvas.drawItemCount("LOADING..." + ((int) (progress * 100)) + "%", canvas.getWidth() * 3 / 5 - 30, (int) buttonY2 + 80);
         }
 

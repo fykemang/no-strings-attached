@@ -318,6 +318,7 @@ public class GDXRoot extends Game implements ScreenListener {
                         gameMode.pause();
                     } else {
                         setCutScene(17);
+                        gameMode.pause();
                     }
                     break;
                 case PauseMode.INTO_PAUSE:
