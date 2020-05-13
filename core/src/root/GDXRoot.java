@@ -345,6 +345,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     currentLevel++;
                     if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
                             (!isForestPlayed &&currentLevel == 14)|| currentLevel == 18) {
+
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
