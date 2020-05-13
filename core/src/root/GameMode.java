@@ -705,25 +705,21 @@ public class GameMode extends Mode implements Screen {
                 for (String s : LEVEL1_T) {
                     billboards.add(createTexture(manager, s, false));
                 }
-                ;
                 break;
             case 2:
                 for (String s : LEVEL2_T) {
                     billboards.add(createTexture(manager, s, false));
                 }
-                ;
                 break;
             case 3:
                 for (String s : LEVEL3_T) {
                     billboards.add(createTexture(manager, s, false));
                 }
-                ;
                 break;
             case 4:
                 for (String s : LEVEL4_T) {
                     billboards.add(createTexture(manager, s, false));
                 }
-                ;
                 break;
         }
 
