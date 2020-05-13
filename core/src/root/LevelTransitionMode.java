@@ -283,8 +283,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         if (GDXRoot.currentLevel == 1) {
             basketTexture = basketEmptyTexture;
             return;
-        }
-        else if (environment.contains("city")) {
+        } else if (environment.contains("city")) {
             if (numItems == 1)
                 basketTexture = basketCity1Texture;
             if (numItems == 2)

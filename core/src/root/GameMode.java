@@ -283,7 +283,7 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion fabric2Texture;
     private TextureRegion spoolTexture;
     private TextureRegion stuffingTexture;
-        private TextureRegion basketEmptyTexture;
+    private TextureRegion basketEmptyTexture;
     private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
@@ -742,8 +742,7 @@ public class GameMode extends Mode implements Screen {
                 }
                 if (level.getLevel() == 1) {
                     itemTexture.add(createTexture(manager, BASKET_EMPTY, false));
-                }
-                else {
+                } else {
                     for (String s : cityItems) {
                         itemTexture.add(createTexture(manager, s, false));
                     }

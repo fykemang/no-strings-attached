@@ -441,7 +441,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             canvas.drawAnimatedBkg(animatedBkg);
         }
         if (startGameButton == null) {
-            canvas.drawItemCount("LOADING..." + ((int) (progress*100)) + "%", canvas.getWidth() * 3 / 5 - 30, (int) buttonY2 + 80);
+            canvas.drawItemCount("LOADING..." + ((int) (progress * 100)) + "%", canvas.getWidth() * 3 / 5 - 30, (int) buttonY2 + 80);
         }
 
         if (startGameButton != null) {
