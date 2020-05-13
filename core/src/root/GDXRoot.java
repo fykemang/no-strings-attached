@@ -301,18 +301,22 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.pause();
                     break;
                 case LevelTransitionMode.INTO_TRANSITION:
-                    transitionMode.setCanvas(UIcanvas);
-                    if (!TransitionLoaded) {
-                        transitionMode.loadContent(manager);
-                        transitionMode.initializeInterface();
-                        TransitionLoaded = true;
+                    if (levelSelector.getLevelIndex() != 17) {
+                        transitionMode.setCanvas(UIcanvas);
+                        if (!TransitionLoaded) {
+                            transitionMode.loadContent(manager);
+                            transitionMode.initializeInterface();
+                            TransitionLoaded = true;
+                        }
+                        transitionMode.reset();
+                        transitionMode.setLevelComplete(gameMode.levelComplete());
+                        transitionMode.setLastLevel(levelSelector.getLevel(this.currentLevel));
+                        transitionMode.setScreenListener(this);
+                        setScreen(transitionMode);
+                        gameMode.pause();
+                    }else {
+                        setCutScene(17);
                     }
-                    transitionMode.reset();
-                    transitionMode.setLevelComplete(gameMode.levelComplete());
-                    transitionMode.setLastLevel(levelSelector.getLevel(this.currentLevel));
-                    transitionMode.setScreenListener(this);
-                    setScreen(transitionMode);
-                    gameMode.pause();
                     break;
                 case PauseMode.INTO_PAUSE:
                     pauseScreen.setScreenListener(this);
@@ -377,8 +381,13 @@ public class GDXRoot extends Game implements ScreenListener {
                 setScreen(cutScene);
                 isVillagePlayed = true;
                 levelSelector.unlock(3);
-
+            case 17:
+                cutScene.setTheme(CutScene.THEME.END);
+                cutScene.loadContent(manager);
+                cutScene.setScreenListener(this);
+                setScreen(cutScene);
         }
+
 
     }
 
