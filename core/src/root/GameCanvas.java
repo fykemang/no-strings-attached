@@ -193,7 +193,7 @@ public class GameCanvas {
         cacheVector3 = new Vector3();
         cacheVector2 = new Vector2();
         vertex = new Vector2();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/blackjack.otf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/BalooThambi.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         font = generator.generateFont(parameter);

@@ -208,7 +208,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * Retro font for displaying messages
      */
-    private static final String FONT_FILE = "ui/Pacifico.ttf";
+    private static final String FONT_FILE = "ui/BalooThambi.ttf";
     private static final int FONT_SIZE = 64;
 
     /**
