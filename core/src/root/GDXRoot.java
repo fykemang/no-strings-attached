@@ -232,7 +232,6 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
-            Gdx.input.setInputProcessor(levelSelector);
             levelSelector.initUI();
             levelSelector.reset();
             setScreen(levelSelector);
@@ -293,7 +292,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     levelSelector.setCanvas(UIcanvas);
                     levelSelector.reset();
                     levelSelector.setScreenListener(this);
-                    Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
                     gameMode.pause();
                     break;
@@ -323,7 +321,6 @@ public class GDXRoot extends Game implements ScreenListener {
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
-                    Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
                     break;
                 case (GameMode.EXIT_INTO_GAME):
