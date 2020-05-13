@@ -499,6 +499,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
         container.setPosition(canvas.getWidth()/2, canvas.getHeight() * 0.25f);
+        levelView.layout();
         levelView.setScrollX(currentScroll);
 
 
