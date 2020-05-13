@@ -185,23 +185,25 @@ public class Stone extends PolygonObstacle {
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
 
             } else if (height <= 2) {
+                float sca = sc;
                 this.x = getX() - 0.3f;
-                this.y = getY() - 0.3f;
+                if (type.equals("mountain"))
+                    this.y = getY() - 0.3f;
                 firstx = x * drawScale.x;
                 firsty = y * drawScale.y;
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         start, firsty + height * drawScale.y / 2, getAngle(),
-                        sc, sc);
+                        sca, sca);
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                         end, firsty + height * drawScale.y / 2, getAngle(),
-                        sc, sc);
+                        sca, sca);
                 for (int i = 0; i < num; i++) {
                     //  float y = ylower + rand.nextFloat()*(yupper- ylower);
                     canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                             start + (i + 1) * dist, firsty + height * drawScale.y / 2, getAngle(),
-                            sc, sc);
+                            sca, sca);
                 }
             } else if (height > 2 * width) {
                 this.x = getX();
