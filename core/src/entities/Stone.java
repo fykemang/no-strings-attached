@@ -176,8 +176,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             } else if (height <= 2 && width <= 2) {
-                firstx = getX() * drawScale.x;
-                firsty = getY() * drawScale.y;
+                firstx = (getX()-0.3f) * drawScale.x;
+                firsty = (getY()-0.3f) * drawScale.y;
                 this.x = getX() - 0.3f;
                 this.y = getY() - 0.3f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
@@ -187,8 +187,8 @@ public class Stone extends PolygonObstacle {
             } else if (height <= 2) {
                 this.x = getX() - 0.3f;
                 this.y = getY() - 0.3f;
-                firstx = getX() * drawScale.x;
-                firsty = getY() * drawScale.y;
+                firstx = x * drawScale.x;
+                firsty = y * drawScale.y;
                 // scale by y
                 approxDist = 0.5f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
