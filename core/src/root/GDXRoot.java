@@ -232,7 +232,6 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
-            Gdx.input.setInputProcessor(levelSelector);
             levelSelector.initUI();
             levelSelector.reset();
             setScreen(levelSelector);
@@ -240,7 +239,7 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == levelSelector) {
             if (exitCode == GameMode.EXIT_INTO_GAME) {
                 currentLevel = levelSelector.getLevelIndex();
-                if ((!isCityPlayed && currentLevel == 6) || ( !isVillagePlayed && currentLevel == 10 ) || currentLevel == 14) {
+                if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) || currentLevel == 14) {
                     setCutScene(levelSelector.getLevelIndex());
                 } else {
                     Gdx.input.setInputProcessor(null);
@@ -293,7 +292,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     levelSelector.setCanvas(UIcanvas);
                     levelSelector.reset();
                     levelSelector.setScreenListener(this);
-                    Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
                     gameMode.pause();
                     break;
@@ -323,7 +321,6 @@ public class GDXRoot extends Game implements ScreenListener {
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
-                    Gdx.input.setInputProcessor(levelSelector);
                     setScreen(levelSelector);
                     break;
                 case (GameMode.EXIT_INTO_GAME):
@@ -333,7 +330,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
-                    if ((!isCityPlayed && currentLevel == 6) ||( !isVillagePlayed && currentLevel == 10 )|| currentLevel == 14) {
+                    if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) || currentLevel == 14) {
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {

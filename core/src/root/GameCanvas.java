@@ -1035,7 +1035,7 @@ public class GameCanvas {
             return;
         }
         GlyphLayout layout = new GlyphLayout(font, text);
-        font.draw(spriteBatch, layout, x-layout.width/2, y-layout.height/2);
+        font.draw(spriteBatch, layout, x - layout.width / 2, y - layout.height / 2);
     }
 
     public void drawTextCenter(String text, BitmapFont font, float x, float y) {
