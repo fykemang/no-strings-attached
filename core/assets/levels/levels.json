@@ -7,7 +7,7 @@
     },
     {
       "id": 2,
-      "unlocked": false,
+      "unlocked": true,
       "path": "levels/tutorial_2.json"
     },
     {
