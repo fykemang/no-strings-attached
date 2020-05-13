@@ -18,6 +18,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
@@ -26,6 +27,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import entities.LevelMetadata;
 import util.ScreenListener;
+
+import java.io.Writer;
 
 /**
  * Root class for a LibGDX.
@@ -303,7 +306,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.pause();
                     break;
                 case LevelTransitionMode.INTO_TRANSITION:
-                    if (currentLevel!= 17) {
+                    if (currentLevel != 17) {
                         transitionMode.setCanvas(UIcanvas);
                         if (!TransitionLoaded) {
                             transitionMode.loadContent(manager);
@@ -312,7 +315,7 @@ public class GDXRoot extends Game implements ScreenListener {
                         }
                         transitionMode.reset();
                         transitionMode.setLevelComplete(gameMode.levelComplete());
-                        transitionMode.setLastLevel(levelSelector.getLevel(this.currentLevel));
+                        transitionMode.setLastLevel(levelSelector.getLevel(currentLevel));
                         transitionMode.setScreenListener(this);
                         setScreen(transitionMode);
                         gameMode.pause();
@@ -345,7 +348,7 @@ public class GDXRoot extends Game implements ScreenListener {
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
                     if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
-                            (!isForestPlayed &&currentLevel == 14)|| currentLevel == 18) {
+                            (!isForestPlayed && currentLevel == 14) || currentLevel == 18) {
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {

@@ -1,5 +1,5 @@
-/*
- * DesktopLauncher.java
+package desktop;/*
+ * desktop.DesktopLauncher.java
  * 
  * LibGDX is a cross-platform development library. You write all of your code in 
  * the core project.  However, you still need some extra classes if you want to
