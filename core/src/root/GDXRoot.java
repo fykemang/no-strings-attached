@@ -252,7 +252,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     gameMode.reset();
                     setScreen(gameMode);
                 }
-            }else if (exitCode == LoadingMode.INTO_STARTSCREEN){
+            } else if (exitCode == LoadingMode.INTO_STARTSCREEN) {
                 loadingMode.reset();
                 Gdx.input.setInputProcessor(loadingMode);
                 setScreen(loadingMode);
