@@ -103,7 +103,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private LevelMetadata levelMetadata;
 
     private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
-    private boolean[] themeUnlocked = new boolean[5];
+    private final boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
     private ScrollPane levelView;
@@ -400,7 +400,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getLevel(int level) {
 
-        if (level > levelMetadata.getLevelCount() || level == -1) return null;
+        if (level > levelMetadata.getLevelCount()+1 || level == -1) return null;
         Level l = levelMetadata.getLevel(level);
         l.setLevel(level);
         return l;
@@ -408,7 +408,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getCurrentLevel() {
 
-        if (level > levelMetadata.getLevelCount() || level == -1) return null;
+        if (level > levelMetadata.getLevelCount()+1 || level == -1) return null;
         Level l = levelMetadata.getLevel(level);
         l.setLevel(level);
         return l;
