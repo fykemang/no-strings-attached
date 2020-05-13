@@ -1303,8 +1303,9 @@ public class GameMode extends Mode implements Screen {
             return false;
         }
 
-        if (!isFailure() && player.getY() < -1) {
+        if (!isFailure() && player.getY() < -1 && !didPlayLose) {
             loseSound.play(GDXRoot.soundVol);
+            didPlayLose = true;
             setFailure(true);
             return false;
         }
