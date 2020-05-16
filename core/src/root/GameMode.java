@@ -813,13 +813,13 @@ public class GameMode extends Mode implements Screen {
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33, true);
         npcCozyTexture.setFrameDuration(0.1f);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33, true);
-        npcNervyTexture.setFrameDuration(0.1f);
+        npcNervyTexture.setFrameDuration(0.2f);
         npcHeyoTexture = createFilmStrip(manager, NPC_HEYO, 1, 4, 4, true);
-        npcHeyoTexture.setFrameDuration(0.1f);
+        npcHeyoTexture.setFrameDuration(0.2f);
         npcSpikyTexture = createFilmStrip(manager, NPC_SPIKY, 1, 16, 16, true);
         npcSpikyTexture.setFrameDuration(0.1f);
         npcWelcomeTexture = createFilmStrip(manager, NPC_WELCOME, 1, 7, 7, true);
-        npcWelcomeTexture.setFrameDuration(0.1f);
+        npcWelcomeTexture.setFrameDuration(0.13f);
         npcHeyoShockTexture = createFilmStrip(manager, NPC_HEYO_SHOCK, 1, 9, 9, true);
         npcHeyoShockTexture.setFrameDuration(0.1f);
         npcCheeseShockTexture = createFilmStrip(manager, NPC_CHEESE_SHOCK, 1, 9, 9, true);
