@@ -1,5 +1,7 @@
 package entities;
 
+import util.FilmStrip;
+
 public class NpcPerson extends Person {
     private String type;
     private NpcPerson couple;
@@ -73,4 +75,10 @@ public class NpcPerson extends Person {
         this.couple = couple;
     }
 
+    @Override
+    public void update(float dt){
+        super.update(dt);
+        ((FilmStrip)texture).setElapsedTime(dt);
+        ((FilmStrip) texture).updateFrame();
+    }
 }
