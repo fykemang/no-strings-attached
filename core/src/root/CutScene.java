@@ -33,7 +33,7 @@ public class CutScene extends Mode implements Screen {
     private THEME theme;
     public static final int INTO_CUTSCENE = 8;
     private static final String[] opening = {"cutscenes/opening-1.png", "cutscenes/opening-2.png",
-            "cutscenes/opening-3.png",  "cutscenes/opening-4.png"};
+            "cutscenes/opening-3.png", "cutscenes/opening-4.png"};
     private static final String city = "cutscenes/city_edit.png";
     private static final String village = "cutscenes/village_edit.png";
     private static final String forest = "cutscenes/forest_edit.png";

@@ -400,7 +400,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getLevel(int level) {
 
-        if (level > levelMetadata.getLevelCount()+1 || level == -1) return null;
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
         Level l = levelMetadata.getLevel(level);
         l.setLevel(level);
         return l;
@@ -408,7 +408,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getCurrentLevel() {
 
-        if (level > levelMetadata.getLevelCount()+1 || level == -1) return null;
+        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
         Level l = levelMetadata.getLevel(level);
         l.setLevel(level);
         return l;
@@ -435,7 +435,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
         levelView = new ScrollPane(levelTable);
         final LevelSelectorMode select = this;
-        levelTable.pad(600-165);
+        levelTable.pad(600 - 165);
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             ImageTextButton Button = null;
             Level l = levelMetadata.getLevel(i + 1);
@@ -498,7 +498,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelView.setScrollingDisabled(false, true);
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
-        container.setPosition(canvas.getWidth()/2, canvas.getHeight() * 0.25f);
+        container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
         levelView.layout();
         levelView.setScrollX(currentScroll);
 

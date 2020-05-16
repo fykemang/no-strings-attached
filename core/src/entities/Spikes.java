@@ -21,6 +21,7 @@ public class Spikes extends PolygonObstacle {
     public String getSensorName() {
         return sensorName;
     }
+
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
@@ -47,20 +48,20 @@ public class Spikes extends PolygonObstacle {
         n = n == 0 ? 1 : n;
         switch (direction) {
             case "up":
-                sensorCenter = new Vector2(getWidth()/2f, 1f);
-                sensorShape.setAsBox(getWidth()/2f, SENSOR_HEIGHT, sensorCenter, 0.0f);
+                sensorCenter = new Vector2(getWidth() / 2f, 1f);
+                sensorShape.setAsBox(getWidth() / 2f, SENSOR_HEIGHT, sensorCenter, 0.0f);
                 break;
             case "left":
-                sensorCenter = new Vector2(0, n*getWidth()/2f);
-                sensorShape.setAsBox(SENSOR_HEIGHT, n*(getWidth()/2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(0, num * getWidth() / 2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, num * (getWidth() / 2f), sensorCenter, 0.0f);
                 break;
             case "down":
-                sensorCenter = new Vector2(getWidth()/2f, 0);
-                sensorShape.setAsBox(getWidth()/2f, SENSOR_HEIGHT, sensorCenter, 0.0f);
+                sensorCenter = new Vector2(getWidth() / 2f, 0);
+                sensorShape.setAsBox(getWidth(), SENSOR_HEIGHT, sensorCenter, 0.0f);
                 break;
             case "right":
-                sensorCenter = new Vector2(getWidth(), n*getWidth()/2f);
-                sensorShape.setAsBox(SENSOR_HEIGHT, n*(getWidth()/2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(getWidth(), num * getWidth() / 2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, num * (getWidth() / 2f), sensorCenter, 0.0f);
                 break;
         }
         sensorDef.shape = sensorShape;
