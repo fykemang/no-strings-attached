@@ -98,7 +98,7 @@ public class CollisionController implements ContactListener {
                 player.setDidCollect(true);
             }
 
-            if ((bd1 == player && bd2.getName().equals("spike")) || (bd2 == player && bd1.getName().equals("spike"))) {
+            if ((bd1 == player && ("spike").equals(fd2)) || (bd2 == player && ("spike").equals(fd1))) {
                 if (!player.won())
                     player.kill();
             }

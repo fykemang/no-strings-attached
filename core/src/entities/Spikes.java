@@ -1,6 +1,11 @@
 package entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import obstacle.PolygonObstacle;
 import root.GameCanvas;
 
@@ -8,11 +13,62 @@ public class Spikes extends PolygonObstacle {
 
     float scale;
     String direction;
+    private PolygonShape sensorShape;
+    private Fixture sensorFixture;
+    private final String sensorName;
+    private static final float SENSOR_HEIGHT = 0.05f;
+
+    public String getSensorName() {
+        return sensorName;
+    }
+    public void drawDebug(GameCanvas canvas) {
+        super.drawDebug(canvas);
+        canvas.drawPhysics(sensorShape, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+    }
 
     public Spikes(float[] points, float x, float y, String direction, float scale) {
         super(points, x, y);
         this.scale = scale;
         this.direction = direction;
+        this.sensorName = "spike";
+    }
+
+
+    public boolean activatePhysics(World world) {
+        if (!super.activatePhysics(world)) {
+            return false;
+        }
+        Vector2 sensorCenter;
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.isSensor = true;
+        sensorShape = new PolygonShape();
+        float scx = 1.2f * drawScale.x / texture.getRegionWidth();
+        int num = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * scx));
+        num = num == 0 ? 1 : num;
+        switch (direction) {
+            case "up":
+                sensorCenter = new Vector2(getWidth()/2f, 1f);
+                sensorShape.setAsBox(getWidth()/2f, SENSOR_HEIGHT, sensorCenter, 0.0f);
+                break;
+            case "left":
+                sensorCenter = new Vector2(0, num*getWidth()/2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, num*(getWidth()/2f), sensorCenter, 0.0f);
+                break;
+            case "down":
+                sensorCenter = new Vector2(getWidth()/2f, 0);
+                sensorShape.setAsBox(getWidth(), SENSOR_HEIGHT, sensorCenter, 0.0f);
+                break;
+            case "right":
+                sensorCenter = new Vector2(getWidth(), num*getWidth()/2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, num*(getWidth()/2f), sensorCenter, 0.0f);
+                break;
+        }
+        sensorDef.shape = sensorShape;
+        sensorDef.filter.maskBits = getFilterData().maskBits;
+        sensorDef.filter.categoryBits = getFilterData().categoryBits;
+        sensorFixture = body.createFixture(sensorDef);
+        sensorFixture.setUserData(getSensorName());
+        return true;
     }
 
 
