@@ -43,9 +43,9 @@ public class Spikes extends PolygonObstacle {
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        float scx = 1.2f * drawScale.x / texture.getRegionWidth();
-        int num = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * scx));
-        num = num == 0 ? 1 : num;
+        float f = 1.2f * drawScale.x / texture.getRegionWidth();
+        int n = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * f));
+        n = n == 0 ? 1 : n;
         switch (direction) {
             case "up":
                 sensorCenter = new Vector2(getWidth() / 2f, 1f);
