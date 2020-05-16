@@ -2,62 +2,50 @@
   "levels": [
     {
       "id": 1,
-      "unlocked": true,
       "path": "levels/tutorial_1.json"
     },
     {
       "id": 2,
-      "unlocked": true,
       "path": "levels/tutorial_2.json"
     },
     {
       "id": 3,
-      "unlocked": true,
       "path": "levels/tutorial_3.json"
     },
     {
       "id": 4,
-      "unlocked": true,
       "path": "levels/level1.json"
     },
     {
       "id": 5,
-      "unlocked": true,
       "path": "levels/tutorial_8.json"
     },
     {
       "id": 6,
-      "unlocked": true,
       "path": "levels/tutorial_6.json"
     },
     {
       "id": 7,
-      "unlocked": true,
       "path": "levels/tutorial_7.json"
     },
     {
       "id": 8,
-      "unlocked": true,
       "path": "levels/tutorial_5.json"
     },
     {
       "id": 9,
-      "unlocked": true,
       "path": "levels/level2.json"
     },
     {
       "id": 10,
-      "unlocked": true,
       "path": "levels/tutorial_9.json"
     },
     {
       "id": 11,
-      "unlocked": true,
       "path": "levels/level3.json"
     },
     {
       "id": 12,
-      "unlocked": true,
       "path": "levels/level4.json"
     },
     {
@@ -67,22 +55,18 @@
     },
     {
       "id": 14,
-      "unlocked": true,
       "path": "levels/dummy_mountain.json"
     },
     {
       "id": 15,
-      "unlocked": true,
       "path": "levels/dummy_mountain.json"
     },
     {
       "id": 16,
-      "unlocked": true,
       "path": "levels/dummy_mountain.json"
     },
     {
       "id": 17,
-      "unlocked": true,
       "path": "levels/dummy_mountain.json"
     }
   ]

@@ -93,9 +93,7 @@ public class FilmStrip extends TextureRegion {
 
     private boolean loop;
     private boolean refreshed;
-//runningAnimation = new Animation(FRAME_DURATION, runningFrames, PlayMode.LOOP);
-//        ...
-//    }
+
     /**
      * Whether or whether not to freeze the animation
      * at the current frame

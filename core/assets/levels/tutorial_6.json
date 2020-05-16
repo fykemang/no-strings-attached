@@ -14,7 +14,7 @@
       "type": "normal",
       "id": 0,
       "isSliding": false,
-      "y": 14.41,
+      "y": 12,
       "width": 2.7066666666666666,
       "x": 0,
       "height": 1,
@@ -25,8 +25,8 @@
       "id": 1,
       "isSliding": false,
       "width": 1,
-      "y": 11,
-      "height": 6,
+      "y": 9.5,
+      "height": 3,
       "x": 9,
       "direction": "left"
     },
@@ -34,9 +34,9 @@
       "type": "spikes",
       "id": 2,
       "isSliding": false,
-      "y": 11,
+      "y": 9.5,
       "width": 1,
-      "height":  6,
+      "height":  3,
       "x": 10,
       "direction": "right"
     },
@@ -118,8 +118,8 @@
     }
   ],
   "player": {
-    "x": 1.0133333333333334,
-    "y": 16.22
+    "x": 1,
+    "y": 13
   },
   "exit": {
     "x": 25,

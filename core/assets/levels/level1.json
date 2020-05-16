@@ -70,11 +70,11 @@
       "isSliding": true,
       "leftPos": {
         "x": 29,
-        "y": 4.5
+        "y": 5
       },
       "rightPos": {
         "x": 33.5,
-        "y": 4.5
+        "y": 5
       },
       "isRotating": false,
       "center": {},
