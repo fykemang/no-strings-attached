@@ -316,8 +316,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
         for (int i = 0; i < buttonPos.size(); i++) {
             Vector2 button = buttonPos.get(i);
-            Level l = (levelMetadata.getLevel(i + 1));
-            if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+            if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                 selectorFont.setColor(Color.WHITE);
             } else {
                 selectorFont.setColor(Color.GRAY);
@@ -333,8 +332,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         } else {
             for (int i = 5; i < 9; i++) {
                 Vector2 button = buttonPos.get(i);
-                Level l = (levelMetadata.getLevel(i + 1));
-                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                if (levelMetadata.getLevelCount() >= (i + 1) && (levelMetadata.isLevelUnlocked(i + 1))) {
                     selectorFont.setColor(Color.WHITE);
                 } else {
                     selectorFont.setColor(Color.GRAY);
@@ -352,7 +350,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             for (int i = 9; i < 13; i++) {
                 Vector2 button = buttonPos.get(i);
                 Level l = (levelMetadata.getLevel(i + 1));
-                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                     selectorFont.setColor(Color.WHITE);
                 } else {
                     selectorFont.setColor(Color.GRAY);
@@ -370,7 +368,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             for (int i = 13; i < 17; i++) {
                 Vector2 button = buttonPos.get(i);
                 Level l = (levelMetadata.getLevel(i + 1));
-                if (levelMetadata.getLevelCount() >= (i + 1) && (l.isUnlocked())) {
+                if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                     selectorFont.setColor(Color.WHITE);
                 } else {
                     selectorFont.setColor(Color.GRAY);
@@ -441,7 +439,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             Level l = levelMetadata.getLevel(i + 1);
             ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
             style.font = selectorFont;
-            if (l.isUnlocked()) {
+            if (levelMetadata.isLevelUnlocked(i + 1)) {
                 switch (l.getType()) {
                     case "city":
                         style.up = new TextureRegionDrawable(citycard);
@@ -470,7 +468,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (levelMetadata.getLevel(finalI + 1).isUnlocked()) {
+                    if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         level = finalI + 1;
                         currentScroll = levelView.getScrollX();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
@@ -478,7 +476,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 }
 
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    if (levelMetadata.getLevel(finalI + 1).isUnlocked())
+                    if (levelMetadata.isLevelUnlocked(finalI + 1))
                         level = finalI + 1;
                     else level = -1;
                     if (finalI + 1 > 10 && isDown) {
@@ -539,4 +537,9 @@ public class LevelSelectorMode extends Mode implements Screen {
     public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
+
+    public void saveGame() {
+        this.levelMetadata.saveGame();
+    }
+
 }
