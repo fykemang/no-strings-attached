@@ -17,7 +17,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
 import root.GameCanvas;
-import util.FilmStrip;
 
 import java.util.ArrayList;
 

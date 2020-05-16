@@ -76,9 +76,9 @@ public class NpcPerson extends Person {
     }
 
     @Override
-    public void update(float dt){
+    public void update(float dt) {
         super.update(dt);
-        ((FilmStrip)texture).setElapsedTime(dt);
+        ((FilmStrip) texture).setElapsedTime(dt);
         ((FilmStrip) texture).updateFrame();
     }
 }
