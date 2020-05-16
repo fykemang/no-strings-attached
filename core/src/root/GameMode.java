@@ -250,11 +250,6 @@ public class GameMode extends Mode implements Screen {
      */
     protected Vector2 scale;
     private final Random rand;
-
-    /**
-     * Texture assets for character avatar
-     */
-    private TextureRegion playerFallTexture;
     /**
      * Texture assets for NPCs
      */
@@ -808,13 +803,16 @@ public class GameMode extends Mode implements Screen {
         }
         playerSwingForwardAnimation = createFilmStrip(manager, PLAYER_SWING_FORWARD, 1, 7, 7, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24, true);
+        playerIdleAnimation.setFrameDuration(0.09f);
         playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21, true);
         playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15, true);
+        playerExitAnimation.setFrameDuration(0.045f);
         playerJumpUpAnimation = createFilmStrip(manager, PLAYER_JUMP_UP, 1, 8, 8, false);
         playerJumpDownAnimation = createFilmStrip(manager, PLAYER_JUMP_DOWN, 1, 14, 14, false);
         playerDeathAnimation = createFilmStrip(manager, PLAYER_DEATH, 1, 24, 24, false);
-        playerFallTexture = createTexture(manager, PLAYER_FALL, false);
+        playerDeathAnimation.setFrameDuration(0.1f);
         playerWalkingAnimation = createFilmStrip(manager, PLAYER_WALKING_ANIMATION_FILE, 1, 17, 17, true);
+        playerWalkingAnimation.setFrameDuration(0.045f);
         npcCheeseTexture = createFilmStrip(manager, NPC_CHEESE, 1, 49, 49, true);
         npcCozyTexture = createFilmStrip(manager, NPC_COZY, 1, 33, 33, true);
         npcNervyTexture = createFilmStrip(manager, NPC_NERVY, 1, 33, 33, true);
@@ -1524,6 +1522,8 @@ public class GameMode extends Mode implements Screen {
         // If player has collected all items, indicate so
         player.setCollectedAll(items.size() == player.getInventory().size());
         if (player.won()) {
+            playerExitAnimation.setElapsedTime(dt);
+            playerExitAnimation.updateFrame();
             player.setTexture(playerExitAnimation);
             door.setElapsedTime(dt);
             door.updateFrame();
@@ -1569,9 +1569,9 @@ public class GameMode extends Mode implements Screen {
                         }
                     }
                     setSwingingAnimations(dt);
-                } else if (player.isFalling()) {
-                    player.setTexture(playerFallTexture);
                 } else if (player.isWalking()) {
+                    playerWalkingAnimation.setElapsedTime(dt);
+                    playerWalkingAnimation.updateFrame();
                     player.setTexture(playerWalkingAnimation);
                 } else if (player.isGrounded()) {
                     if (!didPlayLand) {
@@ -1584,6 +1584,8 @@ public class GameMode extends Mode implements Screen {
                         didPlayJump = false;
                         player.setOnTrampoline(false);
                     }
+                    playerIdleAnimation.setElapsedTime(dt);
+                    playerIdleAnimation.updateFrame();
                     player.setTexture(playerIdleAnimation);
                 }
             }
@@ -1736,6 +1738,9 @@ public class GameMode extends Mode implements Screen {
                 }
             }
         } else if (!player.isAlive()) {
+            if (player.isGrounded())
+                playerDeathAnimation.setElapsedTime(dt);
+            playerDeathAnimation.updateFrame();
             player.setTexture(playerDeathAnimation);
         }
 

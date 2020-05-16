@@ -578,15 +578,6 @@ public class Person extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        frameCount++;
-        int frameRate = 3;
-        if (horizontalMovement != 0) {
-            int temp = Math.abs(((int) (frameRate * 0.16f / horizontalMovement)));
-        }
-
-        if (horizontalMovement == 0) {
-            frameRate = 7;
-        }
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
@@ -596,13 +587,6 @@ public class Person extends CapsuleObstacle {
 
         if (!isShooting) {
             shootCooldown = Math.max(0, shootCooldown - 1);
-        }
-
-        if (texture instanceof FilmStrip && frameCount % frameRate == 0 && (isGrounded() || getName().equals("npc"))) {
-            frameCount = 0;
-            if (!((FilmStrip) texture).getShouldFreeze()) {
-                ((FilmStrip) texture).setNextFrame();
-            }
         }
 
         if (won) {
