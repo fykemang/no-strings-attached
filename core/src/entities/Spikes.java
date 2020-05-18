@@ -52,16 +52,16 @@ public class Spikes extends PolygonObstacle {
                 sensorShape.setAsBox(getWidth() / 2f, SENSOR_HEIGHT, sensorCenter, 0.0f);
                 break;
             case "left":
-                sensorCenter = new Vector2(0, num * getWidth() / 2f);
-                sensorShape.setAsBox(SENSOR_HEIGHT, num * (getWidth() / 2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(0, n * getWidth() / 2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, n * (getWidth() / 2f), sensorCenter, 0.0f);
                 break;
             case "down":
                 sensorCenter = new Vector2(getWidth() / 2f, 0);
                 sensorShape.setAsBox(getWidth(), SENSOR_HEIGHT, sensorCenter, 0.0f);
                 break;
             case "right":
-                sensorCenter = new Vector2(getWidth(), num * getWidth() / 2f);
-                sensorShape.setAsBox(SENSOR_HEIGHT, num * (getWidth() / 2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(getWidth(), n * getWidth() / 2f);
+                sensorShape.setAsBox(SENSOR_HEIGHT, n * (getWidth() / 2f), sensorCenter, 0.0f);
                 break;
         }
         sensorDef.shape = sensorShape;
