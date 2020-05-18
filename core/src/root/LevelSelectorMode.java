@@ -302,7 +302,6 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void draw() {
-
         canvas.begin();
         canvas.drawBackground(background);
         theme = themeUnlocked[theme] ? theme : NONE;
