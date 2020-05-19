@@ -11,8 +11,8 @@ import root.GameCanvas;
 
 public class Spikes extends PolygonObstacle {
 
-    float scale;
-    String direction;
+    private float scale;
+    private String direction;
     private PolygonShape sensorShape;
     private Fixture sensorFixture;
     private final String sensorName;
@@ -33,7 +33,6 @@ public class Spikes extends PolygonObstacle {
         this.direction = direction;
         this.sensorName = "spike";
     }
-
 
     public boolean activatePhysics(World world) {
         if (!super.activatePhysics(world)) {

@@ -35,7 +35,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width  = 1200;
 		config.height = 800;
-		config.samples = 5; // number of sample to take
 		config.resizable = false;
 		config.title = "No Strings Attached";
 		new LwjglApplication(new GDXRoot(), config);
