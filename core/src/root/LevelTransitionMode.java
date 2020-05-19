@@ -163,6 +163,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
     private SelectedButton currentSelection;
+    private SelectedButton pressState;
     private final Stage stage;
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
@@ -185,6 +186,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.setPosition(canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 2, canvas.getHeight() / 6);
         final LevelTransitionMode transition = this;
         Gdx.input.setInputProcessor(this);
+        pressState = null;
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -318,19 +320,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            final LevelTransitionMode transition = this;
-            if (currentSelection == SelectedButton.REPLAY) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
-            }
-            else if (currentSelection == SelectedButton.EXIT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
-            }
-            else if (currentSelection == SelectedButton.NEXT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
-            }
+            pressState = currentSelection;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
                 || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -478,12 +468,25 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             draw();
 
             // We are are ready, notify our listener
-
+            if (listener != null) {
+            final LevelTransitionMode transition = this;
+            if (pressState == SelectedButton.REPLAY) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
+            }
+            else if (pressState == SelectedButton.EXIT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+            }
+            else if (pressState == SelectedButton.NEXT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
+            }
+            }
         }
     }
 
     private void update(float dt) {
-
     }
 
     private int lastState = 0;
