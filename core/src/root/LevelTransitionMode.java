@@ -16,12 +16,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Select;
 import entities.Level;
 import util.ScreenListener;
 
@@ -322,24 +320,20 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             if (currentSelection == SelectedButton.REPLAY) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
-            }
-            else if (currentSelection == SelectedButton.EXIT) {
+            } else if (currentSelection == SelectedButton.EXIT) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
-            }
-            else if (currentSelection == SelectedButton.NEXT) {
+            } else if (currentSelection == SelectedButton.NEXT) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
                 || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (keyState < 3)
                 keyState += 1;
             else
                 keyState = 0;
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
                 || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (keyState > 0)
                 keyState -= 1;

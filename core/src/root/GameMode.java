@@ -427,6 +427,7 @@ public class GameMode extends Mode implements Screen {
     final String[] LEVEL4_T = new String[]{"billboard/Level4-space.png", "billboard/Level4-shift.png", "billboard/Level4-extra.png"};
 
     private double physicsStepAccumulator = 0.0;
+
     /**
      * Creates a new game world
      * <p>
@@ -1185,8 +1186,6 @@ public class GameMode extends Mode implements Screen {
         addObject(tile);
         return tile;
     }
-
-
 
 
     /**
@@ -2075,7 +2074,6 @@ public class GameMode extends Mode implements Screen {
         boolean vert = (bounds.y <= obj.getY() && obj.getY() <= bounds.y + bounds.height);
         return horiz && vert;
     }
-
 
 
     private Vector2 direction = null;
