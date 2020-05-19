@@ -1,6 +1,7 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -15,10 +16,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Select;
 import entities.Level;
 import util.ScreenListener;
 
@@ -28,12 +31,10 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String BK_FILE = "ui/sky.png";
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
-    //    private static final String WIN = "ui/basket_3.png";
     private static final String REPLAY = "ui/replay.png";
     private static final String MAIN_MENU = "ui/main-menu.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private static final String BUTTON_PRESSED = "ui/next-down.png";
-    //    private final String TRANSITION_MUSIC_FILE = "music/goodnight.mp3";
     private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String CLICK_FILE = "sounds/click.mp3";
     private static final String VICTORY_FILE = "sounds/victorymarimba.mp3";
@@ -66,7 +67,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private TextureRegion basketMt2Texture;
     private TextureRegion basketMt3Texture;
     private Texture background;
-    private Texture yarnie;
     private TextureRegion pc;
     private Texture winMessage;
     private Texture replayButtonTexture;
@@ -87,7 +87,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         loadAsset(REPLAY, Texture.class, manager);
         loadAsset(MAIN_MENU, Texture.class, manager);
         loadAsset(WIN_TEXT, Texture.class, manager);
-//        loadAsset(TRANSITION_MUSIC_FILE, Music.class, manager);
         loadAsset(VICTORY_FILE, Sound.class, manager);
         loadAsset(SELECTOR, Texture.class, manager);
         loadAsset(BUTTON_PRESSED, Texture.class, manager);
@@ -134,7 +133,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButtonTexture = manager.get(BUTTON, Texture.class);
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(nextButtonTexture));
         buttonStyle.over = new TextureRegionDrawable(nextButtonPressed);
-//        music = manager.get(TRANSITION_MUSIC_FILE, Music.class);
         victorySound = manager.get(VICTORY_FILE, Sound.class);
         clickSound = manager.get(CLICK_FILE, Sound.class);
         hoverSound = manager.get(HOVER_FILE, Sound.class);
@@ -169,11 +167,9 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
     private boolean isLevelComplete;
-    //    private Music music;
     private Sound victorySound;
     private Sound hoverSound;
     private Sound clickSound;
-    private int currentLevel;
 
     public LevelTransitionMode() {
         this.stage = new Stage();
@@ -188,6 +184,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         ImageButton nextButton = new ImageButton(buttonStyle);
         nextButton.setPosition(canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 2, canvas.getHeight() / 6);
         final LevelTransitionMode transition = this;
+        Gdx.input.setInputProcessor(this);
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -251,9 +248,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         stage.addActor(mainMenuButton);
 
         victorySound.play(0.2f * GDXRoot.soundVol);
-//        music.play();
-//        music.setVolume(0.5f * GDXRoot.musicVol);
-//        music.setLooping(true);
 
         try {
             // Let ANY connected controller start the game.
@@ -279,7 +273,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     public void setBaskets() {
         String environment = level.getType();
         int numItems = level.getItems().size();
-//        this.currentLevel = GDXRoot.currentLevel;
         if (GDXRoot.currentLevel == 1) {
             basketTexture = basketEmptyTexture;
         } else if (environment.contains("city")) {
@@ -320,14 +313,54 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     private final boolean active;
 
+    private int keyState = 0;
+
     @Override
     public boolean keyDown(int keycode) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            final LevelTransitionMode transition = this;
+            if (currentSelection == SelectedButton.REPLAY) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
+            }
+            else if (currentSelection == SelectedButton.EXIT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+            }
+            else if (currentSelection == SelectedButton.NEXT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
+            }
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+                || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+            if (keyState < 3)
+                keyState += 1;
+            else
+                keyState = 0;
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
+                || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+            if (keyState > 0)
+                keyState -= 1;
+            else
+                keyState = 3;
+        }
+        keyState %= 4;
+        if (keyState == 0)
+            currentSelection = null;
+        if (keyState == 1)
+            currentSelection = SelectedButton.REPLAY;
+        if (keyState == 2)
+            currentSelection = SelectedButton.EXIT;
+        if (keyState == 3)
+            currentSelection = SelectedButton.NEXT;
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return false;
+        return true;
     }
 
     @Override
@@ -337,7 +370,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
         return false;
     }
 
@@ -514,8 +546,6 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     public void reset() {
         victorySound.play(0.2f * GDXRoot.soundVol);
-//        music.play();
-//        music.setVolume(0.5f * GDXRoot.musicVol);
         Gdx.input.setInputProcessor(stage);
     }
 
