@@ -1008,9 +1008,10 @@ public class GameCanvas {
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 
-    public void drawAnimatedBkg(FilmStrip bkg) {
+    public void drawAnimatedBkg(FilmStrip bkg, Color tint) {
 
         computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
+        spriteBatch.setColor(tint);
         spriteBatch.draw(bkg, getWidth(), getHeight(), local);
 
     }
@@ -1363,9 +1364,10 @@ public class GameCanvas {
         spriteBatch.begin();
     }
 
-    public void drawUIText(String text, int x, int y) {
+    public void drawUIText(String text, int x, int y, float size) {
         spriteBatch.end();
         UIBatch.begin();
+        font.getData().setScale(size);
         font.draw(UIBatch, text, x, y);
         UIBatch.end();
         spriteBatch.begin();
