@@ -280,7 +280,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * List of all unique item textures
      */
-    private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    private final ArrayList<TextureRegion> itemTexture = new ArrayList<>();
     /**
      * List of item objects
      */
