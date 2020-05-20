@@ -72,7 +72,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * The amount of time for a physics engine step.
      */
-    public static final float WORLD_STEP = 1 / 60.0f;
+    public static final float WORLD_STEP = 0.016f;
     /**
      * Number of velocity iterations for the constrain solvers
      */
@@ -158,10 +158,6 @@ public class GameMode extends Mode implements Screen {
     private static final String BASKET_EMPTY = "ui/basket_0.png";
 
     private static final String CUT_INDICATOR_FILE = "entities/scissor.png";
-    private static final String JUMPCHARGE_0_FILE = "entities/jumpcharge_0.png";
-    private static final String JUMPCHARGE_1_FILE = "entities/jumpcharge_1.png";
-    private static final String JUMPCHARGE_2_FILE = "entities/jumpcharge_2.png";
-    private static final String JUMPCHARGE_3_FILE = "entities/jumpcharge_3.png";
     /**
      * The sound effects
      */
@@ -190,13 +186,6 @@ public class GameMode extends Mode implements Screen {
     private static final String UI_GreyYarn = "ui/ui_uncollected_item.png";
     private static final String UI_RedYarn = "ui/ui_collected_item.png";
     /**
-     * Files for jumping charges
-     */
-    private static final String UI_JUMP_FULL = "ui/full_charge.png";
-    private static final String UI_JUMP_EMPTY = "ui/empty_charge.png";
-    private static final String UI_JUMP_ONE = "ui/1charge.png";
-    private static final String UI_JUMP_TWO = "ui/2charge.png";
-    /**
      * File to texture for restarting button
      */
     private static final String RESTART_FILE = "ui/restart.png";
@@ -219,6 +208,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_exit;
     protected FilmStrip door;
     private Stage stage;
+    private float volume = 0.5f * GDXRoot.musicVol;
     /**
      * The font for giving messages to the player
      */
@@ -281,10 +271,6 @@ public class GameMode extends Mode implements Screen {
     private TextureRegion forestMushroom;
 
     private TextureRegion cutIndicatorTexture;
-    private TextureRegion jumpCharge0Texture;
-    private TextureRegion jumpCharge1Texture;
-    private TextureRegion jumpCharge2Texture;
-    private TextureRegion jumpCharge3Texture;
     /**
      * List of all unique NPC textures
      */
@@ -294,7 +280,7 @@ public class GameMode extends Mode implements Screen {
     /**
      * List of all unique item textures
      */
-    private ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    private final ArrayList<TextureRegion> itemTexture = new ArrayList<>();
     /**
      * List of item objects
      */
@@ -424,6 +410,8 @@ public class GameMode extends Mode implements Screen {
     private final String[] LEVEL2_T = new String[]{"billboard/level2-Z.png", "billboard/level2-trampoline.png", "billboard/Level2-extra.png"};
     final String[] LEVEL3_T = new String[]{"billboard/Level3-extra.png"};
     final String[] LEVEL4_T = new String[]{"billboard/Level4-space.png", "billboard/Level4-shift.png", "billboard/Level4-extra.png"};
+
+    private double physicsStepAccumulator = 0.0;
 
     /**
      * Creates a new game world
@@ -575,15 +563,6 @@ public class GameMode extends Mode implements Screen {
         }
         manager.load(CUT_INDICATOR_FILE, Texture.class);
         assets.add(CUT_INDICATOR_FILE);
-        manager.load(JUMPCHARGE_0_FILE, Texture.class);
-        assets.add(JUMPCHARGE_0_FILE);
-        manager.load(JUMPCHARGE_1_FILE, Texture.class);
-        assets.add(JUMPCHARGE_1_FILE);
-        manager.load(JUMPCHARGE_2_FILE, Texture.class);
-        assets.add(JUMPCHARGE_2_FILE);
-        manager.load(JUMPCHARGE_3_FILE, Texture.class);
-        assets.add(JUMPCHARGE_3_FILE);
-
         // Load Player Animations
         manager.load(PLAYER_IDLE_ANIMATION, Texture.class);
         assets.add(PLAYER_IDLE_ANIMATION);
@@ -851,10 +830,6 @@ public class GameMode extends Mode implements Screen {
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
-        jumpCharge0Texture = createTexture(manager, JUMPCHARGE_0_FILE, false);
-        jumpCharge1Texture = createTexture(manager, JUMPCHARGE_1_FILE, false);
-        jumpCharge2Texture = createTexture(manager, JUMPCHARGE_2_FILE, false);
-        jumpCharge3Texture = createTexture(manager, JUMPCHARGE_3_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
@@ -1185,23 +1160,6 @@ public class GameMode extends Mode implements Screen {
     }
 
 
-    float volume = 0.5f * GDXRoot.musicVol;
-
-    public void fadeInMusic() {
-        timeSeconds = 0;
-        volume = 0f;
-        while ((timeSeconds < period) && (music.isLooping() || music.isPlaying())) {
-            timeSeconds += Gdx.graphics.getRawDeltaTime();
-            if (volume < 0.5f * GDXRoot.musicVol)
-                volume += 0.0005 * timeSeconds;
-            else {
-                volume = 0.5f * GDXRoot.musicVol;
-            }
-            music.setVolume(volume);
-        }
-    }
-
-
     /**
      * Returns whether to process the update loop
      * <p>
@@ -1284,8 +1242,6 @@ public class GameMode extends Mode implements Screen {
             }
         }
 
-
-//        System.out.println(isZoomed);
 
         if (!result) {
             return false;
@@ -1506,6 +1462,7 @@ public class GameMode extends Mode implements Screen {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+//        System.out.println(dt);
         // Process actions in object model
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
@@ -1755,13 +1712,6 @@ public class GameMode extends Mode implements Screen {
         SoundController.getInstance().update();
     }
 
-    private Vector2 screenToWorldCoordinates(Vector2 screenCoordinate) {
-        screenCoordinate.scl(this.scale);
-        Vector2 worldCoordinates = canvas.getMouseCoordinates(screenCoordinate.x, screenCoordinate.y);
-        worldCoordinates.scl(1 / scale.x, 1 / scale.y);
-        return worldCoordinates;
-    }
-
     public void drawPaused(float dt) {
         canvas.begin();
         canvas.drawUITextPause("Press Esc to return back to the game", canvas.getWidth() / 2 - 300, canvas.getHeight() / 2 + 100);
@@ -1823,13 +1773,6 @@ public class GameMode extends Mode implements Screen {
             r = c.getR();
             canvas.draw(cutIndicatorTexture, Color.WHITE, (l.getX() + r.getX()) / 2 * scale.x - 5, (r.getY() + l.getY()) / 2 * scale.y - 20, cutIndicatorTexture.getRegionWidth() * 15f / scale.x, cutIndicatorTexture.getRegionHeight() * 15f / scale.y);
         }
-
-        if (player.getCanJumpIndicator()) {
-            int charge = player.getJumpChargeState();
-            TextureRegion t = charge == 0 ? jumpCharge0Texture : charge == 1 ? jumpCharge1Texture : charge == 2 ? jumpCharge2Texture : jumpCharge3Texture;
-            canvas.draw(t, Color.WHITE, (player.getX() + player.getWidth() / 2) * scale.x, (player.getY()) * scale.y, jumpCharge0Texture.getRegionWidth() * 20f / scale.x, jumpCharge0Texture.getRegionHeight() * 20f / scale.y);
-        }
-
 
         canvas.drawUI(UI_restart, canvas.getWidth() - UI_restart.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
@@ -2097,6 +2040,10 @@ public class GameMode extends Mode implements Screen {
         return horiz && vert;
     }
 
+
+    private Vector2 direction = null;
+    private Vector2 targetViewPort = null;
+
     /**
      * Processes physics
      * <p>
@@ -2106,19 +2053,18 @@ public class GameMode extends Mode implements Screen {
      *
      * @param dt Number of seconds since last animation frame
      */
-
-    //  private final int direction = 0;
-    private Vector2 direction = null;
-    private Vector2 targetViewPort = null;
-
     public void postUpdate(float dt) {
         // Add any objects created by actions
         while (!addQueue.isEmpty()) {
             addObject(addQueue.poll());
         }
+        physicsStepAccumulator += dt;
+        while (physicsStepAccumulator > WORLD_STEP) {
+            // Turn the physics engine crank.
+            world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
+            physicsStepAccumulator -= WORLD_STEP;
+        }
 
-        // Turn the physics engine crank.
-        world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
 
         // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.
@@ -2150,7 +2096,7 @@ public class GameMode extends Mode implements Screen {
     }
 
 
-    public void zoomcleanup(float dt) {
+    public void cleanUpZoom(float dt) {
         Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
         while (iterator.hasNext()) {
             PooledList<Obstacle>.Entry entry = iterator.next();
@@ -2206,9 +2152,7 @@ public class GameMode extends Mode implements Screen {
             case ZOOM:
                 updateZoom(delta);
                 draw(delta);
-                zoomcleanup(delta);
-
-
+                cleanUpZoom(delta);
         }
     }
 

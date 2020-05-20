@@ -55,7 +55,7 @@
       "degree": 0
     },
     {
-      "x": 17.0,
+      "x": 16.5,
       "y": 9,
       "isSliding": false,
       "leftPos": {},
@@ -70,28 +70,20 @@
       "isSliding": true,
       "leftPos": {
         "x": 29,
-        "y": 4.5
+        "y": 5
       },
       "rightPos": {
         "x": 33.5,
-        "y": 4.5
+        "y": 5
       },
       "isRotating": false,
       "center": {},
       "degree": 0
     },
     {
-      "x": 35,
+      "x": 34.5,
       "y": 5.0,
       "isSliding": false,
-      "leftPos": {
-        "x": 34,
-        "y": 5
-      },
-      "rightPos": {
-        "x": 37,
-        "y": 5
-      },
       "isRotating": false,
       "center": {},
       "degree": 0

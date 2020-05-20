@@ -234,6 +234,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         NONE, QUIT, START, SETTINGS, OTHER
     }
 
+    private int keyState;
+
     /**
      * Returns the budget for the asset loader.
      * <p>
@@ -312,6 +314,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         // No progress so far.
         progress = 0;
         frameCount = 0;
+        keyState = 0;
         pressState = MouseState.NONE;
         selectState = MouseState.OTHER;
         active = false;
@@ -727,6 +730,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         return true;
     }
 
+
     // UNSUPPORTED METHODS FROM InputProcessor
 
     /**
@@ -736,7 +740,36 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean keyDown(int keycode) {
-        return true;
+        if (settingsButton == null || quitButton == null || startGameButton == null
+                || pressState == MouseState.OTHER) {
+            return true;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            pressState = selectState;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+                || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+            if (keyState < 3)
+                keyState += 1;
+            else
+                keyState = 0;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
+                || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+            if (keyState > 0)
+                keyState -= 1;
+            else
+                keyState = 3;
+        }
+        keyState %= 4;
+        if (keyState == 0)
+            selectState = MouseState.NONE;
+        if (keyState == 1)
+            selectState = MouseState.START;
+        if (keyState == 2)
+            selectState = MouseState.SETTINGS;
+        if (keyState == 3)
+            selectState = MouseState.QUIT;
+        return false;
     }
 
     /**

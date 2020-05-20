@@ -1,6 +1,5 @@
 package entities;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -19,26 +18,11 @@ public class Level implements Json.Serializable {
     private final Vector2 exitPos;
     private final Vector2 playerPos;
     private String type;
-    private TextureRegion tileTexture;
-    private List<TextureRegion> still;
-    private List<TextureRegion> slight;
-    private List<TextureRegion> moving;
 
     private final List<NpcData> npcData;
-    private final List<float[]> couples;
     private final List<TextBox> text;
     private final List<float[]> items;
-    private boolean unlocked;
     private int level;
-
-    public boolean isUnlocked() {
-        return unlocked;
-    }
-
-    public void setUnlocked(boolean unlocked) {
-        this.unlocked = unlocked;
-    }
-
 
     public int getLevel() {
         return level;
@@ -52,7 +36,6 @@ public class Level implements Json.Serializable {
         tiles = new ArrayList<>();
         playerPos = new Vector2();
         exitPos = new Vector2();
-        couples = new ArrayList<>();
         items = new ArrayList<>();
         npcData = new ArrayList<>();
         spikes = new ArrayList<>();
@@ -139,13 +122,6 @@ public class Level implements Json.Serializable {
 
     public Vector2 getExitPos() {
         return exitPos;
-    }
-
-    /**
-     * @return the list of couple coordinates
-     */
-    public List<float[]> getCouples() {
-        return couples;
     }
 
     public List<NpcData> getNpcData() {

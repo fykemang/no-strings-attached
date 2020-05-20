@@ -17,7 +17,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
 import root.GameCanvas;
-import util.FilmStrip;
 
 import java.util.ArrayList;
 
@@ -647,17 +646,6 @@ public class Person extends CapsuleObstacle {
 
     public void setSwingJoint(Joint swingJoint1) {
         this.swingJoint1 = swingJoint1;
-    }
-
-    public int getJumpChargeState() {
-        float vy = Math.abs(getVY());
-        if (vy < 4f)
-            return 3;
-        if (vy < 6f)
-            return 2;
-        if (vy < 9f)
-            return 1;
-        return 0;
     }
 
     public Joint getSwingJoint1() {

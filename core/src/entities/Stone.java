@@ -46,9 +46,9 @@ public class Stone extends PolygonObstacle {
 //        setFriction(10f);
         isSliding = true;
         back = false;
-        leftSlideLim = new Vector2(left[0], left[1]);
-        rightSlideLim = new Vector2(right[0], right[1]);
-        slideDir = new Vector2(left[0] - getX(), left[1] - getY());
+        leftSlideLim = new Vector2(left[0], left[1] - 0.5f);
+        rightSlideLim = new Vector2(right[0], right[1] - 0.5f);
+        slideDir = new Vector2(left[0] - getX(), leftSlideLim.y - getY());
         slideDir.nor();
     }
 
@@ -129,12 +129,13 @@ public class Stone extends PolygonObstacle {
         super.update(dt);
         if (isSliding) {
 
-            if (getPosition().epsilonEquals(leftSlideLim, 0.05f) ||
-                    getPosition().epsilonEquals(rightSlideLim, 0.05f)) {
+            if (getPosition().epsilonEquals(leftSlideLim, 0.1f) ||
+                    getPosition().epsilonEquals(rightSlideLim, 0.1f)) {
 
                 if (!back) {
                     slideDir.set(rightSlideLim.x - leftSlideLim.x, rightSlideLim.y - leftSlideLim.y);
                     slideDir.nor();
+//                    slideDir.scl(1.1f);
                     back = true;
                 } else
                     slideDir.scl(-1f);
@@ -176,8 +177,8 @@ public class Stone extends PolygonObstacle {
                         firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                         width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
             } else if (height <= 2 && width <= 2) {
-                firstx = (getX()-0.3f) * drawScale.x;
-                firsty = (getY()-0.3f) * drawScale.y;
+                firstx = (getX() - 0.3f) * drawScale.x;
+                firsty = (getY() - 0.3f) * drawScale.y;
                 this.x = getX() - 0.3f;
                 this.y = getY() - 0.3f;
                 canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
