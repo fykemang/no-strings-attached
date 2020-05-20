@@ -50,12 +50,11 @@
     },
     {
       "id": 13,
-      "unlocked": true,
-      "path": "levels/dummy_forest.json"
+      "path": "levels/level5.json"
     },
     {
       "id": 14,
-      "path": "levels/dummy_mountain.json"
+      "path": "levels/level6.json"
     },
     {
       "id": 15,
