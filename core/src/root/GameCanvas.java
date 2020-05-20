@@ -1364,9 +1364,10 @@ public class GameCanvas {
         spriteBatch.begin();
     }
 
-    public void drawUIText(String text, int x, int y) {
+    public void drawUIText(String text, int x, int y, float size) {
         spriteBatch.end();
         UIBatch.begin();
+        font.getData().setScale(size);
         font.draw(UIBatch, text, x, y);
         UIBatch.end();
         spriteBatch.begin();
