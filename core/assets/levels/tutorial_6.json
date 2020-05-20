@@ -25,7 +25,7 @@
       "id": 1,
       "isSliding": false,
       "width": 1,
-      "y": 9.5,
+      "y": 8.5,
       "height": 3,
       "x": 9,
       "direction": "left"
@@ -34,7 +34,7 @@
       "type": "spikes",
       "id": 2,
       "isSliding": false,
-      "y": 9.5,
+      "y": 8.5,
       "width": 1,
       "height":  3,
       "x": 10,
@@ -80,14 +80,14 @@
       "degree": 0,
       "id": 0,
       "leftPos": {
-        "x": 8.0,
+        "x": 7.5,
         "y": 7.5
       },
       "rightPos": {
-        "x": 18.3,
+        "x": 17.8,
         "y": 7.5
       },
-      "x": 8.1,
+      "x": 7.6,
       "y": 7.5
     },
     {
@@ -113,7 +113,7 @@
       "id": 1,
       "leftPos": {},
       "rightPos": {},
-      "x": 19,
+      "x": 18.8,
       "y": 12.79
     }
   ],
