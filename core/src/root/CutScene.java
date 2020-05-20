@@ -140,7 +140,9 @@ public class CutScene extends Mode implements Screen {
 
             canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                     canvas.getWidth() / 2, canvas.getHeight() / 2, Color.WHITE);
-
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+            }
             switch (theme){
                 case OPENING:
                     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
