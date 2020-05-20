@@ -365,6 +365,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         statusBar.dispose();
         music.dispose();
+//        clickSound.dispose();
         statusBar = null;
         select = null;
         animatedBkg = null;
@@ -573,7 +574,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public void pause() {
         // TODO Auto-generated method stub
-
     }
 
     /**
@@ -603,7 +603,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
-        music.pause();
+        music.dispose();
         pressState = MouseState.NONE;
     }
 

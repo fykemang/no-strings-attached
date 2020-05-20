@@ -249,7 +249,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void pause() {
-        levelSelectorMusic.pause();
+        levelSelectorMusic.dispose();
     }
 
     @Override
@@ -259,13 +259,25 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-
+        levelSelectorMusic.dispose();
     }
 
     @Override
     public void dispose() {
         if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
+//        hoverSound.dispose();
+//        clickSound.dispose();
+//        buttonPos.clear();
+//        background.dispose();
+//        city.dispose();
+//        suburb.dispose();
+//        forest.dispose();
+//        mountain.dispose();
+//        selector.dispose();
+//        lockedVillage.dispose();
+//        lockedForest.dispose();
+//        lockedMountain.dispose();
     }
 
 
@@ -413,7 +425,6 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
-
         level = -1;
         ready = false;
         levelSelectorMusic.play();

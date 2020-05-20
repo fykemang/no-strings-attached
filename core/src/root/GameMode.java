@@ -2026,12 +2026,14 @@ public class GameMode extends Mode implements Screen {
         world = null;
         canvas = null;
         if (swingSound != null) {
+            snipSound.dispose();
             swingSound.dispose();
             landSound.dispose();
             winSound.dispose();
             loseSound.dispose();
             collectSound.dispose();
             jumpSound.dispose();
+            clickSound.dispose();
             trampolineLandSound.dispose();
             trampolineJumpSound.dispose();
         }
@@ -2198,8 +2200,8 @@ public class GameMode extends Mode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        music.pause();
-        walkingMusic.pause();
+        music.stop();
+        walkingMusic.stop();
     }
 
     /**
