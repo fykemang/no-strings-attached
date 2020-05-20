@@ -129,12 +129,13 @@ public class Stone extends PolygonObstacle {
         super.update(dt);
         if (isSliding) {
 
-            if (getPosition().epsilonEquals(leftSlideLim, 0.05f) ||
-                    getPosition().epsilonEquals(rightSlideLim, 0.05f)) {
+            if (getPosition().epsilonEquals(leftSlideLim, 0.1f) ||
+                    getPosition().epsilonEquals(rightSlideLim, 0.1f)) {
 
                 if (!back) {
                     slideDir.set(rightSlideLim.x - leftSlideLim.x, rightSlideLim.y - leftSlideLim.y);
                     slideDir.nor();
+//                    slideDir.scl(1.1f);
                     back = true;
                 } else
                     slideDir.scl(-1f);
