@@ -162,7 +162,7 @@ public class Person extends CapsuleObstacle {
     private NpcPerson canSwingTo;
     private final Vector2 trampolineDir;
     private final Vector2 trampolineForce;
-    private static final float MAX_TRAMPOLINE = 1.6f;
+    private static final float MAX_TRAMPOLINE = 1.7f;
     private static final float MIN_TRAMPOLINE = 0.15f;
     private final ArrayList<String> inventory;
     private boolean isAttached;
@@ -457,9 +457,10 @@ public class Person extends CapsuleObstacle {
 
     public void calculateTrampolineForce() {
         float magnitude = temp.dot(trampolineDir) / trampolineDir.len();
-        if (magnitude < 3.2f)
+        if (magnitude < 1.2f)
             return;
 
+//        float adjust = Math.abs(trampolineDir.x) < 0.3f ? 1f : 1f + trampolineDir.x * 10f;
         this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
