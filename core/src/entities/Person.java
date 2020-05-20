@@ -522,9 +522,9 @@ public class Person extends CapsuleObstacle {
         } else {
             Vector2 linearVelocity = body.getLinearVelocity();
             if (linearVelocity.x > 0 && horizontalMovement < 0) {
-                body.setLinearVelocity(0.1f, linearVelocity.y);
+                body.setLinearVelocity(0.025f, linearVelocity.y);
             } else if (linearVelocity.x < 0 && horizontalMovement > 0) {
-                body.setLinearVelocity(-0.1f, linearVelocity.y);
+                body.setLinearVelocity(-0.025f, linearVelocity.y);
             }
 
             // Don't want to be moving. Damp out player motion
