@@ -129,8 +129,9 @@ public class CutScene extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isButtonJustPressed(Input.Keys.RIGHT) && currentSlide< textures.size()-1)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && currentSlide< textures.size()-1) {
             currentSlide++;
+        }
     }
 
     private void draw() {
@@ -142,7 +143,7 @@ public class CutScene extends Mode implements Screen {
 
             switch (theme){
                 case OPENING:
-                    if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                         listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
                     }
                     canvas.drawUIText("press -> to go to the next page", canvas.getWidth()*2/3, 60, 0.5f);
