@@ -728,8 +728,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             float s2 = BUTTON_SCALE * scale * newGameGrey.getHeight() / 2.0f;
             if (Math.abs(screenX - buttonSRTX) < s1 && Math.abs(screenY - buttonNVMY) < s2) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
+                cardOpen = false;
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
-
             }
 
 
