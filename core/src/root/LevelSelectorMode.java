@@ -446,9 +446,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     ImageButton last;
 
     public void initUI() {
-        stage.clear();
         container = new Table();
-        ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
         levelView = new ScrollPane(levelTable) {
