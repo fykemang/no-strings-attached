@@ -56,7 +56,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The maximum vertical character speed
      */
-    private static final float PLAYER_MIN_VERTICAL_SPEED = -9f;
+    private static final float PLAYER_MIN_VERTICAL_SPEED = -9.5f;
     /**
      * The impulse for the character jump
      */
