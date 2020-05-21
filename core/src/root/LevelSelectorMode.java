@@ -304,6 +304,35 @@ public class LevelSelectorMode extends Mode implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+         if (curLevel<levelMetadata.getLevelCount()) {
+             curLevel++;
+             levelView.layout();
+             levelView.setScrollX(levelView.getScrollX()+350 );}
+            if (curLevel==11) {
+                next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
+                last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
+                container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
+                isDown = false;
+            }
+        }else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            if (curLevel > 1) {
+                curLevel--;
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() - 350);
+
+        }
+            if (curLevel==9) {
+                next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
+                last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+                container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
+                isDown = true;
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            listener.exitScreen(this, LoadingMode.INTO_STARTSCREEN);
+        }
 
     }
 
