@@ -585,5 +585,10 @@ public class LevelSelectorMode extends Mode implements Screen {
         this.levelMetadata.saveGame();
     }
 
+    public void startNewGame() {
+        this.levelMetadata.resetSave();
+    }
+
+
 }
 

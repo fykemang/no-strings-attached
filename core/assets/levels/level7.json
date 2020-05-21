@@ -1,0 +1,223 @@
+{
+  "text": [],
+  "tutorial": false,
+  "type": "city",
+  "items": [
+    {
+      "id": 0,
+      "x": 31.5,
+      "y": 14
+    },
+    {
+      "id": 1,
+      "x": 14.5,
+      "y": 17
+    },
+    {
+      "id": 2,
+      "x": 16.5,
+      "y": 6
+    }
+  ],
+  "tiles": [
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 0,
+      "isSliding": false,
+      "x": 0,
+      "height": 0.5405405405405403,
+      "y": 8.11,
+      "direction": "up"
+    },
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 1,
+      "isSliding": false,
+      "x": 10.666666666666666,
+      "y": 13.51,
+      "height": 0.5630630630630631,
+      "direction": "up"
+    },
+    {
+      "width": 2.6666666666666665,
+      "type": "spikes",
+      "id": 2,
+      "isSliding": false,
+      "x": 13.333333333333334,
+      "y": 13.51,
+      "height": 0.6756756756756753,
+      "direction": "up"
+    },
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 3,
+      "isSliding": false,
+      "height": 0.563063063063063,
+      "x": 16,
+      "y": 13.51,
+      "direction": "up"
+    },
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 4,
+      "isSliding": false,
+      "height": 0.5630630630630631,
+      "x": 20.266666666666666,
+      "y": 3.15,
+      "direction": "up"
+    },
+    {
+      "type": "normal",
+      "id": 5,
+      "isSliding": true,
+      "width": 2.653333333333332,
+      "height": 0.5153349811149417,
+      "y": 1.35,
+      "x": 15.5,
+      "direction": "up",
+      "leftPos": {
+        "x": 15.5,
+        "y": 1
+      },
+      "rightPos": {
+        "x": 15.5,
+        "y": 8
+      }
+    },
+    {
+      "type": "normal",
+      "id": 6,
+      "isSliding": false,
+      "x": 19.733333333333334,
+      "height": 0.5855855855855854,
+      "width": 14,
+      "y": 7.66,
+      "direction": "up"
+    },
+    {
+      "type": "spikes",
+      "id": 7,
+      "isSliding": false,
+      "height": 6.639999999999995,
+      "width": 1,
+      "x": 28,
+      "y": 10,
+      "direction": "left"
+    },
+    {
+      "type": "spikes",
+      "id": 8,
+      "isSliding": false,
+      "height":6.7200000000000015,
+      "x": 29,
+      "width": 1,
+      "y": 10,
+      "direction": "right"
+    },
+    {
+      "type": "spikes",
+      "id": 8,
+      "isSliding": false,
+      "height":6.7200000000000015,
+      "x": 33,
+      "width": 1,
+      "y": 10,
+      "direction": "left"
+    }
+  ],
+  "npc": [
+    {
+      "isSliding": false,
+      "isRotating": true,
+      "center": {
+        "x": 8.5,
+        "y": 9
+      },
+      "width": 40,
+      "height": 80,
+      "degree": 90,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 9,
+      "x": 4.24
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 8.5,
+      "y": 9.01
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 12.61,
+      "x": 20
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 12.57,
+      "x": 24
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 20.026666666666667,
+      "y": 19
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 24.186666666666667,
+      "y": 19
+    }
+  ],
+  "player": {
+    "x": 0.8,
+    "y": 9.89
+  },
+  "exit": {
+    "x": 21.5,
+    "y": 3.75
+  }
+}
