@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -518,6 +519,13 @@ public class LevelSelectorMode extends Mode implements Screen {
         container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
         levelView.layout();
         levelView.setScrollX(currentScroll);
+        levelView.addListener(new InputListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+               levelView.cancel();
+            }
+        });
+
 
 
         ImageButton BackButton = createButton(backTexture);
