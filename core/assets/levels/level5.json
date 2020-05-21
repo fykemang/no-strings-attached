@@ -1,101 +1,53 @@
 {
   "text": [],
   "tutorial": false,
-  "type": "village",
+  "type": "forest",
   "items": [
     {
       "id": 0,
-      "x": 2.1066666666666665,
-      "y": 16
+      "x": 8,
+      "y": 4
     },
     {
       "id": 1,
-      "x": 15,
-      "y": 11.5
+      "x": 23.5,
+      "y": 6
     },
     {
       "id": 2,
-      "x": 29,
-      "y": 12
+      "x": 15.5,
+      "y": 9.5
     }
   ],
   "tiles": [
     {
+      "width": 2.6666666666666665,
       "type": "normal",
       "id": 0,
       "isSliding": false,
       "height": 1,
-      "x": 0,
-      "y": 17.75,
-      "width": 3.25,
+      "y": 1.35,
+      "x": 14.4,
       "direction": "up"
     },
     {
-      "width": 8,
-      "type": "spikes",
+      "width": 2.6666666666666665,
+      "type": "normal",
       "id": 1,
       "isSliding": false,
-      "height": 0.75,
-      "x": 10,
-      "y": 8.5,
-      "direction": "up"
-    },
-    {
-      "width": 8,
-      "type": "spikes",
-      "id": 1,
-      "isSliding": false,
-      "height": 0.75,
-      "x": 10,
-      "y": 7.75,
-      "direction": "down"
-    },
-    {
-      "type": "normal",
-      "id": 3,
-      "isSliding": true,
-      "width": 2.5,
-      "x": 20.5,
-      "y": 12.5,
       "height": 1,
-      "direction": "up",
-      "leftPos": {
-        "x": 20.5,
-        "y": 11
-      },
-      "rightPos": {
-        "x": 20.5,
-        "y": 16.5
-      }
-    },
-    {
-      "type": "normal",
-      "id": 4,
-      "isSliding": false,
-      "width": 9,
-      "y": 6.7,
-      "height": 1,
-      "x": 25,
-      "direction": "up"
-    },
-    {
-      "width": 2.5,
-      "type": "spikes",
-      "id": 5,
-      "isSliding": false,
-      "height": 0.9684684684684683,
-      "x": 25,
-      "y": 0,
+      "x": 14.4,
+      "y": 8.11,
       "direction": "up"
     },
     {
       "type": "normal",
-      "id": 6,
+      "id": 2,
       "isSliding": false,
-      "x": 27.5,
-      "width": 4,
       "height": 1,
-      "y": 0,
+      "width": 5,
+      "y": 10.36,
+      "x": 23,
       "direction": "up"
     }
   ],
@@ -110,8 +62,8 @@
       "id": 0,
       "leftPos": {},
       "rightPos": {},
-      "x": 4,
-      "y": 17.75
+      "x": 5.36,
+      "y": 4.01
     },
     {
       "isSliding": false,
@@ -123,8 +75,8 @@
       "id": 0,
       "leftPos": {},
       "rightPos": {},
-      "x": 8.5,
-      "y": 17.75
+      "x": 9.626666666666667,
+      "y": 2.07
     },
     {
       "isSliding": false,
@@ -136,8 +88,8 @@
       "id": 1,
       "leftPos": {},
       "rightPos": {},
-      "x": 11,
-      "y": 14
+      "x": 12.746666666666666,
+      "y": 5
     },
     {
       "isSliding": false,
@@ -149,11 +101,10 @@
       "id": 1,
       "leftPos": {},
       "rightPos": {},
-      "x": 15.5,
-      "y": 14
+      "x": 17.44,
+      "y": 5
     },
     {
-      "y": 13,
       "isSliding": false,
       "isRotating": false,
       "center": {},
@@ -163,10 +114,10 @@
       "id": 2,
       "leftPos": {},
       "rightPos": {},
-      "x": 26
+      "x": 20,
+      "y": 2.5
     },
     {
-      "y": 13,
       "isSliding": false,
       "isRotating": false,
       "center": {},
@@ -176,7 +127,8 @@
       "id": 2,
       "leftPos": {},
       "rightPos": {},
-      "x": 30.5
+      "x": 23.5,
+      "y": 4
     },
     {
       "isSliding": false,
@@ -188,8 +140,8 @@
       "id": 3,
       "leftPos": {},
       "rightPos": {},
-      "x": 16.5,
-      "y": 3.5
+      "x": 9,
+      "y": 10.5
     },
     {
       "isSliding": false,
@@ -201,16 +153,42 @@
       "id": 3,
       "leftPos": {},
       "rightPos": {},
-      "x": 21,
-      "y": 3.5
+      "x": 12.64,
+      "y": 9.05
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 4,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 14.3,
+      "y": 13.8
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 4,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 18.5,
+      "y": 13.8
     }
   ],
   "player": {
-    "x": 1,
-    "y": 20
+    "x": 15.2,
+    "y": 3.11
   },
   "exit": {
-    "x": 29.5,
-    "y": 1.1
+    "x": 25.5,
+    "y": 11.5
   }
 }

@@ -52,6 +52,11 @@ public class LevelSelectorMode extends Mode implements Screen {
     private static final String LOCKED_CARD = "ui/locked.png";
     private static final String ENTER_START = "ui/press-space.png";
     private static final String MAP_LOCK = "ui/map-lock.png";
+    private static final String ARROWDOWN = "ui/arrow-down.png";
+    private static final String ARROWRIGHT = "ui/arrow-right.png";
+    private static final String ARROWLEFT = "ui/arrow-left.png";
+    private static final String PRESS_SPACE = "ui/pressSpace.png";
+
     int lastLevel = 0;
     Table container;
     /**
@@ -71,6 +76,10 @@ public class LevelSelectorMode extends Mode implements Screen {
     private Texture lockedMountain;
     private TextureRegion citycard;
     private TextureRegion mountaincard;
+    private TextureRegion arrowDone;
+    private TextureRegion arrowLeft;
+    private TextureRegion arrowRight;
+    private TextureRegion spaceTexture;
     private TextureRegion villagecard;
     private TextureRegion forestcard;
     private TextureRegion backTexture;
@@ -137,6 +146,10 @@ public class LevelSelectorMode extends Mode implements Screen {
         loadAsset(LOCKED_CARD, Texture.class, manager);
         loadAsset(VILLAGE_CARD, Texture.class, manager);
         loadAsset(ENTER_START, Texture.class, manager);
+        loadAsset(ARROWLEFT, Texture.class, manager);
+        loadAsset(ARROWRIGHT, Texture.class, manager);
+        loadAsset(ARROWDOWN, Texture.class, manager);
+        loadAsset(PRESS_SPACE, Texture.class, manager);
     }
 
     @Override
@@ -170,6 +183,9 @@ public class LevelSelectorMode extends Mode implements Screen {
         lockedcard = createTexture(manager, LOCKED_CARD, false);
         MapLockTexture = createTexture(manager, MAP_LOCK, false);
         enterTexture = createTexture(manager, BACK_FILE, false);
+        arrowDone = createTexture(manager, ARROWDOWN, false);
+        arrowRight = createTexture(manager, ARROWRIGHT, false);
+        arrowLeft = createTexture(manager, ARROWLEFT, false);
 
     }
 
@@ -335,7 +351,9 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
 
         }
-
+        if (isDown) {
+            canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 - 80, 1f);
+        }
         if (!themeUnlocked[VILLAGE]) {
             canvas.draw(MapLockTexture,
                     868 - MapLockTexture.getRegionWidth() / 2, 669 - MapLockTexture.getRegionHeight() / 2);
@@ -434,6 +452,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     private boolean isDown = true;
+    ImageButton next;
 
     public void initUI() {
         stage.clear();
@@ -441,9 +460,10 @@ public class LevelSelectorMode extends Mode implements Screen {
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
-        levelView = new ScrollPane(levelTable);
+        levelView = new ScrollPane(levelTable) {
+        };
         final LevelSelectorMode select = this;
-        levelTable.pad(600 - 165);
+        levelTable.pad(600 - 175);
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {
             ImageTextButton Button = null;
             Level l = levelMetadata.getLevel(i + 1);
@@ -501,8 +521,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             });
             levelTable.add(Button).pad(10);
         }
-        levelView.setFlickScroll(true);
-        stage.setScrollFocus(levelView);
+
         levelView.setScrollingDisabled(false, true);
         levelView.setOverscroll(true, true);
         container.add(levelView).width(canvas.getWidth()).height(300);
@@ -522,8 +541,22 @@ public class LevelSelectorMode extends Mode implements Screen {
         });
         stage.addActor(BackButton);
         stage.addActor(container);
-        Gdx.input.setInputProcessor(stage);
 
+
+        next = createButton(arrowRight);
+        next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
+        next.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() + 350);
+            }
+
+        });
+        stage.addActor(next);
+
+
+        Gdx.input.setInputProcessor(stage);
     }
 
 
@@ -553,3 +586,4 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
 }
+

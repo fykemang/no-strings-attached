@@ -128,16 +128,28 @@ public class CutScene extends Mode implements Screen {
     }
 
     private void update(float dt) {
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && currentSlide < textures.size() - 1) {
+            currentSlide++;
+        }
     }
 
     private void draw() {
         canvas.begin();
         if (slideMode) {
+
             canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                     canvas.getWidth() / 2, canvas.getHeight() / 2, Color.WHITE);
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+            }
+            switch (theme) {
+                case OPENING:
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                        listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+                    }
+                    canvas.drawUIText("press -> to go to the next page", canvas.getWidth() * 2 / 3, 60, 0.5f);
+
+
             }
             if (currentSlide < textures.size() - 1) {
                 canvas.drawUI(skiptexture, canvas.getWidth() * 0.9f - skiptexture.getRegionWidth() / 2, canvas.getHeight() * 0.9f, 1f);
@@ -207,25 +219,25 @@ public class CutScene extends Mode implements Screen {
         music.setVolume(0.25f * GDXRoot.musicVol);
         music.setLooping(true);
         if (slideMode) {
-            nextButtom = createButton(nextTexture);
-            nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
-                    canvas.getHeight() * 0.5f);
-            nextButtom.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (currentSlide < textures.size() - 2)
-                        currentSlide++;
-                    else if (currentSlide == textures.size() - 2) {
-                        currentSlide++;
-                        stage.clear();
-                        addStart();
-                    }
-                }
-
-            });
-            if (textures.size() > 1) {
-                stage.addActor(nextButtom);
-            } else addStart();
+//            nextButtom = createButton(nextTexture);
+//            nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
+//                    canvas.getHeight() * 0.5f);
+//            nextButtom.addListener(new ClickListener() {
+//                @Override
+//                public void clicked(InputEvent event, float x, float y) {
+//                    if (currentSlide < textures.size() - 2)
+//                        currentSlide++;
+//                    else if (currentSlide == textures.size() - 2) {
+//                        currentSlide++;
+//                        stage.clear();
+//                        addStart();
+//                    }
+//                }
+//
+//            });
+//            if (textures.size() > 1) {
+//                stage.addActor(nextButtom);
+//            } else addStart();
 
 
             Gdx.input.setInputProcessor(stage);

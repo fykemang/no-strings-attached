@@ -56,11 +56,16 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String SETTINGS_FILE = "ui/settings.png";
     private static final String LOGO_FILE = "ui/game-logo.png";
     private static final String QUIT_FILE = "ui/quit.png";
-    private static final String START_FILE = "ui/start.png";
+    private static final String START_FILE = "ui/new-game-normal.png";
     private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String LOADING_FILE = "ui/loading.png";
+    private static final String LOAD_GAME = "ui/load-game.png";
+    private static final String NEVER_MIND = "ui/nevermind-text-deselected.png";
+    private static final String CARD = "ui/new-game-warning-text.png";
+    private static final String NEW_GAME_GREY = "ui/new-game-grey.png";
 
     private TextureRegion loadingTexture;
     private FilmStrip loadingStrip;
@@ -73,6 +78,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     private final Music music;
     private final Sound clickSound;
+    private final Sound hoverSound;
 
     /**
      * Play button to display when done
@@ -80,6 +86,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private Texture startGameButton;
     private Texture settingsButton;
     private Texture quitButton;
+    private Texture loadGameButton;
     private Texture select;
 
     private int frameCount;
@@ -87,6 +94,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Texture atlas to support a progress bar
      */
     private Texture statusBar;
+
+    private Texture cardTexcture;
+
+    private Texture nvmTexcture;
+
+    private Texture newGameGrey;
 
     // statusBar is a "texture atlas." Break it up into parts.
     /**
@@ -179,9 +192,14 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private float buttonX1;
     private float buttonX2;
     private float buttonX3;
+    private float buttonX4;
     private float buttonY1;
     private float buttonY2;
     private float buttonY3;
+    private float buttonY4;
+    private float buttonNVMX;
+    private float buttonNVMY;
+    private float buttonSRTX;
     private float logoX;
     private float logoY;
 
@@ -211,6 +229,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * Current progress (0 to 1) of the asset manager
      */
     private float progress;
+
+    private boolean cardOpen = false;
     /**
      * The current state of the play button
      */
@@ -231,7 +251,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private boolean active;
 
     private enum MouseState {
-        NONE, QUIT, START, SETTINGS, OTHER
+        NONE, QUIT, START, SETTINGS, OTHER, LOAD_GAME
     }
 
     private int keyState;
@@ -311,10 +331,16 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         select = new Texture(SELECT_FILE);
         statusBar = new Texture(PROGRESS_FILE);
         logo = new Texture(LOGO_FILE);
+        nvmTexcture = new Texture(NEVER_MIND);
+        newGameGrey = new Texture(NEW_GAME_GREY);
+        cardTexcture = new Texture(CARD);
         // No progress so far.
         progress = 0;
         frameCount = 0;
         keyState = 0;
+        buttonNVMX = canvas.getWidth() / 2 - 190;
+        buttonNVMY = canvas.getHeight() / 2 - 120;
+        buttonSRTX = canvas.getWidth() / 2 + 190;
         pressState = MouseState.NONE;
         selectState = MouseState.OTHER;
         active = false;
@@ -347,6 +373,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
+        hoverSound = Gdx.audio.newSound(Gdx.files.internal(HOVER_FILE));
         active = true;
     }
 
@@ -365,7 +392,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         statusBar.dispose();
         music.dispose();
-//        clickSound.dispose();
+        clickSound.dispose();
+        hoverSound.dispose();
         statusBar = null;
         select = null;
         animatedBkg = null;
@@ -394,6 +422,25 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @param delta Number of seconds since last animation frame
      */
     private void update(float delta) {
+
+        if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            cardOpen = false;
+            listener.exitScreen(this, CutScene.INTO_CUTSCENE);
+        }
+
+
+        if (loadGameButton == null) {
+            manager.update(budget);
+            this.progress = manager.getProgress();
+            if (progress >= 1.0f) {
+                this.progress = 1.0f;
+                loadGameButton = new Texture(LOAD_GAME);
+                loadGameButton.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+                buttonX4 = buttonX + loadGameButton.getWidth() / 2 * scale * BUTTON_SCALE - 80f;
+            }
+        }
+
+
         if (startGameButton == null) {
             manager.update(budget);
             this.progress = manager.getProgress();
@@ -430,6 +477,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         if (animatedBkg == null) {
             animatedBkg = createFilmStrip(manager, CHAR_ANIMATION_FILE, 1, 4, 4);
         }
+
+
     }
 
     /**
@@ -449,7 +498,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 animatedBkg.setNextFrame();
                 frameCount = 0;
             }
-            canvas.drawAnimatedBkg(animatedBkg);
+            Color tint = cardOpen ? Color.GRAY : Color.WHITE;
+            canvas.drawAnimatedBkg(animatedBkg, tint);
         }
         if (startGameButton == null) {
 //            canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
@@ -457,6 +507,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 //        ((FilmStrip) exclamationTexture).setNextFrame();
 //            canvas.drawUI();
             canvas.drawItemCount("LOADING..." + ((int) (progress * 100)) + "%", canvas.getWidth() * 3 / 5 - 30, (int) buttonY2 + 80);
+        }
+
+        if (loadGameButton != null) {
+            Color tint = (pressState == MouseState.START ? Color.GRAY : Color.WHITE);
+            canvas.draw(loadGameButton, tint, startGameButton.getWidth() / 2, startGameButton.getHeight() / 2,
+                    buttonX4, buttonY4, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
 
         if (startGameButton != null) {
@@ -476,13 +532,32 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         }
         if (selectState != MouseState.NONE && selectState != MouseState.OTHER) {
             float y = selectState == MouseState.START ? buttonY1 : selectState == MouseState.SETTINGS ? buttonY2 : buttonY3;
+            if (selectState == MouseState.LOAD_GAME) {
+                y = buttonY4;
+            }
             Color tint = Color.WHITE;
             canvas.draw(select, tint, select.getWidth() / 2, select.getHeight() / 2,
                     buttonX, y, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
         }
 
+
         canvas.draw(logo, Color.WHITE, logo.getWidth() / 2, logo.getHeight() / 2,
                 logoX, logoY, 0, 0.85f * scale, 0.85f * scale);
+
+
+        if (cardOpen) {
+            canvas.draw(cardTexcture, Color.WHITE, cardTexcture.getWidth() / 2, cardTexcture.getHeight() / 2,
+                    canvas.getWidth() / 2, canvas.getHeight() / 2, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+
+            canvas.draw(nvmTexcture, Color.WHITE, nvmTexcture.getWidth() / 2, nvmTexcture.getHeight() / 2,
+                    buttonNVMX, buttonNVMY, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+
+            canvas.draw(newGameGrey, Color.WHITE, nvmTexcture.getWidth() / 2, nvmTexcture.getHeight() / 2,
+                    buttonSRTX, buttonNVMY, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
+
+
+        }
+
 
         canvas.end();
     }
@@ -530,10 +605,19 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             if (listener != null && pressState == MouseState.QUIT) {
                 System.exit(0);
             } else if (listener != null && pressState == MouseState.START) {
-                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
+                pressState = MouseState.OTHER;
+                cardOpen = true;
+//                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             } else if (listener != null && pressState == MouseState.SETTINGS) {
                 pressState = MouseState.NONE;
                 listener.exitScreen(this, SettingMode.INTO_SETTING);
+            } else if (listener != null && pressState == MouseState.LOAD_GAME) {
+                /**
+                 * TODO: handle the LOAD GAME here,
+                 *
+                 * you might need to set up a case in GDXRoot for that hehe
+                 * use listener.exitscreen(this, target) to go to gameMOde?
+                 */
             }
         }
     }
@@ -561,7 +645,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         logoY = 2 * height / 3;
         heightY = height;
         buttonX = (3 * width) / 4;
-        buttonY1 = 4 * height / 10;
+        buttonY4 = 4.5f * height / 10f;
+        buttonY1 = buttonY4 - height / 9;
         buttonY2 = buttonY1 - height / 9;
         buttonY3 = buttonY2 - height / 9;
     }
@@ -640,9 +725,29 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 || pressState == MouseState.OTHER) {
             return true;
         }
+        screenY = heightY - screenY;
+        if (cardOpen) {
+            float b1 = BUTTON_SCALE * scale * nvmTexcture.getWidth() / 2.0f;
+            float b2 = BUTTON_SCALE * scale * nvmTexcture.getHeight() / 2.0f;
+            if (Math.abs(screenX - buttonNVMX) < b1 && Math.abs(screenY - buttonNVMY) < b2) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                cardOpen = false;
+            }
+
+            float s1 = BUTTON_SCALE * scale * newGameGrey.getWidth() / 2.0f;
+            float s2 = BUTTON_SCALE * scale * newGameGrey.getHeight() / 2.0f;
+            if (Math.abs(screenX - buttonSRTX) < s1 && Math.abs(screenY - buttonNVMY) < s2) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                cardOpen = false;
+                listener.exitScreen(this, CutScene.INTO_CUTSCENE);
+            }
+
+
+            return false;
+        }
 
         // Flip to match graphics coordinates
-        screenY = heightY - screenY;
+
 
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
@@ -681,6 +786,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+//        if (cardOpen) return false;
         if (pressState == MouseState.START) {
             pressState = MouseState.OTHER;
             return false;
@@ -747,28 +853,33 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             pressState = selectState;
+            clickSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
                 || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-            if (keyState < 3)
+            if (keyState < 4)
                 keyState += 1;
             else
                 keyState = 0;
+            hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
                 || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (keyState > 0)
                 keyState -= 1;
             else
-                keyState = 3;
+                keyState = 4;
+            hoverSound.play(GDXRoot.soundVol);
         }
-        keyState %= 4;
+        keyState %= 5;
         if (keyState == 0)
             selectState = MouseState.NONE;
-        if (keyState == 1)
-            selectState = MouseState.START;
         if (keyState == 2)
-            selectState = MouseState.SETTINGS;
+            selectState = MouseState.START;
         if (keyState == 3)
+            selectState = MouseState.SETTINGS;
+        if (keyState == 4)
             selectState = MouseState.QUIT;
+        if (keyState == 1)
+            selectState = MouseState.LOAD_GAME;
         return false;
     }
 
@@ -810,13 +921,25 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
                 || pressState == MouseState.OTHER) {
             return true;
         }
+        if (cardOpen) {
 
+
+            return false;
+        }
         screenY = heightY - screenY;
 
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX1) < w1 && Math.abs(screenY - buttonY1) < h1) {
             selectState = MouseState.START;
+
+            return false;
+        }
+
+        float w4 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
+        float h4 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
+        if (Math.abs(screenX - buttonX4) < w4 && Math.abs(screenY - buttonY4) < h4) {
+            selectState = MouseState.LOAD_GAME;
 
             return false;
         }
