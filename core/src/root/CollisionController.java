@@ -90,12 +90,12 @@ public class CollisionController implements ContactListener {
                 player.addItem(bd2.getName());
                 ((Item) bd2).setState(true);
                 bd2.markRemoved(true);
-                player.setDidCollect(true);
+                player.setDidCollect(bd2.getName());
             } else if (bd2 == player && ("item_sensor").equals(fd1) && !((Item) bd1).getState()) {
                 player.addItem(bd1.getName());
                 ((Item) bd1).setState(true);
                 bd1.markRemoved(true);
-                player.setDidCollect(true);
+                player.setDidCollect(bd1.getName());
             }
 
             if ((bd1 == player && ("spike").equals(fd2)) || (bd2 == player && ("spike").equals(fd1))) {

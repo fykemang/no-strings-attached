@@ -21,14 +21,14 @@ public class Item extends CapsuleObstacle {
 
     private Item.ItemState state;
 
-    public Item(float x, float y, float width, float height, int id) {
+    public Item(float x, float y, float width, float height, int id, String name) {
         super(x, y, width * ITEM_HSHRINK, height * ITEM_VSHRINK);
         this.setBodyType(BodyDef.BodyType.StaticBody);
         this.setPosition(x + this.getWidth() / 2 + 0.15f, y + this.getHeight() / 2);
         this.sensorName = "item_sensor";
         this.id = id;
         this.state = ItemState.NOT_COLLECTED;
-        setName("item" + id);
+        setName(name);
     }
 
     public void setState(boolean isCollected) {

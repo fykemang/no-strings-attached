@@ -194,7 +194,7 @@ public class Person extends CapsuleObstacle {
     private boolean onString = false;
     private boolean turned = false;
 
-    private boolean didCollect = false;
+    private String didCollect = null;
 
     private boolean onTrampoline = false;
 
@@ -210,11 +210,11 @@ public class Person extends CapsuleObstacle {
         this.onTrampoline = onTrampoline;
     }
 
-    public boolean isDidCollect() {
+    public String isDidCollect() {
         return this.didCollect;
     }
 
-    public void setDidCollect(boolean didCollect) {
+    public void setDidCollect(String didCollect) {
         this.didCollect = didCollect;
     }
 
