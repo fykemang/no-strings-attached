@@ -24,7 +24,7 @@ public class LevelMetadata implements Json.Serializable {
 
     @Override
     public void read(Json json, JsonValue jsonData) {
-        boolean saveExists = levelState.getBoolean("saveExists");
+        boolean saveExists = levelState.getBoolean("saveExists", false);
 
         JsonValue.JsonIterator levels = jsonData.get("levels").iterator();
         for (JsonValue jsonLevel : levels) {
