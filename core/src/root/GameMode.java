@@ -1156,7 +1156,7 @@ public class GameMode extends Mode implements Screen {
         if (next.isSliding()) {
             rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight());
         } else if (next.isRotating()) {
-            rightTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, next.getRotatingCenter(), next.getRotatingDegree());
+            rightTile = createRotatingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, next.getRotatingCenter(), next.getRotatingDegree());
         } else {
             rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
         }
