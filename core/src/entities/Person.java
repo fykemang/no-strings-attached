@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import obstacle.CapsuleObstacle;
 import obstacle.Obstacle;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import root.GameCanvas;
 
 import java.util.ArrayList;
