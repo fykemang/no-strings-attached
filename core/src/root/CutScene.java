@@ -50,6 +50,8 @@ public class CutScene extends Mode implements Screen {
     //    private static final String[] city = {};
     private boolean slideMode;
     private int currentSlide = 0;
+    private Color tint = new Color(Color.WHITE);
+    private Color lastTint = new Color(Color.WHITE);
 
     private final AssetManager manager;
     private GameCanvas canvas;
@@ -126,19 +128,32 @@ public class CutScene extends Mode implements Screen {
     public void startMusic() {
 
     }
+    private boolean isFading() {
+        return lastTint.a > 0.15f;
+    }
 
     private void update(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && currentSlide < textures.size() - 1) {
             currentSlide++;
+            tint.set(1,1,1,0);
+            lastTint.set(1,1,1,1);
         }
     }
 
     private void draw() {
         canvas.begin();
         if (slideMode) {
-
+            if (isFading() && currentSlide > 0){
+                canvas.drawBackground(textures.get(currentSlide - 1).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
+                        canvas.getWidth() / 2, canvas.getHeight() / 2, lastTint);
+                lastTint.set(1,1,1,lastTint.a * 0.965f);
+                tint.set(1,1,1,1 - lastTint.a);
+            }else{
+                tint.set(1,1,1,1);
+                lastTint.set(1,1,1,0);
+            }
             canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
-                    canvas.getWidth() / 2, canvas.getHeight() / 2, Color.WHITE);
+                    canvas.getWidth() / 2, canvas.getHeight() / 2, tint);
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }

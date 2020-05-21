@@ -52,6 +52,11 @@ public class Person extends CapsuleObstacle {
      * The maximum vertical character speed
      */
     private static final float PLAYER_MAX_VERTICAL_SPEED = 13f;
+
+    /**
+     * The maximum vertical character speed
+     */
+    private static final float PLAYER_MIN_VERTICAL_SPEED = -9.5f;
     /**
      * The impulse for the character jump
      */
@@ -371,6 +376,10 @@ public class Person extends CapsuleObstacle {
         return PLAYER_MAX_VERTICAL_SPEED;
     }
 
+    public float getMinVerticalSpeed() {
+        return PLAYER_MIN_VERTICAL_SPEED;
+    }
+
     public void setOnString(boolean onString) {
         this.onString = onString;
     }
@@ -544,6 +553,10 @@ public class Person extends CapsuleObstacle {
                 setVY(Math.signum(getVY()) * getMaxVerticalSpeed());
             }
 
+            if (Math.abs(getVY()) <= getMinVerticalSpeed()) {
+                setVY(Math.signum(getVY()) * getMinVerticalSpeed());
+            }
+
             if (isTrampolining) {
                 calculateTrampolineForce();
                 forceCache.set(trampolineForce.x, trampolineForce.y);
@@ -552,7 +565,7 @@ public class Person extends CapsuleObstacle {
             }
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 7f;
+                horizontalMovement = horizontalMovement * 6.7f;
             } else if (released) {
                 horizontalMovement = getVX() * 10f + getHorizontalMovement();
             }

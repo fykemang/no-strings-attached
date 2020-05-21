@@ -15,8 +15,8 @@
     },
     {
       "id": 2,
-      "x": 3,
-      "y": 7
+      "x": 4,
+      "y": 6
     }
   ],
   "tiles": [
@@ -24,40 +24,14 @@
       "type": "normal",
       "id": 1,
       "isSliding": false,
-      "x": 30,
-      "height": 0.5,
-      "width": 3,
-      "y": 7.5,
+      "x": 28,
+      "height": 1,
+      "width": 4,
+      "y": 6.5,
       "direction": "up"
     }
   ],
   "npc": [
-    {
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 0,
-      "leftPos": {},
-      "rightPos": {},
-      "x": 2,
-      "y": 13
-    },
-    {
-      "isSliding": false,
-      "isRotating": false,
-      "center": {},
-      "width": 40,
-      "height": 80,
-      "degree": 0,
-      "id": 0,
-      "leftPos": {},
-      "rightPos": {},
-      "y": 13,
-      "x": 6.5
-    },
     {
       "isSliding": false,
       "isRotating": false,
@@ -146,7 +120,7 @@
       "id": 4,
       "leftPos": {},
       "rightPos": {},
-      "x": 1,
+      "x": 2.5,
       "y": 2
     },
     {
@@ -159,7 +133,7 @@
       "id": 4,
       "leftPos": {},
       "rightPos": {},
-      "x": 5.5,
+      "x": 7,
       "y": 2
     },
     {
@@ -191,10 +165,10 @@
   ],
   "player": {
     "x": 4,
-    "y": 10.5
+    "y": 3
   },
   "exit": {
-    "x": 31.5,
-    "y": 8
+    "x": 30,
+    "y": 7.5
   }
 }
