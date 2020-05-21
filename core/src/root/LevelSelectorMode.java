@@ -114,7 +114,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private LevelMetadata levelMetadata;
 
     private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
-    private final boolean[] themeUnlocked = new boolean[5];
+    public static boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
     private ScrollPane levelView;
@@ -655,6 +655,12 @@ public class LevelSelectorMode extends Mode implements Screen {
     public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
+
+    public static void lock() {
+        Arrays.fill(themeUnlocked, false);
+        themeUnlocked[0] =true;
+    }
+
 
     public void saveGame() {
         this.levelMetadata.saveGame();

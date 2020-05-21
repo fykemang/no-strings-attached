@@ -417,6 +417,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             cardOpen = false;
+            GDXRoot.isVillagePlayed = false;
+            GDXRoot.isForestPlayed = false;
+            GDXRoot.isCityPlayed = false;
+            GDXRoot.isVillagePlayed = false;
+            LevelSelectorMode.curLevel = 1;
+            LevelSelectorMode.lock();
             listener.exitScreen(this, CutScene.INTO_CUTSCENE);
         }
 
@@ -747,6 +753,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             if (Math.abs(screenX - buttonSRTX) < s1 && Math.abs(screenY - buttonNVMY) < s2) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
                 cardOpen = false;
+                GDXRoot.isVillagePlayed = false;
+                GDXRoot.isForestPlayed = false;
+                GDXRoot.isCityPlayed = false;
+                GDXRoot.isVillagePlayed = false;
+                LevelSelectorMode.curLevel = 1;
+                LevelSelectorMode.lock();
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             }
             return false;
