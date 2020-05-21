@@ -729,6 +729,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (settingsButton == null || quitButton == null || startGameButton == null
+                || (loadGameButtonEnabled == null && loadGameButtonDisabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }
@@ -858,6 +859,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean keyDown(int keycode) {
         if (settingsButton == null || quitButton == null || startGameButton == null
+                || (loadGameButtonEnabled == null && loadGameButtonDisabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }
@@ -928,7 +930,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean mouseMoved(int screenX, int screenY) {
-        if (settingsButton == null || quitButton == null || startGameButton == null
+        if (settingsButton == null || quitButton == null || startGameButton == null ||
+                (loadGameButtonDisabled == null && loadGameButtonEnabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }
