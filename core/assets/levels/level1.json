@@ -32,15 +32,6 @@
       "type": "normal",
       "direction": "up",
       "isSliding": false
-    },
-    {
-      "x": 10,
-      "y": 4,
-      "width": 9,
-      "height": 0.7,
-      "type": "spikes",
-      "direction": "up",
-      "isSliding": false
     }
   ],
   "npc": [
