@@ -442,6 +442,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     private boolean isDown = true;
     ImageButton next;
+    ImageButton last;
 
     public void initUI() {
         stage.clear();
@@ -539,6 +540,19 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
+            }
+
+        });
+        stage.addActor(next);
+
+
+        last = createButton(arrowLeft);
+        next.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+        next.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() - 350);
             }
 
         });
