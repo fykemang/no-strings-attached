@@ -565,7 +565,7 @@ public class Person extends CapsuleObstacle {
             }
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 7f;
+                horizontalMovement = horizontalMovement * 6.7f;
             } else if (released) {
                 horizontalMovement = getVX() * 10f + getHorizontalMovement();
             }
