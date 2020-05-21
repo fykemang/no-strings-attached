@@ -1,7 +1,7 @@
 {
   "text": [],
   "tutorial": false,
-  "type": "city",
+  "type": "mountain",
   "items": [
     {
       "id": 0,
@@ -21,12 +21,12 @@
   ],
   "tiles": [
     {
-      "width": 2.6666666666666665,
+      "width": 3.2,
       "type": "normal",
       "id": 0,
       "isSliding": false,
       "x": 0,
-      "height": 0.5405405405405403,
+      "height": 1,
       "y": 8.11,
       "direction": "up"
     },
@@ -93,9 +93,9 @@
       "id": 6,
       "isSliding": false,
       "x": 19.733333333333334,
-      "height": 0.5855855855855854,
+      "height": 1,
       "width": 14,
-      "y": 7.66,
+      "y": 7.5,
       "direction": "up"
     },
     {
@@ -134,17 +134,17 @@
       "isSliding": false,
       "isRotating": true,
       "center": {
-        "x": 8.5,
-        "y": 9
+        "x": 9.5,
+        "y": 9.5
       },
       "width": 40,
       "height": 80,
-      "degree": 90,
+      "degree": 60,
       "id": 0,
       "leftPos": {},
       "rightPos": {},
-      "y": 9,
-      "x": 4.24
+      "y": 9.5,
+      "x": 5.5
     },
     {
       "isSliding": false,
@@ -156,8 +156,8 @@
       "id": 0,
       "leftPos": {},
       "rightPos": {},
-      "x": 8.5,
-      "y": 9.01
+      "x": 9,
+      "y": 8.5
     },
     {
       "isSliding": false,

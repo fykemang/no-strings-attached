@@ -210,6 +210,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     settings.initUI();
                     setScreen(settings);
                     loadingMode.hide();
+                    break;
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.loadContent(manager);
                     levelSelector.setScreenListener(this);
@@ -217,7 +218,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     levelSelector.reset();
                     levelSelector.initUI();
                     setScreen(levelSelector);
-
+                    break;
             }
 
         } else if (screen == settings) {
