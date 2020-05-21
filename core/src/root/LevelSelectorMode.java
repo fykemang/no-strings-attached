@@ -267,7 +267,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void pause() {
-        levelSelectorMusic.pause();
+        levelSelectorMusic.dispose();
     }
 
     @Override
@@ -277,13 +277,25 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-
+        levelSelectorMusic.dispose();
     }
 
     @Override
     public void dispose() {
         if (levelSelectorMusic != null)
             levelSelectorMusic.dispose();
+//        hoverSound.dispose();
+//        clickSound.dispose();
+//        buttonPos.clear();
+//        background.dispose();
+//        city.dispose();
+//        suburb.dispose();
+//        forest.dispose();
+//        mountain.dispose();
+//        selector.dispose();
+//        lockedVillage.dispose();
+//        lockedForest.dispose();
+//        lockedMountain.dispose();
     }
 
 
@@ -301,28 +313,29 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
-         if (curLevel<levelMetadata.getLevelCount()) {
-             curLevel++;
-             levelView.layout();
-             levelView.setScrollX(levelView.getScrollX()+350 );}
-            if (curLevel==11) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            if (curLevel < levelMetadata.getLevelCount()) {
+                curLevel++;
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() + 350);
+            }
+            if (curLevel == 11) {
                 next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
                 last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
                 isDown = false;
             }
-        }else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (curLevel > 1) {
                 curLevel--;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
 
-        }
-            if (curLevel==9) {
+            }
+            if (curLevel == 9) {
                 next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
                 last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
@@ -330,7 +343,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             listener.exitScreen(this, LoadingMode.INTO_STARTSCREEN);
         }
 
@@ -376,7 +389,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         }
         if (isDown) {
             canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 - 80, 1f);
-        }else {
+        } else {
             canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 + 140, -1f);
         }
         if (!themeUnlocked[VILLAGE]) {
@@ -439,7 +452,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
-        canvas.drawUI(enterTexture, canvas.getWidth()/2, canvas.getHeight()*0.05f, 0.7f);
+        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.05f, 0.7f);
         canvas.actStage(stage);
         canvas.end();
     }
@@ -467,7 +480,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public void reset() {
         levelView.layout();
-        levelView.setScrollX((curLevel-1)*350f);
+        levelView.setScrollX((curLevel - 1) * 350f);
         level = -1;
         ready = false;
         levelSelectorMusic.play();
@@ -540,13 +553,12 @@ public class LevelSelectorMode extends Mode implements Screen {
         container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
         levelView.layout();
         levelView.setScrollX(currentScroll);
-        levelView.addListener(new InputListener(){
+        levelView.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-               levelView.cancel();
+                levelView.cancel();
             }
         });
-
 
 
         ImageButton BackButton = createButton(backTexture);
@@ -569,8 +581,8 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                curLevel ++;
-                if (curLevel > 10){
+                curLevel++;
+                if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
                     last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
@@ -587,7 +599,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
                 curLevel--;
-                if (curLevel < 10){
+                if (curLevel < 10) {
                     isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
                     last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
