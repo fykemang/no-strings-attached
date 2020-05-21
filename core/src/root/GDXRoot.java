@@ -81,7 +81,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private Screen LastScreen;
 
-    private boolean isOpenningPlayed = false;
+    private boolean isOpeningPlayed = false;
     private boolean isCityPlayed = false;
     private boolean isVillagePlayed = false;
     private boolean isForestPlayed = false;
@@ -192,14 +192,15 @@ public class GDXRoot extends Game implements ScreenListener {
             Gdx.input.setInputProcessor(null);
             switch (exitCode) {
                 case CutScene.INTO_CUTSCENE:
-                    if (!isOpenningPlayed) {
+                    if (!isOpeningPlayed) {
                         cutScene.setTheme(CutScene.THEME.OPENING);
                         cutScene.loadContent(manager);
                         cutScene.setScreenListener(this);
                         setScreen(cutScene);
                         loadingMode.hide();
-                        isOpenningPlayed = true;
+                        isOpeningPlayed = true;
                     } else {
+                        levelSelector.startNewGame();
                         levelSelector.loadContent(manager);
                         levelSelector.setScreenListener(this);
                         levelSelector.setCanvas(UIcanvas);
@@ -214,6 +215,15 @@ public class GDXRoot extends Game implements ScreenListener {
                     settings.initUI();
                     setScreen(settings);
                     loadingMode.hide();
+                    break;
+                case LevelSelectorMode.INTO_SELECTOR:
+                    levelSelector.loadContent(manager);
+                    levelSelector.setScreenListener(this);
+                    levelSelector.setCanvas(UIcanvas);
+                    levelSelector.initUI();
+                    levelSelector.reset();
+                    setScreen(levelSelector);
+                    break;
             }
 
         } else if (screen == settings) {

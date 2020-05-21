@@ -135,7 +135,7 @@ public class Stone extends PolygonObstacle {
                 if (!back) {
                     slideDir.set(rightSlideLim.x - leftSlideLim.x, rightSlideLim.y - leftSlideLim.y);
                     slideDir.nor();
-//                    slideDir.scl(1.1f);
+                    slideDir.scl(1.1f);
                     back = true;
                 } else
                     slideDir.scl(-1f);

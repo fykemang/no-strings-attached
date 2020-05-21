@@ -236,7 +236,6 @@ public class LevelSelectorMode extends Mode implements Screen {
         buttonPos.add(new Vector2(740, 200));
         buttonPos.add(new Vector2(680, 290));
         buttonPos.add(new Vector2(500, 270));
-
         themeUnlocked[CITY] = true;
         active = true;
     }
@@ -649,6 +648,11 @@ public class LevelSelectorMode extends Mode implements Screen {
     public void saveGame() {
         this.levelMetadata.saveGame();
     }
+
+    public void startNewGame() {
+        this.levelMetadata.resetSave();
+    }
+
 
 }
 
