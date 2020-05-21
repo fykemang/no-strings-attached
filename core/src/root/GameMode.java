@@ -141,18 +141,26 @@ public class GameMode extends Mode implements Screen {
      * Texture files for items
      */
     private static final String NEEDLE = "entities/needles.png";
+    private static final String GREY_NEEDLE = "entities/needles_grey.png";
     private static final String YARN = "entities/yarn.png";
-    private static final String GREY_YARN = "entities/grey_yarn.png";
+    private static final String GREY_YARN = "entities/skein_grey.png";
     private static final String BUTTON = "entities/buttons.png";
+    private static final String GREY_BUTTON = "entities/buttons_grey.png";
     private static final String FABRIC_1 = "entities/fabric1.png";
+    private static final String GREY_FABRIC = "entities/fabric_grey.png";
     private static final String FABRIC_2 = "entities/fabric2.png";
     private static final String SPOOL = "entities/spool.png";
+    private static final String GREY_SPOOL = "entities/spool_grey.png";
     private static final String STUFFING = "entities/stuffing.png";
+    private static final String GREY_STUFFING = "entities/stuffing_grey.png";
     private static final String[] cityItems = {"entities/needles.png", "entities/yarn.png", "entities/yarn.png"};
+    private static final String[] greyCityItems = {"entities/needles_grey.png", "entities/skein_grey.png", "entities/skein_grey.png"};
     private static final String[] villageItems = {"entities/spool.png", "entities/yarn.png", "entities/yarn.png"};
+    private static final String[] greyVillageItems = {"entities/spool_grey.png", "entities/skein_grey.png", "entities/skein_grey.png"};
     private static final String[] forestItems = {"entities/fabric1.png", "entities/fabric2.png", "entities/buttons.png"};
+    private static final String[] greyForestItems = {"entities/fabric_grey.png", "entities/fabric_grey.png", "entities/buttons_grey.png"};
     private static final String[] mountainItems = {"entities/stuffing.png", "entities/stuffing.png", "entities/stuffing.png"};
-
+    private static final String[] greyMountainItems = {"entities/stuffing_grey.png", "entities/stuffing_grey.png", "entities/stuffing_grey.png"};
     /**
      * Texture files for baskets (progress bar)
      */
@@ -261,14 +269,8 @@ public class GameMode extends Mode implements Screen {
     /**
      * Texture assets for items
      */
-    private TextureRegion buttonTexture;
-    private TextureRegion needleTexture;
     private TextureRegion yarnTexture;
     private TextureRegion greyYarnTexture;
-    private TextureRegion fabric1Texture;
-    private TextureRegion fabric2Texture;
-    private TextureRegion spoolTexture;
-    private TextureRegion stuffingTexture;
     private TextureRegion basketEmptyTexture;
     private TextureRegion forestMushroom;
 
@@ -283,6 +285,7 @@ public class GameMode extends Mode implements Screen {
      * List of all unique item textures
      */
     private final ArrayList<TextureRegion> itemTexture = new ArrayList<>();
+    private final ArrayList<TextureRegion> greyItemTexture = new ArrayList<>();
     /**
      * List of item objects
      */
@@ -454,8 +457,12 @@ public class GameMode extends Mode implements Screen {
         assets.add(GATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
+        manager.load(GREY_NEEDLE, Texture.class);
+        assets.add(GREY_NEEDLE);
         manager.load(BUTTON, Texture.class);
         assets.add(BUTTON);
+        manager.load(GREY_BUTTON, Texture.class);
+        assets.add(GREY_BUTTON);
         manager.load(YARN, Texture.class);
         assets.add(YARN);
         manager.load(GREY_YARN, Texture.class);
@@ -464,10 +471,16 @@ public class GameMode extends Mode implements Screen {
         assets.add(FABRIC_1);
         manager.load(FABRIC_2, Texture.class);
         assets.add(FABRIC_2);
+        manager.load(GREY_FABRIC, Texture.class);
+        assets.add(GREY_FABRIC);
         manager.load(SPOOL, Texture.class);
         assets.add(SPOOL);
+        manager.load(GREY_SPOOL, Texture.class);
+        assets.add(GREY_SPOOL);
         manager.load(STUFFING, Texture.class);
         assets.add(STUFFING);
+        manager.load(GREY_STUFFING, Texture.class);
+        assets.add(GREY_STUFFING);
         manager.load(BASKET_EMPTY, Texture.class);
         assets.add(BASKET_EMPTY);
         manager.load(CITY_TILE_FILE, Texture.class);
@@ -669,6 +682,7 @@ public class GameMode extends Mode implements Screen {
         slightMoveBackgroundTextures.clear();
         movingBackgroundTextures.clear();
         itemTexture.clear();
+        greyItemTexture.clear();
 
         switch (level.getLevel()) {
             case 1:
@@ -708,9 +722,13 @@ public class GameMode extends Mode implements Screen {
                 }
                 if (level.getLevel() == 1) {
                     itemTexture.add(createTexture(manager, BASKET_EMPTY, false));
+                    greyItemTexture.add(createTexture(manager, GREY_YARN, false));
                 } else {
                     for (String s : cityItems) {
                         itemTexture.add(createTexture(manager, s, false));
+                    }
+                    for (String s : greyCityItems) {
+                        greyItemTexture.add(createTexture(manager, s, false));
                     }
                 }
                 walkingMusic = manager.get(WALKING_CITY_FILE, Music.class);
@@ -730,6 +748,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : villageItems) {
                     itemTexture.add(createTexture(manager, s, false));
                 }
+                for (String s : greyVillageItems) {
+                    greyItemTexture.add(createTexture(manager, s, false));
+                }
                 walkingMusic = manager.get(WALKING_VILLAGE_FILE, Music.class);
                 break;
             case "forest":
@@ -746,6 +767,9 @@ public class GameMode extends Mode implements Screen {
                 }
                 for (String s : forestItems) {
                     itemTexture.add(createTexture(manager, s, false));
+                }
+                for (String s : greyForestItems) {
+                    greyItemTexture.add(createTexture(manager, s, false));
                 }
                 walkingMusic = manager.get(WALKING_FOREST_FILE, Music.class);
                 break;
@@ -764,7 +788,11 @@ public class GameMode extends Mode implements Screen {
                 for (String s : mountainItems) {
                     itemTexture.add(createTexture(manager, s, false));
                 }
+                for (String s : greyMountainItems) {
+                    greyItemTexture.add(createTexture(manager, s, false));
+                }
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
+                break;
         }
         music.setVolume(0.5f * GDXRoot.musicVol);
 //        music.play();
@@ -1792,13 +1820,13 @@ public class GameMode extends Mode implements Screen {
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
-        for (int i = 1; i <= items.size(); i++) {
-            if (i <= player.getInventory().size()) {
-                canvas.drawUI(yarnTexture, UIX, UIY, 0.25f);
+        for (int i = 0; i < items.size(); i++) {
+            if (i < player.getInventory().size()) {
+                canvas.drawUI(itemTexture.get(i), UIX, UIY, 0.25f);
             } else {
-                canvas.drawUI(greyYarnTexture, UIX, UIY, 1f);
+                canvas.drawUI(greyItemTexture.get(i), UIX, UIY, 0.25f);
             }
-            UIX += greyYarnTexture.getRegionWidth() + 10;
+            UIX += greyYarnTexture.getRegionWidth()*0.2f + 10;
         }
         String text = player.getInventory().size() + " / " + items.size();
         canvas.drawItemCount(text, (int) UIX - 20, (int) UIY + 5);
