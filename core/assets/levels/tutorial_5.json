@@ -61,11 +61,11 @@
       "direction": "up",
       "leftPos": {
         "x": 20.5,
-        "y": 12
+        "y": 11
       },
       "rightPos": {
         "x": 20.5,
-        "y": 18
+        "y": 16.5
       }
     },
     {
@@ -137,7 +137,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 11,
-      "y": 14
+      "y": 13.5
     },
     {
       "isSliding": false,
