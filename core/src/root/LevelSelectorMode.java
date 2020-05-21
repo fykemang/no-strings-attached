@@ -342,6 +342,8 @@ public class LevelSelectorMode extends Mode implements Screen {
         }
         if (isDown) {
             canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 - 80, 1f);
+        }else {
+            canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 + 140, -1f);
         }
         if (!themeUnlocked[VILLAGE]) {
             canvas.draw(MapLockTexture,
@@ -493,14 +495,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                         level = finalI + 1;
                         currentScroll = levelView.getScrollX();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
-                    } else level = -1;
-                }
-
-                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    if (levelMetadata.isLevelUnlocked(finalI + 1))
-                        level = finalI + 1;
-                    else level = -1;
-
+                    }
                 }
             });
             levelTable.add(Button).pad(10);
@@ -543,6 +538,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() + 350);
                 curLevel ++;
                 if (curLevel > 10){
+                    isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
                     last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
                     container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
@@ -559,6 +555,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() - 350);
                 curLevel--;
                 if (curLevel < 10){
+                    isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
                     last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
                     container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
