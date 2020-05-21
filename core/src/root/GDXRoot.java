@@ -121,7 +121,7 @@ public class GDXRoot extends Game implements ScreenListener {
         pauseScreen = new PauseMode(manager, UIcanvas);
         pauseScreen.preloadContent(manager);
 
-        helpScreen =  new HelpMode(manager, UIcanvas);
+        helpScreen = new HelpMode(manager, UIcanvas);
         helpScreen.preloadContent(manager);
 
         settings = new SettingMode(manager, UIcanvas);
@@ -276,9 +276,7 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == helpScreen) {
             pauseScreen.initialize();
             setScreen(pauseScreen);
-        }
-        else
-        if (screen == pauseScreen) {
+        } else if (screen == pauseScreen) {
             switch (exitCode) {
                 case GameMode.EXIT_INTO_GAME:
                     gameMode.resume();

@@ -478,11 +478,11 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
-        if (curLevel > 10){
+        if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
             last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
             container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
-        }else {
+        } else {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
             last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
             container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);

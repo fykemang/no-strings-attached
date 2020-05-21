@@ -1826,7 +1826,7 @@ public class GameMode extends Mode implements Screen {
             } else {
                 canvas.drawUI(greyItemTexture.get(i), UIX, UIY, 0.25f);
             }
-            UIX += greyYarnTexture.getRegionWidth()*0.2f + 10;
+            UIX += greyYarnTexture.getRegionWidth() * 0.2f + 10;
         }
         String text = player.getInventory().size() + " / " + items.size();
         canvas.drawItemCount(text, (int) UIX - 20, (int) UIY + 5);

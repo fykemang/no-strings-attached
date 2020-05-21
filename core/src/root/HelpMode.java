@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -69,7 +68,7 @@ public class HelpMode extends Mode implements Screen {
 
     public void initialize() {
         mainButton = createButton(backTexture);
-        mainButton.setPosition(canvas.getWidth()*0.05f, canvas.getHeight() * 0.03f);
+        mainButton.setPosition(canvas.getWidth() * 0.05f, canvas.getHeight() * 0.03f);
         mainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -133,7 +132,7 @@ public class HelpMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             listener.exitScreen(this, PauseMode.INTO_PAUSE);
         }
 
