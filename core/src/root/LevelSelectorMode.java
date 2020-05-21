@@ -547,8 +547,8 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
         last = createButton(arrowLeft);
-        next.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
-        next.addListener(new ClickListener() {
+        last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+        last.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
@@ -556,7 +556,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             }
 
         });
-        stage.addActor(next);
+        stage.addActor(last);
 
 
         Gdx.input.setInputProcessor(stage);
