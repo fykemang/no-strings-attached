@@ -61,6 +61,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private LevelTransitionMode transitionMode;
 
+    private HelpMode helpScreen;
+
     private GameCanvas UIcanvas;
 
     private CutScene cutScene;
@@ -118,6 +120,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
         pauseScreen = new PauseMode(manager, UIcanvas);
         pauseScreen.preloadContent(manager);
+
+        helpScreen =  new HelpMode(manager, UIcanvas);
+        helpScreen.preloadContent(manager);
 
         settings = new SettingMode(manager, UIcanvas);
         settings.preloadContent(manager);
@@ -258,11 +263,22 @@ public class GDXRoot extends Game implements ScreenListener {
                 setScreen(loadingMode);
             }
             // If level select is selected from in game
-        } else if (screen == pauseScreen) {
+        } else if (screen == helpScreen) {
+            pauseScreen.initialize();
+            setScreen(pauseScreen);
+        }
+        else
+        if (screen == pauseScreen) {
             switch (exitCode) {
                 case GameMode.EXIT_INTO_GAME:
                     gameMode.resume();
                     setScreen(gameMode);
+                    break;
+                case (HelpMode.INTO_HELP):
+                    helpScreen.loadContent(manager);
+                    helpScreen.setScreenListener(this);
+                    helpScreen.initialize();
+                    setScreen(helpScreen);
                     break;
                 case GameMode.EXIT_RESET:
                     gameMode.resume();

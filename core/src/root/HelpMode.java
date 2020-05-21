@@ -1,6 +1,7 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -15,18 +16,17 @@ import util.ScreenListener;
 
 
 public class HelpMode extends Mode implements Screen {
-    public static final int INTO_PAUSE = 15;
+    public static final int INTO_HELP = 20;
 
 
     private static final String BACK_FILE = "ui/back.png";
-    private static final String BKG = "ui/sky.png";
+    private static final String BKG = "ui/help-screen.png";
 
 
     private TextureRegion backTexture;
     private TextureRegion bkgTexture;
 
 
-    ImageButton continueButton;
     ImageButton mainButton;
 
     @Override
@@ -35,9 +35,7 @@ public class HelpMode extends Mode implements Screen {
             return;
         }
         assetState = AssetState.LOADING;
-
         loadAsset(BKG, Texture.class, manager);
-
         loadAsset(BACK_FILE, Texture.class, manager);
 
     }
@@ -47,7 +45,6 @@ public class HelpMode extends Mode implements Screen {
         if (assetState != AssetState.LOADING) {
             return;
         }
-
         bkgTexture = createTexture(manager, BKG, false);
         backTexture = createTexture(manager, BACK_FILE, false);
     }
@@ -71,9 +68,8 @@ public class HelpMode extends Mode implements Screen {
 
 
     public void initialize() {
-
         mainButton = createButton(backTexture);
-        mainButton.setPosition(canvas.getWidth() / 2 - mainButton.getWidth() / 2, canvas.getHeight() * 0.1f);
+        mainButton.setPosition(canvas.getWidth()*0.05f, canvas.getHeight() * 0.03f);
         mainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -137,10 +133,17 @@ public class HelpMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            listener.exitScreen(this, PauseMode.INTO_PAUSE);
+        }
 
     }
 
     private void draw() {
+        canvas.begin();
+        canvas.drawBackground(bkgTexture.getTexture());
+        canvas.actStage(stage);
+        canvas.end();
 
     }
 

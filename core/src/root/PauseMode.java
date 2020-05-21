@@ -153,7 +153,7 @@ public class PauseMode extends Mode implements Screen {
         mainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                listener.exitScreen(pause, LoadingMode.INTO_STARTSCREEN);
+                listener.exitScreen(pause, HelpMode.INTO_HELP);
             }
 
         });
