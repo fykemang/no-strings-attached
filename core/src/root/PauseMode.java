@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -17,15 +18,16 @@ import util.ScreenListener;
 public class PauseMode extends Mode implements Screen {
     public static final int INTO_PAUSE = 15;
 
-    enum SelectedButton {
-        restart,
-        main_menu,
-        back,
-        level_select,
-        settings
-    }
+//    enum SelectedButton {
+//        restart,
+//        help,
+//        back,
+//        level_select,
+//        settings,
+//        _continue
+//    }
 
-    private SelectedButton currentSelection;
+    private ImageButton currentSelection;
 
     private static final String CONTINUE = "ui/continue.png";
     private static final String LEVEL_SELECT = "ui/level-select.png";
@@ -111,6 +113,10 @@ public class PauseMode extends Mode implements Screen {
                 listener.exitScreen(pause, GameMode.EXIT_INTO_GAME);
             }
 
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+               currentSelection = continueButton;
+            }
         });
         stage.addActor(continueButton);
         reStartButton = createButton(restartTexture);
@@ -119,6 +125,10 @@ public class PauseMode extends Mode implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, GameMode.EXIT_RESET);
+            }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                currentSelection = reStartButton;
             }
 
         });
@@ -129,7 +139,12 @@ public class PauseMode extends Mode implements Screen {
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 listener.exitScreen(pause, LevelSelectorMode.INTO_SELECTOR);
+            }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                currentSelection = levelSelectButton;
             }
 
         });
@@ -142,6 +157,11 @@ public class PauseMode extends Mode implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, SettingMode.INTO_SETTING);
+
+            }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                currentSelection = settingsButton;
             }
 
         });
@@ -155,8 +175,13 @@ public class PauseMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, HelpMode.INTO_HELP);
             }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                currentSelection = mainButton;
+            }
 
         });
+
         stage.addActor(mainButton);
 
 
@@ -224,6 +249,10 @@ public class PauseMode extends Mode implements Screen {
                 canvas.getWidth() / 2, canvas.getHeight() / 2, Color.GRAY);
         canvas.drawUI(logoTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.75f, 1f);
         canvas.actStage(stage);
+
+        if (currentSelection != null){
+            canvas.drawUI(selectorTexture, currentSelection.getX() + selectorTexture.getRegionWidth()/4, currentSelection.getY(), 1f);
+        }
         canvas.end();
     }
 
