@@ -992,6 +992,7 @@ public class GameMode extends Mode implements Screen {
         }
         objects.clear();
         addQueue.clear();
+        collectedItems = new boolean[]{false, false, false};
         world.dispose();
         world = new World(gravity, false);
         setComplete(false);
