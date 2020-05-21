@@ -370,10 +370,6 @@ public class NpcRope extends Rope {
         }
 
         canvas.drawCatmullRom(splineCurve, tint, MAX_DRAW_POINTS, points);
-//        }catch (Exception e){
-//            System.out.println(state);
-//            System.out.println(contPoints.length);
-//        }
     }
 
     private void setNorms() {

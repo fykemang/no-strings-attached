@@ -339,8 +339,8 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.drawText(i + 1 + "", selectorFont, button.x, button.y);
 
         }
-        if (isDown){
-            canvas.drawUI(arrowDone, canvas.getWidth()/2 , canvas.getHeight()/2-80, 1f);
+        if (isDown) {
+            canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 - 80, 1f);
         }
         if (!themeUnlocked[VILLAGE]) {
             canvas.draw(MapLockTexture,
@@ -449,7 +449,8 @@ public class LevelSelectorMode extends Mode implements Screen {
         ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
-        levelView = new ScrollPane(levelTable){};
+        levelView = new ScrollPane(levelTable) {
+        };
         final LevelSelectorMode select = this;
         levelTable.pad(600 - 175);
         for (int i = 0; i < levelMetadata.getLevelCount(); i++) {

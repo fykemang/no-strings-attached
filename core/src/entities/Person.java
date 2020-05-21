@@ -39,7 +39,7 @@ public class Person extends CapsuleObstacle {
     /**
      * The amount to slow the character down
      */
-    private static final float PLAYER_DAMPING = 30f;
+    private static final float PLAYER_DAMPING = 20f;
     /**
      * The dude is not a slippery one
      */
@@ -460,14 +460,15 @@ public class Person extends CapsuleObstacle {
         if (magnitude < 1.2f)
             return;
 
-//        float adjust = Math.abs(trampolineDir.x) < 0.3f ? 1f : 1f + trampolineDir.x * 10f;
+        float adjust = Math.abs(trampolineDir.x) < 0.3f ? 1f : 1f + Math.abs(trampolineDir.x) * 1.6f;
         this.trampolineForce.set(magnitude * trampolineDir.x, magnitude * trampolineDir.y);
         float len = trampolineForce.len();
         if (len > MAX_TRAMPOLINE) {
-            trampolineForce.scl(MAX_TRAMPOLINE / len);
+            trampolineForce.scl(MAX_TRAMPOLINE * adjust / len);
         } else if (len < MIN_TRAMPOLINE) {
             trampolineForce.scl(MIN_TRAMPOLINE / len);
         }
+
     }
 
     /**
@@ -551,7 +552,7 @@ public class Person extends CapsuleObstacle {
             }
 
             if (isAttached) {
-                horizontalMovement = horizontalMovement * 6f;
+                horizontalMovement = horizontalMovement * 7f;
             } else if (released) {
                 horizontalMovement = getVX() * 10f + getHorizontalMovement();
             }

@@ -418,8 +418,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     private void update(float delta) {
 
-        if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-            cardOpen=false;
+        if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            cardOpen = false;
             listener.exitScreen(this, CutScene.INTO_CUTSCENE);
         }
 
