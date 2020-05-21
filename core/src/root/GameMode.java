@@ -388,9 +388,6 @@ public class GameMode extends Mode implements Screen {
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
-    //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
     private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{};
@@ -1991,12 +1988,14 @@ public class GameMode extends Mode implements Screen {
         world = null;
         canvas = null;
         if (swingSound != null) {
+            snipSound.dispose();
             swingSound.dispose();
             landSound.dispose();
             winSound.dispose();
             loseSound.dispose();
             collectSound.dispose();
             jumpSound.dispose();
+            clickSound.dispose();
             trampolineLandSound.dispose();
             trampolineJumpSound.dispose();
         }
@@ -2163,8 +2162,8 @@ public class GameMode extends Mode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        music.pause();
-        walkingMusic.pause();
+        music.stop();
+        walkingMusic.stop();
     }
 
     /**

@@ -212,7 +212,6 @@ public class GDXRoot extends Game implements ScreenListener {
                     loadingMode.hide();
             }
 
-            // If level is selected from level selector screen
         } else if (screen == settings) {
             useArrow = settings.isArrow();
             soundVol = settings.getSoundVol();
@@ -237,7 +236,7 @@ public class GDXRoot extends Game implements ScreenListener {
             setScreen(levelSelector);
             cutScene.dispose();
         } else if (screen == levelSelector) {
-            levelSelector.pause();
+            levelSelector.hide();
             if (exitCode == GameMode.EXIT_INTO_GAME) {
                 currentLevel = levelSelector.getLevelIndex();
                 if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||

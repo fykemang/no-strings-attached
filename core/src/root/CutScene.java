@@ -100,7 +100,6 @@ public class CutScene extends Mode implements Screen {
 
     @Override
     public void hide() {
-
     }
 
     @Override
