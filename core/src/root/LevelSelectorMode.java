@@ -1,6 +1,7 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -56,7 +58,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private static final String ARROWRIGHT = "ui/arrow-right.png";
     private static final String ARROWLEFT = "ui/arrow-left.png";
     private static final String PRESS_SPACE = "ui/pressSpace.png";
-
+    public static int curLevel = 1;
     int lastLevel = 0;
     Table container;
     /**
@@ -182,7 +184,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         backTexture = createTexture(manager, BACK_FILE, false);
         lockedcard = createTexture(manager, LOCKED_CARD, false);
         MapLockTexture = createTexture(manager, MAP_LOCK, false);
-        enterTexture = createTexture(manager, BACK_FILE, false);
+        enterTexture = createTexture(manager, ENTER_START, false);
         arrowDone = createTexture(manager, ARROWDOWN, false);
         arrowRight = createTexture(manager, ARROWRIGHT, false);
         arrowLeft = createTexture(manager, ARROWLEFT, false);
@@ -311,6 +313,39 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            if (curLevel < levelMetadata.getLevelCount()) {
+                curLevel++;
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() + 350);
+            }
+            if (curLevel == 11) {
+                next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
+                last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
+                container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
+                isDown = false;
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            if (curLevel > 1) {
+                curLevel--;
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() - 350);
+
+            }
+            if (curLevel == 9) {
+                next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
+                last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+                container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
+                isDown = true;
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            listener.exitScreen(this, LoadingMode.INTO_STARTSCREEN);
+        }
 
     }
 
@@ -332,6 +367,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background);
+
         theme = themeUnlocked[theme] ? theme : NONE;
         Texture cityBkg = getTextureFromTheme(CITY), villageBkg = getTextureFromTheme(VILLAGE),
                 mountainBkg = getTextureFromTheme(MOUNTAIN), forestBkg = getTextureFromTheme(FOREST);
@@ -353,6 +389,8 @@ public class LevelSelectorMode extends Mode implements Screen {
         }
         if (isDown) {
             canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 - 80, 1f);
+        } else {
+            canvas.drawUI(arrowDone, canvas.getWidth() / 2, canvas.getHeight() / 2 + 140, -1f);
         }
         if (!themeUnlocked[VILLAGE]) {
             canvas.draw(MapLockTexture,
@@ -408,21 +446,19 @@ public class LevelSelectorMode extends Mode implements Screen {
 
         }
 
-        if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
-            if (level != lastLevel) {
-                hoverSound.play(6 * GDXRoot.soundVol);
-            }
-            lastLevel = level;
-            canvas.draw(selector, buttonPos.get(level - 1).x - selector.getWidth() / 2 + 5,
-                    buttonPos.get(level - 1).y - selector.getHeight() / 2 - 15);
-        }
+        if (curLevel > 0 && curLevel < levelMetadata.getLevelCount() + 1) {
 
+
+            canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
+                    buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
+        }
+        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.05f, 0.7f);
         canvas.actStage(stage);
         canvas.end();
     }
 
     public int getLevelIndex() {
-        return level;
+        return curLevel;
     }
 
     public Level getLevel(int level) {
@@ -435,29 +471,32 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getCurrentLevel() {
 
-        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
-        Level l = levelMetadata.getLevel(level);
-        l.setLevel(level);
+        if (curLevel > levelMetadata.getLevelCount() + 1 || curLevel == -1) return null;
+        Level l = levelMetadata.getLevel(curLevel);
+        l.setLevel(curLevel);
         return l;
     }
 
 
     public void reset() {
+        levelView.layout();
+        levelView.setScrollX((curLevel - 1) * 350f);
         level = -1;
         ready = false;
         levelSelectorMusic.play();
         levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
+        Gdx.input.setInputProcessor(stage);
     }
 
 
     private boolean isDown = true;
     ImageButton next;
+    ImageButton last;
 
     public void initUI() {
         stage.clear();
         container = new Table();
-        ScrollPane.ScrollPaneStyle paneStyle = new ScrollPane.ScrollPaneStyle();
         Table levelTable = new Table();
 
         levelView = new ScrollPane(levelTable) {
@@ -499,24 +538,10 @@ public class LevelSelectorMode extends Mode implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
-                        level = finalI + 1;
+                        curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
-                    } else level = -1;
-                }
-
-                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    if (levelMetadata.isLevelUnlocked(finalI + 1))
-                        level = finalI + 1;
-                    else level = -1;
-                    if (finalI + 1 > 10 && isDown) {
-                        container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
-                        isDown = false;
-                    } else if (finalI + 1 < 8 && !isDown) {
-                        container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
-                        isDown = true;
                     }
-
                 }
             });
             levelTable.add(Button).pad(10);
@@ -528,6 +553,12 @@ public class LevelSelectorMode extends Mode implements Screen {
         container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
         levelView.layout();
         levelView.setScrollX(currentScroll);
+        levelView.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                levelView.cancel();
+            }
+        });
 
 
         ImageButton BackButton = createButton(backTexture);
@@ -542,7 +573,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         stage.addActor(BackButton);
         stage.addActor(container);
 
-
+        last = createButton(arrowLeft);
         next = createButton(arrowRight);
         next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
         next.addListener(new ClickListener() {
@@ -550,10 +581,34 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
+                curLevel++;
+                if (curLevel > 10) {
+                    isDown = false;
+                    next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
+                    last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
+                    container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
+                }
             }
 
         });
         stage.addActor(next);
+        last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+        last.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                levelView.layout();
+                levelView.setScrollX(levelView.getScrollX() - 350);
+                curLevel--;
+                if (curLevel < 10) {
+                    isDown = true;
+                    next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
+                    last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.2f);
+                    container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
+                }
+            }
+
+        });
+        stage.addActor(last);
 
 
         Gdx.input.setInputProcessor(stage);

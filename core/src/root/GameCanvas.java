@@ -987,6 +987,7 @@ public class GameCanvas {
 
     public void drawBackground(Texture image) {
         computeTransform(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2, 0, 1f, 1f);
+        spriteBatch.setColor(Color.WHITE);
         spriteBatch.draw(new TextureRegion(image), getWidth(), getHeight(), local);
     }
 

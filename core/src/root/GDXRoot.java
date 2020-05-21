@@ -200,7 +200,6 @@ public class GDXRoot extends Game implements ScreenListener {
                         levelSelector.setScreenListener(this);
                         levelSelector.setCanvas(UIcanvas);
                         levelSelector.reset();
-                        levelSelector.initUI();
                         setScreen(levelSelector);
                     }
                     break;
@@ -282,7 +281,6 @@ public class GDXRoot extends Game implements ScreenListener {
                 case LevelSelectorMode.INTO_SELECTOR:
                     gameMode.pause();
                     levelSelector.reset();
-                    levelSelector.initUI();
                     setScreen(levelSelector);
                     break;
                 case SettingMode.INTO_SETTING:
@@ -305,7 +303,6 @@ public class GDXRoot extends Game implements ScreenListener {
                 case LevelSelectorMode.INTO_SELECTOR:
                     levelSelector.setCanvas(UIcanvas);
                     levelSelector.reset();
-                    levelSelector.initUI();
                     levelSelector.setScreenListener(this);
                     setScreen(levelSelector);
                     gameMode.pause();
@@ -343,7 +340,6 @@ public class GDXRoot extends Game implements ScreenListener {
             switch (exitCode) {
                 case (LevelSelectorMode.INTO_SELECTOR):
                     levelSelector.reset();
-                    levelSelector.initUI();
                     setScreen(levelSelector);
                     break;
                 case (GameMode.EXIT_INTO_GAME):
@@ -353,13 +349,13 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
+                    LevelSelectorMode.curLevel = currentLevel;
                     if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
                             (!isForestPlayed && currentLevel == 14) || currentLevel == 18) {
                         setCutScene(currentLevel);
                     } else {
                         if (levelSelector.getLevel(currentLevel) == null) {
                             levelSelector.reset();
-                            levelSelector.initUI();
                             setScreen(levelSelector);
                             return;
                         }

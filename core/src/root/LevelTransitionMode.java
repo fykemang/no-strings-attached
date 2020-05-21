@@ -494,19 +494,17 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
             // We are are ready, notify our listener
             if (listener != null) {
-            final LevelTransitionMode transition = this;
-            if (pressState == SelectedButton.REPLAY) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
-            }
-            else if (pressState == SelectedButton.EXIT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
-            }
-            else if (pressState == SelectedButton.NEXT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
-            }
+                final LevelTransitionMode transition = this;
+                if (pressState == SelectedButton.REPLAY) {
+                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
+                } else if (pressState == SelectedButton.EXIT) {
+                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+                } else if (pressState == SelectedButton.NEXT) {
+                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
+                }
             }
         }
     }
