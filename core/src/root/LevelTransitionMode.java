@@ -30,7 +30,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     private static final String BUTTON = "ui/next.png";
     private static final String PC = "player/player_idle.png";
     private static final String REPLAY = "ui/replay.png";
-    private static final String MAIN_MENU = "ui/main-menu.png";
+    private static final String MAIN_MENU = "ui/level-select.png";
     private static final String WIN_TEXT = "ui/excellent.png";
     private static final String BUTTON_PRESSED = "ui/next-down.png";
     private static final String HOVER_FILE = "sounds/hover.mp3";
