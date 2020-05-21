@@ -131,6 +131,7 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
     private static final String EXCLAMATION = "entities/exclamation.png";
     private static final String TARGET = "entities/target.png";
+    private static final String ZOOM_UI = "ui/view-mode.png";
 
     /**
      * Texture file for the exit door
@@ -206,6 +207,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion spikeVertTile;
     protected TextureRegion UI_restart;
     protected TextureRegion UI_exit;
+    protected TextureRegion Zoom_ui;
     protected FilmStrip door;
     private Stage stage;
     private float volume = 0.5f * GDXRoot.musicVol;
@@ -497,6 +499,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(ESC_FILE);
         manager.load(FOREST_MUSHROOM_FILE, Texture.class);
         assets.add(FOREST_MUSHROOM_FILE);
+        manager.load(ZOOM_UI, Texture.class);
+        assets.add(ZOOM_UI);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -770,6 +774,7 @@ public class GameMode extends Mode implements Screen {
         music.setLooping(true);
     }
 
+
     @Override
     public void loadContent(AssetManager manager) {
         if (assetState != AssetState.LOADING) {
@@ -862,6 +867,7 @@ public class GameMode extends Mode implements Screen {
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
         UI_exit = createTexture(manager, ESC_FILE, false);
+        Zoom_ui =  createTexture(manager, ZOOM_UI, false);
         if (manager.isLoaded(FONT_FILE)) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -1778,18 +1784,6 @@ public class GameMode extends Mode implements Screen {
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        //       float UIX = 120;
-        //       float UIY = canvas.getHeight() - UI_restart.getRegionHeight() - 20;
-//        int itemCount = player.getInventory().size();
-//        if (itemCount == 0) {
-////            canvas.drawUI(basketEmptyTexture, UIX, UIY, 1f);
-////        } else if (itemCount == 1) {
-////            canvas.drawUI(basketOneTexture, UIX, UIY, 1f);
-////        } else if (itemCount == 2) {
-////            canvas.drawUI(basketTwoTexture, UIX, UIY, 1f);
-////        } else {
-////            canvas.drawUI(basketThreeTexture, UIX, UIY, 1f);
-////        }
         if (billboards.size() >= level.getText().size()) {
             for (int i = 0; i < level.getText().size(); i++) {
                 TextBox text = level.getText().get(i);
@@ -1813,6 +1807,9 @@ public class GameMode extends Mode implements Screen {
         canvas.drawItemCount(text, (int) UIX - 20, (int) UIY + 5);
         canvas.end();
 
+        if (gameState == GameState.ZOOM){
+            canvas.drawUI(Zoom_ui, canvas.getWidth()*0.7f, canvas.getHeight() * 0.2f, 1f);
+        }
 
         if (isDebug()) {
             canvas.beginDebug();
