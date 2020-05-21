@@ -1805,11 +1805,12 @@ public class GameMode extends Mode implements Screen {
         }
         String text = player.getInventory().size() + " / " + items.size();
         canvas.drawItemCount(text, (int) UIX - 20, (int) UIY + 5);
-        canvas.end();
 
         if (gameState == GameState.ZOOM){
             canvas.drawUI(Zoom_ui, canvas.getWidth()*0.7f, canvas.getHeight() * 0.2f, 1f);
         }
+
+        canvas.end();
 
         if (isDebug()) {
             canvas.beginDebug();
