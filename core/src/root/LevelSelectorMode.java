@@ -404,11 +404,9 @@ public class LevelSelectorMode extends Mode implements Screen {
 
         }
 
-        if (level > 0 && level < levelMetadata.getLevelCount() + 1) {
-            if (level != lastLevel) {
-                hoverSound.play(6 * GDXRoot.soundVol);
-            }
-            lastLevel = level;
+        if (curLevel > 0 && curLevel < levelMetadata.getLevelCount() + 1) {
+
+
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
