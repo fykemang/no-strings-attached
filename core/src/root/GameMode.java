@@ -374,10 +374,14 @@ public class GameMode extends Mode implements Screen {
     private static final String VILLAGE_SPIKES_FILE = "entities/village-obstacle.png";
     private static final String VILLAGE_SPIKES_VERT_FILE = "entities/village-obstacle-vert.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
+    private static final String MOUNTAIN_SPIKES_FILE = "entities/mountain-obstacle.png";
+    private static final String MOUNTAIN_SPIKES_VERT_FILE = "entities/mountain-obstacle-vert.png";
     protected TextureRegion forestSpikeTile;
     protected TextureRegion forestSpikeVertTile;
     protected TextureRegion villageSpikeTile;
     protected TextureRegion villageSpikeVertTile;
+    protected TextureRegion mountainSpikeTile;
+    protected TextureRegion mountainSpikeVertTile;
     private ArrayList<TextureRegion> billboards;
 
     /**
@@ -499,6 +503,10 @@ public class GameMode extends Mode implements Screen {
         assets.add(VILLAGE_SPIKES_FILE);
         manager.load(VILLAGE_SPIKES_VERT_FILE, Texture.class);
         assets.add(VILLAGE_SPIKES_VERT_FILE);
+        manager.load(MOUNTAIN_SPIKES_FILE, Texture.class);
+        assets.add(MOUNTAIN_SPIKES_FILE);
+        manager.load(MOUNTAIN_SPIKES_VERT_FILE, Texture.class);
+        assets.add(MOUNTAIN_SPIKES_VERT_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
         manager.load(SPIKE_VERT, Texture.class);
@@ -888,6 +896,8 @@ public class GameMode extends Mode implements Screen {
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
         villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
         villageSpikeVertTile = createTexture(manager, VILLAGE_SPIKES_VERT_FILE, false);
+        mountainSpikeTile = createTexture(manager, MOUNTAIN_SPIKES_FILE, false);
+        mountainSpikeVertTile = createTexture(manager, MOUNTAIN_SPIKES_VERT_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -1065,6 +1075,11 @@ public class GameMode extends Mode implements Screen {
             for (Tile spike : spikes) {
                 TextureRegion villageSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? villageSpikeTile : villageSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, villageSpikeTexture);
+            }
+        } else if (level.getType().contains("mountain")) {
+            for (Tile spike : spikes) {
+                TextureRegion mountainSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? mountainSpikeTile : mountainSpikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, mountainSpikeTexture);
             }
         } else {
             for (Tile spike : spikes) {
