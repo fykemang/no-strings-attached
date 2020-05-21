@@ -208,12 +208,13 @@ public class Stone extends PolygonObstacle {
                             sca, sca);
                 }
             } else if (height > 2 * width) {
-                this.x = getX();
-                this.y = getY();
+                this.x = getX() -0.3f;
+                this.y = getY() - 0.3f;
+                float overlap = 0.7f;
                 float scx = width * drawScale.x / texture.getRegionWidth();
-                float num = (int) (height * drawScale.y / (texture.getRegionHeight() * scx));
-                float dist = height * drawScale.y / num;
-                float scy = dist / (texture.getRegionHeight() * scx);
+                float num = (int) (height * drawScale.y / (texture.getRegionHeight() * scx * overlap));
+                float dist = height * drawScale.y / (num );
+                float scy = (dist/0.7f) / (texture.getRegionHeight() * scx);
                 num = num == 0 ? 1 : num;
 
                 for (int i = 0; i < num; i++)
