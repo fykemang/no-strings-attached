@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -36,7 +37,8 @@ public class SettingMode extends Mode implements Screen {
     private static final String MUSIC = "ui/music.png";
     private static final String LEFT = "ui/left.png";
     private static final String BACK = "ui/back.png";
-
+    private static final String CLICK_FILE = "sounds/click.mp3";
+    private Sound clickSound;
 
     private TextureRegion logoTexture;
     private TextureRegion background;
@@ -83,6 +85,7 @@ public class SettingMode extends Mode implements Screen {
 
         active = true;
         Gdx.input.setInputProcessor(stage);
+        clickSound = Gdx.audio.newSound(Gdx.files.internal(CLICK_FILE));
     }
 
     public void setScreenListener(ScreenListener listener) {
@@ -111,6 +114,7 @@ public class SettingMode extends Mode implements Screen {
     @Override
     public void hide() {
         stage.clear();
+        clickSound.dispose();
     }
 
     @Override
@@ -287,8 +291,8 @@ public class SettingMode extends Mode implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 soundVol = soundSlider.getValue();
+                clickSound.play(soundVol);
             }
-
         });
         soundSlider.setValue(soundVol);
 
@@ -301,6 +305,7 @@ public class SettingMode extends Mode implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicVol = musicSlider.getValue();
+                clickSound.play(musicVol);
             }
 
         });

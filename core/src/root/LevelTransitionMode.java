@@ -156,14 +156,12 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         NEXT
     }
 
-    enum basketType {
-        C1, C2, C3, V1, V2, V3, F1, F2, F3, M1, M2, M3
-    }
-
     private SelectedButton currentSelection;
+    private SelectedButton pressState;
     private final Stage stage;
     private ImageButton replayButton;
     private ImageButton mainMenuButton;
+    private ImageButton nextButton;
     private boolean isLevelComplete;
     private Sound victorySound;
     private Sound hoverSound;
@@ -179,10 +177,11 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     }
 
     public void initializeInterface() {
-        ImageButton nextButton = new ImageButton(buttonStyle);
+        nextButton = new ImageButton(buttonStyle);
         nextButton.setPosition(canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 2, canvas.getHeight() / 6);
         final LevelTransitionMode transition = this;
         Gdx.input.setInputProcessor(this);
+        pressState = null;
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -316,17 +315,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            final LevelTransitionMode transition = this;
-            if (currentSelection == SelectedButton.REPLAY) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
-            } else if (currentSelection == SelectedButton.EXIT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
-            } else if (currentSelection == SelectedButton.NEXT) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
-                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
-            }
+            pressState = currentSelection;
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
                 || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (keyState < 3)
@@ -362,14 +351,45 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         return false;
     }
 
+    private int heightY;
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (replayButton == null || mainMenuButton == null || nextButton == null) {
+            return true;
+        }
+
+        // Flip to match graphics coordinates
+        screenY = heightY - screenY;
+
+        float w1 = replayButton.getWidth() / 2.0f;
+        float h1 = replayButton.getHeight() / 2.0f;
+        if (Math.abs(screenX) < w1 && Math.abs(screenY) < h1) {
+            clickSound.play(0.5f * GDXRoot.soundVol);
+            pressState = SelectedButton.REPLAY;
+        }
+
+        float w2 = mainMenuButton.getWidth() / 2.0f;
+        float h2 = mainMenuButton.getHeight() / 2.0f;
+        if (Math.abs(screenX) < w2 && Math.abs(screenY) < h2) {
+            clickSound.play(0.5f * GDXRoot.soundVol);
+            pressState = SelectedButton.EXIT;
+        }
+
+        float w3 = nextButton.getWidth() / 2.0f;
+        float h3 = nextButton.getHeight() / 2.0f;
+        if (Math.abs(screenX) < w3 && Math.abs(screenY) < h3) {
+            clickSound.play(0.5f * GDXRoot.soundVol);
+            pressState = SelectedButton.NEXT;
+        }
+
+
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        return true;
     }
 
     @Override
@@ -410,14 +430,15 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
     @Override
     public void hide() {
-        victorySound.pause();
+        victorySound.stop();
 //        music.pause();
     }
 
     @Override
     public void dispose() {
         victorySound.dispose();
-//        music.dispose();
+//        clickSound.dispose();
+//        hoverSound.dispose();
     }
 
     @Override
@@ -472,12 +493,25 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             draw();
 
             // We are are ready, notify our listener
-
+            if (listener != null) {
+            final LevelTransitionMode transition = this;
+            if (pressState == SelectedButton.REPLAY) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
+            }
+            else if (pressState == SelectedButton.EXIT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+            }
+            else if (pressState == SelectedButton.NEXT) {
+                clickSound.play(0.5f * GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
+            }
+            }
         }
     }
 
     private void update(float dt) {
-
     }
 
     private int lastState = 0;
