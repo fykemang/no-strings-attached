@@ -129,7 +129,6 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_SPIKY_SHOCK = "entities/spiky_shock.png";
     private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
-    private static final String EXCLAMATION = "entities/exclamation.png";
     private static final String TARGET = "entities/target.png";
     private static final String ZOOM_UI = "ui/view-mode.png";
 
@@ -137,6 +136,7 @@ public class GameMode extends Mode implements Screen {
      * Texture file for the exit door
      */
     private static final String GATE = "entities/door.png";
+    private static final String VILLAGE_GATE = "entities/door-village.png";
     /**
      * Texture files for items
      */
@@ -217,6 +217,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_exit;
     protected TextureRegion Zoom_ui;
     protected FilmStrip door;
+    protected FilmStrip village_door;
     private Stage stage;
     private float volume = 0.5f * GDXRoot.musicVol;
     /**
@@ -264,7 +265,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip npcHeyoShockTexture;
     private FilmStrip npcSpikyShockTexture;
     private FilmStrip npcWelcomeShockTexture;
-    private FilmStrip exclamationTexture;
     private TextureRegion targetTexture;
     /**
      * Texture assets for items
@@ -459,6 +459,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(UI_RedYarn);
         manager.load(GATE, Texture.class);
         assets.add(GATE);
+        manager.load(VILLAGE_GATE, Texture.class);
+        assets.add(VILLAGE_GATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
         manager.load(GREY_NEEDLE, Texture.class);
@@ -632,8 +634,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(NPC_WELCOME);
         manager.load(NPC_WELCOME_SHOCK, Texture.class);
         assets.add(NPC_WELCOME_SHOCK);
-        manager.load(EXCLAMATION, Texture.class);
-        assets.add(EXCLAMATION);
         manager.load(TARGET, Texture.class);
         assets.add(TARGET);
 
@@ -849,7 +849,6 @@ public class GameMode extends Mode implements Screen {
         npcSpikyShockTexture.setFrameDuration(0.1f);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         npcWelcomeShockTexture.setFrameDuration(0.1f);
-        exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         targetTexture = createTexture(manager, TARGET, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
@@ -867,6 +866,7 @@ public class GameMode extends Mode implements Screen {
         greyYarnTexture = createTexture(manager, GREY_YARN, false);
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
+        village_door = createFilmStrip(manager, VILLAGE_GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
@@ -996,6 +996,7 @@ public class GameMode extends Mode implements Screen {
         didPlaySwing = false;
         didPlayLand = false;
         door.refresh();
+        village_door.refresh();
         didPlayWin = false;
         didPlayLose = false;
         didPlayCollect = false;
@@ -1039,7 +1040,8 @@ public class GameMode extends Mode implements Screen {
         direction = null;
         targetViewPort = null;
         // Create exit door
-        createGate(points, level.getExitPos().x, level.getExitPos().y, door);
+        FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
+        createGate(points, level.getExitPos().x, level.getExitPos().y, winningGate);
         //add player
         addObject(player);
         // Create NPCs
@@ -1105,7 +1107,7 @@ public class GameMode extends Mode implements Screen {
 
     public void createGate(float[] points, float x, float y, FilmStrip texture) {
         Gate gate = new Gate(texture, points, x, y);
-        door.setFrameDuration(0.035f);
+        texture.setFrameDuration(0.035f);
         gate.setBodyType(BodyDef.BodyType.StaticBody);
         gate.setFriction(0f);
         gate.setRestitution(BASIC_RESTITUTION);
@@ -1535,8 +1537,9 @@ public class GameMode extends Mode implements Screen {
             playerExitAnimation.setElapsedTime(dt);
             playerExitAnimation.updateFrame();
             player.setTexture(playerExitAnimation);
-            door.setElapsedTime(dt);
-            door.updateFrame();
+            FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door:door;
+            winningGate.setElapsedTime(dt);
+            winningGate.updateFrame();
 
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
@@ -1802,15 +1805,10 @@ public class GameMode extends Mode implements Screen {
                 obj.draw(canvas);
             }
         }
-
-//        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
-//                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
-//        ((FilmStrip) exclamationTexture).setNextFrame();
         target = player.getCanSwingTo();
         if (target != null) {
             canvas.draw(targetTexture, Color.WHITE, target.getX() * scale.x - 40,
                     target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
-//            ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
         c = player.canCut();
