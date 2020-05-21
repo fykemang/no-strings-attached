@@ -60,6 +60,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     private static final String SELECT_FILE = "ui/select.png";
     private static final String MUSIC_FILE = "music/storybook.mp3";
     private static final String MENU_CLICK_FILE = "sounds/click.mp3";
+    private static final String HOVER_FILE = "sounds/hover.mp3";
     private static final String LOADING_FILE = "ui/loading.png";
     private static final String LOAD_GAME = "ui/load-game.png";
     private static final String NEVER_MIND = "ui/nevermind-text-deselected.png";
@@ -77,6 +78,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
     private final Music music;
     private final Sound clickSound;
+    private final Sound hoverSound;
 
     /**
      * Play button to display when done
@@ -371,6 +373,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
+        hoverSound = Gdx.audio.newSound(Gdx.files.internal(HOVER_FILE));
         active = true;
     }
 
@@ -389,6 +392,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         statusBar.dispose();
         music.dispose();
+        clickSound.dispose();
+        hoverSound.dispose();
         statusBar = null;
         select = null;
         animatedBkg = null;
@@ -654,7 +659,6 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public void pause() {
         // TODO Auto-generated method stub
-
     }
 
     /**
@@ -684,7 +688,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     public void hide() {
         // Useless if called in outside animation loop
         active = false;
-        music.pause();
+        music.dispose();
         pressState = MouseState.NONE;
     }
 
@@ -849,18 +853,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             pressState = selectState;
+            clickSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
                 || Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (keyState < 4)
                 keyState += 1;
             else
                 keyState = 0;
+            hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
                 || Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (keyState > 0)
                 keyState -= 1;
             else
                 keyState = 4;
+            hoverSound.play(GDXRoot.soundVol);
         }
         keyState %= 5;
         if (keyState == 0)

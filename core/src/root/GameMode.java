@@ -390,9 +390,6 @@ public class GameMode extends Mode implements Screen {
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
-    //    private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-1.png", "background/forest-2.png", "background/forest-3.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{"background/forest-5.png", "background/forest-6.png", "background/forest-7.png"};
-//    private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{"background/forest-4.png"};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
     private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{};
@@ -867,7 +864,7 @@ public class GameMode extends Mode implements Screen {
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
         UI_exit = createTexture(manager, ESC_FILE, false);
-        Zoom_ui =  createTexture(manager, ZOOM_UI, false);
+        Zoom_ui = createTexture(manager, ZOOM_UI, false);
         if (manager.isLoaded(FONT_FILE)) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -1806,8 +1803,8 @@ public class GameMode extends Mode implements Screen {
         String text = player.getInventory().size() + " / " + items.size();
         canvas.drawItemCount(text, (int) UIX - 20, (int) UIY + 5);
 
-        if (gameState == GameState.ZOOM){
-            canvas.drawUI(Zoom_ui, canvas.getWidth()*0.8f, canvas.getHeight() * 0.2f, 1f);
+        if (gameState == GameState.ZOOM) {
+            canvas.drawUI(Zoom_ui, canvas.getWidth() * 0.8f, canvas.getHeight() * 0.2f, 1f);
         }
 
         canvas.end();
@@ -1989,12 +1986,14 @@ public class GameMode extends Mode implements Screen {
         world = null;
         canvas = null;
         if (swingSound != null) {
+            snipSound.dispose();
             swingSound.dispose();
             landSound.dispose();
             winSound.dispose();
             loseSound.dispose();
             collectSound.dispose();
             jumpSound.dispose();
+            clickSound.dispose();
             trampolineLandSound.dispose();
             trampolineJumpSound.dispose();
         }
@@ -2161,8 +2160,8 @@ public class GameMode extends Mode implements Screen {
      * also paused before it is destroyed.
      */
     public void pause() {
-        music.pause();
-        walkingMusic.pause();
+        music.stop();
+        walkingMusic.stop();
     }
 
     /**
