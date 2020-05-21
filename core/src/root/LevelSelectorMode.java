@@ -1,6 +1,7 @@
 package root;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -300,6 +301,9 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
+        }
 
     }
 
@@ -321,6 +325,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private void draw() {
         canvas.begin();
         canvas.drawBackground(background);
+
         theme = themeUnlocked[theme] ? theme : NONE;
         Texture cityBkg = getTextureFromTheme(CITY), villageBkg = getTextureFromTheme(VILLAGE),
                 mountainBkg = getTextureFromTheme(MOUNTAIN), forestBkg = getTextureFromTheme(FOREST);
@@ -413,7 +418,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     public int getLevelIndex() {
-        return level;
+        return curLevel;
     }
 
     public Level getLevel(int level) {
@@ -426,15 +431,16 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public Level getCurrentLevel() {
 
-        if (level > levelMetadata.getLevelCount() + 1 || level == -1) return null;
-        Level l = levelMetadata.getLevel(level);
-        l.setLevel(level);
+        if (curLevel > levelMetadata.getLevelCount() + 1 || curLevel == -1) return null;
+        Level l = levelMetadata.getLevel(curLevel);
+        l.setLevel(curLevel);
         return l;
     }
 
 
     public void reset() {
-
+        levelView.layout();
+        levelView.setScrollX((curLevel-1)*350f);
         level = -1;
         ready = false;
         levelSelectorMusic.play();
@@ -492,7 +498,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
-                        level = finalI + 1;
+                        curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }

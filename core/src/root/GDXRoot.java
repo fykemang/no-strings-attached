@@ -231,8 +231,8 @@ public class GDXRoot extends Game implements ScreenListener {
             levelSelector.loadContent(manager);
             levelSelector.setScreenListener(this);
             levelSelector.setCanvas(UIcanvas);
-            levelSelector.reset();
             levelSelector.initUI();
+            levelSelector.reset();
             setScreen(levelSelector);
             cutScene.dispose();
         } else if (screen == levelSelector) {
@@ -341,6 +341,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     break;
                 case (GameMode.EXIT_INTO_NEXT):
                     currentLevel++;
+                    LevelSelectorMode.curLevel = currentLevel;
                     if ((!isCityPlayed && currentLevel == 6) || (!isVillagePlayed && currentLevel == 10) ||
                             (!isForestPlayed && currentLevel == 14) || currentLevel == 18) {
                         setCutScene(currentLevel);
