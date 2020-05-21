@@ -1775,6 +1775,17 @@ public class GameMode extends Mode implements Screen {
                 canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
         }
+        if (billboards.size() >= level.getText().size()) {
+            for (int i = 0; i < level.getText().size(); i++) {
+                TextBox text = level.getText().get(i);
+                TextureRegion tex = billboards.get(i);
+
+                if (Math.abs(player.getX() - text.getX())< 3 )
+                    canvas.draw(tex,
+                            text.getX() * this.scale.x - tex.getRegionWidth() / 2,
+                            text.getY() * this.scale.y - tex.getRegionHeight() / 2);
+            }
+        }
 
         canvas.end();
         canvas.begin();
@@ -1809,17 +1820,6 @@ public class GameMode extends Mode implements Screen {
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        if (billboards.size() >= level.getText().size()) {
-            for (int i = 0; i < level.getText().size(); i++) {
-                TextBox text = level.getText().get(i);
-                TextureRegion tex = billboards.get(i);
-
-              if (Math.abs(player.getX() - text.getX())< 3 )
-                canvas.draw(tex,
-                        text.getX() * this.scale.x - tex.getRegionWidth() / 2,
-                        text.getY() * this.scale.y - tex.getRegionHeight() / 2);
-            }
-        }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
