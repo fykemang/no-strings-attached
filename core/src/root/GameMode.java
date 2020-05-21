@@ -153,6 +153,7 @@ public class GameMode extends Mode implements Screen {
     private static final String GREY_SPOOL = "entities/spool_grey.png";
     private static final String STUFFING = "entities/stuffing.png";
     private static final String GREY_STUFFING = "entities/stuffing_grey.png";
+    private static final String GREY_BASKET = "entities/grey_basket.png";
     private static final String[] cityItems = {"entities/needles.png", "entities/yarn.png", "entities/yarn.png"};
     private static final String[] greyCityItems = {"entities/needles_grey.png", "entities/skein_grey.png", "entities/skein_grey.png"};
     private static final String[] villageItems = {"entities/spool.png", "entities/yarn.png", "entities/yarn.png"};
@@ -487,6 +488,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(STUFFING);
         manager.load(GREY_STUFFING, Texture.class);
         assets.add(GREY_STUFFING);
+        manager.load(GREY_BASKET, Texture.class);
+        assets.add(GREY_BASKET);
         manager.load(BASKET_EMPTY, Texture.class);
         assets.add(BASKET_EMPTY);
         manager.load(CITY_TILE_FILE, Texture.class);
@@ -730,7 +733,7 @@ public class GameMode extends Mode implements Screen {
                 }
                 if (level.getLevel() == 1) {
                     itemTexture.add(createTexture(manager, BASKET_EMPTY, false));
-                    greyItemTexture.add(createTexture(manager, GREY_YARN, false));
+                    greyItemTexture.add(createTexture(manager, GREY_BASKET, false));
                     itemNames.add("basket");
                 } else {
                     for (String s : cityItems) {
