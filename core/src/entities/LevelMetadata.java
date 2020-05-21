@@ -25,7 +25,6 @@ public class LevelMetadata implements Json.Serializable {
     @Override
     public void read(Json json, JsonValue jsonData) {
         boolean saveExists = levelState.getBoolean("saveExists", false);
-
         JsonValue.JsonIterator levels = jsonData.get("levels").iterator();
         for (JsonValue jsonLevel : levels) {
             String levelPath = jsonLevel.getString("path");
@@ -35,10 +34,7 @@ public class LevelMetadata implements Json.Serializable {
             if (!saveExists) {
                 levelState.putBoolean(String.valueOf(levelID), levelID == 1);
             }
-
         }
-
-        levelState.putBoolean("saveExists", true);
     }
 
     public Level getLevel(int index) {
@@ -67,6 +63,7 @@ public class LevelMetadata implements Json.Serializable {
         for (int i = 2; i <= levelMap.size(); i++) {
             levelState.putBoolean(String.valueOf(i), false);
         }
+        levelState.putBoolean("saveExists", true);
         saveGame();
     }
 
