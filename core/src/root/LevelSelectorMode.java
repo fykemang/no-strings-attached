@@ -478,6 +478,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
+        levelSelectorMusic.play();
         if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
             last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
@@ -549,8 +550,14 @@ public class LevelSelectorMode extends Mode implements Screen {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
+                        clickSound.play();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }
+                }
+
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    hoverSound.play();
                 }
             });
             levelTable.add(Button).pad(10);
@@ -590,7 +597,11 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                curLevel++;
+                if (curLevel < levelMetadata.getLevelCount()) {
+                    curLevel++;
+                    clickSound.play();
+                }
+
                 if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
@@ -607,7 +618,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
-                curLevel--;
+                 if (curLevel > 1){ curLevel--;  clickSound.play();}
                 if (curLevel < 10) {
                     isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
