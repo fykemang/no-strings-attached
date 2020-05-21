@@ -114,7 +114,7 @@ public class PauseMode extends Mode implements Screen {
         });
         stage.addActor(continueButton);
         reStartButton = createButton(restartTexture);
-        reStartButton.setPosition(canvas.getWidth() / 2 - reStartButton.getWidth() / 2, canvas.getHeight() * 0.4f);
+        reStartButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.4f);
         reStartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -125,7 +125,7 @@ public class PauseMode extends Mode implements Screen {
         stage.addActor(reStartButton);
 
         levelSelectButton = createButton(levelselectTexture);
-        levelSelectButton.setPosition(canvas.getWidth() / 2 - levelSelectButton.getWidth() / 2, canvas.getHeight() * 0.3f);
+        levelSelectButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.3f);
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -137,7 +137,7 @@ public class PauseMode extends Mode implements Screen {
 
 
         settingsButton = createButton(settingsTexture);
-        settingsButton.setPosition(canvas.getWidth() / 2 - settingsButton.getWidth() / 2, canvas.getHeight() * 0.2f);
+        settingsButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.2f);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -149,7 +149,7 @@ public class PauseMode extends Mode implements Screen {
 
 
         mainButton = createButton(mainTexture);
-        mainButton.setPosition(canvas.getWidth() / 2 - mainButton.getWidth() / 2, canvas.getHeight() * 0.1f);
+        mainButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.1f);
         mainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
