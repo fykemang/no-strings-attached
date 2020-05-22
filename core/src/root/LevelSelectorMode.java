@@ -114,7 +114,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private LevelMetadata levelMetadata;
 
     private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
-    private final boolean[] themeUnlocked = new boolean[5];
+    public static boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
     private ScrollPane levelView;
@@ -314,6 +314,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private void update(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
+            clickSound.play(GDXRoot.soundVol);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             if (curLevel < levelMetadata.getLevelCount()) {
@@ -327,6 +328,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
                 isDown = false;
             }
+            hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (curLevel > 1) {
                 curLevel--;
@@ -340,6 +342,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
                 isDown = true;
             }
+            hoverSound.play(GDXRoot.soundVol);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -376,7 +379,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         canvas.drawBackground(forestBkg);
         canvas.drawBackground(cityBkg);
 
-        for (int i = 0; i < buttonPos.size(); i++) {
+        for (int i = 0; i < 5; i++) {
             Vector2 button = buttonPos.get(i);
             if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                 selectorFont.setColor(Color.WHITE);
@@ -478,6 +481,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
+        levelSelectorMusic.play();
         if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
             last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
@@ -493,7 +497,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
         Gdx.input.setInputProcessor(stage);
     }
@@ -549,8 +553,14 @@ public class LevelSelectorMode extends Mode implements Screen {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
+                        clickSound.play();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }
+                }
+
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    hoverSound.play();
                 }
             });
             levelTable.add(Button).pad(10);
@@ -590,7 +600,11 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                curLevel++;
+                if (curLevel < levelMetadata.getLevelCount()) {
+                    curLevel++;
+                    clickSound.play();
+                }
+
                 if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
@@ -607,7 +621,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
-                curLevel--;
+                if (curLevel > 1) {
+                    curLevel--;
+                    clickSound.play();
+                }
                 if (curLevel < 10) {
                     isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
@@ -644,6 +661,12 @@ public class LevelSelectorMode extends Mode implements Screen {
     public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
+
+    public static void lock() {
+        Arrays.fill(themeUnlocked, false);
+        themeUnlocked[0] = true;
+    }
+
 
     public void saveGame() {
         this.levelMetadata.saveGame();

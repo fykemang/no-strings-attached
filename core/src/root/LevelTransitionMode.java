@@ -185,7 +185,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
+                clickSound.play(GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
             }
 
@@ -207,7 +207,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         replayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
+                clickSound.play(GDXRoot.soundVol);
                 listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
             }
 
@@ -228,7 +228,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
+                clickSound.play(GDXRoot.soundVol);
                 listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
             }
 
@@ -244,7 +244,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         });
         stage.addActor(mainMenuButton);
 
-        victorySound.play(0.2f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.soundVol);
 
         try {
             // Let ANY connected controller start the game.
@@ -365,21 +365,21 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         float w1 = replayButton.getWidth() / 2.0f;
         float h1 = replayButton.getHeight() / 2.0f;
         if (Math.abs(screenX) < w1 && Math.abs(screenY) < h1) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = SelectedButton.REPLAY;
         }
 
         float w2 = mainMenuButton.getWidth() / 2.0f;
         float h2 = mainMenuButton.getHeight() / 2.0f;
         if (Math.abs(screenX) < w2 && Math.abs(screenY) < h2) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = SelectedButton.EXIT;
         }
 
         float w3 = nextButton.getWidth() / 2.0f;
         float h3 = nextButton.getHeight() / 2.0f;
         if (Math.abs(screenX) < w3 && Math.abs(screenY) < h3) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = SelectedButton.NEXT;
         }
 
@@ -410,7 +410,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     @Override
     public void show() {
 //        music.play();
-        victorySound.play(0.2f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.soundVol);
     }
 
     @Override
@@ -496,13 +496,13 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             if (listener != null) {
                 final LevelTransitionMode transition = this;
                 if (pressState == SelectedButton.REPLAY) {
-                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    clickSound.play(GDXRoot.soundVol);
                     listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
                 } else if (pressState == SelectedButton.EXIT) {
-                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    clickSound.play(GDXRoot.soundVol);
                     listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
                 } else if (pressState == SelectedButton.NEXT) {
-                    clickSound.play(0.5f * GDXRoot.soundVol);
+                    clickSound.play(GDXRoot.soundVol);
                     listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
                 }
             }
@@ -533,7 +533,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             switch (currentSelection) {
                 case REPLAY:
                     if (lastState != 1) {
-                        hoverSound.play(3 * GDXRoot.soundVol);
+                        hoverSound.play(GDXRoot.soundVol);
                     }
                     lastState = 1;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 6 - replayButton.getWidth() / 4,
@@ -541,7 +541,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
                     break;
                 case EXIT:
                     if (lastState != 2) {
-                        hoverSound.play(3 * GDXRoot.soundVol);
+                        hoverSound.play(GDXRoot.soundVol);
                     }
                     lastState = 2;
                     canvas.drawUI(selectTexture, canvas.getWidth() / 2 - mainMenuButton.getWidth() / 4,
@@ -549,7 +549,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
                     break;
                 case NEXT:
                     if (lastState != 3) {
-                        hoverSound.play(3 * GDXRoot.soundVol);
+                        hoverSound.play(GDXRoot.soundVol);
                     }
                     lastState = 3;
                     canvas.drawUI(selectTexture, canvas.getWidth() * 5 / 6 - nextButtonTexture.getWidth() / 4,
@@ -571,7 +571,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
 
     public void reset() {
-        victorySound.play(0.2f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.soundVol);
         Gdx.input.setInputProcessor(stage);
     }
 

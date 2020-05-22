@@ -229,7 +229,7 @@ public class GameMode extends Mode implements Screen {
     protected FilmStrip forest_door;
     protected FilmStrip mountain_door;
     private Stage stage;
-    private float volume = 0.5f * GDXRoot.musicVol;
+    private float volume = GDXRoot.musicVol;
     /**
      * The font for giving messages to the player
      */
@@ -403,14 +403,14 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for backgrounds
      */
-    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
-    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
-    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
+    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/city_sky.png"};
+    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/city_buildings.png", "background/city_buildings2.png"};
+    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/city_clouds.png"};
     //    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/villagelayer1.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-skydarken-sky.png", "background/village3-skydarken-mountains.png"};
     //    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/villagelayer2.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-skydarken-houses.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
     private final String[] FOREST_BKG_FILES_LAYER_C = new String[]{};
@@ -841,7 +841,7 @@ public class GameMode extends Mode implements Screen {
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
                 break;
         }
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
     }
@@ -1044,7 +1044,7 @@ public class GameMode extends Mode implements Screen {
         didPlayCollect = false;
         didPlayJump = false;
         didPlayWalk = false;
-        volume = 0.5f * GDXRoot.musicVol;
+        volume = GDXRoot.musicVol;
     }
 
     /**
@@ -1349,12 +1349,12 @@ public class GameMode extends Mode implements Screen {
 
     public void updatePaused(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             gameState = GameState.PLAYING;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             exitToSelector();
         }
     }
@@ -1557,7 +1557,7 @@ public class GameMode extends Mode implements Screen {
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             listener.exitScreen(this, PauseMode.INTO_PAUSE);
         }
 
@@ -1597,9 +1597,9 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-                        jumpSound.play(0.5f * GDXRoot.soundVol);
+                        jumpSound.play(GDXRoot.soundVol);
                     } else {
-                        trampolineJumpSound.play(0.5f * GDXRoot.soundVol);
+                        trampolineJumpSound.play(GDXRoot.soundVol);
                     }
                     didPlayJump = true;
                     didPlayLand = false;
@@ -1662,7 +1662,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play(0.5f * GDXRoot.soundVol);
+                                    snipSound.play(GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
@@ -1712,7 +1712,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isDidCollect() != null && !didPlayCollect) {
-                collectSound.play(0.5f * GDXRoot.soundVol);
+                collectSound.play(GDXRoot.soundVol);
                 for (int i = 0; i < items.size(); i++) {
                     if (itemNames.get(i).equals(player.isDidCollect()) && !collectedItems[i]) {
                         collectedItems[i] = true;
@@ -1786,7 +1786,7 @@ public class GameMode extends Mode implements Screen {
                     !player.isJumping() && !player.isRising() && !player.isOnTrampoline()) {
                 if (!didPlayWalk) {
                     walkingMusic.play();
-                    walkingMusic.setVolume(0.5f * GDXRoot.soundVol);
+                    walkingMusic.setVolume(GDXRoot.soundVol);
                     walkingMusic.setLooping(true);
                     didPlayWalk = true;
                 }
@@ -1839,6 +1839,17 @@ public class GameMode extends Mode implements Screen {
                 canvas.drawMirrorred(t.getTexture(), -.3f * camera, 0f, canvas.getWidth() * 1.2f, canvas.getHeight() * 1.2f, t.getRegionWidth(), t.getRegionHeight(), 1.2f);
             }
         }
+        if (billboards.size() >= level.getText().size()) {
+            for (int i = 0; i < level.getText().size(); i++) {
+                TextBox text = level.getText().get(i);
+                TextureRegion tex = billboards.get(i);
+
+                if (Math.abs(player.getX() - text.getX()) < 3)
+                    canvas.draw(tex,
+                            text.getX() * this.scale.x - tex.getRegionWidth() / 2,
+                            text.getY() * this.scale.y - tex.getRegionHeight() / 2);
+            }
+        }
 
         canvas.end();
         canvas.begin();
@@ -1868,14 +1879,6 @@ public class GameMode extends Mode implements Screen {
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
         canvas.drawUI(UI_exit, canvas.getWidth() - UI_restart.getRegionWidth() - UI_exit.getRegionWidth(),
                 canvas.getHeight() - UI_restart.getRegionHeight(), 1f);
-        if (billboards.size() >= level.getText().size()) {
-            for (int i = 0; i < level.getText().size(); i++) {
-                TextBox text = level.getText().get(i);
-                TextureRegion tex = billboards.get(i);
-                canvas.draw(tex,
-                        text.getX() * this.scale.x - tex.getRegionWidth() / 2, text.getY() * this.scale.y - tex.getRegionHeight() / 2);
-            }
-        }
 
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
@@ -2261,7 +2264,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
     }
 
     @Override
