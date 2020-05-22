@@ -52,6 +52,14 @@ public class Spikes extends PolygonObstacle {
             hx += 0.2f;
             addon += 0.4f;
         }
+        else if (GDXRoot.currentLevel >= 10 && GDXRoot.currentLevel <= 13) {
+            hx -= 0.05f;
+            addon -= 0.1f;
+        }
+        else if (GDXRoot.currentLevel >= 14) {
+            hx += 0.05f;
+            addon += 0.1f;
+        }
         switch (direction) {
             case "up":
                 sensorCenter = new Vector2(getWidth() / 2f, 0.8f);
