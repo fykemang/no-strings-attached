@@ -2286,7 +2286,7 @@ public class GameMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-
+        walkingMusic.stop();
     }
 
 
