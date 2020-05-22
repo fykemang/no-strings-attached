@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import obstacle.PolygonObstacle;
-import root.GDXRoot;
 import root.GameCanvas;
 
 public class Spikes extends PolygonObstacle {
@@ -50,7 +49,7 @@ public class Spikes extends PolygonObstacle {
                 break;
             case "left":
                 sensorCenter = new Vector2(0.2f, getHeight() / 2f);
-                sensorShape.setAsBox(0.25f,  getHeight()/2, sensorCenter, 0.0f);
+                sensorShape.setAsBox(0.25f, getHeight() / 2, sensorCenter, 0.0f);
                 break;
             case "down":
                 sensorCenter = new Vector2(getWidth() / 2f, 0.2f);
@@ -58,7 +57,7 @@ public class Spikes extends PolygonObstacle {
                 break;
             case "right":
                 sensorCenter = new Vector2(getWidth() - 0.2f, getHeight() / 2f);
-                sensorShape.setAsBox(0.25f, getHeight()/2, sensorCenter, 0.0f);
+                sensorShape.setAsBox(0.25f, getHeight() / 2, sensorCenter, 0.0f);
                 break;
         }
         sensorDef.shape = sensorShape;
