@@ -1,0 +1,243 @@
+{
+  "text": [],
+  "tutorial": false,
+  "type": "mountain",
+  "items": [
+    {
+      "id": 0,
+      "x": 4.67,
+      "y": 12.91
+    },
+    {
+      "id": 1,
+      "x": 29.44,
+      "y": 13.69
+    },
+    {
+      "id": 2,
+      "x": 21.47,
+      "y": 13.69
+    }
+  ],
+  "tiles": [
+    {
+      "type": "normal",
+      "id": 0,
+      "isSliding": false,
+      "width": 1.6666666666666667,
+      "height": 1,
+      "x": 2.6666666666666665,
+      "y": 1.8,
+      "direction": "up"
+    },
+    {
+      "type": "normal",
+      "id": 1,
+      "isSliding": false,
+      "width": 1.5,
+      "height": 7.6,
+      "y": 10,
+      "x": 18,
+      "direction": "up"
+    },
+    {
+      "type": "spikes",
+      "id": 2,
+      "isSliding": false,
+      "y": 10,
+      "width": 1,
+      "x": 17,
+      "height": 7.6,
+      "direction": "left"
+    },
+    {
+      "type": "spikes",
+      "id": 3,
+      "isSliding": false,
+      "x": 19.5,
+      "y": 10,
+      "height": 7.6,
+      "width": 1,
+      "direction": "right"
+    },
+    {
+      "type": "normal",
+      "id": 4,
+      "isSliding": false,
+      "x": 17.6,
+      "width": 1.9866666666666655,
+      "height": 1,
+      "y": 0.6,
+      "direction": "up"
+    }
+  ],
+  "npc": [
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 1,
+      "y": 5
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 5.5,
+      "y": 5
+    },
+    {
+      "isSliding": false,
+      "isRotating": true,
+      "center": {
+        "x": 4.5,
+        "y": 13
+      },
+      "width": 40,
+      "height": 80,
+      "degree": 50,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 10,
+      "y": 6.2
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 5,
+      "x": 13.8
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 3,
+      "y": 10
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 6.2,
+      "y": 9
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 9,
+      "y": 14.2
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 13.5,
+      "y": 14.2
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 5,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 22,
+      "y": 16
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 5,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 26.5,
+      "y": 16
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 6,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 22,
+      "y": 4.5
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 6,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 26.5,
+      "y": 4.5
+    }
+  ],
+  "player": {
+    "x": 2.8533333333333335,
+    "y": 3.65
+  },
+  "exit": {
+    "x": 18.5,
+    "y": 1.8
+  }
+}
