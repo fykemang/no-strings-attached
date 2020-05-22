@@ -1200,7 +1200,7 @@ public class GameMode extends Mode implements Screen {
 
     public void createCouple(NpcData curr, NpcData next, int id) {
         float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
-        float[] points = new float[]{0f, 0f, 0f, .8f, .8f, .65f, .65f, 0f};
+        float[] points = new float[]{0f, 0f, 0f, .8f, .65f, .8f, .65f, 0f};
         int n1 = rand.nextInt(npcTypes.length);
         int n2 = rand.nextInt(npcTypes.length);
         while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
