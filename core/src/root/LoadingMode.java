@@ -417,6 +417,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             cardOpen = false;
+            GDXRoot.isVillagePlayed = false;
+            GDXRoot.isForestPlayed = false;
+            GDXRoot.isCityPlayed = false;
+            GDXRoot.isVillagePlayed = false;
+            LevelSelectorMode.curLevel = 1;
+            LevelSelectorMode.lock();
             listener.exitScreen(this, CutScene.INTO_CUTSCENE);
         }
 
@@ -729,6 +735,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (settingsButton == null || quitButton == null || startGameButton == null
+                || (loadGameButtonEnabled == null && loadGameButtonDisabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }
@@ -746,6 +753,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             if (Math.abs(screenX - buttonSRTX) < s1 && Math.abs(screenY - buttonNVMY) < s2) {
                 clickSound.play(0.5f * GDXRoot.soundVol);
                 cardOpen = false;
+                GDXRoot.isVillagePlayed = false;
+                GDXRoot.isForestPlayed = false;
+                GDXRoot.isCityPlayed = false;
+                GDXRoot.isVillagePlayed = false;
+                LevelSelectorMode.curLevel = 1;
+                LevelSelectorMode.lock();
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             }
             return false;
@@ -858,6 +871,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public boolean keyDown(int keycode) {
         if (settingsButton == null || quitButton == null || startGameButton == null
+                || (loadGameButtonEnabled == null && loadGameButtonDisabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }
@@ -928,7 +942,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      * @return whether to hand the event to other listeners.
      */
     public boolean mouseMoved(int screenX, int screenY) {
-        if (settingsButton == null || quitButton == null || startGameButton == null
+        if (settingsButton == null || quitButton == null || startGameButton == null ||
+                (loadGameButtonDisabled == null && loadGameButtonEnabled == null)
                 || pressState == MouseState.OTHER) {
             return true;
         }

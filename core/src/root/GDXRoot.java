@@ -80,11 +80,10 @@ public class GDXRoot extends Game implements ScreenListener {
     private boolean TransitionLoaded = false;
 
     private Screen LastScreen;
-
-    private boolean isOpeningPlayed = false;
-    private boolean isCityPlayed = false;
-    private boolean isVillagePlayed = false;
-    private boolean isForestPlayed = false;
+    public static boolean isOpeningPlayed = false;
+    public static  boolean isCityPlayed = false;
+    public static  boolean isVillagePlayed = false;
+    public static  boolean isForestPlayed = false;
 
     /**
      * Creates a new game from the configuration settings.
@@ -121,7 +120,7 @@ public class GDXRoot extends Game implements ScreenListener {
         pauseScreen = new PauseMode(manager, UIcanvas);
         pauseScreen.preloadContent(manager);
 
-        helpScreen =  new HelpMode(manager, UIcanvas);
+        helpScreen = new HelpMode(manager, UIcanvas);
         helpScreen.preloadContent(manager);
 
         settings = new SettingMode(manager, UIcanvas);
@@ -276,9 +275,7 @@ public class GDXRoot extends Game implements ScreenListener {
         } else if (screen == helpScreen) {
             pauseScreen.initialize();
             setScreen(pauseScreen);
-        }
-        else
-        if (screen == pauseScreen) {
+        } else if (screen == pauseScreen) {
             switch (exitCode) {
                 case GameMode.EXIT_INTO_GAME:
                     gameMode.resume();

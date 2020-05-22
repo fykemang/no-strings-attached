@@ -115,7 +115,7 @@ public class PauseMode extends Mode implements Screen {
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-               currentSelection = continueButton;
+                currentSelection = continueButton;
             }
         });
         stage.addActor(continueButton);
@@ -126,6 +126,7 @@ public class PauseMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, GameMode.EXIT_RESET);
             }
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = reStartButton;
@@ -142,6 +143,7 @@ public class PauseMode extends Mode implements Screen {
 
                 listener.exitScreen(pause, LevelSelectorMode.INTO_SELECTOR);
             }
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = levelSelectButton;
@@ -159,6 +161,7 @@ public class PauseMode extends Mode implements Screen {
                 listener.exitScreen(pause, SettingMode.INTO_SETTING);
 
             }
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = settingsButton;
@@ -175,6 +178,7 @@ public class PauseMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, HelpMode.INTO_HELP);
             }
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = mainButton;
@@ -250,8 +254,8 @@ public class PauseMode extends Mode implements Screen {
         canvas.drawUI(logoTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.75f, 1f);
         canvas.actStage(stage);
 
-        if (currentSelection != null){
-            canvas.drawUI(selectorTexture, currentSelection.getX() + selectorTexture.getRegionWidth()/4, currentSelection.getY(), 1f);
+        if (currentSelection != null) {
+            canvas.drawUI(selectorTexture, currentSelection.getX() + selectorTexture.getRegionWidth() / 4, currentSelection.getY(), 1f);
         }
         canvas.end();
     }
