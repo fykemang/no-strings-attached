@@ -48,7 +48,6 @@ public class Spikes extends PolygonObstacle {
                 sensorShape.setAsBox(getWidth() / 2f, 0.25f, sensorCenter, 0.0f);
                 break;
             case "left":
-                System.out.println(getHeight());
                 sensorCenter = new Vector2(0.2f, getHeight() / 2f);
                 sensorShape.setAsBox(0.25f, getHeight() / 2, sensorCenter, 0.0f);
                 break;

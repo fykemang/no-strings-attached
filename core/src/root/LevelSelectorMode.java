@@ -57,7 +57,6 @@ public class LevelSelectorMode extends Mode implements Screen {
     private static final String ARROWDOWN = "ui/arrow-down.png";
     private static final String ARROWRIGHT = "ui/arrow-right.png";
     private static final String ARROWLEFT = "ui/arrow-left.png";
-    private static final String PRESS_SPACE = "ui/pressSpace.png";
     public static int curLevel = 1;
     int lastLevel = 0;
     Table container;
@@ -151,7 +150,6 @@ public class LevelSelectorMode extends Mode implements Screen {
         loadAsset(ARROWLEFT, Texture.class, manager);
         loadAsset(ARROWRIGHT, Texture.class, manager);
         loadAsset(ARROWDOWN, Texture.class, manager);
-        loadAsset(PRESS_SPACE, Texture.class, manager);
     }
 
     @Override
@@ -237,10 +235,10 @@ public class LevelSelectorMode extends Mode implements Screen {
         buttonPos.add(new Vector2(800, 200));
         buttonPos.add(new Vector2(700, 210));
         buttonPos.add(new Vector2(600, 250));
-        buttonPos.add(new Vector2(500, 250));
-        buttonPos.add(new Vector2(400, 250));
-        buttonPos.add(new Vector2(300, 250));
-        buttonPos.add(new Vector2(200, 250));
+        buttonPos.add(new Vector2(500, 260));
+        buttonPos.add(new Vector2(400, 280));
+        buttonPos.add(new Vector2(300, 300));
+        buttonPos.add(new Vector2(330, 400));
         themeUnlocked[CITY] = true;
         active = true;
     }
@@ -486,6 +484,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.play();
         if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
@@ -501,6 +500,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelView.setScrollX((curLevel - 1) * 350f);
         level = -1;
         ready = false;
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.play();
         levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
@@ -558,14 +558,15 @@ public class LevelSelectorMode extends Mode implements Screen {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
-                        clickSound.play();
+                        clickSound.play(GDXRoot.soundVol);
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }
                 }
 
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    hoverSound.play();
+                    hoverSound.play(GDXRoot.soundVol
+                    );
                 }
             });
             levelTable.add(Button).pad(10);
@@ -607,7 +608,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() + 350);
                 if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                     curLevel++;
-                    clickSound.play();
+                    clickSound.play(GDXRoot.soundVol);
                 }
                 if (curLevel > 10) {
                     isDown = false;
@@ -627,7 +628,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() - 350);
                 if (curLevel > 1) {
                     curLevel--;
-                    clickSound.play();
+                    clickSound.play(GDXRoot.soundVol);
                 }
                 if (curLevel < 10) {
                     isDown = true;
