@@ -264,6 +264,8 @@ public class Stone extends PolygonObstacle {
                             width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
                 }
             } else if (height > 2 * width) {
+
+
                 this.x = getX();
                 this.y = getY();
                 float scx = width * drawScale.x / texture.getRegionWidth();
@@ -271,10 +273,17 @@ public class Stone extends PolygonObstacle {
                 float dist = height * drawScale.y / num;
                 float scy = dist / (texture.getRegionHeight() * scx);
                 num = num == 0 ? 1 : num;
+                if (type.equals("forest")){
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
+                                y * drawScale.y + i * dist, getAngle(), scx*1.15f, scx * scy*1.15f);
 
-                for (int i = 0; i < num; i++)
-                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
-                            y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
+
+                }else {
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
+                                y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
+                }
 
             } else {
 
@@ -301,7 +310,13 @@ public class Stone extends PolygonObstacle {
                     canvas.draw(texRight, Color.WHITE, 0, 0, x * drawScale.x + (num - 1) * dist,
                             y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
 
-                } else {
+                } else if (type.equals("forest")) {
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                                y * drawScale.y, getAngle(), scx * scy*1.15f, scy*1.1f);
+
+                }  else
+                 {
 
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
