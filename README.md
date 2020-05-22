@@ -1,12 +1,12 @@
 # No Strings Attached - Snip Snip Studios
 
+## [Game Trailer](https://www.youtube.com/watch?v=ND1HRDI6Apc)
+
 ## Team Members
 Jamie Poole, Mike Fang, Alina Kim, Yue (Olivia) Li, Yiwei (Vivi) Ye, Junhan (Julia) Zeng, Tae Seo (Chris) Lee, Lily Xie
 
 ## Genre
 Physics, Platformer
-
-## [Game Trailer](https://www.youtube.com/watch?v=ND1HRDI6Apc)
 
 ## Description
 They say that the gods tie an invisible red thread between the fingers of those who are soulmates. However, Robin is not so fortunate. Born with a severed red string of fate, Robin embarks on an adventure to fulfill a task the gods did not: create their soulmate. By trampolining off of others’ strings to catapult through the air or cutting them to create rope swings off of which Robin can soar, Robin treks through the world in search of skeins of magical red yarn to finally fashion together a soulmate of their own.
