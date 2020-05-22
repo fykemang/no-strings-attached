@@ -46,8 +46,8 @@ public class Stone extends PolygonObstacle {
 //        setFriction(10f);
         isSliding = true;
         back = false;
-        leftSlideLim = new Vector2(left[0], left[1] - 0.5f);
-        rightSlideLim = new Vector2(right[0], right[1] - 0.5f);
+        leftSlideLim = new Vector2(left[0], left[1]);
+        rightSlideLim = new Vector2(right[0], right[1]);
         slideDir = new Vector2(left[0] - getX(), leftSlideLim.y - getY());
         slideDir.nor();
     }
