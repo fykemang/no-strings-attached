@@ -317,7 +317,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
             clickSound.play(GDXRoot.soundVol);
         }
@@ -459,7 +459,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
-        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.05f, 0.7f);
+        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.08f, 0.7f);
         canvas.actStage(stage);
         canvas.end();
     }
