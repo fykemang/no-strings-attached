@@ -50,7 +50,7 @@ public class Stone extends PolygonObstacle {
         back = false;
         leftSlideLim = new Vector2(left[0], left[1]);
         rightSlideLim = new Vector2(right[0], right[1]);
-        slideDir = new Vector2(left[0] - getX(), leftSlideLim.y - getY());
+        slideDir = new Vector2(left[0] - getX(), left[1] - getY());
         slideDir.nor();
     }
 

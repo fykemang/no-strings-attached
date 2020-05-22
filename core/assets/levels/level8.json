@@ -102,16 +102,16 @@
       "isSliding": false,
       "isRotating": true,
       "center": {
-        "x": 4.5,
+        "x": 5,
         "y": 13
       },
       "width": 40,
       "height": 80,
-      "degree": 50,
+      "degree": 60,
       "id": 1,
       "leftPos": {},
       "rightPos": {},
-      "x": 10,
+      "x": 9.5,
       "y": 6.2
     },
     {
@@ -125,7 +125,7 @@
       "leftPos": {},
       "rightPos": {},
       "y": 5,
-      "x": 13.8
+      "x": 13
     },
     {
       "isSliding": false,
@@ -137,7 +137,7 @@
       "id": 2,
       "leftPos": {},
       "rightPos": {},
-      "x": 3,
+      "x": 3.5,
       "y": 10
     },
     {
@@ -150,7 +150,7 @@
       "id": 2,
       "leftPos": {},
       "rightPos": {},
-      "x": 6.2,
+      "x": 7,
       "y": 9
     },
     {
