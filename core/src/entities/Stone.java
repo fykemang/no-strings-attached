@@ -37,6 +37,8 @@ public class Stone extends PolygonObstacle {
     Vector2 rotEndLim;
     float degree;
     float rotX, rotY;
+    TextureRegion texLeft;
+    TextureRegion texRight;
 
     public void setIsSliding(boolean b) {
         isSliding = b;
@@ -168,7 +170,7 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
 
-        if (type.equals("mountain") || type.equals("village")) {
+        if (type.equals("mountain")) {
 
             if (height <= 2 && width <= 2 && type.equals("village")) {
                 float firstx = getX() * drawScale.x;
@@ -251,9 +253,16 @@ public class Stone extends PolygonObstacle {
             if (height <= 2 && width <= 2) {
                 float firstx = getX() * drawScale.x;
                 float firsty = getY() * drawScale.y;
-                canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
-                        firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
-                        width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
+                if (type.equals("village")) {
+                    canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
+                            firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
+                            width * drawScale.x / texture.getRegionWidth() * 1.2f, 1.2f * height * drawScale.y / texture.getRegionHeight());
+
+                } else {
+                    canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
+                            firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
+                            width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
+                }
             } else if (height > 2 * width) {
                 this.x = getX();
                 this.y = getY();
@@ -268,6 +277,7 @@ public class Stone extends PolygonObstacle {
                             y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
 
             } else {
+
                 this.x = getX();
                 this.y = getY();
 
@@ -278,11 +288,32 @@ public class Stone extends PolygonObstacle {
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;
 
-                for (int i = 0; i < num; i++)
-                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                            y * drawScale.y, getAngle(), scx * scy, scy);
+                if (type.equals("village") && texLeft != null && texRight != null) {
+
+
+                    canvas.draw(texLeft, Color.WHITE, 0, 0, x * drawScale.x,
+                            y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
+
+                    for (int i = 1; i < num - 1; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                                y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
+
+                    canvas.draw(texRight, Color.WHITE, 0, 0, x * drawScale.x + (num - 1) * dist,
+                            y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
+
+                } else {
+
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                                y * drawScale.y, getAngle(), scx * scy, scy);
+                }
             }
 
         }
+    }
+
+    public void setLeftRight(TextureRegion l, TextureRegion r) {
+        texLeft = l;
+        texRight = r;
     }
 }

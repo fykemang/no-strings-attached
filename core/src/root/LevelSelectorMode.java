@@ -114,7 +114,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private LevelMetadata levelMetadata;
 
     private final int NONE = 0, CITY = 1, VILLAGE = 2, FOREST = 3, MOUNTAIN = 4;
-    private final boolean[] themeUnlocked = new boolean[5];
+    public static boolean[] themeUnlocked = new boolean[5];
 
     private int theme = NONE;
     private ScrollPane levelView;
@@ -219,24 +219,28 @@ public class LevelSelectorMode extends Mode implements Screen {
         this.assets = new Array<>();
         Arrays.fill(themeUnlocked, true);
         buttonPos.add(new Vector2(280, 610));
-        buttonPos.add(new Vector2(350, 650));
-        buttonPos.add(new Vector2(440, 630));
-        buttonPos.add(new Vector2(520, 650));
-        buttonPos.add(new Vector2(600, 680));
+        buttonPos.add(new Vector2(330, 650));
+        buttonPos.add(new Vector2(410, 630));
+        buttonPos.add(new Vector2(500, 650));
+        buttonPos.add(new Vector2(550, 680));
+
         buttonPos.add(new Vector2(690, 710));
-        buttonPos.add(new Vector2(780, 760));
-        buttonPos.add(new Vector2(840, 660));
-        buttonPos.add(new Vector2(860, 540));
-        buttonPos.add(new Vector2(920, 460));
-        buttonPos.add(new Vector2(820, 380));
-        buttonPos.add(new Vector2(720, 340));
-        buttonPos.add(new Vector2(780, 300));
-//        buttonPos.add(new Vector2(860, 250));
+        buttonPos.add(new Vector2(800, 670));
+        buttonPos.add(new Vector2(900, 720));
+        buttonPos.add(new Vector2(1000, 700));
+
+        buttonPos.add(new Vector2(1110, 550));
+        buttonPos.add(new Vector2(1000, 500));
+        buttonPos.add(new Vector2(920, 450));
+        buttonPos.add(new Vector2(810, 400));
+
         buttonPos.add(new Vector2(800, 200));
-        buttonPos.add(new Vector2(700, 220));
+        buttonPos.add(new Vector2(700, 210));
         buttonPos.add(new Vector2(600, 250));
-        buttonPos.add(new Vector2(500, 230));
-        buttonPos.add(new Vector2(410, 250));
+        buttonPos.add(new Vector2(500, 250));
+        buttonPos.add(new Vector2(400, 250));
+        buttonPos.add(new Vector2(300, 250));
+        buttonPos.add(new Vector2(200, 250));
         themeUnlocked[CITY] = true;
         active = true;
     }
@@ -267,7 +271,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void pause() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
@@ -277,7 +281,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
@@ -313,11 +317,12 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
+            clickSound.play(GDXRoot.soundVol);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (curLevel < levelMetadata.getLevelCount()) {
+            if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                 curLevel++;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
@@ -328,6 +333,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
                 isDown = false;
             }
+            hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (curLevel > 1) {
                 curLevel--;
@@ -341,6 +347,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
                 isDown = true;
             }
+            hoverSound.play(GDXRoot.soundVol);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -377,7 +384,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         canvas.drawBackground(forestBkg);
         canvas.drawBackground(cityBkg);
 
-        for (int i = 0; i < buttonPos.size(); i++) {
+        for (int i = 0; i < 5; i++) {
             Vector2 button = buttonPos.get(i);
             if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                 selectorFont.setColor(Color.WHITE);
@@ -452,7 +459,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
-        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.05f, 0.7f);
+        canvas.drawUI(enterTexture, canvas.getWidth() * 0.82f, canvas.getHeight() * 0.05f, 0.9f);
         canvas.actStage(stage);
         canvas.end();
     }
@@ -479,6 +486,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
+        levelSelectorMusic.play();
         if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
             last.setPosition(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.8f);
@@ -494,7 +502,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
         Gdx.input.setInputProcessor(stage);
     }
@@ -550,8 +558,14 @@ public class LevelSelectorMode extends Mode implements Screen {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
+                        clickSound.play();
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }
+                }
+
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    hoverSound.play();
                 }
             });
             levelTable.add(Button).pad(10);
@@ -591,7 +605,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                curLevel++;
+                if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
+                    curLevel++;
+                    clickSound.play();
+                }
                 if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
@@ -608,7 +625,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
-                curLevel--;
+                if (curLevel > 1) {
+                    curLevel--;
+                    clickSound.play();
+                }
                 if (curLevel < 10) {
                     isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
@@ -645,6 +665,12 @@ public class LevelSelectorMode extends Mode implements Screen {
     public void unlock(int theme) {
         themeUnlocked[theme] = true;
     }
+
+    public static void lock() {
+        Arrays.fill(themeUnlocked, false);
+        themeUnlocked[0] = true;
+    }
+
 
     public void saveGame() {
         this.levelMetadata.saveGame();

@@ -158,20 +158,7 @@ public class CutScene extends Mode implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
-            switch (theme) {
-                case OPENING:
-                    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                        listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
-                    }
-                    canvas.drawUIText("press -> to go to the next page", canvas.getWidth() * 2 / 3, 60, 0.5f);
-
-
-            }
-            if (currentSlide < textures.size() - 1) {
-                canvas.drawUI(skiptexture, canvas.getWidth() * 0.9f - skiptexture.getRegionWidth() / 2, canvas.getHeight() * 0.9f, 1f);
-            }
         }
-        canvas.actStage(stage);
         canvas.end();
     }
 
@@ -232,7 +219,7 @@ public class CutScene extends Mode implements Screen {
             default:
         }
         music.play();
-        music.setVolume(0.25f * GDXRoot.musicVol);
+        music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
         if (slideMode) {
 //            nextButtom = createButton(nextTexture);
