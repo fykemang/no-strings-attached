@@ -252,9 +252,16 @@ public class Stone extends PolygonObstacle {
             if (height <= 2 && width <= 2) {
                 float firstx = getX() * drawScale.x;
                 float firsty = getY() * drawScale.y;
-                canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
-                        firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
-                        width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
+                if (type.equals("village")){
+                    canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
+                            firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
+                            width * drawScale.x / texture.getRegionWidth() * 1.2f, 1.2f* height * drawScale.y / texture.getRegionHeight());
+
+                }else{
+                    canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
+                            firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
+                            width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
+                }
             } else if (height > 2 * width) {
                 this.x = getX();
                 this.y = getY();
