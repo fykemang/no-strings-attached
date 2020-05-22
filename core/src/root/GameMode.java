@@ -375,7 +375,7 @@ public class GameMode extends Mode implements Screen {
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
     private static final String VILLAGE_LEFT = "entities/village-left.png";
-    private static final String VILLAGE_RIGHT = "entities/village-left.png";
+    private static final String VILLAGE_RIGHT = "entities/village-right.png";
     private static final String VILLAGE_NPC = "entities/village-left.png";
     private static final String FOREST_TILE_FILE = "entities/forest-leaves.png";
     private static final String FOREST_MUSHROOM_FILE = "entities/forest-mushroom.png";
@@ -392,6 +392,9 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion villageSpikeVertTile;
     protected TextureRegion mountainSpikeTile;
     protected TextureRegion mountainSpikeVertTile;
+    protected TextureRegion villageLeftTexture;
+    protected TextureRegion villageRightTexture;
+    protected TextureRegion villageNPCTexture;
     private ArrayList<TextureRegion> billboards;
 
     /**
@@ -535,6 +538,12 @@ public class GameMode extends Mode implements Screen {
         assets.add(FOREST_MUSHROOM_FILE);
         manager.load(ZOOM_UI, Texture.class);
         assets.add(ZOOM_UI);
+        manager.load(VILLAGE_LEFT, Texture.class);
+        assets.add(VILLAGE_LEFT);
+        manager.load(VILLAGE_RIGHT, Texture.class);
+        assets.add(VILLAGE_RIGHT);
+        manager.load(VILLAGE_NPC, Texture.class);
+        assets.add(VILLAGE_NPC);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -897,7 +906,9 @@ public class GameMode extends Mode implements Screen {
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         village_door = createFilmStrip(manager, VILLAGE_GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
-
+        villageLeftTexture = createTexture(manager, VILLAGE_LEFT, false);
+        villageRightTexture = createTexture(manager, VILLAGE_RIGHT, false);
+        villageNPCTexture = createTexture(manager, VILLAGE_NPC, false);
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, LAND_FILE);
