@@ -1,17 +1,17 @@
 {
   "text": [],
   "tutorial": false,
-  "type": "city",
+  "type": "mountain",
   "items": [
     {
       "id": 0,
       "x": 22.77,
-      "y": 5.92
+      "y": 6.5
     },
     {
       "id": 1,
-      "x": 3.2,
-      "y": 10.97
+      "x": 12,
+      "y": 12
     }
   ],
   "tiles": [
@@ -30,7 +30,7 @@
       "type": "normal",
       "id": 1,
       "isSliding": false,
-      "x": 26.133333333333333,
+      "x": 25.5,
       "height": 0.47297297297297297,
       "y": 12.61,
       "direction": "up"
@@ -46,15 +46,15 @@
       "degree": 0,
       "id": 0,
       "leftPos": {
-        "x": 1.9,
-        "y": 9
+        "x": 8,
+        "y": 7
       },
       "rightPos": {
-        "x": 12.9,
-        "y": 9
+        "x": 14,
+        "y": 7
       },
-      "x": 2,
-      "y": 9.3
+      "x": 9,
+      "y": 7.5
     },
     {
       "isSliding": true,
@@ -65,15 +65,15 @@
       "degree": 0,
       "id": 0,
       "leftPos": {
-        "x": 6.4,
-        "y": 9
+        "x": 12.5,
+        "y": 7
       },
       "rightPos": {
-        "x": 17.4,
-        "y": 9
+        "x": 18.5,
+        "y": 7
       },
-      "x": 6.5,
-      "y": 9.3
+      "x": 13.5,
+      "y": 7.5
     },
     {
       "isSliding": false,
@@ -86,7 +86,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 7.093333333333334,
-      "y": 5.25
+      "y": 3
     },
     {
       "isSliding": false,
@@ -99,7 +99,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 11.44,
-      "y": 4.39
+      "y": 3
     },
     {
       "isSliding": false,
@@ -112,7 +112,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 20.48,
-      "y": 8.81
+      "y": 9.5
     },
     {
       "isSliding": false,
@@ -125,7 +125,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 25.173333333333332,
-      "y": 8.87
+      "y": 9.5
     },
     {
       "isSliding": false,
@@ -138,7 +138,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 15.84,
-      "y": 14.08
+      "y": 13.5
     },
     {
       "isSliding": false,
@@ -151,7 +151,7 @@
       "leftPos": {},
       "rightPos": {},
       "x": 19.786666666666665,
-      "y": 15.52
+      "y": 15
     }
   ],
   "player": {
@@ -159,7 +159,7 @@
     "y": 4.95
   },
   "exit": {
-    "x": 27.5,
+    "x": 26.5,
     "y": 13
   }
 }
