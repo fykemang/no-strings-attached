@@ -11,7 +11,7 @@ import java.util.Map;
 public class LevelMetadata implements Json.Serializable {
     private final Map<Integer, Level> levelMap;
     private final Preferences levelState;
-    private final boolean UNLOCK_ALL_LEVELS = true;
+    private final static boolean UNLOCK_ALL_LEVELS = true;
 
     public LevelMetadata() {
         levelMap = new HashMap<>();

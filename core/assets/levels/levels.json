@@ -62,11 +62,23 @@
     },
     {
       "id": 16,
-      "path": "levels/dummy_mountain.json"
+      "path": "levels/level8.json"
     },
     {
       "id": 17,
-      "path": "levels/dummy_mountain.json"
+      "path": "levels/level9.json"
+    },
+    {
+      "id": 18,
+      "path": "levels/level10.json"
+    },
+    {
+      "id": 19,
+      "path": "levels/level11.json"
+    },
+    {
+      "id": 20,
+      "path": "levels/level12.json"
     }
   ]
 }
