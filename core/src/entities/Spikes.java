@@ -43,21 +43,6 @@ public class Spikes extends PolygonObstacle {
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        float f = 1.2f * drawScale.x / texture.getRegionWidth();
-        int n = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * f));
-        n = n == 0 ? 1 : n;
-        float hx = getWidth() / 2f;
-        float addon = 0;
-        if (GDXRoot.currentLevel >= 6 && GDXRoot.currentLevel <= 9) {
-            hx += 0.2f;
-            addon += 0.4f;
-        } else if (GDXRoot.currentLevel >= 10 && GDXRoot.currentLevel <= 13) {
-            hx -= 0.05f;
-            addon -= 0.1f;
-        } else if (GDXRoot.currentLevel >= 14) {
-            hx += 0.05f;
-            addon += 0.1f;
-        }
         switch (direction) {
             case "up":
                 sensorCenter = new Vector2(getWidth() / 2f, 0.8f);
