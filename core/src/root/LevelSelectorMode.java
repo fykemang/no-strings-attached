@@ -486,6 +486,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
 
     public void reset() {
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.play();
         if (curLevel > 10) {
             next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
@@ -501,6 +502,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         levelView.setScrollX((curLevel - 1) * 350f);
         level = -1;
         ready = false;
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.play();
         levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
@@ -558,14 +560,15 @@ public class LevelSelectorMode extends Mode implements Screen {
                     if (levelMetadata.isLevelUnlocked(finalI + 1)) {
                         curLevel = finalI + 1;
                         currentScroll = levelView.getScrollX();
-                        clickSound.play();
+                        clickSound.play(GDXRoot.soundVol);
                         listener.exitScreen(select, GameMode.EXIT_INTO_GAME);
                     }
                 }
 
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    hoverSound.play();
+                    hoverSound.play(GDXRoot.soundVol
+                    );
                 }
             });
             levelTable.add(Button).pad(10);
@@ -607,7 +610,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() + 350);
                 if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                     curLevel++;
-                    clickSound.play();
+                    clickSound.play(GDXRoot.soundVol);
                 }
                 if (curLevel > 10) {
                     isDown = false;
@@ -627,7 +630,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 levelView.setScrollX(levelView.getScrollX() - 350);
                 if (curLevel > 1) {
                     curLevel--;
-                    clickSound.play();
+                    clickSound.play(GDXRoot.soundVol);
                 }
                 if (curLevel < 10) {
                     isDown = true;
