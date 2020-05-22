@@ -287,7 +287,8 @@ public class Stone extends PolygonObstacle {
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;
 
-                if (type.equals("village")){
+                if (type.equals("village") && texLeft!=null && texRight != null){
+
 
                     canvas.draw(texLeft, Color.WHITE, 0, 0, x * drawScale.x ,
                             y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
