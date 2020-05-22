@@ -374,6 +374,9 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
+    private static final String VILLAGE_LEFT = "entities/village-left.png";
+    private static final String VILLAGE_RIGHT = "entities/village-left.png";
+    private static final String VILLAGE_NPC = "entities/village-left.png";
     private static final String FOREST_TILE_FILE = "entities/forest-leaves.png";
     private static final String FOREST_MUSHROOM_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";

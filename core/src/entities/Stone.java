@@ -37,6 +37,8 @@ public class Stone extends PolygonObstacle {
     Vector2 rotEndLim;
     float degree;
     float rotX, rotY;
+    TextureRegion texLeft;
+    TextureRegion texRight;
 
     public void setIsSliding(boolean b) {
         isSliding = b;
@@ -168,7 +170,7 @@ public class Stone extends PolygonObstacle {
     @Override
     public void draw(GameCanvas canvas) {
 
-        if (type.equals("mountain") || type.equals("village")) {
+        if (type.equals("mountain")) {
 
             if (height <= 2 && width <= 2 && type.equals("village")) {
                 float firstx = getX() * drawScale.x;
@@ -267,6 +269,7 @@ public class Stone extends PolygonObstacle {
                             y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
 
             } else {
+
                 this.x = getX();
                 this.y = getY();
 
@@ -277,9 +280,17 @@ public class Stone extends PolygonObstacle {
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;
 
-                for (int i = 0; i < num; i++)
-                    canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                            y * drawScale.y, getAngle(), scx * scy, scy);
+                if (type.equals("village")){
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                                y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+
+                }else {
+
+                    for (int i = 0; i < num; i++)
+                        canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
+                                y * drawScale.y, getAngle(), scx * scy, scy);
+                }
             }
 
         }
