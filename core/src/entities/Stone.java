@@ -252,12 +252,12 @@ public class Stone extends PolygonObstacle {
             if (height <= 2 && width <= 2) {
                 float firstx = getX() * drawScale.x;
                 float firsty = getY() * drawScale.y;
-                if (type.equals("village")){
+                if (type.equals("village")) {
                     canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                             firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
-                            width * drawScale.x / texture.getRegionWidth() * 1.2f, 1.2f* height * drawScale.y / texture.getRegionHeight());
+                            width * drawScale.x / texture.getRegionWidth() * 1.2f, 1.2f * height * drawScale.y / texture.getRegionHeight());
 
-                }else{
+                } else {
                     canvas.draw(texture, Color.WHITE, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2,
                             firstx + width * drawScale.x / 2, firsty + height * drawScale.y / 2, getAngle(),
                             width * drawScale.x / texture.getRegionWidth(), height * drawScale.y / texture.getRegionHeight());
@@ -287,20 +287,20 @@ public class Stone extends PolygonObstacle {
                 float scx = dist / (texture.getRegionWidth() * scy);
                 num = num == 0 ? 1 : num;
 
-                if (type.equals("village") && texLeft!=null && texRight != null){
+                if (type.equals("village") && texLeft != null && texRight != null) {
 
 
-                    canvas.draw(texLeft, Color.WHITE, 0, 0, x * drawScale.x ,
-                            y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+                    canvas.draw(texLeft, Color.WHITE, 0, 0, x * drawScale.x,
+                            y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
 
-                    for (int i = 1; i < num-1 ; i++)
+                    for (int i = 1; i < num - 1; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                                y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+                                y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
 
-                    canvas.draw(texRight, Color.WHITE, 0, 0, x * drawScale.x + (num -1)* dist,
-                            y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+                    canvas.draw(texRight, Color.WHITE, 0, 0, x * drawScale.x + (num - 1) * dist,
+                            y * drawScale.y, getAngle(), scx * scy, scy * 1.1f);
 
-                }else {
+                } else {
 
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
@@ -311,7 +311,7 @@ public class Stone extends PolygonObstacle {
         }
     }
 
-    public void setLeftRight(TextureRegion l, TextureRegion r){
+    public void setLeftRight(TextureRegion l, TextureRegion r) {
         texLeft = l;
         texRight = r;
     }

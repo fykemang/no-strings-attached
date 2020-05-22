@@ -46,17 +46,15 @@ public class Spikes extends PolygonObstacle {
         float f = 1.2f * drawScale.x / texture.getRegionWidth();
         int n = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * f));
         n = n == 0 ? 1 : n;
-        float hx = getWidth()/2f;
+        float hx = getWidth() / 2f;
         float addon = 0;
         if (GDXRoot.currentLevel >= 6 && GDXRoot.currentLevel <= 9) {
             hx += 0.2f;
             addon += 0.4f;
-        }
-        else if (GDXRoot.currentLevel >= 10 && GDXRoot.currentLevel <= 13) {
+        } else if (GDXRoot.currentLevel >= 10 && GDXRoot.currentLevel <= 13) {
             hx -= 0.05f;
             addon -= 0.1f;
-        }
-        else if (GDXRoot.currentLevel >= 14) {
+        } else if (GDXRoot.currentLevel >= 14) {
             hx += 0.05f;
             addon += 0.1f;
         }
@@ -66,7 +64,7 @@ public class Spikes extends PolygonObstacle {
                 sensorShape.setAsBox(getWidth() / 2f, 0.25f, sensorCenter, 0.0f);
                 break;
             case "left":
-                sensorCenter = new Vector2(0.2f, n * (addon+getWidth()) / 2f);
+                sensorCenter = new Vector2(0.2f, n * (addon + getWidth()) / 2f);
                 sensorShape.setAsBox(0.25f, n * hx, sensorCenter, 0.0f);
                 break;
             case "down":
@@ -74,7 +72,7 @@ public class Spikes extends PolygonObstacle {
                 sensorShape.setAsBox(getWidth() / 2f, 0.25f, sensorCenter, 0.0f);
                 break;
             case "right":
-                sensorCenter = new Vector2(getWidth() - 0.2f, n * (addon+getWidth()) / 2f);
+                sensorCenter = new Vector2(getWidth() - 0.2f, n * (addon + getWidth()) / 2f);
                 sensorShape.setAsBox(0.25f, n * hx, sensorCenter, 0.0f);
                 break;
         }
