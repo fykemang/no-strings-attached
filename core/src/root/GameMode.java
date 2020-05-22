@@ -398,9 +398,9 @@ public class GameMode extends Mode implements Screen {
     /**
      * Files for backgrounds
      */
-    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
-    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
-    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
+    private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/city_sky.png"};
+    private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/city_buildings.png", "background/city_buildings2.png"};
+    private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/city_clouds.png"};
 //    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-skydarken-sky.png", "background/village3-skydarken-mountains.png"};
 //    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
