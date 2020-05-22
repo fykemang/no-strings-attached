@@ -191,6 +191,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SelectedButton.NEXT;
+                hoverSound.play(GDXRoot.soundVol);
 
             }
 
@@ -213,7 +214,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SelectedButton.REPLAY;
-
+                hoverSound.play(GDXRoot.soundVol);
             }
 
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -234,7 +235,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = SelectedButton.EXIT;
-
+                hoverSound.play(GDXRoot.soundVol);
             }
 
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -493,23 +494,47 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
             draw();
 
             // We are are ready, notify our listener
-            if (listener != null) {
-                final LevelTransitionMode transition = this;
-                if (pressState == SelectedButton.REPLAY) {
-                    clickSound.play(GDXRoot.soundVol);
-                    listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
-                } else if (pressState == SelectedButton.EXIT) {
-                    clickSound.play(GDXRoot.soundVol);
-                    listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
-                } else if (pressState == SelectedButton.NEXT) {
-                    clickSound.play(GDXRoot.soundVol);
-                    listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
-                }
-            }
         }
     }
 
     private void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            pressState = currentSelection;
+            final LevelTransitionMode transition = this;
+            if (pressState == SelectedButton.REPLAY) {
+                clickSound.play(GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_GAME);
+            } else if (pressState == SelectedButton.EXIT) {
+                clickSound.play(GDXRoot.soundVol);
+                listener.exitScreen(transition, LevelSelectorMode.INTO_SELECTOR);
+            } else if (pressState == SelectedButton.NEXT) {
+                clickSound.play(GDXRoot.soundVol);
+                listener.exitScreen(transition, GameMode.EXIT_INTO_NEXT);
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)
+                || Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            if (keyState < 3)
+                keyState += 1;
+            else
+                keyState = 0;
+            hoverSound.play(GDXRoot.soundVol);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)
+                || Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            if (keyState > 0)
+                keyState -= 1;
+            else
+                keyState = 3;
+            hoverSound.play(GDXRoot.soundVol);
+        }
+        keyState %= 4;
+        if (keyState == 0)
+            currentSelection = null;
+        if (keyState == 1)
+            currentSelection = SelectedButton.REPLAY;
+        if (keyState == 2)
+            currentSelection = SelectedButton.EXIT;
+        if (keyState == 3)
+            currentSelection = SelectedButton.NEXT;
     }
 
     private int lastState = 0;
