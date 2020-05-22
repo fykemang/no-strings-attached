@@ -122,12 +122,12 @@
       },
       "width": 40,
       "height": 80,
-      "degree": 30,
+      "degree": 60,
       "id": 0,
       "leftPos": {},
       "rightPos": {},
       "x": 10,
-      "y": 8
+      "y": 6
     },
     {
       "isSliding": false,
