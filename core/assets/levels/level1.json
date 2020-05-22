@@ -57,7 +57,7 @@
     },
     {
       "x": 30.0,
-      "y": 5.0,
+      "y": 5,
       "isSliding": true,
       "leftPos": {
         "x": 29,
@@ -73,7 +73,7 @@
     },
     {
       "x": 34.5,
-      "y": 5.0,
+      "y": 5,
       "isSliding": false,
       "isRotating": false,
       "center": {},
