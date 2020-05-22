@@ -401,9 +401,9 @@ public class GameMode extends Mode implements Screen {
     private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
     private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
     private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
-//    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/villagelayer1.png"};
-//    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/villagelayer2.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
@@ -1110,7 +1110,7 @@ public class GameMode extends Mode implements Screen {
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
             if (tile.isSliding()) {
-                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight(),tileTexture);
+                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight(), tileTexture);
             } else {
                 createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tileTexture);
             }
@@ -1192,16 +1192,16 @@ public class GameMode extends Mode implements Screen {
         Stone rightTile;
         TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : tileTexture;
         if (curr.isSliding()) {
-            leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(),npcTile);
+            leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(), npcTile);
         } else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree(),npcTile);
+            leftTile = createRotatingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree(), npcTile);
         } else {
-            leftTile = createTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f,npcTile);
+            leftTile = createTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(),npcTile);
+            rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(), npcTile);
         } else {
-            rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f,npcTile);
+            rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);
         addObject(couple);
@@ -1565,7 +1565,7 @@ public class GameMode extends Mode implements Screen {
             playerExitAnimation.setElapsedTime(dt);
             playerExitAnimation.updateFrame();
             player.setTexture(playerExitAnimation);
-            FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door:door;
+            FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
             winningGate.setElapsedTime(dt);
             winningGate.updateFrame();
 
