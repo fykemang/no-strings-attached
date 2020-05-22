@@ -1,0 +1,179 @@
+{
+  "text": [],
+  "tutorial": false,
+  "type": "mountain",
+  "items": [
+    {
+      "id": 0,
+      "x": 15.76,
+      "y": 14.01
+    },
+    {
+      "id": 1,
+      "x": 27.47,
+      "y": 12.79
+    }
+  ],
+  "tiles": [
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 0,
+      "isSliding": false,
+      "height": 0.49549549549549565,
+      "y": 12.61,
+      "x": 0.5333333333333333,
+      "direction": "up"
+    },
+    {
+      "type": "normal",
+      "id": 1,
+      "isSliding": false,
+      "y": 3.15,
+      "height": 0.4954954954954958,
+      "width": 3.103680098241982,
+      "x": 3.7333333333333334,
+      "direction": "up"
+    }
+  ],
+  "npc": [
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 3,
+      "y": 9.3
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 7.5,
+      "y": 9.3
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 8,
+      "y": 14.46
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 12.5,
+      "y": 14.41
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 9.3,
+      "x": 13
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 9.3,
+      "x": 17.5
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 19,
+      "y": 14.32
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 23.5,
+      "y": 14.37
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 4,
+      "leftPos": {},
+      "rightPos": {},
+      "y": 9.37,
+      "x": 23.5
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 4,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 28,
+      "y": 9.32
+    }
+  ],
+  "player": {
+    "x": 1.3066666666666666,
+    "y": 14.39
+  },
+  "exit": {
+    "x": 5.5,
+    "y": 3.75
+  }
+}

@@ -67,6 +67,10 @@
     {
       "id": 17,
       "path": "levels/level9.json"
+    },
+    {
+      "id": 18,
+      "path": "levels/test.json"
     }
   ]
 }

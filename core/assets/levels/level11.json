@@ -1,0 +1,165 @@
+{
+  "text": [],
+  "tutorial": false,
+  "type": "city",
+  "items": [
+    {
+      "id": 0,
+      "x": 22.77,
+      "y": 5.92
+    },
+    {
+      "id": 1,
+      "x": 3.2,
+      "y": 10.97
+    }
+  ],
+  "tiles": [
+    {
+      "type": "normal",
+      "id": 0,
+      "isSliding": false,
+      "x": 14.4,
+      "y": 3.15,
+      "height": 0.5180180180180177,
+      "width": 5.266666666666667,
+      "direction": "up"
+    },
+    {
+      "width": 2.6666666666666665,
+      "type": "normal",
+      "id": 1,
+      "isSliding": false,
+      "x": 26.133333333333333,
+      "height": 0.47297297297297297,
+      "y": 12.61,
+      "direction": "up"
+    }
+  ],
+  "npc": [
+    {
+      "isSliding": true,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {
+        "x": 1.9,
+        "y": 9
+      },
+      "rightPos": {
+        "x": 12.9,
+        "y": 9
+      },
+      "x": 2,
+      "y": 9.3
+    },
+    {
+      "isSliding": true,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 0,
+      "leftPos": {
+        "x": 6.4,
+        "y": 9
+      },
+      "rightPos": {
+        "x": 17.4,
+        "y": 9
+      },
+      "x": 6.5,
+      "y": 9.3
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 7.093333333333334,
+      "y": 5.25
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 1,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 11.44,
+      "y": 4.39
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 20.48,
+      "y": 8.81
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 2,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 25.173333333333332,
+      "y": 8.87
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 15.84,
+      "y": 14.08
+    },
+    {
+      "isSliding": false,
+      "isRotating": false,
+      "center": {},
+      "width": 40,
+      "height": 80,
+      "degree": 0,
+      "id": 3,
+      "leftPos": {},
+      "rightPos": {},
+      "x": 19.786666666666665,
+      "y": 15.52
+    }
+  ],
+  "player": {
+    "x": 16.7,
+    "y": 4.95
+  },
+  "exit": {
+    "x": 27.5,
+    "y": 13
+  }
+}
