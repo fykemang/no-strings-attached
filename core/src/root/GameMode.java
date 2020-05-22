@@ -376,7 +376,7 @@ public class GameMode extends Mode implements Screen {
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
     private static final String VILLAGE_LEFT = "entities/village-left.png";
     private static final String VILLAGE_RIGHT = "entities/village-right.png";
-    private static final String VILLAGE_NPC = "entities/village-left.png";
+    private static final String VILLAGE_NPC = "entities/village-npc.png";
     private static final String FOREST_TILE_FILE = "entities/forest-leaves.png";
     private static final String FOREST_MUSHROOM_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
@@ -1207,7 +1207,7 @@ public class GameMode extends Mode implements Screen {
         TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
-        TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : tileTexture;
+        TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : currentlevel.getType().equals("village") ? villageNPCTexture : tileTexture;
         if (curr.isSliding()) {
             leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(), npcTile);
         } else if (curr.isRotating()) {
