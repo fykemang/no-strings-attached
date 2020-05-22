@@ -273,13 +273,13 @@ public class Stone extends PolygonObstacle {
                 float dist = height * drawScale.y / num;
                 float scy = dist / (texture.getRegionHeight() * scx);
                 num = num == 0 ? 1 : num;
-                if (type.equals("forest")){
+                if (type.equals("forest")) {
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
-                                y * drawScale.y + i * dist, getAngle(), scx*1.15f, scx * scy*1.15f);
+                                y * drawScale.y + i * dist, getAngle(), scx * 1.15f, scx * scy * 1.15f);
 
 
-                }else {
+                } else {
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x,
                                 y * drawScale.y + i * dist, getAngle(), scx, scx * scy);
@@ -313,10 +313,9 @@ public class Stone extends PolygonObstacle {
                 } else if (type.equals("forest")) {
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
-                                y * drawScale.y, getAngle(), scx * scy*1.15f, scy*1.1f);
+                                y * drawScale.y, getAngle(), scx * scy * 1.15f, scy * 1.1f);
 
-                }  else
-                 {
+                } else {
 
                     for (int i = 0; i < num; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
