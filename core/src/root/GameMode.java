@@ -401,9 +401,9 @@ public class GameMode extends Mode implements Screen {
     private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/city_sky.png"};
     private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/city_buildings.png", "background/city_buildings2.png"};
     private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/city_clouds.png"};
-//    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-skydarken-sky.png", "background/village3-skydarken-mountains.png"};
-//    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-skydarken-houses.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
