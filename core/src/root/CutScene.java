@@ -8,10 +8,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import util.ScreenListener;
 
@@ -144,20 +142,20 @@ public class CutScene extends Mode implements Screen {
     private void draw() {
         canvas.begin();
 
-            if (isFading() && currentSlide > 0) {
-                canvas.drawBackground(textures.get(currentSlide - 1).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
-                        canvas.getWidth() / 2, canvas.getHeight() / 2, lastTint);
-                lastTint.set(1, 1, 1, lastTint.a * 0.965f);
-                tint.set(1, 1, 1, 1 - lastTint.a);
-            } else {
-                tint.set(1, 1, 1, 1);
-                lastTint.set(1, 1, 1, 0);
-            }
-            canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
-                    canvas.getWidth() / 2, canvas.getHeight() / 2, tint);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
-            }
+        if (isFading() && currentSlide > 0) {
+            canvas.drawBackground(textures.get(currentSlide - 1).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
+                    canvas.getWidth() / 2, canvas.getHeight() / 2, lastTint);
+            lastTint.set(1, 1, 1, lastTint.a * 0.965f);
+            tint.set(1, 1, 1, 1 - lastTint.a);
+        } else {
+            tint.set(1, 1, 1, 1);
+            lastTint.set(1, 1, 1, 0);
+        }
+        canvas.drawBackground(textures.get(currentSlide).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
+                canvas.getWidth() / 2, canvas.getHeight() / 2, tint);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
+        }
 
         canvas.end();
     }

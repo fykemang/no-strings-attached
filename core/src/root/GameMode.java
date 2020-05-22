@@ -1217,7 +1217,9 @@ public class GameMode extends Mode implements Screen {
         }
         if (next.isSliding()) {
             rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(), npcTile);
-        } else {
+        } else if (next.isRotating()) {
+            rightTile = createRotatingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getRotatingCenter(), next.getRotatingDegree(), npcTile);
+        }else {
             rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);

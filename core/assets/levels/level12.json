@@ -83,9 +83,9 @@
     {
       "type": "normal",
       "isSliding": false,
-      "width": 3,
+      "width": 4.5,
       "y": 1,
-      "x": 14,
+      "x": 12.5,
       "height": 1,
       "direction": "up"
     }
