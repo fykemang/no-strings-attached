@@ -316,7 +316,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (curLevel < levelMetadata.getLevelCount()) {
+            if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel+1)) {
                 curLevel++;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
@@ -328,7 +328,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 isDown = false;
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (curLevel > 1) {
+            if (curLevel > 1 ) {
                 curLevel--;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
@@ -597,11 +597,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                if (curLevel < levelMetadata.getLevelCount()) {
+                if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel+1)) {
                     curLevel++;
                     clickSound.play();
                 }
-
                 if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
