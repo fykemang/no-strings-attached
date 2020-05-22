@@ -376,7 +376,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         canvas.drawBackground(forestBkg);
         canvas.drawBackground(cityBkg);
 
-        for (int i = 0; i < buttonPos.size(); i++) {
+        for (int i = 0; i < 5; i++) {
             Vector2 button = buttonPos.get(i);
             if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
                 selectorFont.setColor(Color.WHITE);
