@@ -143,7 +143,7 @@ public class CutScene extends Mode implements Screen {
 
     private void draw() {
         canvas.begin();
-        if (slideMode) {
+
             if (isFading() && currentSlide > 0) {
                 canvas.drawBackground(textures.get(currentSlide - 1).getTexture(), canvas.getWidth() / 2, canvas.getHeight() / 2,
                         canvas.getWidth() / 2, canvas.getHeight() / 2, lastTint);
@@ -158,7 +158,7 @@ public class CutScene extends Mode implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
             }
-        }
+
         canvas.end();
     }
 
@@ -168,7 +168,6 @@ public class CutScene extends Mode implements Screen {
             return;
         }
         for (String s : opening) loadAsset(s, Texture.class, manager);
-//        for (String s : city) loadAsset(s, Texture.class, manager);
         for (String s : ending) loadAsset(s, Texture.class, manager);
         loadAsset(RIGHT, Texture.class, manager);
         loadAsset(SKIP, Texture.class, manager);
@@ -221,55 +220,10 @@ public class CutScene extends Mode implements Screen {
         music.play();
         music.setVolume(0.5f * GDXRoot.musicVol);
         music.setLooping(true);
-        if (slideMode) {
-//            nextButtom = createButton(nextTexture);
-//            nextButtom.setPosition(canvas.getWidth() * 0.9f - nextButtom.getWidth() / 2,
-//                    canvas.getHeight() * 0.5f);
-//            nextButtom.addListener(new ClickListener() {
-//                @Override
-//                public void clicked(InputEvent event, float x, float y) {
-//                    if (currentSlide < textures.size() - 2)
-//                        currentSlide++;
-//                    else if (currentSlide == textures.size() - 2) {
-//                        currentSlide++;
-//                        stage.clear();
-//                        addStart();
-//                    }
-//                }
-//
-//            });
-//            if (textures.size() > 1) {
-//                stage.addActor(nextButtom);
-//            } else addStart();
-
-
-            Gdx.input.setInputProcessor(stage);
-
-        } else {
-            //set up the buttoms
-            // deal with animations
-
-
-        }
+        Gdx.input.setInputProcessor(stage);
         selectorAssetState = AssetState.COMPLETE;
     }
 
-    private void addStart() {
-        TextureRegion startTexture = createTexture(manager, START, false);
-        ImageButton start = createButton(startTexture);
-        start.setPosition(canvas.getWidth() * 0.7f - start.getWidth() / 2,
-                canvas.getHeight() * 0.4f);
-        start.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                stopMusic();
-                listener.exitScreen(cutScene, LevelSelectorMode.INTO_SELECTOR);
-            }
-
-        });
-        stage.addActor(start);
-        Gdx.input.setInputProcessor(stage);
-    }
 
     private ImageButton createButton(TextureRegion texture) {
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(texture);

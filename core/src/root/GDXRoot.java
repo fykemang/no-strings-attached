@@ -216,6 +216,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     loadingMode.hide();
                     break;
                 case LevelSelectorMode.INTO_SELECTOR:
+                    isOpeningPlayed = true;
                     levelSelector.loadContent(manager);
                     levelSelector.setScreenListener(this);
                     levelSelector.setCanvas(UIcanvas);
