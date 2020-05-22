@@ -361,7 +361,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         startButton = (System.getProperty("os.name").equals("Mac OS X") ? MAC_OS_X_START : WINDOWS_START);
         Gdx.input.setInputProcessor(this);
         music = Gdx.audio.newMusic(Gdx.files.internal(MUSIC_FILE));
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
         music.setLooping(true);
         clickSound = Gdx.audio.newSound(Gdx.files.internal(MENU_CLICK_FILE));
         hoverSound = Gdx.audio.newSound(Gdx.files.internal(HOVER_FILE));
@@ -417,6 +417,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 
         if (cardOpen && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             cardOpen = false;
+            GDXRoot.isVillagePlayed = false;
+            GDXRoot.isForestPlayed = false;
+            GDXRoot.isCityPlayed = false;
+            GDXRoot.isVillagePlayed = false;
+            LevelSelectorMode.curLevel = 1;
+            LevelSelectorMode.lock();
             listener.exitScreen(this, CutScene.INTO_CUTSCENE);
         }
 
@@ -683,7 +689,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
      */
     public void show() {
         // Useless if called in outside animation loop
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
         active = true;
@@ -700,7 +706,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
     }
 
     public void reset() {
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
         music.play();
     }
 
@@ -738,15 +744,21 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
             float b1 = BUTTON_SCALE * scale * nvmTexture.getWidth() / 2.0f;
             float b2 = BUTTON_SCALE * scale * nvmTexture.getHeight() / 2.0f;
             if (Math.abs(screenX - buttonNVMX) < b1 && Math.abs(screenY - buttonNVMY) < b2) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
+                clickSound.play(GDXRoot.soundVol);
                 cardOpen = false;
             }
 
             float s1 = BUTTON_SCALE * scale * newGameGrey.getWidth() / 2.0f;
             float s2 = BUTTON_SCALE * scale * newGameGrey.getHeight() / 2.0f;
             if (Math.abs(screenX - buttonSRTX) < s1 && Math.abs(screenY - buttonNVMY) < s2) {
-                clickSound.play(0.5f * GDXRoot.soundVol);
+                clickSound.play(GDXRoot.soundVol);
                 cardOpen = false;
+                GDXRoot.isVillagePlayed = false;
+                GDXRoot.isForestPlayed = false;
+                GDXRoot.isCityPlayed = false;
+                GDXRoot.isVillagePlayed = false;
+                LevelSelectorMode.curLevel = 1;
+                LevelSelectorMode.lock();
                 listener.exitScreen(this, CutScene.INTO_CUTSCENE);
             }
             return false;
@@ -758,28 +770,28 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
         float w1 = BUTTON_SCALE * scale * startGameButton.getWidth() / 2.0f;
         float h1 = BUTTON_SCALE * scale * startGameButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w1 && Math.abs(screenY - buttonY1) < h1) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = MouseState.START;
         }
 
         float w2 = BUTTON_SCALE * scale * settingsButton.getWidth() / 2.0f;
         float h2 = BUTTON_SCALE * scale * settingsButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w2 && Math.abs(screenY - buttonY2) < h2) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = MouseState.SETTINGS;
         }
 
         float w3 = BUTTON_SCALE * scale * quitButton.getWidth() / 2.0f;
         float h3 = BUTTON_SCALE * scale * quitButton.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w3 && Math.abs(screenY - buttonY3) < h3) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = MouseState.QUIT;
         }
 
         float w4 = BUTTON_SCALE * scale * loadGameButtonDisabled.getWidth() / 2.0f;
         float h4 = BUTTON_SCALE * scale * loadGameButtonDisabled.getHeight() / 2.0f;
         if (Math.abs(screenX - buttonX) < w4 && Math.abs(screenY - buttonY4) < h4) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             pressState = MouseState.LOAD_GAME;
         }
 
