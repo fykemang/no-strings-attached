@@ -137,6 +137,8 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String GATE = "entities/door.png";
     private static final String VILLAGE_GATE = "entities/door-village.png";
+    private static final String FOREST_GATE = "entities/door-forest.png";
+    private static final String MOUNTAIN_GATE = "entities/door-mountain.png";
     /**
      * Texture files for items
      */
@@ -222,7 +224,10 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_exit;
     protected TextureRegion Zoom_ui;
     protected FilmStrip door;
+    protected FilmStrip city_door;
     protected FilmStrip village_door;
+    protected FilmStrip forest_door;
+    protected FilmStrip mountain_door;
     private Stage stage;
     private float volume = GDXRoot.musicVol;
     /**
@@ -374,6 +379,9 @@ public class GameMode extends Mode implements Screen {
      */
     private static final String CITY_TILE_FILE = "entities/city-brick.png";
     private static final String VILLAGE_TILE_FILE = "entities/village-tile.png";
+    private static final String VILLAGE_LEFT = "entities/village-left.png";
+    private static final String VILLAGE_RIGHT = "entities/village-right.png";
+    private static final String VILLAGE_NPC = "entities/village-npc.png";
     private static final String FOREST_TILE_FILE = "entities/forest-leaves.png";
     private static final String FOREST_MUSHROOM_FILE = "entities/forest-mushroom.png";
     private static final String FOREST_SPIKES_FILE = "entities/forest-spikes.png";
@@ -389,6 +397,9 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion villageSpikeVertTile;
     protected TextureRegion mountainSpikeTile;
     protected TextureRegion mountainSpikeVertTile;
+    protected TextureRegion villageLeftTexture;
+    protected TextureRegion villageRightTexture;
+    protected TextureRegion villageNPCTexture;
     private ArrayList<TextureRegion> billboards;
 
     /**
@@ -470,6 +481,10 @@ public class GameMode extends Mode implements Screen {
         assets.add(GATE);
         manager.load(VILLAGE_GATE, Texture.class);
         assets.add(VILLAGE_GATE);
+        manager.load(FOREST_GATE, Texture.class);
+        assets.add(FOREST_GATE);
+        manager.load(MOUNTAIN_GATE, Texture.class);
+        assets.add(MOUNTAIN_GATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
         manager.load(GREY_NEEDLE, Texture.class);
@@ -532,6 +547,12 @@ public class GameMode extends Mode implements Screen {
         assets.add(FOREST_MUSHROOM_FILE);
         manager.load(ZOOM_UI, Texture.class);
         assets.add(ZOOM_UI);
+        manager.load(VILLAGE_LEFT, Texture.class);
+        assets.add(VILLAGE_LEFT);
+        manager.load(VILLAGE_RIGHT, Texture.class);
+        assets.add(VILLAGE_RIGHT);
+        manager.load(VILLAGE_NPC, Texture.class);
+        assets.add(VILLAGE_NPC);
         for (String s : CITY_BKG_FILES_LAYER_A) {
             assets.add(s);
             manager.load(s, Texture.class);
@@ -732,6 +753,7 @@ public class GameMode extends Mode implements Screen {
             case "city":
                 music = manager.get(CITY_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, CITY_TILE_FILE, false);
+                door = city_door;
                 for (String s : CITY_BKG_FILES_LAYER_A) {
                     stillBackgroundTextures.add(createTexture(manager, s, false));
                 }
@@ -761,6 +783,7 @@ public class GameMode extends Mode implements Screen {
             case "village":
                 music = manager.get(VILLAGE_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, VILLAGE_TILE_FILE, false);
+                door = village_door;
                 for (String s : VILLAGE_BKG_FILES_LAYER_A) {
                     stillBackgroundTextures.add(createTexture(manager, s, false));
                 }
@@ -784,6 +807,7 @@ public class GameMode extends Mode implements Screen {
             case "forest":
                 music = manager.get(FOREST_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, FOREST_TILE_FILE, false);
+                door = forest_door;
                 for (String s : FOREST_BKG_FILES_LAYER_A) {
                     stillBackgroundTextures.add(createTexture(manager, s, false));
                 }
@@ -807,6 +831,7 @@ public class GameMode extends Mode implements Screen {
             case "mountain":
                 music = manager.get(MOUNTAIN_MUSIC_FILE, Music.class);
                 tileTexture = createTexture(manager, MOUNTAIN_TILE_FILE, false);
+                door = mountain_door;
                 for (String s : MT_BKG_FILES_LAYER_A) {
                     stillBackgroundTextures.add(createTexture(manager, s, false));
                 }
@@ -891,10 +916,15 @@ public class GameMode extends Mode implements Screen {
         yarnTexture = createTexture(manager, YARN, false);
         greyYarnTexture = createTexture(manager, GREY_YARN, false);
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
-        door = createFilmStrip(manager, GATE, 1, 11, 11, false);
+//        door = createFilmStrip(manager, GATE, 1, 11, 11, false);
+        city_door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         village_door = createFilmStrip(manager, VILLAGE_GATE, 1, 11, 11, false);
+        forest_door = createFilmStrip(manager, FOREST_GATE, 1, 11, 11, false);
+        mountain_door = createFilmStrip(manager, MOUNTAIN_GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
-
+        villageLeftTexture = createTexture(manager, VILLAGE_LEFT, false);
+        villageRightTexture = createTexture(manager, VILLAGE_RIGHT, false);
+        villageNPCTexture = createTexture(manager, VILLAGE_NPC, false);
         SoundController sounds = SoundController.getInstance();
         sounds.allocate(manager, JUMP_FILE);
         sounds.allocate(manager, LAND_FILE);
@@ -1023,7 +1053,6 @@ public class GameMode extends Mode implements Screen {
         didPlaySwing = false;
         didPlayLand = false;
         door.refresh();
-        village_door.refresh();
         didPlayWin = false;
         didPlayLose = false;
         didPlayCollect = false;
@@ -1067,8 +1096,7 @@ public class GameMode extends Mode implements Screen {
         direction = null;
         targetViewPort = null;
         // Create exit door
-        FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
-        createGate(points, level.getExitPos().x, level.getExitPos().y, winningGate);
+        createGate(points, level.getExitPos().x, level.getExitPos().y, door);
         //add player
         addObject(player);
         // Create NPCs
@@ -1120,6 +1148,9 @@ public class GameMode extends Mode implements Screen {
 
     public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion texture) {
         Stone tile = new Stone(points, x, y, width, height, type, sc);
+        if (type.equals("village")) {
+            tile.setLeftRight(villageLeftTexture, villageRightTexture);
+        }
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
@@ -1190,7 +1221,7 @@ public class GameMode extends Mode implements Screen {
         TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
-        TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : tileTexture;
+        TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : currentlevel.getType().equals("village") ? villageNPCTexture : tileTexture;
         if (curr.isSliding()) {
             leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(), npcTile);
         } else if (curr.isRotating()) {
@@ -1565,9 +1596,8 @@ public class GameMode extends Mode implements Screen {
             playerExitAnimation.setElapsedTime(dt);
             playerExitAnimation.updateFrame();
             player.setTexture(playerExitAnimation);
-            FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
-            winningGate.setElapsedTime(dt);
-            winningGate.updateFrame();
+            door.setElapsedTime(dt);
+            door.updateFrame();
 
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());

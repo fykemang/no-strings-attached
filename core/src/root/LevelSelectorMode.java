@@ -219,23 +219,28 @@ public class LevelSelectorMode extends Mode implements Screen {
         this.assets = new Array<>();
         Arrays.fill(themeUnlocked, true);
         buttonPos.add(new Vector2(280, 610));
-        buttonPos.add(new Vector2(350, 650));
-        buttonPos.add(new Vector2(440, 630));
-        buttonPos.add(new Vector2(520, 650));
-        buttonPos.add(new Vector2(600, 680));
+        buttonPos.add(new Vector2(330, 650));
+        buttonPos.add(new Vector2(410, 630));
+        buttonPos.add(new Vector2(500, 650));
+        buttonPos.add(new Vector2(550, 680));
+
         buttonPos.add(new Vector2(690, 710));
-        buttonPos.add(new Vector2(780, 760));
-        buttonPos.add(new Vector2(840, 660));
-        buttonPos.add(new Vector2(860, 540));
-        buttonPos.add(new Vector2(920, 460));
-        buttonPos.add(new Vector2(820, 380));
-        buttonPos.add(new Vector2(720, 340));
-        buttonPos.add(new Vector2(780, 300));
-        buttonPos.add(new Vector2(860, 250));
+        buttonPos.add(new Vector2(800, 670));
+        buttonPos.add(new Vector2(900, 720));
+        buttonPos.add(new Vector2(1000, 700));
+
+        buttonPos.add(new Vector2(1110, 550));
+        buttonPos.add(new Vector2(1000, 500));
+        buttonPos.add(new Vector2(920, 450));
+        buttonPos.add(new Vector2(810, 400));
+
         buttonPos.add(new Vector2(800, 200));
-        buttonPos.add(new Vector2(740, 200));
-        buttonPos.add(new Vector2(680, 290));
-        buttonPos.add(new Vector2(500, 270));
+        buttonPos.add(new Vector2(700, 210));
+        buttonPos.add(new Vector2(600, 250));
+        buttonPos.add(new Vector2(500, 250));
+        buttonPos.add(new Vector2(400, 250));
+        buttonPos.add(new Vector2(300, 250));
+        buttonPos.add(new Vector2(200, 250));
         themeUnlocked[CITY] = true;
         active = true;
     }
@@ -312,12 +317,12 @@ public class LevelSelectorMode extends Mode implements Screen {
     }
 
     private void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
             clickSound.play(GDXRoot.soundVol);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (curLevel < levelMetadata.getLevelCount()) {
+            if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                 curLevel++;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
@@ -454,7 +459,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
-        canvas.drawUI(enterTexture, canvas.getWidth() / 2, canvas.getHeight() * 0.05f, 0.7f);
+        canvas.drawUI(enterTexture, canvas.getWidth() * 0.82f, canvas.getHeight() * 0.05f, 0.9f);
         canvas.actStage(stage);
         canvas.end();
     }
@@ -600,11 +605,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                if (curLevel < levelMetadata.getLevelCount()) {
+                if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                     curLevel++;
                     clickSound.play();
                 }
-
                 if (curLevel > 10) {
                     isDown = false;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.8f);
