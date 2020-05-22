@@ -281,9 +281,16 @@ public class Stone extends PolygonObstacle {
                 num = num == 0 ? 1 : num;
 
                 if (type.equals("village")){
-                    for (int i = 0; i < num; i++)
+
+                    canvas.draw(texLeft, Color.WHITE, 0, 0, x * drawScale.x ,
+                            y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+
+                    for (int i = 1; i < num-1 ; i++)
                         canvas.draw(texture, Color.WHITE, 0, 0, x * drawScale.x + i * dist,
                                 y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
+
+                    canvas.draw(texRight, Color.WHITE, 0, 0, x * drawScale.x + (num -1)* dist,
+                            y * drawScale.y, getAngle(), scx * scy, scy*1.1f);
 
                 }else {
 
@@ -294,5 +301,10 @@ public class Stone extends PolygonObstacle {
             }
 
         }
+    }
+
+    public void setLeftRight(TextureRegion l, TextureRegion r){
+        texLeft = l;
+        texRight = r;
     }
 }
