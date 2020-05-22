@@ -322,7 +322,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             clickSound.play(GDXRoot.soundVol);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel+1)) {
+            if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                 curLevel++;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
@@ -335,7 +335,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             }
             hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (curLevel > 1 ) {
+            if (curLevel > 1) {
                 curLevel--;
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
@@ -459,7 +459,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             canvas.draw(selector, buttonPos.get(curLevel - 1).x - selector.getWidth() / 2 + 5,
                     buttonPos.get(curLevel - 1).y - selector.getHeight() / 2 - 15);
         }
-        canvas.drawUI(enterTexture, canvas.getWidth() *0.82f, canvas.getHeight() * 0.05f, 0.9f);
+        canvas.drawUI(enterTexture, canvas.getWidth() * 0.82f, canvas.getHeight() * 0.05f, 0.9f);
         canvas.actStage(stage);
         canvas.end();
     }
@@ -605,7 +605,7 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() + 350);
-                if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel+1)) {
+                if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel + 1)) {
                     curLevel++;
                     clickSound.play();
                 }

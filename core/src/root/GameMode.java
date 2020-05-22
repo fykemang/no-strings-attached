@@ -1148,7 +1148,7 @@ public class GameMode extends Mode implements Screen {
 
     public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion texture) {
         Stone tile = new Stone(points, x, y, width, height, type, sc);
-        if (type.equals("village")){
+        if (type.equals("village")) {
             tile.setLeftRight(villageLeftTexture, villageRightTexture);
         }
         tile.setBodyType(BodyDef.BodyType.StaticBody);
