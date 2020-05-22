@@ -224,7 +224,7 @@ public class GameMode extends Mode implements Screen {
     protected FilmStrip door;
     protected FilmStrip village_door;
     private Stage stage;
-    private float volume = 0.5f * GDXRoot.musicVol;
+    private float volume = GDXRoot.musicVol;
     /**
      * The font for giving messages to the player
      */
@@ -828,7 +828,7 @@ public class GameMode extends Mode implements Screen {
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
                 break;
         }
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
         music.play();
         music.setLooping(true);
     }
@@ -1029,7 +1029,7 @@ public class GameMode extends Mode implements Screen {
         didPlayCollect = false;
         didPlayJump = false;
         didPlayWalk = false;
-        volume = 0.5f * GDXRoot.musicVol;
+        volume = GDXRoot.musicVol;
     }
 
     /**
@@ -1335,12 +1335,12 @@ public class GameMode extends Mode implements Screen {
 
     public void updatePaused(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             gameState = GameState.PLAYING;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             exitToSelector();
         }
     }
@@ -1543,7 +1543,7 @@ public class GameMode extends Mode implements Screen {
         if ((Gdx.input.isTouched() && Gdx.input.getX() >= 800
                 && Gdx.input.getX() <= 950 && Gdx.input.getY() >= 48 && Gdx.input.getY() <= 132)
                 || (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            clickSound.play(0.5f * GDXRoot.soundVol);
+            clickSound.play(GDXRoot.soundVol);
             listener.exitScreen(this, PauseMode.INTO_PAUSE);
         }
 
@@ -1584,9 +1584,9 @@ public class GameMode extends Mode implements Screen {
             if (!player.isGrounded() && !player.isAttached()) {//rising
                 if (!didPlayJump) {
                     if (!player.isOnTrampoline()) {
-                        jumpSound.play(0.5f * GDXRoot.soundVol);
+                        jumpSound.play(GDXRoot.soundVol);
                     } else {
-                        trampolineJumpSound.play(0.5f * GDXRoot.soundVol);
+                        trampolineJumpSound.play(GDXRoot.soundVol);
                     }
                     didPlayJump = true;
                     didPlayLand = false;
@@ -1649,7 +1649,7 @@ public class GameMode extends Mode implements Screen {
                             if (r != null) {
                                 NpcRope[] ropes = r.cut(player.getPosition(), world, player.getHeight());
                                 if (ropes != null) {
-                                    snipSound.play(0.5f * GDXRoot.soundVol);
+                                    snipSound.play(GDXRoot.soundVol);
                                     ((Couple) obs).breakBond(ropes[0], ropes[1]);
                                     NpcPerson left = ((Couple) obs).getL();
                                     setShockNpc(left, "cutrope");
@@ -1699,7 +1699,7 @@ public class GameMode extends Mode implements Screen {
             }
 
             if (player.isDidCollect() != null && !didPlayCollect) {
-                collectSound.play(0.5f * GDXRoot.soundVol);
+                collectSound.play(GDXRoot.soundVol);
                 for (int i = 0; i < items.size(); i++) {
                     if (itemNames.get(i).equals(player.isDidCollect()) && !collectedItems[i]) {
                         collectedItems[i] = true;
@@ -1773,7 +1773,7 @@ public class GameMode extends Mode implements Screen {
                     !player.isJumping() && !player.isRising() && !player.isOnTrampoline()) {
                 if (!didPlayWalk) {
                     walkingMusic.play();
-                    walkingMusic.setVolume(0.5f * GDXRoot.soundVol);
+                    walkingMusic.setVolume(GDXRoot.soundVol);
                     walkingMusic.setLooping(true);
                     didPlayWalk = true;
                 }
@@ -2251,7 +2251,7 @@ public class GameMode extends Mode implements Screen {
      */
     public void resume() {
         music.play();
-        music.setVolume(0.5f * GDXRoot.musicVol);
+        music.setVolume(GDXRoot.musicVol);
     }
 
     @Override

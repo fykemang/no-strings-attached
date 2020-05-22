@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import obstacle.PolygonObstacle;
+import root.GDXRoot;
 import root.GameCanvas;
 
 public class Spikes extends PolygonObstacle {
@@ -45,22 +46,28 @@ public class Spikes extends PolygonObstacle {
         float f = 1.2f * drawScale.x / texture.getRegionWidth();
         int n = (int) (getHeight() * drawScale.y / (texture.getRegionHeight() * f));
         n = n == 0 ? 1 : n;
+        float hx = getWidth()/2f;
+        float addon = 0;
+        if (GDXRoot.currentLevel >= 6 && GDXRoot.currentLevel <= 9) {
+            hx += 0.2f;
+            addon += 0.4f;
+        }
         switch (direction) {
             case "up":
                 sensorCenter = new Vector2(getWidth() / 2f, 0.8f);
                 sensorShape.setAsBox(getWidth() / 2f, 0.25f, sensorCenter, 0.0f);
                 break;
             case "left":
-                sensorCenter = new Vector2(0.2f, n * getWidth() / 2f);
-                sensorShape.setAsBox(0.25f, n * (getWidth() / 2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(0.2f, n * (addon+getWidth()) / 2f);
+                sensorShape.setAsBox(0.25f, n * hx, sensorCenter, 0.0f);
                 break;
             case "down":
                 sensorCenter = new Vector2(getWidth() / 2f, 0.2f);
                 sensorShape.setAsBox(getWidth() / 2f, 0.25f, sensorCenter, 0.0f);
                 break;
             case "right":
-                sensorCenter = new Vector2(getWidth() - 0.2f, n * getWidth() / 2f);
-                sensorShape.setAsBox(0.25f, n * (getWidth() / 2f), sensorCenter, 0.0f);
+                sensorCenter = new Vector2(getWidth() - 0.2f, n * (addon+getWidth()) / 2f);
+                sensorShape.setAsBox(0.25f, n * hx, sensorCenter, 0.0f);
                 break;
         }
         sensorDef.shape = sensorShape;
