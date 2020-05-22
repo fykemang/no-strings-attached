@@ -1809,7 +1809,7 @@ public class GameMode extends Mode implements Screen {
                 TextBox text = level.getText().get(i);
                 TextureRegion tex = billboards.get(i);
 
-                if (Math.abs(player.getX() - text.getX())< 3 )
+                if (Math.abs(player.getX() - text.getX()) < 3)
                     canvas.draw(tex,
                             text.getX() * this.scale.x - tex.getRegionWidth() / 2,
                             text.getY() * this.scale.y - tex.getRegionHeight() / 2);

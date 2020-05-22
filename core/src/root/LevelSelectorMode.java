@@ -617,7 +617,10 @@ public class LevelSelectorMode extends Mode implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 levelView.layout();
                 levelView.setScrollX(levelView.getScrollX() - 350);
-                 if (curLevel > 1){ curLevel--;  clickSound.play();}
+                if (curLevel > 1) {
+                    curLevel--;
+                    clickSound.play();
+                }
                 if (curLevel < 10) {
                     isDown = true;
                     next.setPosition(canvas.getWidth() * 0.9f, canvas.getHeight() * 0.2f);
@@ -657,7 +660,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     public static void lock() {
         Arrays.fill(themeUnlocked, false);
-        themeUnlocked[0] =true;
+        themeUnlocked[0] = true;
     }
 
 

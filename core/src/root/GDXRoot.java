@@ -81,9 +81,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
     private Screen LastScreen;
     public static boolean isOpeningPlayed = false;
-    public static  boolean isCityPlayed = false;
-    public static  boolean isVillagePlayed = false;
-    public static  boolean isForestPlayed = false;
+    public static boolean isCityPlayed = false;
+    public static boolean isVillagePlayed = false;
+    public static boolean isForestPlayed = false;
 
     /**
      * Creates a new game from the configuration settings.
