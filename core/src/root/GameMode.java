@@ -905,10 +905,10 @@ public class GameMode extends Mode implements Screen {
         greyYarnTexture = createTexture(manager, GREY_YARN, false);
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
 //        door = createFilmStrip(manager, GATE, 1, 11, 11, false);
-        city_door = createFilmStrip(manager,GATE,1,11,11,false);
+        city_door = createFilmStrip(manager, GATE, 1, 11, 11, false);
         village_door = createFilmStrip(manager, VILLAGE_GATE, 1, 11, 11, false);
-        forest_door = createFilmStrip(manager,FOREST_GATE,1,11,11,false);
-        mountain_door = createFilmStrip(manager,MOUNTAIN_GATE,1,11,11,false);
+        forest_door = createFilmStrip(manager, FOREST_GATE, 1, 11, 11, false);
+        mountain_door = createFilmStrip(manager, MOUNTAIN_GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
