@@ -73,10 +73,10 @@
     {
       "type": "normal",
       "id": 5,
-      "isSliding": true,
+      "isSliding": false,
       "width": 2.653333333333332,
       "height": 0.5153349811149417,
-      "y": 1.35,
+      "y": 4,
       "x": 15.5,
       "direction": "up",
       "leftPos": {

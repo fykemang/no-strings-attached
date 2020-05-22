@@ -106,11 +106,8 @@ public class GameMode extends Mode implements Screen {
     private static final String PLAYER_IDLE_ANIMATION = "player/player_idle_animation.png";
     private static final String PLAYER_WALKING_ANIMATION_FILE = "player/player_walk_animation.png";
     private static final String PLAYER_SWING_FORWARD = "player/player_swing_forward.png";
-    private static final String PLAYER_SWING_FREE = "player/player_swing_free.png";
-    private static final String PLAYER_SWING_BACK = "player/player_swing_back.png";
     private static final String PLAYER_JUMP_UP = "player/player_jump_up.png";
     private static final String PLAYER_JUMP_DOWN = "player/player_jump_down.png";
-    private static final String PLAYER_ENTER = "player/player_enter.png";
     private static final String PLAYER_EXIT = "player/player_exit.png";
     private static final String PLAYER_DEATH = "player/player_death.png";
 
@@ -308,7 +305,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip playerSwingForwardAnimation;
     //    private FilmStrip playerSwingBackAnimation;
     private FilmStrip playerWalkingAnimation;
-    private FilmStrip playerEnterAnimation;
     private FilmStrip playerExitAnimation;
     private FilmStrip playerJumpUpAnimation;
     private FilmStrip playerJumpDownAnimation;
@@ -621,8 +617,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(PLAYER_IDLE_ANIMATION);
         manager.load(PLAYER_WALKING_ANIMATION_FILE, Texture.class);
         assets.add(PLAYER_WALKING_ANIMATION_FILE);
-        manager.load(PLAYER_ENTER, Texture.class);
-        assets.add(PLAYER_ENTER);
         manager.load(PLAYER_EXIT, Texture.class);
         assets.add(PLAYER_EXIT);
         manager.load(PLAYER_JUMP_UP, Texture.class);
@@ -631,10 +625,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(PLAYER_JUMP_DOWN);
         manager.load(PLAYER_SWING_FORWARD, Texture.class);
         assets.add(PLAYER_SWING_FORWARD);
-        manager.load(PLAYER_SWING_FREE, Texture.class);
-        assets.add(PLAYER_SWING_FREE);
-        manager.load(PLAYER_SWING_BACK, Texture.class);
-        assets.add(PLAYER_SWING_BACK);
         manager.load(PLAYER_DEATH, Texture.class);
         assets.add(PLAYER_DEATH);
 
@@ -864,7 +854,6 @@ public class GameMode extends Mode implements Screen {
         playerSwingForwardAnimation = createFilmStrip(manager, PLAYER_SWING_FORWARD, 1, 7, 7, false);
         playerIdleAnimation = createFilmStrip(manager, PLAYER_IDLE_ANIMATION, 1, 24, 24, true);
         playerIdleAnimation.setFrameDuration(0.09f);
-        playerEnterAnimation = createFilmStrip(manager, PLAYER_ENTER, 1, 21, 21, true);
         playerExitAnimation = createFilmStrip(manager, PLAYER_EXIT, 1, 15, 15, true);
         playerExitAnimation.setFrameDuration(0.045f);
         playerJumpUpAnimation = createFilmStrip(manager, PLAYER_JUMP_UP, 1, 8, 8, false);
@@ -1208,7 +1197,7 @@ public class GameMode extends Mode implements Screen {
 
     public void createCouple(NpcData curr, NpcData next, int id) {
         float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
-        float[] points = new float[]{0f, 0f, 0f, .8f, .8f, .65f, .65f, 0f};
+        float[] points = new float[]{0f, 0f, 0f, .8f, .65f, .8f, .65f, 0f};
         int n1 = rand.nextInt(npcTypes.length);
         int n2 = rand.nextInt(npcTypes.length);
         while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
