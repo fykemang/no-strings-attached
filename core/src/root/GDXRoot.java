@@ -342,6 +342,7 @@ public class GDXRoot extends Game implements ScreenListener {
                     }
                     break;
                 case PauseMode.INTO_PAUSE:
+                    gameMode.hide();
                     pauseScreen.setScreenListener(this);
                     pauseScreen.loadContent(manager);
                     pauseScreen.initialize();
