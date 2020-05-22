@@ -155,6 +155,7 @@ public class GameMode extends Mode implements Screen {
     private static final String GREY_SPOOL = "entities/spool_grey.png";
     private static final String STUFFING = "entities/stuffing.png";
     private static final String GREY_STUFFING = "entities/stuffing_grey.png";
+    private static final String GREY_BASKET = "entities/grey_basket.png";
     private static final String[] cityItems = {"entities/needles.png", "entities/yarn.png", "entities/yarn.png"};
     private static final String[] greyCityItems = {"entities/needles_grey.png", "entities/skein_grey.png", "entities/skein_grey.png"};
     private static final String[] villageItems = {"entities/spool.png", "entities/yarn.png", "entities/yarn.png"};
@@ -163,6 +164,10 @@ public class GameMode extends Mode implements Screen {
     private static final String[] greyForestItems = {"entities/fabric_grey.png", "entities/fabric_grey.png", "entities/buttons_grey.png"};
     private static final String[] mountainItems = {"entities/stuffing.png", "entities/stuffing.png", "entities/stuffing.png"};
     private static final String[] greyMountainItems = {"entities/stuffing_grey.png", "entities/stuffing_grey.png", "entities/stuffing_grey.png"};
+    private static final String[] cityNames = {"needles", "skein1", "skein2"};
+    private static final String[] villageNames = {"spool", "skein1", "skein2"};
+    private static final String[] forestNames = {"fabric1", "fabric2", "buttons"};
+    private static final String[] mountainNames = {"stuffing1", "stuffing2", "stuffing3"};
     /**
      * Texture files for baskets (progress bar)
      */
@@ -291,6 +296,8 @@ public class GameMode extends Mode implements Screen {
      */
     private final ArrayList<TextureRegion> itemTexture = new ArrayList<>();
     private final ArrayList<TextureRegion> greyItemTexture = new ArrayList<>();
+    private final ArrayList<String> itemNames = new ArrayList<>();
+    private boolean[] collectedItems = {false, false, false};
     /**
      * List of item objects
      */
@@ -399,8 +406,10 @@ public class GameMode extends Mode implements Screen {
     private final String[] CITY_BKG_FILES_LAYER_A = new String[]{"background/citylayer1.png", "background/citylayer2.png"};
     private final String[] CITY_BKG_FILES_LAYER_B = new String[]{"background/citylayer4.png", "background/citylayer5.png", "background/citylayer6.png", "background/citylayer7.png", "background/citylayer8.png", "background/citylayer9.png"};
     private final String[] CITY_BKG_FILES_LAYER_C = new String[]{"background/citylayer3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
-    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/village3-1.png", "background/village3-2.png", "background/village3-3.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_A = new String[]{"background/villagelayer1.png"};
+    //    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/village3-5.png", "background/village3-6.png"};
+    private final String[] VILLAGE_BKG_FILES_LAYER_B = new String[]{"background/villagelayer2.png"};
     private final String[] VILLAGE_BKG_FILES_LAYER_C = new String[]{"background/village3-4.png"};
     private final String[] FOREST_BKG_FILES_LAYER_A = new String[]{"background/forest-layer1.png", "background/forest-layer2.png", "background/forest-layer3.png"};
     private final String[] FOREST_BKG_FILES_LAYER_B = new String[]{};
@@ -496,6 +505,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(STUFFING);
         manager.load(GREY_STUFFING, Texture.class);
         assets.add(GREY_STUFFING);
+        manager.load(GREY_BASKET, Texture.class);
+        assets.add(GREY_BASKET);
         manager.load(BASKET_EMPTY, Texture.class);
         assets.add(BASKET_EMPTY);
         manager.load(CITY_TILE_FILE, Texture.class);
@@ -700,6 +711,8 @@ public class GameMode extends Mode implements Screen {
         movingBackgroundTextures.clear();
         itemTexture.clear();
         greyItemTexture.clear();
+        itemNames.clear();
+        collectedItems = new boolean[]{false, false, false};
 
         switch (level.getLevel()) {
             case 1:
@@ -740,13 +753,17 @@ public class GameMode extends Mode implements Screen {
                 }
                 if (level.getLevel() == 1) {
                     itemTexture.add(createTexture(manager, BASKET_EMPTY, false));
-                    greyItemTexture.add(createTexture(manager, GREY_YARN, false));
+                    greyItemTexture.add(createTexture(manager, GREY_BASKET, false));
+                    itemNames.add("basket");
                 } else {
                     for (String s : cityItems) {
                         itemTexture.add(createTexture(manager, s, false));
                     }
                     for (String s : greyCityItems) {
                         greyItemTexture.add(createTexture(manager, s, false));
+                    }
+                    for (String s : cityNames) {
+                        itemNames.add(s);
                     }
                 }
                 walkingMusic = manager.get(WALKING_CITY_FILE, Music.class);
@@ -770,6 +787,9 @@ public class GameMode extends Mode implements Screen {
                 for (String s : greyVillageItems) {
                     greyItemTexture.add(createTexture(manager, s, false));
                 }
+                for (String s : villageNames) {
+                    itemNames.add(s);
+                }
                 walkingMusic = manager.get(WALKING_VILLAGE_FILE, Music.class);
                 break;
             case "forest":
@@ -790,6 +810,9 @@ public class GameMode extends Mode implements Screen {
                 }
                 for (String s : greyForestItems) {
                     greyItemTexture.add(createTexture(manager, s, false));
+                }
+                for (String s : forestNames) {
+                    itemNames.add(s);
                 }
                 walkingMusic = manager.get(WALKING_FOREST_FILE, Music.class);
                 break;
@@ -812,11 +835,14 @@ public class GameMode extends Mode implements Screen {
                 for (String s : greyMountainItems) {
                     greyItemTexture.add(createTexture(manager, s, false));
                 }
+                for (String s : mountainNames) {
+                    itemNames.add(s);
+                }
                 walkingMusic = manager.get(WALKING_MT_FILE, Music.class);
                 break;
         }
         music.setVolume(0.5f * GDXRoot.musicVol);
-//        music.play();
+        music.play();
         music.setLooping(true);
     }
 
@@ -994,6 +1020,7 @@ public class GameMode extends Mode implements Screen {
         }
         objects.clear();
         addQueue.clear();
+        collectedItems = new boolean[]{false, false, false};
         world.dispose();
         world = new World(gravity, false);
         setComplete(false);
@@ -1068,7 +1095,7 @@ public class GameMode extends Mode implements Screen {
         // Create items
         for (int i = 0; i < items.size(); i++) {
             float[] curr = items.get(i);
-            createItem(curr[0], curr[1], i, itemTexture.get(i));
+            createItem(curr[0], curr[1], i, itemTexture.get(i), itemNames.get(i));
         }
 
         if (level.getType().contains("forest")) {
@@ -1097,7 +1124,7 @@ public class GameMode extends Mode implements Screen {
         for (int i = 0; i < tiles.size(); i++) {
             Tile tile = tiles.get(i);
             if (tile.isSliding()) {
-                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight(),tileTexture);
+                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight(), tileTexture);
             } else {
                 createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tileTexture);
             }
@@ -1141,11 +1168,11 @@ public class GameMode extends Mode implements Screen {
         addObject(spike);
     }
 
-    public void createItem(float x, float y, int id, TextureRegion tex) {
+    public void createItem(float x, float y, int id, TextureRegion tex, String name) {
 //        int n = rand.nextInt(itemTexture.size());
 //        TextureRegion randTex = itemTexture.get(n);
         Vector2 dimensions = getScaledDimensions(tex);
-        Item item = new Item(x, y, dimensions.x, dimensions.y, id);
+        Item item = new Item(x, y, dimensions.x, dimensions.y, id, name);
         item.setTexture(tex);
         item.setDrawScale(scale);
         addObject(item);
@@ -1179,16 +1206,16 @@ public class GameMode extends Mode implements Screen {
         Stone rightTile;
         TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : tileTexture;
         if (curr.isSliding()) {
-            leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(),npcTile);
+            leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(), npcTile);
         } else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree(),npcTile);
+            leftTile = createRotatingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree(), npcTile);
         } else {
-            leftTile = createTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f,npcTile);
+            leftTile = createTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(),npcTile);
+            rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(), npcTile);
         } else {
-            rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f,npcTile);
+            rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);
         addObject(couple);
@@ -1684,14 +1711,19 @@ public class GameMode extends Mode implements Screen {
                 destroyPlayerRope();
             }
 
-            if (player.isDidCollect() && !didPlayCollect) {
+            if (player.isDidCollect() != null && !didPlayCollect) {
                 collectSound.play(0.5f * GDXRoot.soundVol);
-                player.setDidCollect(false);
+                for (int i = 0; i < items.size(); i++) {
+                    if (itemNames.get(i).equals(player.isDidCollect()) && !collectedItems[i]) {
+                        collectedItems[i] = true;
+                    }
+                }
+                player.setDidCollect(null);
                 didPlayCollect = true;
             }
 
             if (didPlayCollect) {
-                player.setDidCollect(false);
+                player.setDidCollect(null);
                 didPlayCollect = false;
             }
 
@@ -1848,8 +1880,11 @@ public class GameMode extends Mode implements Screen {
         float UIX = 70;
         float UIY = canvas.getHeight() - UI_restart.getRegionHeight();
         for (int i = 0; i < items.size(); i++) {
-            if (i < player.getInventory().size()) {
+            if (collectedItems[i]) {
                 canvas.drawUI(itemTexture.get(i), UIX, UIY, 0.25f);
+//            }
+//            if (i < player.getInventory().size()) {
+//
             } else {
                 canvas.drawUI(greyItemTexture.get(i), UIX, UIY, 0.25f);
             }

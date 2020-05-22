@@ -266,7 +266,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void pause() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
@@ -276,7 +276,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
