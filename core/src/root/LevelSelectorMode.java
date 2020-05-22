@@ -439,7 +439,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                     330 - MapLockTexture.getRegionWidth() / 2, 230 - MapLockTexture.getRegionHeight() / 2);
         } else {
 
-            for (int i = 13; i < 17; i++) {
+            for (int i = 13; i < 20; i++) {
                 Vector2 button = buttonPos.get(i);
                 Level l = (levelMetadata.getLevel(i + 1));
                 if (levelMetadata.getLevelCount() >= (i + 1) && levelMetadata.isLevelUnlocked(i + 1)) {
