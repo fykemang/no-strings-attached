@@ -34,6 +34,16 @@
       "width": 3.103680098241982,
       "x": 3.7333333333333334,
       "direction": "up"
+    },
+    {
+      "type": "spikes",
+      "y": 20,
+      "x": 1,
+      "height": 1,
+      "direction": "down",
+      "width": 20,
+      "isSliding": false
+
     }
   ],
   "npc": [
