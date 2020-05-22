@@ -129,7 +129,6 @@ public class GameMode extends Mode implements Screen {
     private static final String NPC_SPIKY_SHOCK = "entities/spiky_shock.png";
     private static final String NPC_HEYO_SHOCK = "entities/heyo_shock.png";
     private static final String NPC_WELCOME_SHOCK = "entities/welcome_shock.png";
-    private static final String EXCLAMATION = "entities/exclamation.png";
     private static final String TARGET = "entities/target.png";
     private static final String ZOOM_UI = "ui/view-mode.png";
 
@@ -137,6 +136,7 @@ public class GameMode extends Mode implements Screen {
      * Texture file for the exit door
      */
     private static final String GATE = "entities/door.png";
+    private static final String VILLAGE_GATE = "entities/door-village.png";
     /**
      * Texture files for items
      */
@@ -222,6 +222,7 @@ public class GameMode extends Mode implements Screen {
     protected TextureRegion UI_exit;
     protected TextureRegion Zoom_ui;
     protected FilmStrip door;
+    protected FilmStrip village_door;
     private Stage stage;
     private float volume = 0.5f * GDXRoot.musicVol;
     /**
@@ -269,7 +270,6 @@ public class GameMode extends Mode implements Screen {
     private FilmStrip npcHeyoShockTexture;
     private FilmStrip npcSpikyShockTexture;
     private FilmStrip npcWelcomeShockTexture;
-    private FilmStrip exclamationTexture;
     private TextureRegion targetTexture;
     /**
      * Texture assets for items
@@ -381,10 +381,14 @@ public class GameMode extends Mode implements Screen {
     private static final String VILLAGE_SPIKES_FILE = "entities/village-obstacle.png";
     private static final String VILLAGE_SPIKES_VERT_FILE = "entities/village-obstacle-vert.png";
     private static final String MOUNTAIN_TILE_FILE = "entities/earthtile.png";
+    private static final String MOUNTAIN_SPIKES_FILE = "entities/mountain-obstacle.png";
+    private static final String MOUNTAIN_SPIKES_VERT_FILE = "entities/mountain-obstacle-vert.png";
     protected TextureRegion forestSpikeTile;
     protected TextureRegion forestSpikeVertTile;
     protected TextureRegion villageSpikeTile;
     protected TextureRegion villageSpikeVertTile;
+    protected TextureRegion mountainSpikeTile;
+    protected TextureRegion mountainSpikeVertTile;
     private ArrayList<TextureRegion> billboards;
 
     /**
@@ -464,6 +468,8 @@ public class GameMode extends Mode implements Screen {
         assets.add(UI_RedYarn);
         manager.load(GATE, Texture.class);
         assets.add(GATE);
+        manager.load(VILLAGE_GATE, Texture.class);
+        assets.add(VILLAGE_GATE);
         manager.load(NEEDLE, Texture.class);
         assets.add(NEEDLE);
         manager.load(GREY_NEEDLE, Texture.class);
@@ -510,6 +516,10 @@ public class GameMode extends Mode implements Screen {
         assets.add(VILLAGE_SPIKES_FILE);
         manager.load(VILLAGE_SPIKES_VERT_FILE, Texture.class);
         assets.add(VILLAGE_SPIKES_VERT_FILE);
+        manager.load(MOUNTAIN_SPIKES_FILE, Texture.class);
+        assets.add(MOUNTAIN_SPIKES_FILE);
+        manager.load(MOUNTAIN_SPIKES_VERT_FILE, Texture.class);
+        assets.add(MOUNTAIN_SPIKES_VERT_FILE);
         manager.load(SPIKE_FILE, Texture.class);
         assets.add(SPIKE_FILE);
         manager.load(SPIKE_VERT, Texture.class);
@@ -635,8 +645,6 @@ public class GameMode extends Mode implements Screen {
         assets.add(NPC_WELCOME);
         manager.load(NPC_WELCOME_SHOCK, Texture.class);
         assets.add(NPC_WELCOME_SHOCK);
-        manager.load(EXCLAMATION, Texture.class);
-        assets.add(EXCLAMATION);
         manager.load(TARGET, Texture.class);
         assets.add(TARGET);
 
@@ -867,7 +875,6 @@ public class GameMode extends Mode implements Screen {
         npcSpikyShockTexture.setFrameDuration(0.1f);
         npcWelcomeShockTexture = createFilmStrip(manager, NPC_WELCOME_SHOCK, 1, 13, 13, true);
         npcWelcomeShockTexture.setFrameDuration(0.1f);
-        exclamationTexture = createFilmStrip(manager, EXCLAMATION, 1, 5, 5, true);
         targetTexture = createTexture(manager, TARGET, false);
         npcs.put("cheese", npcCheeseTexture);
         npcs.put("cozy", npcCozyTexture);
@@ -885,6 +892,7 @@ public class GameMode extends Mode implements Screen {
         greyYarnTexture = createTexture(manager, GREY_YARN, false);
         basketEmptyTexture = createTexture(manager, BASKET_EMPTY, false);
         door = createFilmStrip(manager, GATE, 1, 11, 11, false);
+        village_door = createFilmStrip(manager, VILLAGE_GATE, 1, 11, 11, false);
         cutIndicatorTexture = createTexture(manager, CUT_INDICATOR_FILE, false);
 
         SoundController sounds = SoundController.getInstance();
@@ -914,6 +922,8 @@ public class GameMode extends Mode implements Screen {
         forestSpikeVertTile = createTexture(manager, FOREST_SPIKES_VERT_FILE, false);
         villageSpikeTile = createTexture(manager, VILLAGE_SPIKES_FILE, false);
         villageSpikeVertTile = createTexture(manager, VILLAGE_SPIKES_VERT_FILE, false);
+        mountainSpikeTile = createTexture(manager, MOUNTAIN_SPIKES_FILE, false);
+        mountainSpikeVertTile = createTexture(manager, MOUNTAIN_SPIKES_VERT_FILE, false);
         spikeTile = createTexture(manager, SPIKE_FILE, false);
         spikeVertTile = createTexture(manager, SPIKE_VERT, false);
         UI_restart = createTexture(manager, RESTART_FILE, false);
@@ -1013,6 +1023,7 @@ public class GameMode extends Mode implements Screen {
         didPlaySwing = false;
         didPlayLand = false;
         door.refresh();
+        village_door.refresh();
         didPlayWin = false;
         didPlayLose = false;
         didPlayCollect = false;
@@ -1056,7 +1067,8 @@ public class GameMode extends Mode implements Screen {
         direction = null;
         targetViewPort = null;
         // Create exit door
-        createGate(points, level.getExitPos().x, level.getExitPos().y, door);
+        FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
+        createGate(points, level.getExitPos().x, level.getExitPos().y, winningGate);
         //add player
         addObject(player);
         // Create NPCs
@@ -1072,17 +1084,6 @@ public class GameMode extends Mode implements Screen {
             createItem(curr[0], curr[1], i, itemTexture.get(i), itemNames.get(i));
         }
 
-        // Create platforms
-        for (int i = 0; i < tiles.size(); i++) {
-            Tile tile = tiles.get(i);
-            if (tile.isSliding()) {
-                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight());
-            } else {
-                createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f);
-            }
-        }
-
-
         if (level.getType().contains("forest")) {
             for (Tile spike : spikes) {
                 TextureRegion forestSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? forestSpikeTile : forestSpikeVertTile;
@@ -1093,22 +1094,38 @@ public class GameMode extends Mode implements Screen {
                 TextureRegion villageSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? villageSpikeTile : villageSpikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, villageSpikeTexture);
             }
+        } else if (level.getType().contains("mountain")) {
+            for (Tile spike : spikes) {
+                TextureRegion mountainSpikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? mountainSpikeTile : mountainSpikeVertTile;
+                createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, mountainSpikeTexture);
+            }
         } else {
             for (Tile spike : spikes) {
                 TextureRegion spikeTexture = (spike.getDirection().equals("up") || spike.getDirection().equals("down")) ? spikeTile : spikeVertTile;
                 createSpike(spike.getCorners(), spike.getX(), spike.getY(), spike.getDirection(), "spike", 1f, spikeTexture);
             }
         }
+
+        // Create platforms
+        for (int i = 0; i < tiles.size(); i++) {
+            Tile tile = tiles.get(i);
+            if (tile.isSliding()) {
+                createSlidingTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tile.getLeft(), tile.getRight(), tileTexture);
+            } else {
+                createTile(tile.getCorners(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), level.getType(), "tile" + i, 1f, tileTexture);
+            }
+        }
+
     }
 
-    public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc) {
+    public Stone createTile(float[] points, float x, float y, float width, float height, String type, String name, float sc, TextureRegion texture) {
         Stone tile = new Stone(points, x, y, width, height, type, sc);
         tile.setBodyType(BodyDef.BodyType.StaticBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tileTexture);
+        tile.setTexture(texture);
         tile.setName(name);
         addObject(tile);
         return tile;
@@ -1117,7 +1134,7 @@ public class GameMode extends Mode implements Screen {
 
     public void createGate(float[] points, float x, float y, FilmStrip texture) {
         Gate gate = new Gate(texture, points, x, y);
-        door.setFrameDuration(0.035f);
+        texture.setFrameDuration(0.035f);
         gate.setBodyType(BodyDef.BodyType.StaticBody);
         gate.setFriction(0f);
         gate.setRestitution(BASIC_RESTITUTION);
@@ -1163,7 +1180,7 @@ public class GameMode extends Mode implements Screen {
 
     public void createCouple(NpcData curr, NpcData next, int id) {
         float x1 = curr.getPos()[0], y1 = curr.getPos()[1], x2 = next.getPos()[0], y2 = next.getPos()[1];
-        float[] points = new float[]{0f, 0f, 0f, .5f, .5f, .5f, .5f, 0f};
+        float[] points = new float[]{0f, 0f, 0f, .8f, .8f, .65f, .65f, 0f};
         int n1 = rand.nextInt(npcTypes.length);
         int n2 = rand.nextInt(npcTypes.length);
         while (n2 == n1) n2 = rand.nextInt(npcTypes.length);
@@ -1173,31 +1190,32 @@ public class GameMode extends Mode implements Screen {
         TextureRegion randTex2 = npcs.get(randType2);
         Stone leftTile;
         Stone rightTile;
+        TextureRegion npcTile = currentlevel.getType().equals("forest") ? forestMushroom : tileTexture;
         if (curr.isSliding()) {
-            leftTile = createSlidingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight());
+            leftTile = createSlidingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getLeft(), curr.getRight(), npcTile);
         } else if (curr.isRotating()) {
-            leftTile = createRotatingTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree());
+            leftTile = createRotatingTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, curr.getRotatingCenter(), curr.getRotatingDegree(), npcTile);
         } else {
-            leftTile = createTile(points, x1 + .3f, y1 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
+            leftTile = createTile(points, x1 + .1f, y1 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         if (next.isSliding()) {
-            rightTile = createSlidingTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight());
+            rightTile = createSlidingTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, next.getLeft(), next.getRight(), npcTile);
         } else {
-            rightTile = createTile(points, x2 + .3f, y2 - 0.5f, 0.5f, 0.5f, currentlevel.getType(), "tile", 1f);
+            rightTile = createTile(points, x2 + .1f, y2 - 0.65f, 0.8f, 0.65f, currentlevel.getType(), "tile", 1f, npcTile);
         }
         Couple couple = new Couple(x1, y1, x2, y2, randType1, randType2, randTex1, randTex2, scale, leftTile, rightTile, id);
         addObject(couple);
     }
 
     public Stone createRotatingTile(float[] points, float x, float y, float width, float height, String type, String name, float sc,
-                                    float[] rotatingCenter, float rotatingDegree) {
+                                    float[] rotatingCenter, float rotatingDegree, TextureRegion texture) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, rotatingCenter, rotatingDegree);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setFriction(BASIC_FRICTION);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tileTexture);
+        tile.setTexture(texture);
         tile.setName(name);
         addObject(tile);
         return tile;
@@ -1205,13 +1223,13 @@ public class GameMode extends Mode implements Screen {
 
     public Stone createSlidingTile(float[] points, float x, float y, float width, float height, String type,
                                    String name, float sc,
-                                   float[] leftPos, float[] rightPos) {
+                                   float[] leftPos, float[] rightPos, TextureRegion texture) {
         Stone tile = new Stone(points, x, y, width, height, type, sc, leftPos, rightPos);
         tile.setBodyType(BodyDef.BodyType.KinematicBody);
         tile.setDensity(BASIC_DENSITY);
         tile.setRestitution(BASIC_RESTITUTION);
         tile.setDrawScale(scale);
-        tile.setTexture(tileTexture);
+        tile.setTexture(texture);
         tile.setName(name);
         addObject(tile);
         return tile;
@@ -1547,8 +1565,9 @@ public class GameMode extends Mode implements Screen {
             playerExitAnimation.setElapsedTime(dt);
             playerExitAnimation.updateFrame();
             player.setTexture(playerExitAnimation);
-            door.setElapsedTime(dt);
-            door.updateFrame();
+            FilmStrip winningGate = currentlevel.getType().equals("village") ? village_door : door;
+            winningGate.setElapsedTime(dt);
+            winningGate.updateFrame();
 
         } else if (player.isAlive()) {
             player.setHorizontalMovement(InputController.getInstance().getHorizontal() * player.getForce());
@@ -1819,15 +1838,10 @@ public class GameMode extends Mode implements Screen {
                 obj.draw(canvas);
             }
         }
-
-//        canvas.draw(exclamationTexture, Color.WHITE,player.getX()*scale.x,
-//                player.getY()*scale.y, exclamationTexture.getRegionWidth()*0.1f, exclamationTexture.getRegionHeight()*0.1f);
-//        ((FilmStrip) exclamationTexture).setNextFrame();
         target = player.getCanSwingTo();
         if (target != null) {
             canvas.draw(targetTexture, Color.WHITE, target.getX() * scale.x - 40,
                     target.getY() * scale.y - 34, targetTexture.getRegionWidth() * 10f / scale.x, targetTexture.getRegionHeight() * 10f / scale.y);
-//            ((FilmStrip) exclamationTexture).setNextFrame();
         }
 
         c = player.canCut();
