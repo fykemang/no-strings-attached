@@ -245,7 +245,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
         });
         stage.addActor(mainMenuButton);
 
-        victorySound.play(0.5f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.musicVol);
 
         try {
             // Let ANY connected controller start the game.
@@ -411,7 +411,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
     @Override
     public void show() {
 //        music.play();
-        victorySound.play(0.5f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.musicVol);
     }
 
     @Override
@@ -596,7 +596,7 @@ public class LevelTransitionMode extends Mode implements Screen, InputProcessor,
 
 
     public void reset() {
-        victorySound.play(0.5f * GDXRoot.soundVol);
+        victorySound.play(0.5f * GDXRoot.musicVol);
         Gdx.input.setInputProcessor(stage);
     }
 
