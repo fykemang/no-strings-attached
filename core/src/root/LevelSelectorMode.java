@@ -271,7 +271,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void pause() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
@@ -281,7 +281,7 @@ public class LevelSelectorMode extends Mode implements Screen {
 
     @Override
     public void hide() {
-        levelSelectorMusic.dispose();
+        levelSelectorMusic.stop();
     }
 
     @Override
@@ -319,6 +319,7 @@ public class LevelSelectorMode extends Mode implements Screen {
     private void update(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             listener.exitScreen(this, GameMode.EXIT_INTO_GAME);
+            clickSound.play(GDXRoot.soundVol);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             if (curLevel < levelMetadata.getLevelCount() && levelMetadata.isLevelUnlocked(curLevel+1)) {
@@ -332,6 +333,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.85f);
                 isDown = false;
             }
+            hoverSound.play(GDXRoot.soundVol);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (curLevel > 1 ) {
                 curLevel--;
@@ -345,6 +347,7 @@ public class LevelSelectorMode extends Mode implements Screen {
                 container.setPosition(canvas.getWidth() / 2, canvas.getHeight() * 0.25f);
                 isDown = true;
             }
+            hoverSound.play(GDXRoot.soundVol);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -499,7 +502,7 @@ public class LevelSelectorMode extends Mode implements Screen {
         level = -1;
         ready = false;
         levelSelectorMusic.play();
-        levelSelectorMusic.setVolume(0.5f * GDXRoot.musicVol);
+        levelSelectorMusic.setVolume(GDXRoot.musicVol);
         levelSelectorMusic.setLooping(true);
         Gdx.input.setInputProcessor(stage);
     }
