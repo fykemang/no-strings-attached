@@ -57,7 +57,6 @@ public class LevelSelectorMode extends Mode implements Screen {
     private static final String ARROWDOWN = "ui/arrow-down.png";
     private static final String ARROWRIGHT = "ui/arrow-right.png";
     private static final String ARROWLEFT = "ui/arrow-left.png";
-    private static final String PRESS_SPACE = "ui/pressSpace.png";
     public static int curLevel = 1;
     int lastLevel = 0;
     Table container;
@@ -151,7 +150,6 @@ public class LevelSelectorMode extends Mode implements Screen {
         loadAsset(ARROWLEFT, Texture.class, manager);
         loadAsset(ARROWRIGHT, Texture.class, manager);
         loadAsset(ARROWDOWN, Texture.class, manager);
-        loadAsset(PRESS_SPACE, Texture.class, manager);
     }
 
     @Override
