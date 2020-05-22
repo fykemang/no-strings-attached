@@ -231,11 +231,12 @@ public class LevelSelectorMode extends Mode implements Screen {
         buttonPos.add(new Vector2(820, 380));
         buttonPos.add(new Vector2(720, 340));
         buttonPos.add(new Vector2(780, 300));
-        buttonPos.add(new Vector2(860, 250));
+//        buttonPos.add(new Vector2(860, 250));
         buttonPos.add(new Vector2(800, 200));
-        buttonPos.add(new Vector2(740, 200));
-        buttonPos.add(new Vector2(680, 290));
-        buttonPos.add(new Vector2(500, 270));
+        buttonPos.add(new Vector2(700, 220));
+        buttonPos.add(new Vector2(600, 250));
+        buttonPos.add(new Vector2(500, 230));
+        buttonPos.add(new Vector2(410, 250));
         themeUnlocked[CITY] = true;
         active = true;
     }
