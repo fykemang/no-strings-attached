@@ -3,6 +3,7 @@ package root;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,16 +19,23 @@ import util.ScreenListener;
 public class PauseMode extends Mode implements Screen {
     public static final int INTO_PAUSE = 15;
 
-//    enum SelectedButton {
-//        restart,
-//        help,
-//        back,
-//        level_select,
-//        settings,
-//        _continue
-//    }
+    enum SelectedButton {
+        CONTINUE,
+        LEVEL_SELECT,
+        MENU,
+        RESTART,
+        SETTINGS,
+        HELP
+    }
 
     private ImageButton currentSelection;
+    private SelectedButton pressState;
+    private int keyState;
+    private Sound hoverSound;
+    private Sound clickSound;
+    private static final String HOVER_FILE = "sounds/hover.mp3";
+    private static final String CLICK_FILE = "sounds/click.mp3";
+
 
     private static final String CONTINUE = "ui/continue.png";
     private static final String LEVEL_SELECT = "ui/level-select.png";
@@ -69,7 +77,6 @@ public class PauseMode extends Mode implements Screen {
         loadAsset(SELECT, Texture.class, manager);
         loadAsset(MAIN_MENU, Texture.class, manager);
         loadAsset(SETTINGS, Texture.class, manager);
-
     }
 
     @Override
@@ -85,6 +92,8 @@ public class PauseMode extends Mode implements Screen {
         selectorTexture = createTexture(manager, SELECT, false);
         bkgTexture = createTexture(manager, BKG, false);
         levelselectTexture = createTexture(manager, LEVEL_SELECT, false);
+        clickSound = manager.get(CLICK_FILE, Sound.class);
+        hoverSound = manager.get(HOVER_FILE, Sound.class);
     }
 
 
@@ -105,17 +114,20 @@ public class PauseMode extends Mode implements Screen {
     final PauseMode pause = this;
 
     public void initialize() {
+        pressState = null;
         continueButton = createButton(continueTexture);
         continueButton.setPosition(canvas.getWidth() / 2 - continueButton.getWidth() / 2, canvas.getHeight() * 0.5f);
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, GameMode.EXIT_INTO_GAME);
+                clickSound.play(GDXRoot.soundVol);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = continueButton;
+                hoverSound.play(GDXRoot.soundVol);
             }
         });
         stage.addActor(continueButton);
@@ -125,11 +137,13 @@ public class PauseMode extends Mode implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, GameMode.EXIT_RESET);
+                clickSound.play(GDXRoot.soundVol);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = reStartButton;
+                hoverSound.play(GDXRoot.soundVol);
             }
 
         });
@@ -140,13 +154,14 @@ public class PauseMode extends Mode implements Screen {
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
                 listener.exitScreen(pause, LevelSelectorMode.INTO_SELECTOR);
+                clickSound.play(GDXRoot.soundVol);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = levelSelectButton;
+                hoverSound.play(GDXRoot.soundVol);
             }
 
         });
@@ -159,12 +174,13 @@ public class PauseMode extends Mode implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, SettingMode.INTO_SETTING);
-
+                clickSound.play(GDXRoot.soundVol);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = settingsButton;
+                hoverSound.play(GDXRoot.soundVol);
             }
 
         });
@@ -177,11 +193,13 @@ public class PauseMode extends Mode implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listener.exitScreen(pause, HelpMode.INTO_HELP);
+                clickSound.play(GDXRoot.soundVol);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 currentSelection = mainButton;
+                hoverSound.play(GDXRoot.soundVol);
             }
 
         });
@@ -228,7 +246,8 @@ public class PauseMode extends Mode implements Screen {
 
     @Override
     public void dispose() {
-
+        hoverSound.dispose();
+        clickSound.dispose();
     }
 
 
@@ -239,7 +258,27 @@ public class PauseMode extends Mode implements Screen {
             draw();
 
             // We are are ready, notify our listener
-
+            if (listener != null) {
+                if (pressState == SelectedButton.CONTINUE) {
+                    clickSound.play(GDXRoot.soundVol);
+                    listener.exitScreen(pause, GameMode.EXIT_INTO_GAME);
+                } else if (pressState == SelectedButton.LEVEL_SELECT) {
+                    clickSound.play(GDXRoot.soundVol);
+                    listener.exitScreen(pause, LevelSelectorMode.INTO_SELECTOR);
+                } else if (pressState == SelectedButton.MENU) {
+                    clickSound.play(GDXRoot.soundVol);
+                    currentSelection = mainButton;
+                } else if (pressState == SelectedButton.RESTART) {
+                    clickSound.play(GDXRoot.soundVol);
+                    listener.exitScreen(pause, GameMode.EXIT_RESET);
+                } else if (pressState == SelectedButton.SETTINGS) {
+                    clickSound.play(GDXRoot.soundVol);
+                    listener.exitScreen(pause, SettingMode.INTO_SETTING);
+                } else if (pressState == SelectedButton.HELP) {
+                    clickSound.play(GDXRoot.soundVol);
+                    listener.exitScreen(pause, HelpMode.INTO_HELP);
+                }
+            }
         }
     }
 
